@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+<defs>
+ <radialGradient id="g"><stop stop-color="#00ff9d" stop-opacity=".12"/><stop offset="1" stop-color="#00ff9d" stop-opacity="0"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<circle cx="250" cy="250" r="210" fill="url(#g)" stroke="#00ff9d" stroke-width="2" opacity=".8" filter="url(#glow)"/>
+<g fill="none" stroke="#00ff9d" opacity=".34">
+ <ellipse cx="250" cy="250" rx="210" ry="75"/>
+ <ellipse cx="250" cy="250" rx="210" ry="135"/>
+ <ellipse cx="250" cy="250" rx="75" ry="210"/>
+ <ellipse cx="250" cy="250" rx="135" ry="210"/>
+ <path d="M40 250h420M64 160h372M64 340h372M250 40v420"/>
+</g>
+<g fill="#00ff9d" opacity=".65">
+ <circle cx="138" cy="153" r="4"/><circle cx="322" cy="128" r="4"/><circle cx="375" cy="271" r="4"/>
+ <circle cx="202" cy="350" r="4"/><circle cx="117" cy="289" r="4"/><circle cx="298" cy="313" r="4"/>
+</g>
+<text x="250" y="265" text-anchor="middle" font-family="monospace" font-size="46" letter-spacing="10" fill="#00ff9d">NETA</text>
+</svg>
