@@ -24,19 +24,20 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Patch diagnostic parser for composite WYND stake keys
+      - name: Inspect WYND stake residual structures
         run: |
           python - <<'PY'
-          from pathlib import Path
-          p=Path('scripts/diagnose_wynd_lp.py')
-          s=p.read_text()
-          s=s.replace('HEX_RE=re.compile(r"^[0-9a-fA-F]+$")', 'HEX_RE=re.compile(r"^[0-9a-fA-F]+$")\nADDR_RE=re.compile(rb"juno1[0-9a-z]{38}")')
-          s=s.replace('if ns=="staked_balances" and suf:', 'if ns=="stake" and suf:')
-          s=s.replace('a=suf.decode(); x=amount_from_obj(obj)', 'm=ADDR_RE.search(suf)\n                if not m: raise ValueError("wallet address not found in stake key")\n                a=m.group(0).decode(); x=amount_from_obj(obj)\n                if isinstance(obj,dict) and isinstance(obj.get("locked_tokens"),list):\n                    x=(x or 0)+sum((amount_from_obj(v) or 0) for v in obj["locked_tokens"])')
-          p.write_text(s)
+          import json, sys
+          sys.path.insert(0,'scripts')
+          import diagnose_wynd_lp as d
+          rows=d.parse_state(d.CUSTODY)
+          nonempty=[]
+          totals=[]
+          for ns,suf,vb,kb in rows:
+              obj=d.parse_json(vb)
+              if ns=='stake' and isinstance(obj,dict) and obj.get('locked_tokens'):
+                  nonempty.append({'key':kb.hex(),'value':obj})
+              if ns in ('total_staked','total_per_period'):
+                  totals.append({'ns':ns,'key':kb.hex(),'text':vb.decode(errors='replace'),'hex':vb.hex()})
+          print(json.dumps({'nonempty_locked_count':len(nonempty),'nonempty_locked_samples':nonempty[:20],'totals':totals},indent=2))
           PY
-      - name: Run WYND LP diagnostic
-        run: python scripts/diagnose_wynd_lp.py
-      - name: Show WYND LP diagnostic
-        if: always()
-        run: cat wynd_lp_diagnostic.json || true
