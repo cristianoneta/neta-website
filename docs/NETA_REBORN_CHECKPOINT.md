@@ -242,3 +242,23 @@ The metadata key names remain unchanged to preserve the existing frontend. Commi
 ### Frontend cache refresh incident — 2026-09-12
 
 The corrected production metadata was committed successfully at `eaff76a5c6fbcecb611c2875d18f01a729d1238e`, but the public page continued to display the preceding snapshot because `index.html` referenced generated assets with the unchanged fixed cache key `v=20260912-3`. Commit `0f6f75d64f996a1b55350700ec83d8ea8a727619` advances the invisible asset cache key to `v=20260912-4`; no visual frontend behavior changed. When generated data semantics change, refresh the asset query version or adopt a generated content/version key so browsers and the Pages CDN cannot retain an older `data.js`.
+
+
+## Map of NETA — FORWARD-COLLECTION MVP
+
+Branch: `feature/map-of-neta`.
+
+Product decision (2026-09-12):
+- Launch with a real rolling 24-hour view and no speculative historical backfill.
+- Persist validated movements from the collection start onward.
+- Unlock 7D, 30D and 90D only after that much continuous data has actually accumulated.
+- Juno is the fixed central origin-chain node; NETA is the flowing asset, not a node.
+- Chain nodes use chain symbols, rounded NETA custody amounts and hover labels.
+- Right sidebar shows 30-day net Power Buyers and Top Sellers once sufficient history exists.
+- DEX rankings exclude transfers, IBC movements, staking, claims and LP deposits/withdrawals; ranking is net bought or net sold NETA across validated markets.
+
+Diagnostic findings:
+- Initial LCD probes used the legacy repeated `events` parameters and returned `query cannot be empty`; the current endpoint expects one `query` expression.
+- Initial Tendermint RPC probes encoded `query` correctly but not the string-valued `order_by` parameter, producing an HTTP-RPC parameter decoding error.
+- Commit `94ff8564c6f27155956c998e3ce054df93e471bc` corrects both query formats. A new isolated diagnostic run will determine actual indexed event availability.
+- Production remains unchanged until event parsing and accounting are validated.
