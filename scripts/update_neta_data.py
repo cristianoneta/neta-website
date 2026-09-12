@@ -141,9 +141,16 @@ def fields(buf):
     while p<len(buf):
         tag,p=varint(buf,p); f,w=tag>>3,tag&7
         if w==0: v,p=varint(buf,p)
-        elif w==2: n,p=varint(buf,p); v=buf[p:p+n]; p+=n
-        elif w==1: v=buf[p:p+8]; p+=8
-        elif w==5: v=buf[p:p+4]; p+=4
+        elif w==2:
+            n,p=varint(buf,p)
+            if p+n>len(buf): raise ValueError("truncated length-delimited field")
+            v=buf[p:p+n]; p+=n
+        elif w==1:
+            if p+8>len(buf): raise ValueError("truncated fixed64")
+            v=buf[p:p+8]; p+=8
+        elif w==5:
+            if p+4>len(buf): raise ValueError("truncated fixed32")
+            v=buf[p:p+4]; p+=4
         else: raise ValueError(f"unsupported wire {w}")
         yield f,w,v
 def kvpair(msg):
@@ -162,13 +169,34 @@ def kvpairs(buf):
     if buf and not out: raise ValueError("non-empty subspace response without KVPairs")
     return out
 def bank_amount(raw):
+    """Decode Cosmos SDK bank BalanceValueCodec exactly.
+
+    Current balances are math.Int.Marshal() (ASCII decimal bytes). Legacy
+    balances are protobuf cosmos.base.v1beta1.Coin: field 1 denom, field 2
+    ASCII decimal amount. Never scrape arbitrary digit runs from protobuf.
+    """
+    if not raw: raise ValueError("empty bank balance value")
     try:
-        s=raw.decode('ascii')
-        if s.isdigit(): return int(s)
-    except UnicodeDecodeError: pass
-    nums=re.findall(rb"[0-9]{1,80}",raw)
-    if not nums: raise ValueError(f"cannot parse bank amount {raw!r}")
-    return int(max(nums,key=len))
+        s=raw.decode("ascii")
+    except UnicodeDecodeError:
+        s=""
+    if s.isdigit(): return int(s)
+
+    denom=None; amount=None
+    for f,w,x in fields(raw):
+        if w!=2: continue
+        if f==1:
+            try: denom=x.decode("utf-8")
+            except UnicodeDecodeError: raise ValueError("invalid Coin denom encoding")
+        elif f==2:
+            try: a=x.decode("ascii")
+            except UnicodeDecodeError: raise ValueError("invalid Coin amount encoding")
+            if not a.isdigit(): raise ValueError(f"invalid Coin amount {a!r}")
+            amount=int(a)
+    if amount is None: raise ValueError(f"cannot decode bank balance value: {raw.hex()}")
+    if denom is not None and denom!=DENOM:
+        raise ValueError(f"bank value denom mismatch: {denom}")
+    return amount
 def latest_height():
     d,ep=req_json(OSMO,"/status"); return int(d["result"]["sync_info"]["latest_block_height"]),ep
 def subspace(prefix,height,rpc):
@@ -233,38 +261,36 @@ def pub(r,supply):
 def gini(vals):
     xs=sorted(v for v in vals if v>=0); sm=sum(xs); n=len(xs)
     return 0 if not xs or sm==0 else (2*sum((i+1)*x for i,x in enumerate(xs)))/(n*sm)-(n+1)/n
-def concentration(rows,supply):
-    ts=[r["total_raw"] for r in rows]; out={f"top_{n}_percent":round(sum(ts[:n])/supply*100,8) for n in (1,5,10,25,50,100)}
-    n=max(1,int(len(rows)*0.01+0.999999)); out["top_1pct_wallet_count"]=n; out["top_1pct_percent"]=round(sum(ts[:n])/supply*100,8); return out
-
-def build(outdir):
+def build(out):
     juno,supply,supply_src=scan_juno(); staked,claims=scan_dao(); osmo,height,rpc=scan_osmo()
     escrow=juno.get(ESCROW,0); osmo_total=sum(osmo.values())
     if escrow!=osmo_total: raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != Osmosis {osmo_total/1e6:.6f}")
-    dao_bal=juno.get(DAO,0); active=sum(staked.values()); unstaking=sum(claims.values()); dao_res=dao_bal-active-unstaking
-    if dao_res<0 or dao_res>1_000_000: raise RuntimeError(f"DAO closure failed: balance={dao_bal/1e6:.6f}, active={active/1e6:.6f}, unstaking={unstaking/1e6:.6f}, residual={dao_res/1e6:.6f}")
-    rows,res=merge(juno,osmo,staked,claims,supply)
-    if res!=dao_res: raise RuntimeError(f"economic residual {res} != DAO residual {dao_res}")
-    holders=[pub(r,supply) for r in rows]; idx={}
-    for h in holders:
-        c={k:h[k] for k in ("rank","total_neta","juno_neta","osmosis_neta","neta_dao_staking","neta_dao_unstaking","type","label")}
-        if h["juno_address"]: idx[h["juno_address"].lower()]=c
-        if h["osmosis_address"]: idx[h["osmosis_address"].lower()]=c
-    now=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
-    meta={"schema_version":2,"generated_at":now,"validation":"passed","stats":{"total_supply_neta":supply/1e6,"juno_custody_addresses":len(juno),"osmosis_primary_state_addresses":len(osmo),"dao_active_stakers":len(staked),"dao_active_staking_neta":active/1e6,"dao_unstaking_wallets":len(claims),"dao_unstaking_neta":unstaking/1e6,"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"ranked_total_neta":sum(r["total_raw"] for r in rows)/1e6,"dao_contract_residual_neta":dao_res/1e6,"excluded_bridge_escrow_neta":escrow/1e6,"gini":round(gini([r["total_raw"] for r in rows]),8),**concentration(rows,supply)},"sources":{"supply_source":supply_src,"osmosis_height":height,"osmosis_rpc":rpc,"osmosis_method":"primary bank KV state; 20-byte + 32-byte address scans","juno_method":"CW20 raw contract state","dao_method":"staking contract raw state: staked_balances + claims"},"methodology_short":"Economic NETA holdings across Juno + Osmosis + DAO staking + DAO unstaking. Juno bridge escrow is excluded to avoid double-counting Osmosis. The DAO staking contract is decomposed to wallet owners. Identical 20-byte Juno/Osmosis Bech32 payloads are merged."}
-    outdir.mkdir(parents=True,exist_ok=True); compact=dict(ensure_ascii=False,separators=(',',':'))
-    (outdir/'holders.json').write_text(json.dumps(holders,**compact),encoding='utf-8')
-    (outdir/'address_index.json').write_text(json.dumps(idx,**compact),encoding='utf-8')
-    (outdir/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
-    (outdir/'data.js').write_text('window.NETA_METADATA = '+json.dumps(meta,**compact)+';\nwindow.NETA_TOP_HOLDERS = '+json.dumps(holders[:100],**compact)+';\n',encoding='utf-8')
-    (outdir/'address-index.js').write_text('window.NETA_ADDRESS_INDEX = '+json.dumps(idx,**compact)+';\n',encoding='utf-8')
-    log(f"VALIDATED: {len(rows):,} holders; {sum(r['total_raw'] for r in rows)/1e6:,.6f} attributed + {res/1e6:.6f} residual = {supply/1e6:,.6f} NETA")
+    dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(claims.values()); dao_res=dao_balance-active-unst
+    if dao_res<0: raise RuntimeError("DAO attribution exceeds staking contract balance")
+    rows,residual=merge(juno,osmo,staked,claims,supply)
+    if residual!=dao_res: raise RuntimeError(f"economic residual {residual} != DAO residual {dao_res}")
+    if residual>1_000_000: raise RuntimeError("residual > 1 NETA")
+    public=[pub(r,supply) for r in rows]; ranked=sum(r["total_raw"] for r in rows)
+    def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
+    onepct=max(1,(len(rows)+99)//100)
+    meta={"schema_version":2,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_active_plus_unstaking_plus_residual":True,"economic_total_plus_residual_equals_supply":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":len(juno),"osmosis_primary_state_addresses":len(osmo),"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(claims),"dao_unstaking_neta":round(unst/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"bank primary state prefix scan (20-byte + 32-byte addresses)"},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace"},"dao":{"method":"CosmWasm AllContractState / staked_balances + claims namespaces"}}
+    idx={}
+    for r in public:
+        for a in (r["juno_address"],r["osmosis_address"]):
+            if a: idx[a]=r
+    (out/"holders.json").write_text(json.dumps(public,separators=(',',':')),encoding='utf-8')
+    (out/"address_index.json").write_text(json.dumps(idx,separators=(',',':')),encoding='utf-8')
+    (out/"metadata.json").write_text(json.dumps(meta,indent=2),encoding='utf-8')
+    (out/"data.js").write_text("window.NETA_METADATA="+json.dumps(meta,separators=(',',':'))+";\nwindow.NETA_TOP_HOLDERS="+json.dumps(public[:100],separators=(',',':'))+";\n",encoding='utf-8')
+    (out/"address-index.js").write_text("window.NETA_ADDRESS_INDEX="+json.dumps(idx,separators=(',',':'))+";\n",encoding='utf-8')
     return meta
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--output',default='.'); target=Path(ap.parse_args().output).resolve()
-    with tempfile.TemporaryDirectory(prefix='neta-reborn-') as td:
+    ap=argparse.ArgumentParser(); ap.add_argument("--output",default="."); a=ap.parse_args(); out=Path(a.output)
+    with tempfile.TemporaryDirectory(prefix="neta-") as td:
         tmp=Path(td); meta=build(tmp)
-        for name in ('holders.json','address_index.json','metadata.json','data.js','address-index.js'): os.replace(tmp/name,target/name)
-    print(json.dumps(meta['stats'],indent=2)); return 0
-if __name__=='__main__': raise SystemExit(main())
+        out.mkdir(parents=True,exist_ok=True)
+        for name in ("holders.json","address_index.json","metadata.json","data.js","address-index.js"): os.replace(tmp/name,out/name)
+    log(f"VALIDATED: {meta['economic_master_entries']:,} economic entries; {meta['wallet_attributed_neta']:,.6f} attributed + {meta['dao_residual_neta']:.6f} residual = {meta['total_supply_neta']:,.6f} NETA")
+    return 0
+if __name__=="__main__": raise SystemExit(main())
