@@ -262,3 +262,15 @@ Diagnostic findings:
 - Initial Tendermint RPC probes encoded `query` correctly but not the string-valued `order_by` parameter, producing an HTTP-RPC parameter decoding error.
 - Commit `94ff8564c6f27155956c998e3ce054df93e471bc` corrects both query formats. A new isolated diagnostic run will determine actual indexed event availability.
 - Production remains unchanged until event parsing and accounting are validated.
+
+
+### Map of NETA production collector — DEPLOYED 2026-09-12
+
+- Forward collection started at `2026-09-12T18:05:26.203149Z`.
+- Production collector and initial page were fast-forwarded to `main`; first production continuation commit: `1ca1d018415e3060b02ac9d806b6c6189fe97080`.
+- The collector uses indexed transaction queries with persisted Juno/Osmosis height cursors, a five-block finality buffer, deterministic event IDs and fail-closed validation.
+- Normalized events are stored by UTC day under `data/map/days/`; technical progress is in `data/map/state.json`; the frontend reads `data/map/map-of-neta.json`.
+- The lightweight workflow runs at the same four Berlin-local windows as the holder data and requests a Pages rebuild after changed production data.
+- The 24H period remains marked unavailable until a complete 24 hours has been collected. Longer periods remain unavailable until their full real history exists.
+- The production page is `map-of-neta.html`; chain balances are sourced from validated holder metadata and displayed rounded, while raw stored values retain six decimals.
+- Completed oversized discovery output and its temporary workflow/script were removed before production.
