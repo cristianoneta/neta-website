@@ -3,6 +3,10 @@ name: Update NETA on-chain data
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-neta-data.yml"
   workflow_dispatch:
   schedule:
     - cron: "7 1 * * *"
@@ -26,9 +30,9 @@ jobs:
         id: gate
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
-            echo "Manual/PR validation run allowed."
+            echo "Manual/PR/production bootstrap run allowed."
             exit 0
           fi
           HOUR="$(TZ=Europe/Berlin date +%H)"
