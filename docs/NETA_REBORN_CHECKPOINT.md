@@ -221,3 +221,19 @@ Only after Osmosis reconciliation is green:
 - Record snapshot height/date with mutable on-chain quantities.
 - Preserve exact integer reconciliation and fail closed on incomplete scans.
 - Do not modify production merely to test an attribution hypothesis.
+
+
+## Custody holder metric semantics — FIXED 2026-09-12
+
+The unchanged frontend cards `JUNO CUSTODY` and `OSMOSIS CUSTODY` must count economic holders by custody chain, not merely addresses found in the direct token bank/CW20 scans.
+
+Definitions:
+- Juno custody includes direct Juno NETA, NETA DAO staking, actively unbonding DAO claims, matured claimable DAO claims, and economically attributed WYND LP NETA.
+- Osmosis custody includes direct Osmosis NETA and economically attributed Pool 631 LP NETA.
+- A holder present on both chains is counted in both custody cards but once in `economic_master_entries`.
+
+Required invariant:
+
+`juno_custody_addresses + osmosis_primary_state_addresses - overlap == economic_master_entries`
+
+The metadata key names remain unchanged to preserve the existing frontend. Commit `850047c52341837bfd723c0fc17b9cd52cd1015e` changes only the indexer's calculation behind those values and adds a fail-closed validation flag, `custody_holder_union_equals_economic_holders`.
