@@ -165,13 +165,26 @@ def parse_duration(buf):
     return sec+nanos/1_000_000_000
 
 
+def signed_varint(value,bits):
+    """Interpret a protobuf int32/int64 varint as two's-complement signed."""
+    value=int(value)
+    sign=1 << (bits-1)
+    return value-(1 << bits) if value & sign else value
+
+
 def parse_timestamp(buf):
     sec=0; nanos=0
     for f,w,x in u.fields(buf):
-        if f==1 and w==0:sec=int(x)
-        elif f==2 and w==0:nanos=int(x)
-    if sec==0 and nanos==0:return None
-    return datetime.fromtimestamp(sec+nanos/1_000_000_000,tz=timezone.utc).isoformat()
+        if f==1 and w==0:sec=signed_varint(x,64)
+        elif f==2 and w==0:nanos=signed_varint(x,32)
+    # PeriodLock uses Go's zero time (0001-01-01) until unlocking starts.
+    # It is outside Python datetime's portable Unix range and semantically
+    # means that no unlocking end time has been set.
+    if (sec==0 and nanos==0) or sec<=-62135596800:return None
+    try:
+        return datetime.fromtimestamp(sec+nanos/1_000_000_000,tz=timezone.utc).isoformat()
+    except (OverflowError,OSError,ValueError) as e:
+        raise ValueError(f"invalid PeriodLock timestamp seconds={sec} nanos={nanos}") from e
 
 
 def parse_lock(buf):
