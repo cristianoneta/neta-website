@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import json
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 
 import requests
@@ -12,6 +13,18 @@ import requests
 LCDS = ["https://juno-api.polkachu.com", "https://juno-api.lavenderfive.com"]
 REFERENCE_PAIR = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OUT = Path("docs/diagnostics/wynd_recovery_discovery.json")
+
+# Explicit registry for the assets that can anchor a USD valuation. Denom hashes
+# are persisted in the discovery output; no symbol-only matching is used.
+PRICE_ASSETS = {
+    "native:ujuno": (6, "juno-network"),
+    "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9": (6, "cosmos"),
+    "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034": (6, "usd-coin"),
+    "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518": (6, "osmosis"),
+    "native:ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885": (6, "stargaze"),
+    "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384": (6, "mars-protocol"),
+    "native:ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17": (18, "weth"),
+}
 
 
 def get(path, params=None):
@@ -56,6 +69,29 @@ def native_meta(denom):
         return {"symbol": meta.get("symbol") or display, "name": meta.get("name"), "display": display, "decimals": exponent}
     except Exception as exc:
         return {"symbol": denom, "decimals": None, "error": str(exc)}
+
+
+def fetch_prices():
+    ids = sorted({coin_id for _, coin_id in PRICE_ASSETS.values()})
+    errors = []
+    try:
+        r = requests.get("https://api.coingecko.com/api/v3/simple/price", params={"ids": ",".join(ids), "vs_currencies": "usd"}, timeout=45)
+        r.raise_for_status()
+        data = r.json()
+        prices = {coin_id: Decimal(str(data[coin_id]["usd"])) for coin_id in ids}
+        return prices, "CoinGecko simple/price", datetime.now(timezone.utc).isoformat()
+    except Exception as exc:
+        errors.append(f"CoinGecko: {exc}")
+    try:
+        coins = ",".join("coingecko:" + coin_id for coin_id in ids)
+        r = requests.get("https://coins.llama.fi/prices/current/" + coins, timeout=45)
+        r.raise_for_status()
+        data = r.json()["coins"]
+        prices = {coin_id: Decimal(str(data["coingecko:" + coin_id]["price"])) for coin_id in ids}
+        return prices, "DefiLlama price API (CoinGecko identifiers)", datetime.now(timezone.utc).isoformat()
+    except Exception as exc:
+        errors.append(f"DefiLlama: {exc}")
+    raise RuntimeError("price lookup failed: " + "; ".join(errors))
 
 
 def asset_key(info):
@@ -108,6 +144,7 @@ def main():
         raise RuntimeError("reference pair absent from discovered factory pair set")
 
     meta_cache = {}
+    prices, price_source, price_time = fetch_prices()
     output = []
     failures = []
     for pair in pairs:
@@ -124,12 +161,37 @@ def main():
             assets = []
             for asset in pool["assets"]:
                 info = asset["info"]
+                key = asset_key(info)
+                metadata = asset_meta(info, meta_cache)
+                price_entry = PRICE_ASSETS.get(key)
+                decimals = price_entry[0] if price_entry else metadata.get("decimals")
                 assets.append({
-                    "key": asset_key(info),
+                    "key": key,
                     "info": info,
                     "amount_raw": str(asset["amount"]),
-                    "metadata": asset_meta(info, meta_cache),
+                    "metadata": metadata,
+                    "resolved_decimals": decimals,
+                    "coingecko_id": price_entry[1] if price_entry else None,
+                    "usd_price": str(prices[price_entry[1]]) if price_entry else None,
                 })
+            valued = []
+            for asset in assets:
+                if asset["usd_price"] is None or asset["resolved_decimals"] is None:
+                    continue
+                qty = Decimal(asset["amount_raw"]) / (Decimal(10) ** int(asset["resolved_decimals"]))
+                valued.append((asset["key"], qty * Decimal(asset["usd_price"])))
+            if len(valued) == len(assets):
+                pool_usd = sum((v for _, v in valued), Decimal(0))
+                valuation_method = "sum_of_both_external_price_anchors"
+                anchor_keys = [k for k, _ in valued]
+            elif len(valued) == 1:
+                pool_usd = valued[0][1] * 2
+                valuation_method = "two_times_single_external_price_anchor"
+                anchor_keys = [valued[0][0]]
+            else:
+                pool_usd = None
+                valuation_method = "unpriced_no_external_anchor"
+                anchor_keys = []
             output.append({
                 "pair": addr,
                 "pair_code_id": contract_info(addr).get("code_id"),
@@ -143,10 +205,16 @@ def main():
                 "stake_custody_lp_raw": str(stake_custody),
                 "direct_lp_raw": str(lp_supply - stake_custody),
                 "assets": assets,
+                "recoverable_pool_value_usd": str(pool_usd.quantize(Decimal("0.000001"))) if pool_usd is not None else None,
+                "valuation_method": valuation_method,
+                "valuation_anchor_asset_keys": anchor_keys,
             })
         except Exception as exc:
             failures.append({"pair": addr, "error": str(exc)})
 
+    ranked = sorted((p for p in output if p["recoverable_pool_value_usd"] is not None), key=lambda p: Decimal(p["recoverable_pool_value_usd"]), reverse=True)
+    for rank, pair in enumerate(ranked, 1):
+        pair["usd_rank"] = rank
     result = {
         "status": "VALIDATED" if not failures else "WORKING",
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -157,11 +225,15 @@ def main():
         "reference_pair_creator": factory,
         "factory": factory,
         "factory_code_id": contract_info(factory).get("code_id"),
+        "price_source": price_source,
+        "price_timestamp": price_time,
+        "prices_usd": {coin_id: str(price) for coin_id, price in sorted(prices.items())},
         "pair_count": len(pairs),
         "complete_pair_count": len(output),
         "failures": failures,
         "assets": meta_cache,
         "pairs": output,
+        "top_five_pair_addresses": [p["pair"] for p in ranked[:5]],
         "validation": {
             "reference_pair_present": True,
             "factory_derived_from_reference_creator": True,
