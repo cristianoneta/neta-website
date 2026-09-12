@@ -18,6 +18,27 @@ OSMO_POOL_ADDR="osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x"
 OSMO_LOCKUP_ADDR="osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc"
 OSMO_LCD=["https://osmosis-api.polkachu.com","https://lcd.osmosis.zone"]
 ADDR_RE=re.compile(rb"juno1[0-9a-z]{38}")
+HEX_RE=re.compile(r"^[0-9a-fA-F]+$")
+
+
+def decode_state_blob(s):
+    s=s.strip()
+    if len(s)%2==0 and HEX_RE.fullmatch(s):
+        try:return bytes.fromhex(s)
+        except ValueError:pass
+    s += "="*((4-len(s)%4)%4)
+    return base64.b64decode(s,altchars=b"-_")
+
+
+def contract_state(addr):
+    rows=[]; key=None
+    while True:
+        q={"pagination.limit":"5000"}
+        if key:q["pagination.key"]=key
+        d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{addr}/state",q)
+        rows += [(decode_state_blob(x["key"]),decode_state_blob(x["value"])) for x in d.get("models",[])]
+        key=(d.get("pagination") or {}).get("next_key")
+        if not key:return rows
 
 
 def smart(contract,msg):
@@ -43,7 +64,7 @@ def parse_json(raw):
 
 
 def wynd_attribution():
-    lp_rows=u.contract_state(WYND_LP)
+    lp_rows=contract_state(WYND_LP)
     direct={}
     token_info=None
     for k,v in lp_rows:
@@ -61,7 +82,7 @@ def wynd_attribution():
     if custody<=0: raise RuntimeError("WYND stake contract has no LP custody")
 
     active={}; claims={}; unknown=[]
-    for k,v in u.contract_state(WYND_STAKE):
+    for k,v in contract_state(WYND_STAKE):
         ns,suf=u.nskey(k); obj=parse_json(v)
         if ns=="stake":
             try:
@@ -92,7 +113,6 @@ def wynd_attribution():
 
     pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
     neta={a:(pool_neta*x)//supply for a,x in economic.items()}
-    # Allocate integer rounding dust deterministically to the largest share holder.
     dust=pool_neta-sum(neta.values())
     if dust:
         top=max(economic,key=lambda a:(economic[a],a)); neta[top]+=dust
@@ -123,13 +143,6 @@ def subspace_store(store,prefix,height,rpc,timeout=180):
     r=u.S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=timeout); r.raise_for_status(); d=r.json()["result"]["response"]
     if int(d.get("code",0) or 0)!=0:raise RuntimeError(f"ABCI {store} code {d.get('code')}: {d.get('log')}")
     raw=base64.b64decode(d.get("value") or ""); return u.kvpairs(raw) if raw else []
-
-
-def key_store(store,key,height,rpc):
-    q={"path":f'"/store/{store}/key"',"data":"0x"+key.hex(),"height":str(height),"prove":"false"}
-    r=u.S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=60); r.raise_for_status(); d=r.json()["result"]["response"]
-    if int(d.get("code",0) or 0)!=0:raise RuntimeError(f"ABCI {store} code {d.get('code')}: {d.get('log')}")
-    return base64.b64decode(d.get("value") or "")
 
 
 def parse_coin(buf):
@@ -201,8 +214,7 @@ def osmosis_attribution():
 
 def build():
     wynd,wm=wynd_attribution(); osmo,om=osmosis_attribution()
-    result={"wynd":wm,"osmosis_pool_631":om,"wynd_wallet_neta_raw":wynd,"osmosis_pool_631_wallet_neta_raw":osmo}
-    return result
+    return {"wynd":wm,"osmosis_pool_631":om,"wynd_wallet_neta_raw":wynd,"osmosis_pool_631_wallet_neta_raw":osmo}
 
 
 if __name__=="__main__":
