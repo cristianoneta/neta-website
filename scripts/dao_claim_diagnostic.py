@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
 """Classify NETA DAO claims as still locked or already claimable."""
 from __future__ import annotations
+import base64
+import binascii
 import json
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 import requests
 import update_neta_data as u
+
+_original_b64decode = base64.b64decode
+_HEX_RE = re.compile(r"^[0-9a-fA-F]+$")
+
+def compatible_b64decode(value, *args, **kwargs):
+    if isinstance(value, str):
+        if len(value) >= 2 and len(value) % 2 == 0 and _HEX_RE.fullmatch(value):
+            return bytes.fromhex(value)
+        value += "=" * (-len(value) % 4)
+    return _original_b64decode(value, *args, **kwargs)
+
+base64.b64decode = compatible_b64decode
 
 def release_status(release_at, now_ns, height):
     if not isinstance(release_at, dict) or len(release_at) != 1:
