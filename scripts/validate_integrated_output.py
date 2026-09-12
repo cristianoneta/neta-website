@@ -15,6 +15,9 @@ missing=[r.get("rank") for r in rows if not required.issubset(r)]
 if missing: raise SystemExit(f"rows missing v3 fields: {missing[:10]}")
 addresses={r.get("juno_address") for r in rows}|{r.get("osmosis_address") for r in rows}
 if "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra" in addresses:
+    offending=next(r for r in rows if r.get("juno_address")=="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra")
+    print("WYND_POOL_ROW="+json.dumps(offending,sort_keys=True))
+    print("WYND_META="+json.dumps(meta["juno"]["wynd"],sort_keys=True))
     raise SystemExit("WYND pool custody address remains ranked")
 if "osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x" in addresses:
     raise SystemExit("Pool 631 custody address remains ranked")
