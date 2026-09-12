@@ -87,6 +87,7 @@ def main():
         "all_claims_neta": round(sum(totals.values()) / 1_000_000, 6),
         "earliest_releases": releases[:20],
         "latest_releases": releases[-20:],
+        "all_releases": releases,
         "raw_samples": raw_samples,
     }
     print(json.dumps(out, indent=2, sort_keys=True))
