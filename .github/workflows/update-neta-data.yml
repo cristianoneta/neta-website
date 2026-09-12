@@ -1,0 +1,67 @@
+name: Update NETA on-chain data
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "7 1 * * *"
+    - cron: "7 2 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: neta-daily-data-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Berlin 03:00 gate
+        id: gate
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "Manual/PR validation run allowed."
+            exit 0
+          fi
+          HOUR="$(TZ=Europe/Berlin date +%H)"
+          if [ "$HOUR" = "03" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+      - name: Fetch and validate all NETA data
+        if: steps.gate.outputs.run == 'true'
+        run: python scripts/run_neta_data.py --output .
+      - name: Show validation summary
+        if: steps.gate.outputs.run == 'true'
+        run: cat metadata.json
+      - name: Commit changed data
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          if git diff --quiet -- holders.json address_index.json metadata.json data.js address-index.js; then
+            echo "No data changes."
+            exit 0
+          fi
+          git config user.name "NETA Reborn Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add holders.json address_index.json metadata.json data.js address-index.js
+          git commit -m "chore: daily NETA on-chain data update"
+          git push
