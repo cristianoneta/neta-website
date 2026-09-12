@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import json
 import re
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -230,4 +231,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        OUT.parent.mkdir(parents=True, exist_ok=True)
+        OUT.write_text(json.dumps({
+            "status": "WORKING",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "error": str(exc),
+            "traceback": traceback.format_exc(),
+        }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        raise
