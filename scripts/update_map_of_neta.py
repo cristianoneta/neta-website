@@ -149,11 +149,10 @@ def aggregate(root,all_events,state,metadata):
     movers={}
     for e in swaps:
         x=movers.setdefault(e["wallet_id"],{"wallet":e.get("wallet"),"bought_raw":0,"sold_raw":0,"swaps":0})
-        x[e["direction"]+"ght_raw" if e["direction"]=="buy" else "sold_raw"]+=e["neta_raw"]; x["swaps"]+=1
-    # Correct dynamically constructed buy key for compactness.
+        if e["direction"]=="buy": x["bought_raw"]+=e["neta_raw"]
+        else: x["sold_raw"]+=e["neta_raw"]
+        x["swaps"]+=1
     for x in movers.values():
-        if "bought_raw" not in x: x["bought_raw"]=x.pop("buyght_raw",0)
-        else: x["bought_raw"]+=x.pop("buyght_raw",0)
         x["net_raw"]=x["bought_raw"]-x["sold_raw"]
     buyers=sorted((x for x in movers.values() if x["net_raw"]>0),key=lambda x:-x["net_raw"])[:3]
     sellers=sorted((x for x in movers.values() if x["net_raw"]<0),key=lambda x:x["net_raw"])[:3]
