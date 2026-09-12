@@ -1,0 +1,26 @@
+name: Update WYND recovery statistics
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [diagnostic/wynd-recovery-discovery]
+    paths:
+      - ".github/workflows/update-wynd-recovery-stats.yml"
+      - "scripts/update_wynd_recovery_stats.py"
+      - "scripts/test_wynd_recovery_stats.py"
+      - "data/recovery/wynd-pools.json"
+
+permissions:
+  contents: write
+
+jobs:
+  validate-draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python scripts/test_wynd_recovery_stats.py
+      - run: python scripts/update_wynd_recovery_stats.py --root . --dry-run
