@@ -53,7 +53,7 @@ Important WYND edge case: seven non-empty `locked_tokens` entries inside stake o
 
 Small historical snapshot differences are acceptable for exploratory work because the pool is small, but production attribution should use a consistent snapshot/height where possible.
 
-## Osmosis NETA/OSMO Pool 631 — WORKING
+## Osmosis NETA/OSMO Pool 631 — VALIDATED
 Pool:
 - Pool ID: `631`
 - share denom: `gamm/pool/631`
@@ -70,10 +70,32 @@ Initial fixed-height bank-share scan at Osmosis height `70421906` was internally
 
 Largest apparent bank holder was `osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc` with `131997115844286440618885` shares, or about `58.664222%` of Pool 631. This must not be treated as one economic holder. Evidence indicates it is the Osmosis lockup module account holding bonded/locked GAMM shares on behalf of users. At the snapshot reserve this custody represented roughly 528.7 NETA.
 
-Current diagnostic approach scans Osmosis `lockup` KV state and unwraps PeriodLock records containing `gamm/pool/631` back to `owner`. Required validation:
-1. sum of Pool-631 PeriodLock amounts == bank balance of lockup module address;
-2. direct economic shares after replacing module custody with lock owners == pool total share supply;
-3. attributed NETA == Pool 631 NETA reserve exactly.
+Validated economic-owner reconciliation at Osmosis height `70424425`:
+- Pool total shares: `225004459685449894124978 raw shares`
+- Direct bank share holders: `578`
+- Pool-631 PeriodLock records: `1,422`
+- Unique lock owners: `1,411`
+- Lockup-module bank balance: `131997302629907807636139 raw shares`
+- Sum of Pool-631 PeriodLocks: `131997302629907807636139 raw shares`
+- Lockup reconciliation difference: `0`
+- Economic wallets after replacing module custody with underlying owners: `1,969`
+- Economic shares after unwrapping: exactly total pool supply
+- NETA reserve: `901.155656 NETA`
+- Attributed NETA: `901.155656 NETA`
+- NETA attribution difference: `0.000000 NETA`
+- Diagnostic exit code: `0`
+
+Lock metadata at this height:
+- `1,418` records had no end time, holding `130442789155461559710253 raw shares`.
+- `4` records had an end time, holding `1554513474446247925886 raw shares`.
+- Duration distribution: 14 × 1 day, 11 × 7 days, 1,392 × 14 days, 1 × 14 days + 1 second, and 4 × `1209600000` seconds.
+- The four explicit end times fall in March/April 2061. These unusual long-duration records must be investigated before interpreting them as ordinary user-initiated unbonding.
+- Lock IDs span `1007513` to `1502489`.
+
+All three attribution validations are now **VALIDATED**:
+1. Pool-631 PeriodLocks equal the lockup-module bank balance exactly;
+2. direct economic shares after replacing module custody equal pool total share supply exactly;
+3. attributed NETA equals the Pool 631 NETA reserve exactly.
 
 ### Locked-position age investigation — OPEN
 We also want to answer whether the Pool 631 positions are ancient locks from the 2022 incentive era or were touched/rebonded later.
@@ -83,7 +105,7 @@ Parser finding (2026-09-12):
 - Diagnostic run 15 failed because the generic protobuf reader returned negative `int64` timestamp seconds as an unsigned two's-complement integer. Python then raised `OverflowError: timestamp out of range`.
 - For locks whose unlocking has not started, Go's zero time is serialized as year 0001, equivalent to Unix seconds `-62135596800`. This is a sentinel meaning “no unlocking end time”, not a future timestamp.
 - Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` fixes signed `int64`/`int32` decoding and maps this zero-time sentinel to `None`.
-- The post-fix diagnostic reconciliation is still **OPEN** until its workflow output is inspected. Do not yet claim Pool 631 economic-owner closure.
+- The post-fix diagnostic completed successfully at height `70424425`; Pool 631 economic-owner attribution is **VALIDATED**. Historical lock age and the four unusual 2061 end-time records remain **OPEN**.
 
 PeriodLock contains at least ID, owner, duration, end time and coins. `end_time` is useful for distinguishing still-locked versus unlocking positions, but creation time is not necessarily stored directly in the current lock object. Exact creation/last-touch dates may therefore require transaction/event history keyed by lock ID and owner.
 
@@ -110,9 +132,9 @@ It is intentionally read-only and should be used to prove the attribution before
 
 Run 14 (`34691326477`, head `aaecec0b725899d58fa987889e4eaa9434976cbe`) completed on 2026-09-12 with **failure** after the combined attribution step ran for about seven minutes. The failure occurred after the earlier base64-padding issue had been fixed.
 
-Run 15 then isolated the downstream failure to `PeriodLock.end_time` decoding: a negative protobuf `int64` representing Go zero time was interpreted as unsigned and overflowed Python datetime. Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` corrects that parser on the diagnostic branch and triggered the next diagnostic run. Its final reconciliation result still needs inspection; do not claim Osmosis lockup reconciliation is green until that output proves it.
+Run 15 then isolated the downstream failure to `PeriodLock.end_time` decoding: a negative protobuf `int64` representing Go zero time was interpreted as unsigned and overflowed Python datetime. Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` corrects that parser on the diagnostic branch and triggered the next diagnostic run. The subsequent persisted diagnostic completed with exit code `0` and proved exact Pool 631 lockup, share-supply and NETA-reserve reconciliation at height `70424425`.
 
-## Production integration plan — NOT YET EXECUTED
+## Production integration plan — READY, NOT YET EXECUTED
 Only after Osmosis reconciliation is green:
 1. Reuse the existing 4-worker Osmosis 512-prefix bank scan in `scripts/run_neta_data.py` to collect both NETA and `gamm/pool/631` in the same pass. Do not add a second expensive full bank scan.
 2. Attribute WYND pool NETA from a consistent Juno snapshot and Pool 631 NETA from the same Osmosis snapshot/height used for shares where possible.
