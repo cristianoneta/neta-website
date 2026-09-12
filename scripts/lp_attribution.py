@@ -120,14 +120,17 @@ def wynd_attribution():
     if sum(active.values())+sum(claims.values())!=custody:
         raise RuntimeError("WYND active+claims do not equal stake-contract LP custody")
 
-    economic={a:x for a,x in direct.items() if a!=WYND_STAKE}
+    pair_self_lp=direct.get(WYND_PAIR,0)
+    economic={a:x for a,x in direct.items() if a not in (WYND_STAKE,WYND_PAIR)}
     for src in (active,claims):
         for a,x in src.items():economic[a]=economic.get(a,0)+x
-    if sum(economic.values())!=supply: raise RuntimeError("WYND economic LP shares do not equal LP supply")
+    attributable_supply=supply-pair_self_lp
+    if sum(economic.values())!=attributable_supply:
+        raise RuntimeError("WYND economic LP shares plus pair minimum liquidity do not equal LP supply")
 
     pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
-    neta=allocate_exact(pool_neta,economic,supply)
-    return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values()),"pair_self_lp_raw":economic.get(WYND_PAIR,0),"pair_self_neta_raw":neta.get(WYND_PAIR,0)}
+    neta=allocate_exact(pool_neta,economic,attributable_supply)
+    return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"attributable_lp_supply_raw":attributable_supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values()),"pair_minimum_liquidity_lp_raw":pair_self_lp}
 
 
 def bank_amount_any(raw,expected_denom):
