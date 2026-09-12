@@ -25,3 +25,22 @@
 .osmo-node .chain-logo-shell:after{animation-delay:-2.2s}
 @keyframes chain-holographic-scan{0%,12%{opacity:0;transform:translateY(4px)}18%{opacity:.9}54%{opacity:.75}61%,100%{opacity:0;transform:translateY(51px)}}
 @media(prefers-reduced-motion:reduce){.chain-logo-shell:after{animation:none;display:none}}
+
+
+/* v5 — match approved concept scale and full logo-area code rain */
+.chain-node{isolation:isolate}
+.chain-node strong{position:relative;z-index:5}
+.chain-logo-shell,.osmo-node .chain-logo-shell{position:relative;z-index:3;border:0;background:transparent;overflow:visible;box-shadow:none}
+.juno-node .chain-logo-shell{width:90px;height:90px}
+.osmo-node .chain-logo-shell{width:76px;height:76px}
+.chain-logo-shell:before,.chain-logo-shell:after{display:none!important}
+.chain-logo{padding:0!important;position:relative;z-index:3}
+.node-code-rain{position:absolute;z-index:1;left:15%;right:15%;top:13%;height:61%;display:flex;justify-content:space-around;overflow:hidden;pointer-events:none;opacity:.62;mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 82%,transparent 100%)}
+.node-code-rain i{display:block;width:1ch;color:var(--g);font:700 8px/1.05 monospace;font-style:normal;letter-spacing:1px;writing-mode:vertical-rl;text-orientation:upright;text-shadow:0 0 5px var(--g);animation:node-code-fall 3.1s linear infinite}
+.node-code-rain i:nth-child(2){animation-duration:4.2s;animation-delay:-1.8s;opacity:.55}.node-code-rain i:nth-child(3){animation-duration:2.7s;animation-delay:-.7s}.node-code-rain i:nth-child(4){animation-duration:3.8s;animation-delay:-2.6s;opacity:.5}.node-code-rain i:nth-child(5){animation-duration:2.9s;animation-delay:-1.2s}.node-code-rain i:nth-child(6){animation-duration:4.5s;animation-delay:-3.1s;opacity:.65}
+.node-scan-beam{position:absolute;z-index:4;left:14%;right:14%;top:13%;height:2px;pointer-events:none;background:#caffeb;box-shadow:0 0 4px #caffeb,0 0 10px var(--g),0 0 18px var(--g);opacity:0;animation:node-scan-down 4.8s linear infinite}
+.osmo-node .node-scan-beam{animation-delay:-2.2s}
+@keyframes node-code-fall{from{transform:translateY(-72%)}to{transform:translateY(20%)}}
+@keyframes node-scan-down{0%,10%{opacity:0;transform:translateY(0)}16%{opacity:.95}55%{opacity:.72}63%,100%{opacity:0;transform:translateY(94px)}}
+@media(max-width:700px){.juno-node .chain-logo-shell{width:70px;height:70px}.osmo-node .chain-logo-shell{width:60px;height:60px}.node-code-rain i{font-size:6px}.node-scan-beam{left:12%;right:12%}}
+@media(prefers-reduced-motion:reduce){.node-code-rain i,.node-scan-beam{animation:none}.node-scan-beam{display:none}}

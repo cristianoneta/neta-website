@@ -298,3 +298,10 @@ Diagnostic findings:
 - Original Juno and Osmosis silhouettes remain crisp in the foreground.
 - Binary columns move vertically from top to bottom behind the emblems.
 - A bright horizontal scan beam passes through each logo at offset intervals; the general flicker remains restrained.
+
+
+### Map logo scale correction — 2026-09-12
+
+- Production was compared against the approved concept and found materially undersized: the previous CSS constrained Juno/Osmosis artwork to 58/50 px and confined code to the badge.
+- Corrected treatment uses approximately 90 px for Juno and 76 px for Osmosis on desktop, removes the extra badge border/background, keeps the official emblems dominant, and adds independent binary-code columns across the larger logo area.
+- The vertical code rain moves top-to-bottom behind each emblem; a separate horizontal scan beam crosses the full logo/code area.
