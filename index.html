@@ -12,7 +12,7 @@
 <main>
 <section class="hero">
 <div class="hero-copy"><div class="kicker">PEOPLE / POWER / PROTOCOL</div><h1><b>NETA</b> HOLDER RANKING</h1>
-<h2>Transparent. On-Chain. Together.</h2><p>Explore the distribution of NETA across Juno and Osmosis.<br>Enter any Juno or Osmosis address to see its current position.</p>
+<h2>Transparent. On-Chain. Together.</h2><p>Explore the economic distribution of NETA across Juno, Osmosis and the NETA DAO.<br>Enter any Juno or Osmosis address to see its current position.</p>
 <div class="search"><span>⌕</span><input id="q" placeholder="Enter your Juno or Osmosis address ..."><button id="go">SEARCH</button></div>
 <div class="hint">No wallet connection required.</div></div>
 <div class="orb"><img src="assets/neta-globe.svg"><div>A BRIGHTER<br>TOMORROW<br>IS A<br>DECENTRALIZED<br>ONE</div></div>
@@ -21,20 +21,20 @@
 <section id="stats" class="stats"></section>
 <section class="lower">
 <div class="ranking"><div class="title"><h3>TOP HOLDERS</h3><span id="updated"></span></div>
-<div class="tablebox holder-scroll"><table><thead><tr><th>#</th><th>ADDRESS / LABEL</th><th>JUNO NETA</th><th>OSMOSIS NETA</th><th>TOTAL NETA</th><th>TYPE</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="tablebox holder-scroll"><table><thead><tr><th>#</th><th>ADDRESS / LABEL</th><th>JUNO NETA</th><th>OSMOSIS NETA</th><th>DAO STAKED</th><th>UNSTAKING</th><th>TOTAL NETA</th><th>TYPE</th></tr></thead><tbody id="rows"></tbody></table></div>
 <div id="mobileRows" class="mobile-holder-list"></div>
-<div class="note">ⓘ Snapshot: 11 Sep 2026. Shows direct on-chain balances. NETA held in staking contracts or liquidity pools is currently assigned to those contract/pool addresses, not redistributed to the underlying users.</div></div>
+<div class="note">ⓘ Economic ranking: direct Juno and Osmosis balances are combined with NETA DAO active stakes and open unstaking claims attributed to their underlying wallets. The Juno ICS20 bridge escrow is excluded to avoid double counting.</div></div>
 <aside><div class="sidebox rank-panel"><h3>CHECK YOUR RANK</h3>
 <div id="rankPanelDefault">
   <div class="crosshair">◎</div>
-  <p>Enter a Juno or Osmosis address above to see your ranking, balances and share of supply.</p>
+  <p>Enter a Juno or Osmosis address above to see your ranking, direct balances, DAO positions and share of supply.</p>
 </div>
 <div id="rankPanelResult" class="hidden"></div>
 </div>
-<div class="sidebox methodology"><h4>ⓘ METHODOLOGY v1</h4>
-<p><strong>Snapshot:</strong> 11 Sep 2026. The ranking reflects the on-chain balances captured in this dataset and is not real-time.</p>
+<div class="sidebox methodology"><h4>ⓘ METHODOLOGY v2</h4>
+<p>The ranking is generated from validated on-chain data for Juno, Osmosis and the NETA DAO.</p>
 <p>Identical 20-byte Juno/Osmosis wallet payloads are merged. The Juno ICS20 escrow backing Osmosis NETA is excluded to prevent double counting.</p>
-<p><strong>Important:</strong> v1 does not attribute NETA held in staking contracts or liquidity pools to the individual users who economically own those positions. Instead, the staking contract or LP/pool address itself appears as the holder in the ranking.</p>
+<p><strong>DAO attribution:</strong> NETA held in the DAO staking contract is not ranked as one contract balance. Active stakes and open unstaking claims are assigned to the underlying Juno wallets. Any unmatched DAO contract residual is excluded from wallet ranking and remains part of the total supply reconciliation.</p>
 </div>
 <div class="quote">“MORE THAN A TOKEN.<br>A COMMUNITY.”</div></aside>
 </section>
