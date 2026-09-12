@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Map of NETA</title>
+  <link rel="stylesheet" href="styles.css?v=20260912-4">
+  <link rel="stylesheet" href="map-of-neta.css?v=1">
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<header>
+  <a class="logo" href="index.html"><img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span></a>
+  <nav><a href="index.html">RANKING</a><a class="active" href="map-of-neta.html">MAP OF NETA</a><a href="what-is-neta.html">WHAT IS NETA</a><a href="neta-dao.html">NETA DAO</a></nav>
+  <div class="motto">PEOPLE / POWER / PROTOCOL</div>
+</header>
+<main class="map-page">
+  <section class="map-heading">
+    <div><div class="kicker">INTERCHAIN ACTIVITY</div><h1>MAP OF <b>NETA</b></h1><p>Follow a finite asset across the interchain.</p></div>
+    <div class="periods" id="periods"><button class="active" data-period="24h">24H</button><button disabled data-period="7d">7D</button><button disabled data-period="30d">30D</button><button disabled data-period="90d">90D</button></div>
+  </section>
+  <div class="map-layout">
+    <section class="flow-panel">
+      <div class="panel-cap"><span>INTERCHAIN FLOW MAP</span><span id="coverage">LOADING VERIFIED DATA…</span></div>
+      <div class="flow-stage">
+        <svg class="flow-svg" viewBox="0 0 1000 570" role="img" aria-label="NETA movements between Juno and Osmosis">
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z"/></marker>
+            <path id="outPath" d="M425 255 C560 165 720 165 820 250"/>
+            <path id="inPath" d="M820 310 C685 390 540 390 425 310"/>
+          </defs>
+          <g class="future">
+            <circle cx="160" cy="130" r="48"/><circle cx="210" cy="455" r="48"/><circle cx="500" cy="75" r="48"/><circle cx="655" cy="485" r="48"/>
+          </g>
+          <path class="future-link" d="M340 240L195 150M350 330L245 430M405 205L475 115M435 350L620 460"/>
+          <path class="flow-line out" d="M425 255 C560 165 720 165 820 250" marker-end="url(#arrow)"/>
+          <path class="flow-line incoming" d="M820 310 C685 390 540 390 425 310" marker-end="url(#arrow)"/>
+          <g class="particles" filter="url(#glow)">
+            <circle r="4"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#outPath"/></animateMotion></circle>
+            <circle r="3"><animateMotion dur="2.8s" begin=".9s" repeatCount="indefinite"><mpath href="#outPath"/></animateMotion></circle>
+            <circle r="4"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#inPath"/></animateMotion></circle>
+          </g>
+          <text id="flowOut" class="flow-label" x="610" y="185">0 NETA OUT</text>
+          <text id="flowIn" class="flow-label" x="610" y="390">0 NETA IN</text>
+        </svg>
+        <button class="chain-node juno-node" data-chain="Juno" aria-label="Juno, NETA origin chain">
+          <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34"/><path d="M40 17v46M27 31l26 18M53 31L27 49M31 24l18 32M49 24L31 56"/></svg>
+          <strong id="junoAmount">— NETA</strong><span class="chain-tooltip">JUNO · NETA ORIGIN</span>
+        </button>
+        <button class="chain-node osmo-node" data-chain="Osmosis" aria-label="Osmosis">
+          <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M31 17h18M34 17v17c-11 6-16 14-13 24 3 11 12 16 19 16s17-5 20-16c3-10-2-18-13-24V17"/><path d="M24 52c9 4 23 4 32-1"/><circle cx="49" cy="43" r="3"/></svg>
+          <strong id="osmoAmount">— NETA</strong><span class="chain-tooltip">OSMOSIS</span>
+        </button>
+      </div>
+      <div class="flow-metrics">
+        <div><span>TRANSFER VOLUME</span><strong id="volume">0 NETA</strong></div>
+        <div><span>TRANSFERS</span><strong id="transfers">0</strong></div>
+        <div><span>NET FLOW</span><strong id="netFlow">0 NETA</strong></div>
+      </div>
+    </section>
+    <aside class="movers-panel">
+      <h2>MARKET MOVERS <span>· 24H</span></h2>
+      <div class="mover-box buyers"><h3>POWER BUYERS</h3><ol id="buyers"></ol></div>
+      <div class="mover-box sellers"><h3>TOP SELLERS</h3><ol id="sellers"></ol></div>
+      <div class="market-mini"><div><span>SWAPS</span><strong id="swaps">0</strong></div><div><span>COLLECTING SINCE</span><strong id="collectingSince">—</strong></div></div>
+      <p class="collection-note" id="collectionNote">Only verified forward-collected data is shown. Longer periods unlock as history accumulates.</p>
+    </aside>
+  </div>
+</main>
+<footer><div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div><div>BUILT ON JUNO & OSMOSIS</div></footer>
+<script src="map-of-neta.js?v=1"></script>
+</body></html>
