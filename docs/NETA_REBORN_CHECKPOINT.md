@@ -525,3 +525,28 @@ Testing without the user's own stake:
 - Read-only empty-wallet behavior can be tested immediately.
 - State-dependent execute messages can be tested with unsigned chain simulation using existing on-chain position holders as the sender context; this does not sign, broadcast or move their assets.
 - Final broadcast testing still requires a consenting test wallet or a tiny controlled position.
+
+
+### Recovery statistics collector and unsigned simulations — VALIDATED 2026-09-12
+
+Statistics implementation:
+- `scripts/update_wynd_recovery_stats.py`
+- `scripts/test_wynd_recovery_stats.py`
+- `.github/workflows/update-wynd-recovery-stats.yml`
+- Exact public memo: `netareborn.com/wynd-recovery:v1`.
+- Forward-only cursor with five-block finality buffer.
+- Only successful transactions with the exact memo, an allowlisted stake contract and a recognized `unbond` or `claim` event are accepted.
+- Deterministic event IDs prevent duplicate counting.
+- USD values use the LP share of live pool reserves at the first successful collector run after confirmation, with price source and timestamp retained per event.
+- Statistics parser and Top-8 registry dry-run completed successfully.
+- Collection is intentionally not initialized on the unpublished branch; the official counters start at production launch.
+
+Unsigned simulation:
+- Evidence: `docs/diagnostics/wynd_recovery_simulation.json`.
+- Network: `juno-1`; representative JUNO/ATOM pool uses the same validated pair/LP/stake code IDs as all Top-8 pools.
+- Unbond succeeded in simulation: 215,620 gas used.
+- Claim succeeded in simulation: 221,614 gas used.
+- CW20 Send + WithdrawLiquidity hook succeeded in simulation: 320,811 gas used.
+- Real existing position owners were used only as unsigned simulation sender context.
+- All simulations returned result data; no signature was created and no transaction was broadcast.
+- A controlled tiny-position broadcast and post-transaction state verification remain required before signing can be enabled.
