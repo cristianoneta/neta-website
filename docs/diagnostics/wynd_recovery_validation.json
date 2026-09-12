@@ -1,6 +1,381 @@
 {
-  "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
-  "generated_at": "2026-09-12T20:45:08.802239+00:00",
-  "status": "WORKING",
-  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/neta-website/neta-website/scripts/validate_wynd_recovery.py\", line 235, in <module>\n    main()\n  File \"/home/runner/work/neta-website/neta-website/scripts/validate_wynd_recovery.py\", line 213, in main\n    results = [validate_pool(by_address[address], height, block_nanos) for address in discovery[\"top_five_pair_addresses\"]]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/neta-website/neta-website/scripts/validate_wynd_recovery.py\", line 150, in validate_pool\n    unbond_all = smart(stake, {\"unbond_all\": {}})\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/neta-website/neta-website/scripts/validate_wynd_recovery.py\", line 44, in smart\n    data, _ = u.req_json(u.JUNO, f\"/cosmwasm/wasm/v1/contract/{contract}/smart/{query}\")\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/neta-website/neta-website/scripts/update_neta_data.py\", line 38, in req_json\n    raise RuntimeError(f\"all endpoints failed for {path}: {err}\")\nRuntimeError: all endpoints failed for /cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=\n"
+  "all_top_five_share_same_pair_and_stake_code": true,
+  "code_id_sets": {
+    "lp": [
+      "1699"
+    ],
+    "pair": [
+      "2289"
+    ],
+    "stake": [
+      "2291"
+    ]
+  },
+  "discovery_generated_at": "2026-09-12T20:48:27.000375+00:00",
+  "generated_at": "2026-09-12T20:50:30.871257+00:00",
+  "juno_block_time": "2026-09-12T20:48:22.804981299Z",
+  "juno_height": "41699851",
+  "pools": [
+    {
+      "active_stake_lp_raw": "71525759016",
+      "active_stake_wallets": 8394,
+      "claim_records": 461,
+      "claim_wallets": 422,
+      "claimable_records": 461,
+      "claims_lp_raw": "15965564709",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "lp_total_supply_raw": "89761104045",
+      "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "71525759016"
+        },
+        "total_unbonding": {
+          "total_unbonding": "15965564709"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "stake": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "87491323725",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      }
+    },
+    {
+      "active_stake_lp_raw": "45677563933",
+      "active_stake_wallets": 1562,
+      "claim_records": 119,
+      "claim_wallets": 113,
+      "claimable_records": 119,
+      "claims_lp_raw": "6348568200",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",
+      "lp_total_supply_raw": "52511840165",
+      "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "45677563933"
+        },
+        "total_unbonding": {
+          "total_unbonding": "6348568200"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "stake": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "52026132133",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      }
+    },
+    {
+      "active_stake_lp_raw": "94669225628",
+      "active_stake_wallets": 2493,
+      "claim_records": 205,
+      "claim_wallets": 176,
+      "claimable_records": 205,
+      "claims_lp_raw": "9610679200",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",
+      "lp_total_supply_raw": "104783420853",
+      "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "94669225628"
+        },
+        "total_unbonding": {
+          "total_unbonding": "9610679200"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "stake": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "104279904828",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      }
+    },
+    {
+      "active_stake_lp_raw": "58163579814",
+      "active_stake_wallets": 1682,
+      "claim_records": 177,
+      "claim_wallets": 175,
+      "claimable_records": 177,
+      "claims_lp_raw": "13524644700",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",
+      "lp_total_supply_raw": "74958722515",
+      "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "58163579814"
+        },
+        "total_unbonding": {
+          "total_unbonding": "13524644700"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "stake": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "71688224514",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      }
+    },
+    {
+      "active_stake_lp_raw": "7157563479",
+      "active_stake_wallets": 3334,
+      "claim_records": 197,
+      "claim_wallets": 182,
+      "claimable_records": 197,
+      "claims_lp_raw": "1580900690",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",
+      "lp_total_supply_raw": "8961136120",
+      "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "7157563479"
+        },
+        "total_unbonding": {
+          "total_unbonding": "1580900690"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "stake": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "8738464169",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      }
+    }
+  ],
+  "status": "VALIDATED"
 }

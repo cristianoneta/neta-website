@@ -126,9 +126,9 @@
   "factory": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
   "factory_code_id": "2285",
   "failures": [],
-  "generated_at": "2026-09-12T20:44:12.135916+00:00",
-  "juno_block_time": "2026-09-12T20:43:11.588812299Z",
-  "juno_height": "41699739",
+  "generated_at": "2026-09-12T20:48:27.000375+00:00",
+  "juno_block_time": "2026-09-12T20:47:38.165133914Z",
+  "juno_height": "41699836",
   "lcd": "https://juno-api.polkachu.com",
   "pair_count": 32,
   "pairs": [
@@ -272,7 +272,7 @@
             "symbol": "WETH-WEI"
           },
           "resolved_decimals": 18,
-          "usd_price": "2522.3"
+          "usd_price": "2522.74"
         }
       ],
       "direct_lp_raw": "2109004496558",
@@ -285,7 +285,7 @@
       "pair_type": {
         "xyk": {}
       },
-      "recoverable_pool_value_usd": "254.704146",
+      "recoverable_pool_value_usd": "254.748578",
       "stake": "juno1jl2l7rs2arevjhjccr7n7etvcfuakfu304fx4k0m9n7pahxf67hsw6egaa",
       "stake_code_id": "2291",
       "stake_custody_lp_raw": "106463850185432",
@@ -489,7 +489,7 @@
             "symbol": "UUSDC"
           },
           "resolved_decimals": 6,
-          "usd_price": "0.999872"
+          "usd_price": "0.999874"
         }
       ],
       "direct_lp_raw": "3270498001",
@@ -502,7 +502,7 @@
       "pair_type": {
         "xyk": {}
       },
-      "recoverable_pool_value_usd": "3044.203752",
+      "recoverable_pool_value_usd": "3044.209841",
       "stake": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
       "stake_code_id": "2291",
       "stake_custody_lp_raw": "71688224514",
@@ -543,7 +543,7 @@
             "symbol": "UUSDC"
           },
           "resolved_decimals": 6,
-          "usd_price": "0.999872"
+          "usd_price": "0.999874"
         }
       ],
       "direct_lp_raw": "485708032",
@@ -556,7 +556,7 @@
       "pair_type": {
         "xyk": {}
       },
-      "recoverable_pool_value_usd": "13133.119483",
+      "recoverable_pool_value_usd": "13133.133423",
       "stake": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
       "stake_code_id": "2291",
       "stake_custody_lp_raw": "52026132133",
@@ -598,7 +598,7 @@
             "symbol": "UOSMO"
           },
           "resolved_decimals": 6,
-          "usd_price": "0.03354005"
+          "usd_price": "0.03358514"
         }
       ],
       "direct_lp_raw": "44214341251",
@@ -611,7 +611,7 @@
       "pair_type": {
         "xyk": {}
       },
-      "recoverable_pool_value_usd": "669.235991",
+      "recoverable_pool_value_usd": "670.135687",
       "stake": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
       "stake_code_id": "2291",
       "stake_custody_lp_raw": "51166119305",
@@ -652,7 +652,7 @@
             "symbol": "UOSMO"
           },
           "resolved_decimals": 6,
-          "usd_price": "0.03354005"
+          "usd_price": "0.03358514"
         }
       ],
       "direct_lp_raw": "503516025",
@@ -665,7 +665,7 @@
       "pair_type": {
         "xyk": {}
       },
-      "recoverable_pool_value_usd": "4472.679381",
+      "recoverable_pool_value_usd": "4475.669551",
       "stake": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
       "stake_code_id": "2291",
       "stake_custody_lp_raw": "104279904828",
@@ -1830,15 +1830,15 @@
     }
   ],
   "price_source": "CoinGecko simple/price",
-  "price_timestamp": "2026-09-12T20:43:16.507916+00:00",
+  "price_timestamp": "2026-09-12T20:47:42.673287+00:00",
   "prices_usd": {
     "cosmos": "1.61",
     "juno-network": "0.01144254",
     "mars-protocol": "0.00965841",
-    "osmosis": "0.03354005",
+    "osmosis": "0.03358514",
     "stargaze": "0.00005192",
-    "usd-coin": "0.999872",
-    "weth": "2522.3"
+    "usd-coin": "0.999874",
+    "weth": "2522.74"
   },
   "reference_pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
   "reference_pair_creator": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
