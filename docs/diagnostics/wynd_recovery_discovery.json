@@ -1,149 +1,1466 @@
 {
-  "assets": {},
-  "complete_pair_count": 0,
+  "assets": {
+    "cw20:juno10gthz5ufgrpuk5cscve2f0hjp56wgp90psqxcrqlg4m9mcu9dh8q4864xy": {
+      "decimals": 6,
+      "name": "Kleomedes",
+      "symbol": "KLEO"
+    },
+    "cw20:juno14lycavan8gvpjn97aapzvwmsj8kyrvf644p05r0hu79namyj3ens87650k": {
+      "decimals": 6,
+      "name": "Signal",
+      "symbol": "SGNL"
+    },
+    "cw20:juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr": {
+      "decimals": 6,
+      "name": "NETA",
+      "symbol": "NETA"
+    },
+    "cw20:juno19rqljkh95gh40s7qdx40ksx3zq5tm4qsmsrdz9smw668x9zdr3lqtg33mf": {
+      "decimals": 6,
+      "name": "SEASY",
+      "symbol": "SEASY"
+    },
+    "cw20:juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a": {
+      "decimals": 6,
+      "name": "Eris Amplified JUNO",
+      "symbol": "ampJUNO"
+    },
+    "cw20:juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv": {
+      "decimals": 6,
+      "name": "seJUNO",
+      "symbol": "SEJUNO"
+    },
+    "cw20:juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz": {
+      "decimals": 6,
+      "name": "Howl Token",
+      "symbol": "HOWL"
+    },
+    "cw20:juno1j0a9ymgngasfn3l5me8qpd53l5zlm9wurfdk7r65s5mg6tkxal3qpgf5se": {
+      "decimals": 6,
+      "name": "Gelotto",
+      "symbol": "GLTO"
+    },
+    "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9": {
+      "decimals": 6,
+      "name": "Wynd DAO Governance Token",
+      "symbol": "WYND"
+    },
+    "cw20:juno1naunqzk6jseqeqhq43nm6kdneraws2rkmteprjzppw6j9xcrurxqx0ld9e": {
+      "decimals": 6,
+      "name": "wyJUNO",
+      "symbol": "wyJUNO"
+    },
+    "cw20:juno1p8x807f6h222ur0vssqy3qk6mcpa40gw2pchquz5atl935t7kvyq894ne3": {
+      "decimals": 6,
+      "name": "MUSE",
+      "symbol": "MUSE"
+    },
+    "cw20:juno1r4pzw8f9z0sypct5l9j906d47z998ulwvhvqe5xdwgy8wf84583sxwh0pa": {
+      "decimals": 6,
+      "name": "RACOON",
+      "symbol": "RAC"
+    },
+    "cw20:juno1rws84uz7969aaa7pej303udhlkt3j9ca0l3egpcae98jwak9quzq8szn2l": {
+      "decimals": 6,
+      "name": "POSTHUMAN",
+      "symbol": "PHMN"
+    },
+    "cw20:juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa": {
+      "decimals": 3,
+      "name": "CannaLabs",
+      "symbol": "CANLAB"
+    },
+    "cw20:juno1wwnhkagvcd3tjz6f8vsdsw5plqnw8qy2aj3rrhqr2axvktzv9q2qz8jxn3": {
+      "decimals": 6,
+      "name": "bJUNO",
+      "symbol": "BJUNO"
+    },
+    "cw20:juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h": {
+      "decimals": 6,
+      "name": "Czar Gov Token",
+      "symbol": "CZAR"
+    },
+    "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384": {
+      "decimals": 0,
+      "display": "transfer/channel-209/umars",
+      "name": "transfer/channel-209/umars IBC token",
+      "symbol": "UMARS"
+    },
+    "native:ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17": {
+      "decimals": 0,
+      "display": "transfer/channel-71/weth-wei",
+      "name": "transfer/channel-71/weth-wei IBC token",
+      "symbol": "WETH-WEI"
+    },
+    "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9": {
+      "decimals": 0,
+      "display": "transfer/channel-1/uatom",
+      "name": "transfer/channel-1/uatom IBC token",
+      "symbol": "UATOM"
+    },
+    "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034": {
+      "decimals": 0,
+      "display": "transfer/channel-71/uusdc",
+      "name": "transfer/channel-71/uusdc IBC token",
+      "symbol": "UUSDC"
+    },
+    "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518": {
+      "decimals": 0,
+      "display": "transfer/channel-0/uosmo",
+      "name": "transfer/channel-0/uosmo IBC token",
+      "symbol": "UOSMO"
+    },
+    "native:ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885": {
+      "decimals": 0,
+      "display": "transfer/channel-20/ustars",
+      "name": "transfer/channel-20/ustars IBC token",
+      "symbol": "USTARS"
+    },
+    "native:ujuno": {
+      "decimals": null,
+      "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+      "symbol": "ujuno"
+    }
+  },
+  "complete_pair_count": 32,
   "factory": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
   "factory_code_id": "2285",
-  "failures": [
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1xwkkravdfqq9rfe4rxkxskzvf37dm74m65u9rdp3eqne4xytswzq6ynejd"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1l35fpym6a4t45fuuz88df6afehs725f52uy0zpk2k9j70c2ln32q0sucwe"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno170llawq4ks76z78gj833737llv6pq8hazd0phntqh532vkdjkuusuxhqjm"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno13lulw8mm9w8ww99dvr35tfaw5tdmwvc7xn6nsn28pnlre8uw7j6srce67z"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno16k0f2mksg7swautzgfynve2ns3kq95ggp0z9t5dvxg56q45x67nqckmzru"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1dpqgt3ja2kdxs94ltjw9ncdsexts9e3dx5qpnl20zvgdguzjelhqstf8zg"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1p3eed298qx3nyhs3grld07jrf9vjsjsmdd2kmmh3crk87emjcx5stp409y"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno16vvu2fjrgg6rnddrcvtaeukzl3weau63gc3d3c7mvq05ygnzklvs3peqmt"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1nmy9v6pc2lwhsexmpsdekcgdwd7zmmqguxndnqfdv220jvhk9j5shw5e36"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1a7hvexlmhwwflnsr7uyf373q2etwmzm233lsj75rydrmra4rhvps582hu4"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1tndfgq4kfgm6wwvfem3uwqcpf4ac3cqfcf5df4efagucm32ywaasugr9mq"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno177xtcl6dax47kg3xptr5n48kd7twmzm49ltugfxuc76x9v05qq6q63hsm9"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1kx2mgqr4gry7lnjyv4fqd32uua5lkec7m3r5lv8y84qkkcacupdqn2u68w"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno158nznrq0dhh6m29jkkgxctlura7nskemujsvjxahmlw4d7erjvasw49tu4"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1ptdt6dg7ke6rn5k8xr8kh87zjnxhp832l5q07y3c9htz8z88cptqlthu5f"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1ls5un4a8zyn4f05k0ekq5aa9uhn88y8362ww38elqfpcwllme0jqelamke"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1q0f3nlghr350e7lhmxej3ev0j25m5caws5y4kyr5huawwr24hfkq74fsnq"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1f9c60hyvzys5h7q0y4e995n8r9cchgpy8p3k4kw3sqsmut95ankq0chfv0"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1rcssjyqgr6vzalss77d43v30c2qpyzzg607ua8gte2shqgtvu24sg8gs8r"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1mz5uz38h89dxj6c8w69rg7l060p8vq8pfetykk2gvrrxhjcsa5yqru9g7v"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno17jv00cm4f3twr548jzayu57g9txvd4zdh54mdg9qpjs7samlphjsykylsq"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno17ckp36lmgtt7jtuggdv2j39eh4alcnl35szu6quh747nujags07swwq0nh"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1syxlvk6pjpuxplqxwxr6n6fveqaz069dzya0ass9vrfwn9qxpvpqhq7msy"
-    },
-    {
-      "error": "string indices must be integers, not 'str'",
-      "pair": "juno1ndw52eaajcn8wpx7e503ly3j07666hhufx6cyp0s9v703rvzrpksfujv3h"
-    }
-  ],
-  "generated_at": "2026-09-12T20:32:16.200541+00:00",
-  "juno_block_time": "2026-09-12T20:31:37.630050113Z",
-  "juno_height": "41699488",
+  "failures": [],
+  "generated_at": "2026-09-12T20:34:39.109946+00:00",
+  "juno_block_time": "2026-09-12T20:33:55.187282980Z",
+  "juno_height": "41699538",
   "lcd": "https://juno-api.polkachu.com",
   "pair_count": 32,
-  "pairs": [],
+  "pairs": [
+    {
+      "assets": [
+        {
+          "amount_raw": "11637849482",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "2800912495",
+          "info": {
+            "native": "ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
+          },
+          "key": "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-209/umars",
+            "name": "transfer/channel-209/umars IBC token",
+            "symbol": "UMARS"
+          }
+        }
+      ],
+      "direct_lp_raw": "1492693063",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1q2sd3jxecaqmy2z3epxrk47hesmz08m40t3l8rt04jqesgk8rfwq5lzyq6",
+      "lp_total_supply_raw": "5412714158",
+      "pair": "juno1xwkkravdfqq9rfe4rxkxskzvf37dm74m65u9rdp3eqne4xytswzq6ynejd",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1fpgrwgz78uhxfudv0ay78veutwftxhm6zsfw27m7c7c28je6n87qd25f80",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "3920021095"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "704329280",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "6551597282",
+          "info": {
+            "native": "ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
+          },
+          "key": "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-209/umars",
+            "name": "transfer/channel-209/umars IBC token",
+            "symbol": "UMARS"
+          }
+        }
+      ],
+      "direct_lp_raw": "920035368",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1cwz4frftdt7xtx2w8ynhq4cl2wcpr04lr3cc4m6cn9pvn47rvpjqx3hw8t",
+      "lp_total_supply_raw": "2022651896",
+      "pair": "juno1l35fpym6a4t45fuuz88df6afehs725f52uy0zpk2k9j70c2ln32q0sucwe",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno14qa84053dlc2ydgq32wq2ymkcgr67k0dtwjn503en58cfdr9s2rqmue6h0",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "1102616528"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "244679741192",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "50490454397556467",
+          "info": {
+            "native": "ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17"
+          },
+          "key": "native:ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-71/weth-wei",
+            "name": "transfer/channel-71/weth-wei IBC token",
+            "symbol": "WETH-WEI"
+          }
+        }
+      ],
+      "direct_lp_raw": "2109004496558",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno18uagfkrl4dwnksalnzxhtyph8tf6a5lngw0lzwf847acsd8c2myq9lzdcc",
+      "lp_total_supply_raw": "108572854681990",
+      "pair": "juno170llawq4ks76z78gj833737llv6pq8hazd0phntqh532vkdjkuusuxhqjm",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1jl2l7rs2arevjhjccr7n7etvcfuakfu304fx4k0m9n7pahxf67hsw6egaa",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "106463850185432"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "89313519",
+          "info": {
+            "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+          },
+          "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-1/uatom",
+            "name": "transfer/channel-1/uatom IBC token",
+            "symbol": "UATOM"
+          }
+        },
+        {
+          "amount_raw": "6068074989",
+          "info": {
+            "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
+          },
+          "key": "cw20:juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv",
+          "metadata": {
+            "decimals": 6,
+            "name": "seJUNO",
+            "symbol": "SEJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "5682038",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno107v6e3vga87v3y777wcgznrlu6jyljzdpgecaegec9ccyqsx97pszq3598",
+      "lp_total_supply_raw": "723122393",
+      "pair": "juno13lulw8mm9w8ww99dvr35tfaw5tdmwvc7xn6nsn28pnlre8uw7j6srce67z",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1kzpq7ynt44yrkt2uhej4v4km6a0g8dc3t6m4r7j95n4dm7na3sjq7mdtna",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "717440355"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "1287121970271",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "247749685",
+          "info": {
+            "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+          },
+          "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-1/uatom",
+            "name": "transfer/channel-1/uatom IBC token",
+            "symbol": "UATOM"
+          }
+        }
+      ],
+      "direct_lp_raw": "211909941",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1k5vhzkssgh35zlv9hqaasetslgqyal6jane86umrqvrjav9eg3hq3pxa0l",
+      "lp_total_supply_raw": "16230598229",
+      "pair": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "16018688288"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "1176686925783",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "8229757377",
+          "info": {
+            "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+          },
+          "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-1/uatom",
+            "name": "transfer/channel-1/uatom IBC token",
+            "symbol": "UATOM"
+          }
+        }
+      ],
+      "direct_lp_raw": "2269780320",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "lp_total_supply_raw": "89761104045",
+      "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "87491323725"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "4242929776408",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "1522296730",
+          "info": {
+            "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+          },
+          "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-71/uusdc",
+            "name": "transfer/channel-71/uusdc IBC token",
+            "symbol": "UUSDC"
+          }
+        }
+      ],
+      "direct_lp_raw": "3270498001",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",
+      "lp_total_supply_raw": "74958722515",
+      "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "71688224514"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "538681414798",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "6970128023",
+          "info": {
+            "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+          },
+          "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-71/uusdc",
+            "name": "transfer/channel-71/uusdc IBC token",
+            "symbol": "UUSDC"
+          }
+        }
+      ],
+      "direct_lp_raw": "485708032",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",
+      "lp_total_supply_raw": "52511840165",
+      "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "52026132133"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "1049051126020",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "9976669553",
+          "info": {
+            "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+          },
+          "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-0/uosmo",
+            "name": "transfer/channel-0/uosmo IBC token",
+            "symbol": "UOSMO"
+          }
+        }
+      ],
+      "direct_lp_raw": "44214341251",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1dx6djxrsr4f4mqjn3vsp6v0yrg78stv3d8qyp66k209qmzn7r3eqne7mwf",
+      "lp_total_supply_raw": "95380460556",
+      "pair": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "51166119305"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "196499314148",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "66315587461",
+          "info": {
+            "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+          },
+          "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-0/uosmo",
+            "name": "transfer/channel-0/uosmo IBC token",
+            "symbol": "UOSMO"
+          }
+        }
+      ],
+      "direct_lp_raw": "503516025",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",
+      "lp_total_supply_raw": "104783420853",
+      "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "104279904828"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "232972274460",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "1138289623306",
+          "info": {
+            "native": "ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885"
+          },
+          "key": "native:ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-20/ustars",
+            "name": "transfer/channel-20/ustars IBC token",
+            "symbol": "USTARS"
+          }
+        }
+      ],
+      "direct_lp_raw": "167293333",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1n965ux7p8qhph9j3g378qqr9fa5qup7jz089k0xjzqg99e787ekq84g8we",
+      "lp_total_supply_raw": "490094535709",
+      "pair": "juno16k0f2mksg7swautzgfynve2ns3kq95ggp0z9t5dvxg56q45x67nqckmzru",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1dqaqj5xzlm2pz3x54cc40hwkurradm6fgjj83pp8qkjrqht2y7pqg6ch6l",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "489927242376"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "240075230932",
+          "info": {
+            "token": "juno10gthz5ufgrpuk5cscve2f0hjp56wgp90psqxcrqlg4m9mcu9dh8q4864xy"
+          },
+          "key": "cw20:juno10gthz5ufgrpuk5cscve2f0hjp56wgp90psqxcrqlg4m9mcu9dh8q4864xy",
+          "metadata": {
+            "decimals": 6,
+            "name": "Kleomedes",
+            "symbol": "KLEO"
+          }
+        },
+        {
+          "amount_raw": "731508931",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        }
+      ],
+      "direct_lp_raw": "2023560208",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1gam7gpevdt0n7k7cepkqcxn4cyjqes9tfym8ac64hnryxpvfpddqlgkvlw",
+      "lp_total_supply_raw": "11793180355",
+      "pair": "juno1dpqgt3ja2kdxs94ltjw9ncdsexts9e3dx5qpnl20zvgdguzjelhqstf8zg",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1d4qcgcc0yw65e7cyw3vta80s0wvttn2p3uwzhq0hyamjtt96ytwsl0mvlt",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "9769620147"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "710288094",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "31306936555",
+          "info": {
+            "token": "juno14lycavan8gvpjn97aapzvwmsj8kyrvf644p05r0hu79namyj3ens87650k"
+          },
+          "key": "cw20:juno14lycavan8gvpjn97aapzvwmsj8kyrvf644p05r0hu79namyj3ens87650k",
+          "metadata": {
+            "decimals": 6,
+            "name": "Signal",
+            "symbol": "SGNL"
+          }
+        }
+      ],
+      "direct_lp_raw": "434496357",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1flax8ja0u2lzuv5qundw9k7hmc5ttf3jh98lgk4ttnx5s7jdq5dq6qzts3",
+      "lp_total_supply_raw": "4500766282",
+      "pair": "juno1p3eed298qx3nyhs3grld07jrf9vjsjsmdd2kmmh3crk87emjcx5stp409y",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1r2haw70fwu0z8s5n6em5gd097f8mplyxqs5uz3zch69h3llk64xssqp64l",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "4066269925"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "94756144452",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "959341093",
+          "info": {
+            "token": "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
+          },
+          "key": "cw20:juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",
+          "metadata": {
+            "decimals": 6,
+            "name": "NETA",
+            "symbol": "NETA"
+          }
+        }
+      ],
+      "direct_lp_raw": "222671951",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",
+      "lp_total_supply_raw": "8961136120",
+      "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "8738464169"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "493261929",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "114096867494",
+          "info": {
+            "token": "juno19rqljkh95gh40s7qdx40ksx3zq5tm4qsmsrdz9smw668x9zdr3lqtg33mf"
+          },
+          "key": "cw20:juno19rqljkh95gh40s7qdx40ksx3zq5tm4qsmsrdz9smw668x9zdr3lqtg33mf",
+          "metadata": {
+            "decimals": 6,
+            "name": "SEASY",
+            "symbol": "SEASY"
+          }
+        }
+      ],
+      "direct_lp_raw": "565820555",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno10zj5zme4g0zj6hc79tkld5p47gjpe8qvxlky650gwan4tf0a4u8qzg5kc9",
+      "lp_total_supply_raw": "7303626314",
+      "pair": "juno16vvu2fjrgg6rnddrcvtaeukzl3weau63gc3d3c7mvq05ygnzklvs3peqmt",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1un4052t70d64zj3qepch5qehqymuy653kqzgrl8eqzf3ns0p4kassg7pea",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "6737805759"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "6245403409",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "94178035",
+          "info": {
+            "token": "juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a"
+          },
+          "key": "cw20:juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a",
+          "metadata": {
+            "decimals": 6,
+            "name": "Eris Amplified JUNO",
+            "symbol": "ampJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "1000",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno17c67j5wwamq9hn8q6anfqfm8dpnx0xpyuhc3hw6u0fedeg2s2tks8pweq4",
+      "lp_total_supply_raw": "751699053",
+      "pair": "juno1nmy9v6pc2lwhsexmpsdekcgdwd7zmmqguxndnqfdv220jvhk9j5shw5e36",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno10sc6f842cguwrekeca40k9lpcsrt5r8hc6zpx60d43r9tpxxm00qftj50t",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "751698053"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "583352123",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "336330183",
+          "info": {
+            "token": "juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a"
+          },
+          "key": "cw20:juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a",
+          "metadata": {
+            "decimals": 6,
+            "name": "Eris Amplified JUNO",
+            "symbol": "ampJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "516600",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno14x9pd4m2yrayep025yzyt9wjrnt8r6ktuxdalt8ym88ald3gqc8qc5pxwf",
+      "lp_total_supply_raw": "426274082",
+      "pair": "juno1a7hvexlmhwwflnsr7uyf373q2etwmzm233lsj75rydrmra4rhvps582hu4",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1w0xpg7mwfh3wjkfv90gyu7k4vqwnepcwe9mletyjsk9lpwlvqg7qseq6v3",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "425757482"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "21311811942",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "263999113",
+          "info": {
+            "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
+          },
+          "key": "cw20:juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv",
+          "metadata": {
+            "decimals": 6,
+            "name": "seJUNO",
+            "symbol": "SEJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "47196825",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1au3mzqfams8axufpemtvufw78zetl3pl5qn4cn9r2tz9pgly79ws92kr46",
+      "lp_total_supply_raw": "2323670170",
+      "pair": "juno1tndfgq4kfgm6wwvfem3uwqcpf4ac3cqfcf5df4efagucm32ywaasugr9mq",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno153a72ges9fq52kvutgztr59udxhv4eq025p5za3xl0yvq22a7j8qfw6pmp",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "2276473345"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "4124521935",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "1939810947",
+          "info": {
+            "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
+          },
+          "key": "cw20:juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv",
+          "metadata": {
+            "decimals": 6,
+            "name": "seJUNO",
+            "symbol": "SEJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "909215112",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1kqeqglacd8l48347tttjlqc4yvxpcvhdekqrtrhv76frjh96gruqx36efv",
+      "lp_total_supply_raw": "2701431415",
+      "pair": "juno177xtcl6dax47kg3xptr5n48kd7twmzm49ltugfxuc76x9v05qq6q63hsm9",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1shgke28jvl3ycfdlkx0mkvnmrunlvujd80q7zk499s9vx0zcqcvs2zsz3y",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "1792216303"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "193001313906",
+          "info": {
+            "token": "juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz"
+          },
+          "key": "cw20:juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz",
+          "metadata": {
+            "decimals": 6,
+            "name": "Howl Token",
+            "symbol": "HOWL"
+          }
+        },
+        {
+          "amount_raw": "23147613174",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        }
+      ],
+      "direct_lp_raw": "27162547231",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1jsevsuqxyda73m4zpu295tw08gw0p8qe58mah2p7xq9uyh7zzkxqpws63c",
+      "lp_total_supply_raw": "64938514394",
+      "pair": "juno1kx2mgqr4gry7lnjyv4fqd32uua5lkec7m3r5lv8y84qkkcacupdqn2u68w",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno19jayj30q6t8ruu58q8ayj7py5czzf9pm84s25qs3pnuakd5a50cswc5m2c",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "37775967163"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "1475649696820",
+          "info": {
+            "token": "juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz"
+          },
+          "key": "cw20:juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz",
+          "metadata": {
+            "decimals": 6,
+            "name": "Howl Token",
+            "symbol": "HOWL"
+          }
+        },
+        {
+          "amount_raw": "4912334097",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        }
+      ],
+      "direct_lp_raw": "245571812",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1h9vzec27pjcav2yj0a6mvxlquqxtr8r5tjyu2w9vyngkwldstsjssupuzr",
+      "lp_total_supply_raw": "83611718403",
+      "pair": "juno158nznrq0dhh6m29jkkgxctlura7nskemujsvjxahmlw4d7erjvasw49tu4",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1tfryulnedmfs9hqs9hyvupramfddv90pz3dpp7h886tl6kuftflskypwh7",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "83366146591"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "10903130911",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "5931503232372",
+          "info": {
+            "token": "juno1j0a9ymgngasfn3l5me8qpd53l5zlm9wurfdk7r65s5mg6tkxal3qpgf5se"
+          },
+          "key": "cw20:juno1j0a9ymgngasfn3l5me8qpd53l5zlm9wurfdk7r65s5mg6tkxal3qpgf5se",
+          "metadata": {
+            "decimals": 6,
+            "name": "Gelotto",
+            "symbol": "GLTO"
+          }
+        }
+      ],
+      "direct_lp_raw": "8087731752",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1gf7d9kp59na60zr9z4yl5chmf0x7ype3xutszc9gg270l2mtac9sratca6",
+      "lp_total_supply_raw": "238967262345",
+      "pair": "juno1ptdt6dg7ke6rn5k8xr8kh87zjnxhp832l5q07y3c9htz8z88cptqlthu5f",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno14l8dhtl8rfwu4d97q6mp0ycnnhlrhssgjknkr2p9e34g0nxvcczqlur0yp",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "230879530593"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "613802301",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "3408406",
+          "info": {
+            "token": "juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa"
+          },
+          "key": "cw20:juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa",
+          "metadata": {
+            "decimals": 3,
+            "name": "CannaLabs",
+            "symbol": "CANLAB"
+          }
+        }
+      ],
+      "direct_lp_raw": "7445600",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1h52qvcp5phaqmhzeu9urzsfvtehn9d98ql6xj05sr6z78zjgjv6sletkec",
+      "lp_total_supply_raw": "45040596",
+      "pair": "juno1ls5un4a8zyn4f05k0ekq5aa9uhn88y8362ww38elqfpcwllme0jqelamke",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1l6vy80rm9x2r63rgcj5u3an7ge035udu986jf2dm65mx8yz0hw6su64ghn",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "37594996"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "60551227",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "10208521782148",
+          "info": {
+            "token": "juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h"
+          },
+          "key": "cw20:juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h",
+          "metadata": {
+            "decimals": 6,
+            "name": "Czar Gov Token",
+            "symbol": "CZAR"
+          }
+        }
+      ],
+      "direct_lp_raw": "625548952",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1r8lzdyydak2832m35wzg9g7l6z8whpm68t950cgncv2wnug8lhwseulms4",
+      "lp_total_supply_raw": "23037011627",
+      "pair": "juno1q0f3nlghr350e7lhmxej3ev0j25m5caws5y4kyr5huawwr24hfkq74fsnq",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno15aqhjcm4x886pje3ae8mxl46wft5spuwp3fpcscz0x2g6n00dqns49v22y",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "22411462675"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "1613862041931",
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          }
+        },
+        {
+          "amount_raw": "45175243541",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        }
+      ],
+      "direct_lp_raw": "8695285409",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1stg339rrg9guqsuv205yayq2ttzwz4583luc9pznvexe7rtrtrksdxstg3",
+      "lp_total_supply_raw": "250846698920",
+      "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "242151413511"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "2124028890",
+          "info": {
+            "token": "juno1naunqzk6jseqeqhq43nm6kdneraws2rkmteprjzppw6j9xcrurxqx0ld9e"
+          },
+          "key": "cw20:juno1naunqzk6jseqeqhq43nm6kdneraws2rkmteprjzppw6j9xcrurxqx0ld9e",
+          "metadata": {
+            "decimals": 6,
+            "name": "wyJUNO",
+            "symbol": "wyJUNO"
+          }
+        },
+        {
+          "amount_raw": "676860288",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        }
+      ],
+      "direct_lp_raw": "295832597",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno129lz7c0n5na7hdq5zrv2mmfsshg0yhqccfttkjnx2cz94nm8x52s6e5enl",
+      "lp_total_supply_raw": "24491642245",
+      "pair": "juno1f9c60hyvzys5h7q0y4e995n8r9cchgpy8p3k4kw3sqsmut95ankq0chfv0",
+      "pair_code_id": "2290",
+      "pair_type": {
+        "lsd": {}
+      },
+      "stake": "juno1qkqah87ks56v20nqwtjvrfa08p85d8qszjd9zck7h6ln37mzrsksgy7fh9",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "24195809648"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "68176959",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "1131012155",
+          "info": {
+            "token": "juno1p8x807f6h222ur0vssqy3qk6mcpa40gw2pchquz5atl935t7kvyq894ne3"
+          },
+          "key": "cw20:juno1p8x807f6h222ur0vssqy3qk6mcpa40gw2pchquz5atl935t7kvyq894ne3",
+          "metadata": {
+            "decimals": 6,
+            "name": "MUSE",
+            "symbol": "MUSE"
+          }
+        }
+      ],
+      "direct_lp_raw": "15527127",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno18khfnt4052e9s2y2c5kra5n9uw84hh8qc6k5t4aey70erlz500cqfum00n",
+      "lp_total_supply_raw": "262463627",
+      "pair": "juno1rcssjyqgr6vzalss77d43v30c2qpyzzg607ua8gte2shqgtvu24sg8gs8r",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno182rvmpzq2hcvsr0xqnugvm4tz59l7hdgkhnnqnwklc3th8wmxxcsxeu5fx",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "246936500"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "4411122721",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "15067932696",
+          "info": {
+            "token": "juno1r4pzw8f9z0sypct5l9j906d47z998ulwvhvqe5xdwgy8wf84583sxwh0pa"
+          },
+          "key": "cw20:juno1r4pzw8f9z0sypct5l9j906d47z998ulwvhvqe5xdwgy8wf84583sxwh0pa",
+          "metadata": {
+            "decimals": 6,
+            "name": "RACOON",
+            "symbol": "RAC"
+          }
+        }
+      ],
+      "direct_lp_raw": "184308277",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1as45s9detrnjwsn9vgcejz6erxttdtvu6kga4xrge3ny4lyfmjqq7lpgsj",
+      "lp_total_supply_raw": "7549322182",
+      "pair": "juno1mz5uz38h89dxj6c8w69rg7l060p8vq8pfetykk2gvrrxhjcsa5yqru9g7v",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1lkek4vzhum6vx4v36akftzqw60ul76lmrktkzl84quf3wq66uctqy734aj",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "7365013905"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "198112556",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "306442869",
+          "info": {
+            "token": "juno1rws84uz7969aaa7pej303udhlkt3j9ca0l3egpcae98jwak9quzq8szn2l"
+          },
+          "key": "cw20:juno1rws84uz7969aaa7pej303udhlkt3j9ca0l3egpcae98jwak9quzq8szn2l",
+          "metadata": {
+            "decimals": 6,
+            "name": "POSTHUMAN",
+            "symbol": "PHMN"
+          }
+        }
+      ],
+      "direct_lp_raw": "27590691",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1qwpr47n9djzm7erghmatudva8chvg63ejuvqzhfvq7u4ckl62t2sh8uk4k",
+      "lp_total_supply_raw": "224019490",
+      "pair": "juno17jv00cm4f3twr548jzayu57g9txvd4zdh54mdg9qpjs7samlphjsykylsq",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1sjkc38sy6aj3e8jerr40nhqm5xdcdc99ejtp46smjxs63tk3dj5svg0kqt",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "196428799"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "20108428",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "4107237",
+          "info": {
+            "token": "juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa"
+          },
+          "key": "cw20:juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa",
+          "metadata": {
+            "decimals": 3,
+            "name": "CannaLabs",
+            "symbol": "CANLAB"
+          }
+        }
+      ],
+      "direct_lp_raw": "25489",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1ev8qxfpen3yh9cxc9m5yu4qkuujlaxztw83kdh7txextvc5q8gdqpqxxzc",
+      "lp_total_supply_raw": "3075907",
+      "pair": "juno17ckp36lmgtt7jtuggdv2j39eh4alcnl35szu6quh747nujags07swwq0nh",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1wjcak50p8y7ajyu5n4u88s8ah58fa520442flthy7dq55v6fatqqrd395z",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "3050418"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "2676339987",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "2303419753",
+          "info": {
+            "token": "juno1wwnhkagvcd3tjz6f8vsdsw5plqnw8qy2aj3rrhqr2axvktzv9q2qz8jxn3"
+          },
+          "key": "cw20:juno1wwnhkagvcd3tjz6f8vsdsw5plqnw8qy2aj3rrhqr2axvktzv9q2qz8jxn3",
+          "metadata": {
+            "decimals": 6,
+            "name": "bJUNO",
+            "symbol": "BJUNO"
+          }
+        }
+      ],
+      "direct_lp_raw": "1167858101",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1kpqf3lm2drxzf98xw5ptsqdd483wgtjdsr4dvcr3j89tv6rqvw2q9y383s",
+      "lp_total_supply_raw": "2373329431",
+      "pair": "juno1syxlvk6pjpuxplqxwxr6n6fveqaz069dzya0ass9vrfwn9qxpvpqhq7msy",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno1l2auxggxa5n9yled8zrf4zxtahergzgs2t9vykf66uckwwk9n3zq2j3yq7",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "1205471330"
+    },
+    {
+      "assets": [
+        {
+          "amount_raw": "693946",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          }
+        },
+        {
+          "amount_raw": "52446009504091",
+          "info": {
+            "token": "juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h"
+          },
+          "key": "cw20:juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h",
+          "metadata": {
+            "decimals": 6,
+            "name": "Czar Gov Token",
+            "symbol": "CZAR"
+          }
+        }
+      ],
+      "direct_lp_raw": "1427854088",
+      "lp_code_id": "1699",
+      "lp_decimals": 6,
+      "lp_token": "juno1k58efu65v6m0kgnq0fpgk8fxhsqah74r4lsuyk68308a35xxyels2qkl5z",
+      "lp_total_supply_raw": "5383258583",
+      "pair": "juno1ndw52eaajcn8wpx7e503ly3j07666hhufx6cyp0s9v703rvzrpksfujv3h",
+      "pair_code_id": "2289",
+      "pair_type": {
+        "xyk": {}
+      },
+      "stake": "juno122kx9l5z9lld74hjka0mg7exwxuwj2d0plwx03pwg3z4433vct8s4e9jr8",
+      "stake_code_id": "2291",
+      "stake_custody_lp_raw": "3955404495"
+    }
+  ],
   "reference_pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
   "reference_pair_creator": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
-  "status": "WORKING",
+  "status": "VALIDATED",
   "validation": {
-    "all_pairs_queried": false,
+    "all_pairs_queried": true,
     "factory_derived_from_reference_creator": true,
     "reference_pair_present": true
   }
