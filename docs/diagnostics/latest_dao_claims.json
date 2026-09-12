@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/home/runner/work/neta-website/neta-website/scripts/dao_claim_diagnostic.py", line 80, in <module>
+    main()
+  File "/home/runner/work/neta-website/neta-website/scripts/dao_claim_diagnostic.py", line 40, in main
+    for key, value in u.contract_state(u.DAO):
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/neta-website/neta-website/scripts/update_neta_data.py", line 71, in contract_state
+    rows += [(base64.b64decode(x["key"]),base64.b64decode(x["value"])) for x in d.get("models",[])]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/base64.py", line 88, in b64decode
+    return binascii.a2b_base64(s, strict_mode=validate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+binascii.Error: Incorrect padding
+exit_code=1
