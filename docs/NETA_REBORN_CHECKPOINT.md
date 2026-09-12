@@ -150,6 +150,39 @@ Run 14 (`34691326477`, head `aaecec0b725899d58fa987889e4eaa9434976cbe`) complete
 
 Run 15 then isolated the downstream failure to `PeriodLock.end_time` decoding: a negative protobuf `int64` representing Go zero time was interpreted as unsigned and overflowed Python datetime. Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` corrects that parser on the diagnostic branch and triggered the next diagnostic run. The subsequent persisted diagnostic completed with exit code `0` and proved exact Pool 631 lockup, share-supply and NETA-reserve reconciliation at height `70424425`.
 
+## Schema v3 integration — WORKING
+
+Implementation exists on `diagnostic/wynd-lp-attribution`; production `main` is not yet changed.
+
+Planned public holder components:
+`Juno + Osmosis + DAO Staked + DAO Unstaking + DAO Claimable + LP NETA = Total NETA`.
+
+Implemented behavior:
+- DAO claims are classified on every run against the current Juno block time/height using `release_at.at_time` or `release_at.at_height`.
+- Pool custody balances are removed from direct Juno/Osmosis attribution before LP redistribution.
+- WYND staked/claimed LP and Osmosis Pool 631 locked LP are unwrapped to economic owners.
+- Pool 631 GAMM shares are collected in the same 512-prefix Osmosis bank scan as NETA balances; no second full bank scan is performed.
+- LP NETA uses deterministic largest-remainder allocation so each pool reserve reconciles to the raw micro-NETA exactly.
+- Schema version is raised to `3`; holder rows add `neta_dao_claimable` and `lp_neta`.
+- Frontend table, mobile cards, address lookup, headline metrics and methodology text support the new fields.
+
+First integrated diagnostic snapshot:
+- Total supply: `31,886.600000 NETA`
+- Wallet-attributed: `31,886.390000 NETA`
+- DAO residual: `0.210000 NETA`
+- Exact total: `31,886.600000 NETA`
+- DAO staked: `4,180.135927 NETA`
+- DAO actively unbonding: `0.000000 NETA`
+- DAO matured claimable: `702.382593 NETA`
+- Economic entries before minimum-liquidity cleanup: `13,974`
+
+WYND minimum-liquidity edge case:
+- The WYND pair contract itself holds exactly `1,000 raw LP units`.
+- That self-share initially received `107 raw NETA = 0.000107 NETA` and caused the strict “pool address absent” validator to fail.
+- This is treated as protocol minimum liquidity with no external economic owner.
+- Commit `20ac32b07c603467b397d51b467aa5e854a1dfa9` excludes the pair from economic owners, validates economic LP supply plus the 1,000-unit minimum against total LP supply, and allocates the full pool reserve across the attributable LP supply using largest remainder.
+- Final post-fix integrated validation is still **WORKING** until the persisted run is green.
+
 ## Production integration plan — READY, NOT YET EXECUTED
 Only after Osmosis reconciliation is green:
 1. Reuse the existing 4-worker Osmosis 512-prefix bank scan in `scripts/run_neta_data.py` to collect both NETA and `gamm/pool/631` in the same pass. Do not add a second expensive full bank scan.
