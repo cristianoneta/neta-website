@@ -1,10 +1,11 @@
-name: Diagnose Osmosis Pool 631 lockup ownership
+name: Diagnose combined LP attribution
 
 on:
   push:
     branches: [diagnostic/wynd-lp-attribution]
     paths:
       - ".github/workflows/diagnose-wynd-lp.yml"
+      - "scripts/lp_attribution.py"
   workflow_dispatch:
 
 permissions:
@@ -13,7 +14,7 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,76 +24,5 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Resolve Pool 631 lockup owners
-        run: |
-          python - <<'PY'
-          import base64, json, sys
-          sys.path.insert(0,'scripts')
-          import update_neta_data as u
-
-          SHARE_DENOM='gamm/pool/631'
-          LOCKUP_ADDR='osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc'
-
-          def subspace_store(store,prefix,height,rpc):
-              q={'path':f'"/store/{store}/subspace"','data':'0x'+prefix.hex(),'height':str(height),'prove':'false'}
-              r=u.S.get(rpc.rstrip('/')+'/abci_query',params=q,timeout=180); r.raise_for_status()
-              d=r.json()['result']['response']
-              if int(d.get('code',0) or 0)!=0: raise RuntimeError(f"ABCI code {d.get('code')}: {d.get('log')}")
-              raw=base64.b64decode(d.get('value') or '')
-              return u.kvpairs(raw) if raw else []
-
-          def key_store(store,key,height,rpc):
-              q={'path':f'"/store/{store}/key"','data':'0x'+key.hex(),'height':str(height),'prove':'false'}
-              r=u.S.get(rpc.rstrip('/')+'/abci_query',params=q,timeout=60); r.raise_for_status()
-              d=r.json()['result']['response']
-              if int(d.get('code',0) or 0)!=0: raise RuntimeError(f"ABCI code {d.get('code')}: {d.get('log')}")
-              return base64.b64decode(d.get('value') or '')
-
-          def parse_coin(buf):
-              denom=None; amount=None
-              for f,w,x in u.fields(buf):
-                  if w!=2: continue
-                  if f==1: denom=x.decode()
-                  elif f==2: amount=int(x.decode())
-              return denom,amount
-
-          def parse_lock(buf):
-              lock_id=None; owner=None; coins=[]
-              for f,w,x in u.fields(buf):
-                  if f==1 and w==0: lock_id=x
-                  elif f==2 and w==2: owner=x.decode()
-                  elif f==5 and w==2: coins.append(parse_coin(x))
-              return lock_id,owner,coins
-
-          height,rpc=u.latest_height()
-          print('height',height,'rpc',rpc,flush=True)
-          pairs=subspace_store('lockup',b'\x02',height,rpc)
-          print('period_lock_rows',len(pairs),flush=True)
-
-          owners={}; matching_locks=0; malformed=[]
-          for k,v in pairs:
-              try: lock_id,owner,coins=parse_lock(v)
-              except Exception as e:
-                  malformed.append({'key':k.hex(),'error':str(e)}); continue
-              for denom,amount in coins:
-                  if denom==SHARE_DENOM and amount:
-                      owners[owner]=owners.get(owner,0)+amount
-                      matching_locks+=1
-
-          raw=u.payload(LOCKUP_ADDR)
-          bank_key=bytes([2,len(raw)])+raw+SHARE_DENOM.encode()
-          module_raw=key_store('bank',bank_key,height,rpc)
-          module_balance=u.bank_amount(module_raw) if module_raw else 0
-          locked_sum=sum(owners.values())
-          result={
-            'height':height,'rpc':rpc,'period_lock_rows':len(pairs),
-            'matching_pool631_locks':matching_locks,'economic_lock_owners':len(owners),
-            'locked_pool631_shares_raw':locked_sum,'lockup_module_balance_raw':module_balance,
-            'lockup_reconciliation':locked_sum==module_balance,
-            'malformed_rows':len(malformed),'malformed_samples':malformed[:10],
-            'top_lock_owners':[{'address':a,'shares_raw':x} for a,x in sorted(owners.items(),key=lambda z:(-z[1],z[0]))[:25]]
-          }
-          print(json.dumps(result,indent=2),flush=True)
-          if malformed: raise RuntimeError(f'malformed period locks: {len(malformed)}')
-          if locked_sum!=module_balance: raise RuntimeError(f'lock owners {locked_sum} != lockup module balance {module_balance}')
-          PY
+      - name: Run combined LP attribution
+        run: python scripts/lp_attribution.py
