@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-12",
+  "events": [
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "osmosis",
+      "height": 41698938,
+      "id": "juno:29748792D8FA463A44D8D55BE176165EDD651D4D90175B166B6A9DDBEDAE0437:ibc:13",
+      "neta_raw": 1000000,
+      "receiver": "juno15agzfrclmqnq72asjssh80723c9fvkq2e5h02p",
+      "remote_chain": "osmosis",
+      "sender": "osmo15agzfrclmqnq72asjssh80723c9fvkq28a8ym0",
+      "timestamp": "2026-09-12T20:06:19Z",
+      "to_chain": "juno",
+      "txhash": "29748792D8FA463A44D8D55BE176165EDD651D4D90175B166B6A9DDBEDAE0437",
+      "type": "ibc"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 70446257,
+      "id": "osmosis:BAB89572D3DFB33AADC6DB088270E85E5954AF1F8B89F378E7A59D83B3943DEC:pool631:20",
+      "market": "pool-631",
+      "neta_raw": 998000,
+      "timestamp": "2026-09-12T20:09:09Z",
+      "txhash": "BAB89572D3DFB33AADC6DB088270E85E5954AF1F8B89F378E7A59D83B3943DEC",
+      "type": "swap",
+      "wallet": "osmo15agzfrclmqnq72asjssh80723c9fvkq28a8ym0",
+      "wallet_id": "a750248f1fd8260f2bb0942173bfca8e0a96580a"
+    }
+  ]
+}
