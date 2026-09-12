@@ -15,13 +15,15 @@
   ],
   "collection_started_at": "2026-09-12T18:05:26.203149Z",
   "flows": {
+    "discovered_chains": [],
     "juno_to_osmosis_neta": 0.0,
     "net_to_osmosis_neta": 0.0,
     "osmosis_to_juno_neta": 0.0,
+    "routes": [],
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-09-12T19:23:01.871473Z",
+  "generated_at": "2026-09-12T19:40:04.274850Z",
   "market": {
     "power_buyers": [],
     "swaps": 0,
@@ -30,7 +32,7 @@
   "periods": {
     "24h": {
       "available": false,
-      "coverage_percent": 5.39
+      "coverage_percent": 6.57
     },
     "30d": {
       "available": false
@@ -46,6 +48,7 @@
   "validation": {
     "cursors_monotonic": true,
     "event_ids_unique": true,
-    "passed": true
+    "passed": true,
+    "unknown_routes_not_misclassified": true
   }
 }
