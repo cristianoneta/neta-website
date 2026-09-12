@@ -1,5 +1,5 @@
 name: Update NETA on-chain data
-# Schema v3: DAO maturity split and validated LP attribution.
+# Schema v3: DAO maturity split, validated LP attribution, and economic custody counts.
 
 on:
   pull_request:
