@@ -283,3 +283,10 @@ Diagnostic findings:
 - A restrained, irregular CSS flicker adds brief opacity shifts, horizontal clipping/glitch lines and scanlines; `prefers-reduced-motion` disables animation.
 - Period controls include `180D` and `1Y` after `90D`; they remain disabled until sufficient verified forward-collected history exists.
 - Map of NETA includes the same Telegram community CTA and footer treatment as the other pages.
+
+
+### Map logo rendering correction — 2026-09-12
+
+- The first monochrome PNG approach was rejected: a global CSS filter recolored Juno's opaque dark disc together with its emblem, producing a solid green circle.
+- Production now uses transparent, purpose-built `juno-matrix.svg` and `osmosis-matrix.svg` artwork. Their recognizable chain silhouettes are filled with visible binary-code texture in the Matrix palette.
+- The surrounding irregular flicker remains secondary; logo recognition and code texture are the primary visual treatment.

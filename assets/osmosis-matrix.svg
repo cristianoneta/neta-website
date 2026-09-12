@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Osmosis">
+<defs>
+ <pattern id="bits" width="40" height="21" patternUnits="userSpaceOnUse"><text x="0" y="15" font-family="monospace" font-size="14" font-weight="700" fill="#62ffc2">1010</text></pattern>
+ <clipPath id="body"><path d="M69 48v28C44 91 32 112 37 137c7 34 34 51 63 51s56-17 63-51c5-25-7-46-32-61V48z"/></clipPath>
+</defs>
+<g transform="rotate(12 100 100)">
+ <path d="M72 18h56c8 0 14 6 14 14s-6 14-14 14H72c-8 0-14-6-14-14s6-14 14-14z" fill="#02110b" stroke="#00ff9d" stroke-width="7"/>
+ <path d="M69 42v34C44 91 32 112 37 137c7 34 34 51 63 51s56-17 63-51c5-25-7-46-32-61V42" fill="#020b07" stroke="#00ff9d" stroke-width="7" stroke-linejoin="round"/>
+ <g clip-path="url(#body)">
+  <rect x="28" y="83" width="145" height="110" fill="#063523"/>
+  <rect x="20" y="70" width="170" height="130" fill="url(#bits)"><animateTransform attributeName="transform" type="translate" values="0 -21;0 0" dur="2.4s" repeatCount="indefinite"/></rect>
+  <path d="M25 112c29-17 49 13 78-2 31-16 50 8 77-5v22c-30 13-50-10-78 5-31 16-51-12-77 3z" fill="#00ff9d" opacity=".3"/>
+ </g>
+ <circle cx="75" cy="139" r="5" fill="#62ffc2"/><circle cx="111" cy="153" r="4" fill="#00ff9d"/><circle cx="132" cy="130" r="6" fill="#62ffc2"/>
+</g>
+</svg>

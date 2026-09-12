@@ -13,3 +13,8 @@
 @keyframes chain-scan{from{transform:translateY(-8px)}to{transform:translateY(8px)}}
 @media(prefers-reduced-motion:reduce){.chain-logo,.chain-logo-shell:before,.chain-logo-shell:after{animation:none}.chain-logo-shell:after{display:none}}
 @media(max-width:700px){.chain-logo-shell{width:44px;height:44px}.osmo-node .chain-logo-shell{width:40px;height:40px}}
+
+
+/* v3 — transparent matrix-code logo artwork; overrides the lossy PNG recolor */
+.chain-logo{padding:1px!important;filter:drop-shadow(0 0 5px rgba(0,255,157,.65))!important}
+.chain-logo-shell{background:radial-gradient(circle,#03140d 0,#010805 72%);box-shadow:0 0 13px rgba(0,255,157,.2),inset 0 0 12px rgba(0,255,157,.1)}

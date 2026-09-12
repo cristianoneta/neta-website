@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Juno">
+<defs>
+ <pattern id="bits" width="42" height="22" patternUnits="userSpaceOnUse"><text x="0" y="15" font-family="monospace" font-size="15" font-weight="700" fill="#62ffc2">0101</text></pattern>
+ <mask id="mark"><rect width="200" height="200" fill="black"/><circle cx="100" cy="100" r="84" fill="none" stroke="white" stroke-width="12"/><path fill="white" d="M94 43h12v39l27-27 9 9-29 29h41v13h-41l29 29-9 9-27-27v40H94v-40l-28 28-9-9 30-30H45V93h42L57 63l9-9 28 28z"/><path fill="white" d="M70 149h60v12H70z"/></mask>
+</defs>
+<circle cx="100" cy="100" r="91" fill="#010805" stroke="#0b6f4d" stroke-width="2"/>
+<rect width="200" height="200" fill="url(#bits)" mask="url(#mark)"><animateTransform attributeName="transform" type="translate" values="0 -22;0 0" dur="2.8s" repeatCount="indefinite"/></rect>
+<circle cx="100" cy="100" r="84" fill="none" stroke="#00ff9d" stroke-width="2" opacity=".8"/>
+<path d="M100 45v110M59 100h82M68 67l64 66M132 67l-64 66" stroke="#00ff9d" stroke-width="2" opacity=".55"/>
+</svg>
