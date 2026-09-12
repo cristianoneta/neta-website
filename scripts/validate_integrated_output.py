@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json, sys
+# Final schema-v3 gate; output is persisted by the diagnostic workflow.
 from pathlib import Path
 
 out=Path(sys.argv[1] if len(sys.argv)>1 else "diagnostic-output")
