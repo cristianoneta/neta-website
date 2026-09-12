@@ -5,8 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Europe/Berlin 03:00 = 01:00 UTC in summer, 02:00 UTC in winter.
-    # Run at both UTC hours; the gate below lets only local 03:00 continue.
     - cron: "7 1 * * *"
     - cron: "7 2 * * *"
 
@@ -21,11 +19,9 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Berlin 03:00 gate
         id: gate
         shell: bash
@@ -38,31 +34,27 @@ jobs:
           HOUR="$(TZ=Europe/Berlin date +%H)"
           if [ "$HOUR" = "03" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
-            echo "Europe/Berlin hour is 03. Scheduled run allowed."
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "Europe/Berlin hour is $HOUR. Scheduled run skipped."
           fi
-
       - name: Set up Python
         if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
-
       - name: Install dependencies
         if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
-
+      - name: Diagnose Osmosis discrepancy
+        if: steps.gate.outputs.run == 'true' && github.event_name == 'pull_request'
+        run: python scripts/diagnose_osmo.py
       - name: Fetch and validate all NETA data
         if: steps.gate.outputs.run == 'true'
         run: python scripts/run_neta_data.py --output .
-
       - name: Show validation summary
         if: steps.gate.outputs.run == 'true'
         run: cat metadata.json
-
       - name: Commit changed data
         if: steps.gate.outputs.run == 'true' && github.event_name != 'pull_request'
         shell: bash
