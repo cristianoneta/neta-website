@@ -32,7 +32,7 @@ jobs:
           s=p.read_text()
           s=s.replace('HEX_RE=re.compile(r"^[0-9a-fA-F]+$")', 'HEX_RE=re.compile(r"^[0-9a-fA-F]+$")\nADDR_RE=re.compile(rb"juno1[0-9a-z]{38}")')
           s=s.replace('if ns=="staked_balances" and suf:', 'if ns=="stake" and suf:')
-          s=s.replace('a=suf.decode(); x=amount_from_obj(obj)', 'm=ADDR_RE.search(suf)\n                if not m: raise ValueError("wallet address not found in stake key")\n                a=m.group(0).decode(); x=amount_from_obj(obj)')
+          s=s.replace('a=suf.decode(); x=amount_from_obj(obj)', 'm=ADDR_RE.search(suf)\n                if not m: raise ValueError("wallet address not found in stake key")\n                a=m.group(0).decode(); x=amount_from_obj(obj)\n                if isinstance(obj,dict) and isinstance(obj.get("locked_tokens"),list):\n                    x=(x or 0)+sum((amount_from_obj(v) or 0) for v in obj["locked_tokens"])')
           p.write_text(s)
           PY
       - name: Run WYND LP diagnostic
