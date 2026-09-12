@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-09-12T17:53:02.393305Z",
+  "purpose": "event-shape discovery only; not production Map of NETA data",
+  "constants": {
+    "wynd_pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+    "neta_cw20": "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",
+    "juno_bridge": "juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn",
+    "osmosis_neta_denom": "ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A",
+    "pool_id": "631"
+  },
+  "probes": {
+    "wynd_lcd_pair": {
+      "ok": false,
+      "errors": [
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+      ]
+    },
+    "wynd_lcd_swap": {
+      "ok": false,
+      "errors": [
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&events=wasm.action%3D%27swap%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+      ]
+    },
+    "juno_bridge_lcd": {
+      "ok": false,
+      "errors": [
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+      ]
+    },
+    "juno_neta_lcd": {
+      "ok": false,
+      "errors": [
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+      ]
+    },
+    "pool631_lcd": {
+      "ok": false,
+      "errors": [
+        "https://osmosis-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-api.polkachu.com/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC",
+        "https://lcd.osmosis.zone: 500 Server Error: Internal Server Error for url: https://lcd.osmosis.zone/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+      ]
+    },
+    "pool631_rpc": {
+      "ok": false,
+      "errors": [
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc"
+      ]
+    },
+    "osmo_neta_packets": {
+      "ok": false,
+      "errors": [
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc"
+      ]
+    },
+    "osmo_neta_transfers": {
+      "ok": false,
+      "errors": [
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc"
+      ]
+    },
+    "juno_bridge_rpc": {
+      "ok": false,
+      "errors": [
+        "https://juno-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-rpc.polkachu.com/tx_search?query=%22wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27%22&prove=false&page=1&per_page=8&order_by=desc"
+      ]
+    }
+  }
+}
