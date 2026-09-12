@@ -52,6 +52,7 @@ def _parallel_scan_osmo():
     )
 
     holders = {}
+    pool_shares = {}
     failures = []
     tasks = [(n, first) for n in (20, 32) for first in range(256)]
     completed = 0
@@ -70,12 +71,13 @@ def _parallel_scan_osmo():
                         raw, denom = update_neta_data.bank_key(k)
                     except Exception:
                         continue
-                    if denom != update_neta_data.DENOM:
+                    if denom not in (update_neta_data.DENOM, update_neta_data.OSMO_SHARE_DENOM):
                         continue
-                    amt = update_neta_data.bank_amount(v)
+                    amt = update_neta_data.bank_amount(v, denom)
                     if amt > 0:
                         addr = update_neta_data.b32enc("osmo", raw)
-                        local[addr] = local.get(addr, 0) + amt
+                        key = "neta" if denom == update_neta_data.DENOM else "pool631"
+                        local[(key, addr)] = local.get((key, addr), 0) + amt
                 return local
             except Exception as exc:
                 last_exc = exc
@@ -94,8 +96,9 @@ def _parallel_scan_osmo():
             completed += 1
             try:
                 local = future.result()
-                for addr, amt in local.items():
-                    holders[addr] = holders.get(addr, 0) + amt
+                for (kind, addr), amt in local.items():
+                    target = holders if kind == "neta" else pool_shares
+                    target[addr] = target.get(addr, 0) + amt
             except Exception as exc:
                 failures.append((n, first, str(exc)))
 
@@ -112,13 +115,16 @@ def _parallel_scan_osmo():
             f"Osmosis incomplete: {len(failures)} of 512 scans failed. {sample}"
         )
     if not holders:
-        raise RuntimeError("Osmosis scan returned zero holders")
+        raise RuntimeError("Osmosis scan returned zero NETA holders")
+    if not pool_shares:
+        raise RuntimeError("Osmosis scan returned zero Pool 631 share holders")
 
     update_neta_data.log(
-        f"Osmosis: {len(holders):,} holders / "
-        f"{sum(holders.values()) / 1e6:,.6f} NETA"
+        f"Osmosis: {len(holders):,} NETA holders / "
+        f"{sum(holders.values()) / 1e6:,.6f} NETA; "
+        f"{len(pool_shares):,} Pool 631 share holders"
     )
-    return holders, height, primary_rpc
+    return holders, pool_shares, height, primary_rpc
 
 
 update_neta_data.scan_osmo = _parallel_scan_osmo
