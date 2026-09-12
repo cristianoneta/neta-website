@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "schema_version": 3,
+  "generated_at": "2026-09-12T13:00:05.660116Z",
+  "economic_holders": 13973,
+  "dao_staked_neta": 4180.135927,
+  "dao_unstaking_neta": 0.0,
+  "dao_claimable_neta": 702.382593,
+  "lp_neta": 1860.496749,
+  "wallet_attributed_neta": 31886.39,
+  "residual_neta": 0.21,
+  "total_supply_neta": 31886.6,
+  "validations": {
+    "passed": true,
+    "cw20_balance_sum_equals_supply": true,
+    "juno_ics20_escrow_equals_osmosis_primary_state": true,
+    "dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual": true,
+    "wynd_pool_neta_fully_attributed": true,
+    "osmosis_pool_631_neta_fully_attributed": true,
+    "economic_total_plus_residual_equals_supply": true
+  },
+  "wynd": {
+    "pool_neta_raw": 959341093,
+    "lp_supply_raw": 8961136120,
+    "attributable_lp_supply_raw": 8961135120,
+    "economic_wallets": 3343,
+    "custody_lp_raw": 8738464169,
+    "active_lp_raw": 7157563479,
+    "claim_lp_raw": 1580900690,
+    "pair_minimum_liquidity_lp_raw": 1000
+  },
+  "pool_631": {
+    "height": 70426458,
+    "rpc": "https://rpc.osmosis.zone",
+    "pool_neta_raw": 901155656,
+    "lp_supply_raw": 225004459685449894124978,
+    "direct_share_holders": 578,
+    "economic_wallets": 1969,
+    "lockup_module_shares_raw": 131997302629907807636139,
+    "lock_owners": 1411,
+    "lock_records": 1422,
+    "active_lock_records": 1418,
+    "unlocking_lock_records": 4
+  }
+}
