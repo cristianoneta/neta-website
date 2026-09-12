@@ -1,0 +1,29 @@
+POOL631_LOCK_DIAGNOSTIC={"active_no_end_time_records": 1418, "active_no_end_time_shares_raw": 130442789155461559710253, "difference_raw": 0, "duration_counts": {"86400": 14, "604800": 11, "1209600": 1392, "1209601": 1, "1209600000": 4}, "height": 70424425, "lockup_module_bank_shares_raw": 131997302629907807636139, "max_lock_id": 1502489, "min_lock_id": 1007513, "periodlock_pool631_shares_raw": 131997302629907807636139, "pool631_lock_records": 1422, "sample_locks": [{"amount": 5348772635987988151437, "duration_seconds": 1209600.0, "end_time": null, "id": 1050410, "owner": "osmo1gp6drj8tmg2hxe70rpdlhqdeamgyjp2gfgla3c"}, {"amount": 4401530333606759284717, "duration_seconds": 1209600.0, "end_time": null, "id": 1042124, "owner": "osmo1wgkdysp7nw3c8k2zrun4jee0qhtcqpcywuq6tx"}, {"amount": 4226721578205181433617, "duration_seconds": 1209600.0, "end_time": null, "id": 1266877, "owner": "osmo1vzw8kmpvqtxtsq799ajka7kqh75l2dfg9pa0ld"}, {"amount": 4188674231930509481437, "duration_seconds": 1209600.0, "end_time": null, "id": 1193648, "owner": "osmo1wnv5s4559hg9vhcc2s8rk3q3qa0zcfu5u9tpul"}, {"amount": 4044114766266473966611, "duration_seconds": 1209600.0, "end_time": null, "id": 1121951, "owner": "osmo19jkrdeqz03vvnz6q0xdan0ss8drvsxj5npssdw"}, {"amount": 4015300123740834673819, "duration_seconds": 1209600.0, "end_time": null, "id": 1126306, "owner": "osmo1f62zgjhla097yc4e9sf5zm64antugnjhq0h6ke"}, {"amount": 3937486472858328858917, "duration_seconds": 1209600.0, "end_time": null, "id": 1157340, "owner": "osmo1wpzxnzjsju69un7ufql57zt0vp3s6eu6myz704"}, {"amount": 3582672006153408463641, "duration_seconds": 1209600.0, "end_time": null, "id": 1153479, "owner": "osmo177t27fsph9rejywmdh4d9s8eqlmv86hdehg30j"}, {"amount": 2909197846877770706256, "duration_seconds": 1209600.0, "end_time": null, "id": 1158082, "owner": "osmo16j63xpschj99e8xvfagdcmnsapxgy3qsf59lfy"}, {"amount": 2600005219258880647049, "duration_seconds": 1209600.0, "end_time": null, "id": 1022793, "owner": "osmo1a77r597z9csun3c73jzuxwyfc4j7k9vmc4gqya"}, {"amount": 2570390261165447247981, "duration_seconds": 1209600.0, "end_time": null, "id": 1010453, "owner": "osmo1dnrdkjcwwe6f0q67symfmddjtdfut9s4h0ezxl"}, {"amount": 2357670346117380222180, "duration_seconds": 604800.0, "end_time": null, "id": 1011338, "owner": "osmo1wsuvf5rt4ftr40axdq4m8dkwdtnefqfp9mt5f3"}, {"amount": 2273565254426636729086, "duration_seconds": 1209600.0, "end_time": null, "id": 1159701, "owner": "osmo1v0w76ajefghv89jzhxe9jms0s75dmvuemvfpqy"}, {"amount": 2220110953921095282590, "duration_seconds": 1209600.0, "end_time": null, "id": 1126299, "owner": "osmo1226q9glnrx4vvkk68050l82dazcpk4uvunm0wa"}, {"amount": 2218577070469775793323, "duration_seconds": 1209600.0, "end_time": null, "id": 1126348, "owner": "osmo1q5r883azzh0n7v377h6ehv87y7xm5yldtvxe3u"}, {"amount": 1906076550489807694404, "duration_seconds": 1209600.0, "end_time": null, "id": 1318802, "owner": "osmo1hll9m9ljk5sz3lpjh0mfetc3j3zjzw5tz400dd"}, {"amount": 1654359259739529092975, "duration_seconds": 1209600.0, "end_time": null, "id": 1177568, "owner": "osmo1kj3v2cp2gv60jrrccx7tysgmf885c4d59u6j6v"}, {"amount": 1624604129993919637588, "duration_seconds": 1209600.0, "end_time": null, "id": 1142071, "owner": "osmo1y8ekncqkmpjtedn2zrferz4f0mgt0zyetlz53n"}, {"amount": 1584031151305469358434, "duration_seconds": 1209600.0, "end_time": null, "id": 1285072, "owner": "osmo16cv72vafxxrnwfkghtaxmpdrknqlpvwgpg7quy"}, {"amount": 1331185483079045232463, "duration_seconds": 1209600.0, "end_time": null, "id": 1422490, "owner": "osmo1sag5545z7feptkr745dly20htctlemt72fv49x"}], "unique_lock_owners": 1411, "unlocking_end_times": ["2061-03-25T06:00:52.272577+00:00", "2061-03-25T06:05:00.554273+00:00", "2061-03-25T06:18:15.966730+00:00", "2061-04-11T21:12:12.126108+00:00"], "unlocking_with_end_time_records": 4, "unlocking_with_end_time_shares_raw": 1554513474446247925886}
+{
+  "wynd": {
+    "pool_neta_raw": 959341093,
+    "lp_supply_raw": 8961136120,
+    "economic_wallets": 3344,
+    "custody_lp_raw": 8738464169,
+    "active_lp_raw": 7157563479,
+    "claim_lp_raw": 1580900690
+  },
+  "osmosis_pool_631": {
+    "height": 70424425,
+    "rpc": "https://rpc.osmosis.zone",
+    "pool_neta_raw": 901155656,
+    "lp_supply_raw": 225004459685449894124978,
+    "direct_share_holders": 578,
+    "economic_wallets": 1969,
+    "lockup_module_shares_raw": 131997302629907807636139,
+    "lock_owners": 1411,
+    "lock_records": 1422,
+    "active_lock_records": 1418,
+    "unlocking_lock_records": 4
+  },
+  "checks": {
+    "wynd_wallet_sum_raw": 959341093,
+    "osmosis_wallet_sum_raw": 901155656
+  }
+}
+exit_code=0
