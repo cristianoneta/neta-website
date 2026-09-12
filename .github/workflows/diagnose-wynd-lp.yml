@@ -2,7 +2,7 @@ name: Diagnose WYND LP ownership
 
 on:
   push:
-    branches: [main]
+    branches: [diagnostic/wynd-lp-attribution]
     paths:
       - ".github/workflows/diagnose-wynd-lp.yml"
       - "scripts/diagnose_wynd_lp.py"
@@ -27,4 +27,5 @@ jobs:
       - name: Run WYND LP diagnostic
         run: python scripts/diagnose_wynd_lp.py
       - name: Show WYND LP diagnostic
-        run: cat wynd_lp_diagnostic.json
+        if: always()
+        run: cat wynd_lp_diagnostic.json || true
