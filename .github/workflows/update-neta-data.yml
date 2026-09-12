@@ -1,6 +1,8 @@
 name: Update NETA on-chain data
 
 on:
+  pull_request:
+    branches: [main]
   workflow_dispatch:
   schedule:
     # Europe/Berlin 03:00 = 01:00 UTC in summer, 02:00 UTC in winter.
@@ -12,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: neta-daily-data
+  group: neta-daily-data-${{ github.event_name }}
   cancel-in-progress: false
 
 jobs:
@@ -28,6 +30,11 @@ jobs:
         id: gate
         shell: bash
         run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "Manual/PR validation run allowed."
+            exit 0
+          fi
           HOUR="$(TZ=Europe/Berlin date +%H)"
           if [ "$HOUR" = "03" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
@@ -38,26 +45,26 @@ jobs:
           fi
 
       - name: Set up Python
-        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
 
       - name: Install dependencies
-        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
 
       - name: Fetch and validate all NETA data
-        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true'
         run: python scripts/update_neta_data.py --output .
 
       - name: Show validation summary
-        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true'
         run: cat metadata.json
 
       - name: Commit changed data
-        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'pull_request'
         shell: bash
         run: |
           if git diff --quiet -- holders.json address_index.json metadata.json data.js address-index.js; then
