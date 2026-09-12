@@ -7,6 +7,7 @@ on:
       - ".github/workflows/discover-wynd-recovery.yml"
       - "scripts/discover_wynd_recovery.py"
       - "scripts/validate_wynd_recovery.py"
+      - "scripts/build_wynd_recovery_registry.py"
   workflow_dispatch:
 
 permissions:
@@ -26,10 +27,14 @@ jobs:
         id: discovery
         continue-on-error: true
         run: python scripts/discover_wynd_recovery.py
-      - name: Validate top-five recovery state
+      - name: Validate top-eight recovery state
         id: validation
         continue-on-error: true
         run: python scripts/validate_wynd_recovery.py
+      - name: Build top-eight frontend allowlist
+        id: registry
+        continue-on-error: true
+        run: python scripts/build_wynd_recovery_registry.py
       - name: Persist evidence
         if: always()
         run: |
@@ -39,9 +44,12 @@ jobs:
           if [ -f docs/diagnostics/wynd_recovery_validation.json ]; then
             git add docs/diagnostics/wynd_recovery_validation.json
           fi
+          if [ -f data/recovery/wynd-pools.json ]; then
+            git add data/recovery/wynd-pools.json docs/recovery/WYND_RECOVERY_STATE_MACHINE.md
+          fi
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Record WYND recovery pool discovery"
           git push
       - name: Fail when discovery is incomplete
-        if: always() && (steps.discovery.outcome != 'success' || steps.validation.outcome != 'success')
+        if: always() && (steps.discovery.outcome != 'success' || steps.validation.outcome != 'success' || steps.registry.outcome != 'success')
         run: exit 1
