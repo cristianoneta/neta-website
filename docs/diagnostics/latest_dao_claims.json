@@ -3455,8 +3455,8 @@
   },
   "snapshot": {
     "endpoint": "https://juno-api.polkachu.com",
-    "height": 41689016,
-    "time": "2026-09-12T12:27:45.840867+00:00"
+    "height": 41689047,
+    "time": "2026-09-12T12:29:12.910272+00:00"
   },
   "totals_neta": {
     "claimable": 702.382593
