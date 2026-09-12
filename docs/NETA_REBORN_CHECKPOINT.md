@@ -493,3 +493,35 @@ Frontend foundation artifacts:
 - `docs/recovery/WYND_RECOVERY_STATE_MACHINE.md`: fail-closed wallet/action state machine.
 - Registry status: `VALIDATED_FOR_READ_ONLY_FRONTEND`.
 - Signing is intentionally disabled until controlled simulation and tiny-position transaction tests have validated gas, fees, events, rejection paths and post-transaction refresh.
+
+
+### WYND recovery frontend draft and achievement statistics — WORKING 2026-09-12
+
+Draft files on `diagnostic/wynd-recovery-discovery`:
+- `wynd-recovery.html`
+- `wynd-recovery.css`
+- `wynd-recovery.js`
+- `data/recovery/recovery-stats.json`
+
+Implemented draft behavior:
+- Loads only the validated Top-8 registry.
+- Connects a Juno wallet through an injected Keplr/Leap provider and reads direct LP, active stake, internal locked components, claimable LP and still-unbonding LP.
+- Uses current block height as well as block time to classify claim maturity.
+- Never offers locked stake as freely unbondable.
+- Shows transaction previews with signing disabled.
+- Implements the requested 0.5-second blackout every 5 seconds, an ON/OFF control, reduced-motion handling and automatic suspension while a preview dialog is open.
+- Shows aggregate and per-pool `Unstaked via NETA Reborn` and `Claimed via NETA Reborn` USD statistics.
+
+Statistics attribution decision:
+- Site-created transactions use memo `netareborn.com/wynd-recovery:v1`.
+- Only confirmed, allowlisted transactions with the exact memo may be counted.
+- Collection starts at launch with zero; no historical action is attributed retroactively.
+- Unstaked USD is valued when an Unbond transaction is confirmed.
+- Claimed USD is valued when a Claim transaction returns LP to the wallet.
+- These are separate process milestones; the same LP value may appear in both and the figures must not be summed as unique recovered value.
+- Production collector implementation and price-at-block validation remain required before publication.
+
+Testing without the user's own stake:
+- Read-only empty-wallet behavior can be tested immediately.
+- State-dependent execute messages can be tested with unsigned chain simulation using existing on-chain position holders as the sender context; this does not sign, broadcast or move their assets.
+- Final broadcast testing still requires a consenting test wallet or a tiny controlled position.
