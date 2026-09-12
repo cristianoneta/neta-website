@@ -13,11 +13,52 @@ from pathlib import Path
 
 import requests
 
-from update_neta_data import JUNO, NETA, S, TIMEOUT, contract_state, jint, jval, nskey
+from update_neta_data import JUNO, NETA, S, TIMEOUT, jint, jval, nskey
 
 LP = "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x"
 PAIR = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OUT = Path("wynd_lp_diagnostic.json")
+
+
+def b64decode_loose(value: str) -> bytes:
+    """Accept normal or URL-safe base64 with omitted padding."""
+    value = value.strip()
+    value += "=" * ((4 - len(value) % 4) % 4)
+    return base64.b64decode(value, altchars=b"-_")
+
+
+def contract_state_loose(address: str):
+    rows = []
+    key = None
+    endpoint = None
+    while True:
+        q = {"pagination.limit": "5000"}
+        if key:
+            q["pagination.key"] = key
+        last = None
+        for base in JUNO:
+            try:
+                r = S.get(
+                    base.rstrip("/") + f"/cosmwasm/wasm/v1/contract/{address}/state",
+                    params=q,
+                    timeout=TIMEOUT,
+                )
+                r.raise_for_status()
+                data = r.json()
+                endpoint = base
+                break
+            except Exception as exc:
+                last = exc
+        else:
+            raise RuntimeError(f"state query failed for {address}: {last}")
+
+        for model in data.get("models", []):
+            rows.append((b64decode_loose(model["key"]), b64decode_loose(model["value"])))
+        key = (data.get("pagination") or {}).get("next_key")
+        if not key:
+            break
+    print(f"WYND LP contract state: {len(rows):,} rows via {endpoint}")
+    return rows
 
 
 def smart(contract: str, msg: dict) -> dict:
@@ -58,7 +99,7 @@ def main() -> None:
     token_info = None
     minter = None
 
-    for key, value in contract_state(LP):
+    for key, value in contract_state_loose(LP):
         ns, suffix = nskey(key)
         if ns == "balance" and suffix:
             address = suffix.decode()
@@ -93,8 +134,6 @@ def main() -> None:
     ordered = sorted(balances.items(), key=lambda x: (-x[1], x[0]))
     top = []
     contract_lp_raw = 0
-    # Inspect enough large holders to reveal staking/custody contracts without
-    # issuing thousands of account-info requests.
     for address, amount in ordered[:100]:
         contract = is_contract(address)
         if contract:
