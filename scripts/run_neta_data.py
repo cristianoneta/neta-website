@@ -7,6 +7,7 @@ with a bounded parallel version that preserves the fail-closed accounting.
 """
 import base64
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 _original_b64decode = base64.b64decode
@@ -36,14 +37,18 @@ import update_neta_data
 
 
 def _parallel_scan_osmo():
-    """Scan all 512 bank prefixes with bounded concurrency.
+    """Scan all 512 bank prefixes with conservative concurrency + retries.
 
-    Each prefix remains independently validated. Any failed prefix aborts the
-    complete run exactly as before, so speed does not weaken correctness.
+    We deliberately use only two workers. A failed prefix is retried with
+    exponential backoff and, when available, the secondary Osmosis RPC.
+    Every prefix must still succeed or the whole run aborts.
     """
-    height, rpc = update_neta_data.latest_height()
+    height, primary_rpc = update_neta_data.latest_height()
+    rpc_candidates = [primary_rpc] + [x for x in update_neta_data.OSMO if x != primary_rpc]
+    workers = 2
     update_neta_data.log(
-        f"Osmosis primary-state height {height:,} via {rpc}; 8 parallel workers"
+        f"Osmosis primary-state height {height:,} via {primary_rpc}; "
+        f"{workers} parallel workers with retry/backoff"
     )
 
     holders = {}
@@ -52,22 +57,34 @@ def _parallel_scan_osmo():
     completed = 0
 
     def fetch_one(n, first):
-        pairs = update_neta_data.subspace(bytes([2, n, first]), height, rpc)
-        local = {}
-        for k, v in pairs:
+        prefix = bytes([2, n, first])
+        last_exc = None
+        # Up to 8 attempts total; rotate endpoints and slow down progressively.
+        for attempt in range(8):
+            rpc = rpc_candidates[attempt % len(rpc_candidates)]
             try:
-                raw, denom = update_neta_data.bank_key(k)
-            except Exception:
-                continue
-            if denom != update_neta_data.DENOM:
-                continue
-            amt = update_neta_data.bank_amount(v)
-            if amt > 0:
-                addr = update_neta_data.b32enc("osmo", raw)
-                local[addr] = local.get(addr, 0) + amt
-        return local
+                pairs = update_neta_data.subspace(prefix, height, rpc)
+                local = {}
+                for k, v in pairs:
+                    try:
+                        raw, denom = update_neta_data.bank_key(k)
+                    except Exception:
+                        continue
+                    if denom != update_neta_data.DENOM:
+                        continue
+                    amt = update_neta_data.bank_amount(v)
+                    if amt > 0:
+                        addr = update_neta_data.b32enc("osmo", raw)
+                        local[addr] = local.get(addr, 0) + amt
+                return local
+            except Exception as exc:
+                last_exc = exc
+                # Backoff is intentionally capped so a temporary 429 does not
+                # turn a daily run into a very long job.
+                time.sleep(min(0.75 * (2 ** attempt), 8.0))
+        raise RuntimeError(f"all retry attempts failed: {last_exc}")
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = {
             pool.submit(fetch_one, n, first): (n, first)
             for n, first in tasks
@@ -101,7 +118,7 @@ def _parallel_scan_osmo():
         f"Osmosis: {len(holders):,} holders / "
         f"{sum(holders.values()) / 1e6:,.6f} NETA"
     )
-    return holders, height, rpc
+    return holders, height, primary_rpc
 
 
 update_neta_data.scan_osmo = _parallel_scan_osmo
