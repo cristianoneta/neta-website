@@ -9,8 +9,10 @@ on:
       - ".github/workflows/update-neta-data.yml"
   workflow_dispatch:
   schedule:
-    - cron: "7 1 * * *"
-    - cron: "7 2 * * *"
+    # GitHub cron is UTC. These two 6-hour grids cover both CET and CEST.
+    # The Berlin-time gate below accepts only 03:00, 09:00, 15:00 and 21:00 local time.
+    - cron: "7 0,6,12,18 * * *"
+    - cron: "7 1,7,13,19 * * *"
 
 permissions:
   contents: write
@@ -27,7 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Berlin 03:00 gate
+      - name: Berlin update-time gate
         id: gate
         shell: bash
         run: |
@@ -37,11 +39,10 @@ jobs:
             exit 0
           fi
           HOUR="$(TZ=Europe/Berlin date +%H)"
-          if [ "$HOUR" = "03" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          fi
+          case "$HOUR" in
+            03|09|15|21) echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "run=false" >> "$GITHUB_OUTPUT" ;;
+          esac
       - name: Set up Python
         if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v5
