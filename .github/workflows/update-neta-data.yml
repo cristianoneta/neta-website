@@ -1,0 +1,71 @@
+name: Update NETA on-chain data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Europe/Berlin 03:00 = 01:00 UTC in summer, 02:00 UTC in winter.
+    # Run at both UTC hours; the gate below lets only local 03:00 continue.
+    - cron: "7 1 * * *"
+    - cron: "7 2 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: neta-daily-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Berlin 03:00 gate
+        id: gate
+        shell: bash
+        run: |
+          HOUR="$(TZ=Europe/Berlin date +%H)"
+          if [ "$HOUR" = "03" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "Europe/Berlin hour is 03. Scheduled run allowed."
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Europe/Berlin hour is $HOUR. Scheduled run skipped."
+          fi
+
+      - name: Set up Python
+        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Fetch and validate all NETA data
+        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        run: python scripts/update_neta_data.py --output .
+
+      - name: Show validation summary
+        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        run: cat metadata.json
+
+      - name: Commit changed data
+        if: github.event_name == 'workflow_dispatch' || steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          if git diff --quiet -- holders.json address_index.json metadata.json data.js address-index.js; then
+            echo "No data changes."
+            exit 0
+          fi
+          git config user.name "NETA Reborn Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add holders.json address_index.json metadata.json data.js address-index.js
+          git commit -m "chore: daily NETA on-chain data update"
+          git push
