@@ -147,7 +147,12 @@ def validate_pool(pool, height, block_nanos):
     bonding = smart(stake, {"bonding_info": {}})
     total_staked = smart(stake, {"total_staked": {}})
     total_unbonding = smart(stake, {"total_unbonding": {}})
-    unbond_all = smart(stake, {"unbond_all": {}})
+    try:
+        unbond_all = {"supported": True, "response": smart(stake, {"unbond_all": {}})}
+    except Exception as exc:
+        # This query was added in a later stake contract version and is not
+        # required for user position recovery.
+        unbond_all = {"supported": False, "error": str(exc)}
     periods = [int(x["unbonding_period"]) for x in bonding.get("bonding", [])]
     if not periods:
         raise RuntimeError(f"{stake}: no unbonding periods")
