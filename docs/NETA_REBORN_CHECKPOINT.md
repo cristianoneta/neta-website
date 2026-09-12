@@ -333,3 +333,88 @@ Diagnostic findings:
 - Export validation: `unknown_routes_not_misclassified: true`; all validation flags passed.
 - No IBC movements have yet been observed in the forward-collected window, so `routes` and `discovered_chains` are currently empty.
 - This validates movement detection/classification infrastructure only. Holder-ranking support for a third chain remains pending until its NETA denom, endpoint and custody reconciliation are verified.
+
+
+## WYND DEX user recovery page — NEW PROJECT CHECKPOINT 2026-09-12
+
+### Goal
+Create a new subpage on the existing NETA Reborn website that lets **any user** connect a Juno wallet and recover liquidity currently inaccessible through the former normal WYND DEX frontend. This is not limited to selected wallets. The initial scope is the **five largest relevant WYND pools by current recoverable USD pool value**.
+
+Expected per-wallet flow:
+1. Connect a Juno wallet using a standard wallet provider such as Keplr/Leap.
+2. Read and display all of that address's positions in the selected five pools.
+3. Separate direct LP tokens, actively staked LP, locked-token stake components, unbonding claims and already claimable LP.
+4. Show the estimated underlying assets and USD value for each position, with timestamp and price source.
+5. Offer only actions valid for the current state:
+   - **Unstake / Unbond**
+   - **Claim LP** after its release condition is satisfied
+   - **Withdraw Liquidity** by sending the recovered LP token to the relevant pair contract with the exact withdrawal hook
+6. Preview the contract, message, amounts and expected next state before the wallet asks the user to sign.
+
+The page must be non-custodial. It never receives funds or seed phrases and never signs transactions. It only constructs messages; the user's wallet signs and broadcasts them.
+
+### Known validated reference pool
+WYND JUNO/NETA remains the only pool already fully reconstructed:
+- Pair: `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`
+- LP CW20: `juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x`
+- Stake: `juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7`
+- LP supply: `8,961,136,120 raw LP`
+- Stake custody: `8,738,464,169 raw LP`
+- Active stake including `locked_tokens`: `7,157,563,479 raw LP`
+- Claims/unbonding: `1,580,900,690 raw LP`
+- Pool reserve at the validated snapshot: `959.341093 NETA`
+- Active stake wallets found: `3,334`
+- Claims found: `724`
+
+### Top-five pool discovery — OPEN
+A previously discussed “top five WYND pools by USD value” list was not persisted in the checkpoint and could not be recovered reliably from available project artifacts. Do **not** guess or reuse an unverified list.
+
+Required next step:
+- enumerate the live WYND factory/pair set on Juno;
+- query each pair's assets/reserves, LP token and staking contract;
+- determine which pools still hold economically recoverable user liquidity;
+- value both sides consistently using explicit current price sources;
+- rank by total current recoverable pool value;
+- persist the exact top five with Juno height, UTC timestamp, pair, LP and stake addresses, raw reserves, display reserves, prices and USD value;
+- prove for each selected pool that stake plus claim accounting reconciles to stake-contract LP custody before enabling transactions.
+
+Current technical progress:
+- The current Juno LCD is reachable.
+- The original public WYND DEX contract repository `wynddao/wynddex` is available and confirms the relevant message families.
+- Contract definitions show stake actions including `Unbond` and `Claim`, and pair liquidity withdrawal via `WithdrawLiquidity`.
+- Exact serialized execute messages and all state/edge-case handling still need to be verified against the deployed code versions of each selected contract. Never infer a deployed message shape solely from a current source branch.
+
+### Recovery UI safety requirements
+- Start read-only and build a transaction simulator/preview before enabling signing.
+- Verify wallet network is `juno-1`.
+- Never request or handle mnemonic/seed phrases.
+- Use explicit allowlisted pair, LP and stake addresses from the validated pool registry.
+- Disable action buttons if the live contract code ID/config no longer matches the validated deployment record.
+- Re-query the wallet position immediately before constructing a transaction.
+- Never label a claim as withdrawable until its release condition is mature at the current Juno block time/height.
+- Do not combine multiple destructive financial actions invisibly. Display each transaction and resulting state.
+- Pause all decorative animation while a wallet approval modal is expected.
+- Test every message with tiny controlled positions or reliable simulation before production.
+- Production must remain unchanged during pool discovery and contract-message validation.
+
+### Visual direction
+The user requested a “risky recovery mission” presentation consistent with the existing Matrix/terminal style.
+
+Specific effect:
+- On the recovery subpage only, the screen should go completely black for **0.5 seconds every 5 seconds**.
+- Provide a clearly discoverable **BLACKOUT EFFECT ON/OFF** control.
+- Default behavior and accessibility must be evaluated in the draft; at minimum respect `prefers-reduced-motion`.
+- Suspend the blackout while the user is reading a transaction preview, signing in Keplr/Leap, broadcasting, or viewing success/error feedback.
+- The blackout is presentation only and must never cause navigation, lose component state, reset forms, move scroll position or interrupt RPC/wallet operations.
+
+### Separate frontend issue — OPEN
+The user reported that scrolling on an existing page can cause the view to jump back to the top. This predates the recovery subpage and is not caused by unpublished recovery work. Investigate recurring DOM replacement, focus management, hash navigation, data refresh/reload and scroll restoration separately. Do not carry the defect into the recovery page.
+
+### Immediate continuation instruction for the next chat
+Read this checkpoint first. Then:
+1. finish on-chain enumeration and valuation of all recoverable WYND pools;
+2. present the verified top five in a table;
+3. validate deployed query/execute message shapes and recovery state machine for all five;
+4. update this checkpoint with the evidence;
+5. create and show the user a frontend draft **before** changing production;
+6. do not publish until the user explicitly approves the draft.
