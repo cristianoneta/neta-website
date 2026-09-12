@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-12T10:29:22.412426Z",
+  "generated_at": "2026-09-12T10:36:23.883509Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -33,7 +33,7 @@
     "top_1_percent_wallets": 122
   },
   "osmosis": {
-    "height": 70419623,
+    "height": 70419930,
     "rpc": "https://rpc.osmosis.zone",
     "method": "bank primary state prefix scan (20-byte + 32-byte addresses)"
   },
