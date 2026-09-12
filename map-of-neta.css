@@ -44,3 +44,9 @@
 @keyframes node-scan-down{0%,10%{opacity:0;transform:translateY(0)}16%{opacity:.95}55%{opacity:.72}63%,100%{opacity:0;transform:translateY(94px)}}
 @media(max-width:700px){.juno-node .chain-logo-shell{width:70px;height:70px}.osmo-node .chain-logo-shell{width:60px;height:60px}.node-code-rain i{font-size:6px}.node-scan-beam{left:12%;right:12%}}
 @media(prefers-reduced-motion:reduce){.node-code-rain i,.node-scan-beam{animation:none}.node-scan-beam{display:none}}
+
+
+/* v6 — approved treatment uses recolored authentic PNG artwork */
+.chain-logo{display:block;object-fit:contain;padding:0!important;filter:drop-shadow(0 0 4px rgba(0,255,157,.8)) drop-shadow(0 0 9px rgba(0,255,157,.28))!important}
+.juno-node .chain-logo-shell{width:94px;height:94px}
+.osmo-node .chain-logo-shell{width:80px;height:80px}

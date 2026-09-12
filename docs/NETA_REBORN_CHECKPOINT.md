@@ -305,3 +305,11 @@ Diagnostic findings:
 - Production was compared against the approved concept and found materially undersized: the previous CSS constrained Juno/Osmosis artwork to 58/50 px and confined code to the badge.
 - Corrected treatment uses approximately 90 px for Juno and 76 px for Osmosis on desktop, removes the extra badge border/background, keeps the official emblems dominant, and adds independent binary-code columns across the larger logo area.
 - The vertical code rain moves top-to-bottom behind each emblem; a separate horizontal scan beam crosses the full logo/code area.
+
+
+### Authentic-logo production correction — 2026-09-12
+
+- The hand-built approximation SVGs were rejected after visual comparison with the approved concept.
+- Production now uses the authentic chain-registry PNG artwork, recolored deterministically into a dark/mint phosphor palette while preserving original geometry, shading, transparency and internal detail.
+- Assets: `assets/juno-matrix-official.png` and `assets/osmosis-matrix-official.png`.
+- Matrix digits and the horizontal scan beam remain independent CSS layers behind/over the unmodified logo artwork; no filter collapses the Juno disc and no custom-drawn flask replaces Osmosis.
