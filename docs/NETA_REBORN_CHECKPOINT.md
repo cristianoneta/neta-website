@@ -192,7 +192,18 @@ WYND minimum-liquidity edge case:
 - All seven schema-v3 validation flags passed, both pool custody addresses were absent from economic rows, and output schema fields were present.
 
 
-## Production integration plan — VALIDATED, DEPLOYMENT PENDING
+## Production schema v3 — DEPLOYED AND VALIDATED
+
+Production deployment:
+- Atomic code/frontend integration commit on `main`: `491684eadf7bdd13ea6cbc6559ee4dfd72ac07d2`.
+- Successful schema-v3 data commit: `845f3bd9dea382b572f0ac55554ce8661ed5b9f7`.
+- Generated at: `2026-09-12T13:08:25.511118Z`.
+- Juno DAO snapshot height: `41689824`.
+- Osmosis snapshot height: `70426854`.
+- Production metadata has `schema_version: 3` and all seven validation flags true.
+- Production totals: `13,973` economic holders; `4,180.135927` staked; `0.000000` unstaking; `702.382593` claimable; `1,860.496749` LP NETA; `31,886.390000` wallet-attributed + `0.210000` residual = `31,886.600000` total supply.
+- Production workflow requested the Pages rebuild after its data commit.
+
 Only after Osmosis reconciliation is green:
 1. Reuse the existing 4-worker Osmosis 512-prefix bank scan in `scripts/run_neta_data.py` to collect both NETA and `gamm/pool/631` in the same pass. Do not add a second expensive full bank scan.
 2. Attribute WYND pool NETA from a consistent Juno snapshot and Pool 631 NETA from the same Osmosis snapshot/height used for shares where possible.
