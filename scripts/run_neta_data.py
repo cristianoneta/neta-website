@@ -35,4 +35,23 @@ base64.b64decode = _compatible_b64decode
 
 import update_neta_data
 
+# Expose visible progress during the 512 Osmosis bank-state prefix scans.
+_original_subspace = update_neta_data.subspace
+_progress = {"done": 0}
+
+
+def _progress_subspace(prefix, height, rpc):
+    try:
+        return _original_subspace(prefix, height, rpc)
+    finally:
+        _progress["done"] += 1
+        done = _progress["done"]
+        if done % 32 == 0 or done == 512:
+            update_neta_data.log(
+                f"Osmosis scan progress: {done}/512 ({done / 512:.0%})"
+            )
+
+
+update_neta_data.subspace = _progress_subspace
+
 raise SystemExit(update_neta_data.main())
