@@ -3,7 +3,7 @@ name: Update Map of NETA data
 on:
   workflow_dispatch:
   push:
-    branches: [feature/map-of-neta]
+    branches: [feature/map-of-neta, main]
     paths:
       - ".github/workflows/update-map-of-neta.yml"
       - "scripts/update_map_of_neta.py"
