@@ -315,7 +315,7 @@ Diagnostic findings:
 - Matrix digits and the horizontal scan beam remain independent CSS layers behind/over the unmodified logo artwork; no filter collapses the Juno disc and no custom-drawn flask replaces Osmosis.
 
 
-## Multichain NETA detection — WORKING 2026-09-12
+## Multichain NETA detection — BASE LAYER VALIDATED 2026-09-12
 
 - Chain Registry search currently finds NETA officially on Juno and Osmosis only; no verified Terra NETA denom was found.
 - The old Map parser hard-coded every outgoing CW20-ICS20 transfer as Juno→Osmosis and every receive as Osmosis→Juno.
@@ -323,3 +323,13 @@ Diagnostic findings:
 - Shared registry: `data/map/chains.json`. Terra/Cosmos Hub are detection-only until exact NETA denom and reliable LCD are verified.
 - Map exports generic `flows.routes` and `flows.discovered_chains` while retaining legacy Juno/Osmosis totals.
 - Ranking remains fail-closed: movement detection may precede ranking support, but holder balances require verified denom, endpoint and custody reconciliation.
+
+
+### Multichain detector production validation
+
+- Implementation commit: `fe4b24968c9fa3136ea640010e331a1e1b3023ea`.
+- First production data continuation: `dd2c66ced6fbf138b7e18897aa85cba760bccea2`.
+- Workflow unit tests and collector completed successfully.
+- Export validation: `unknown_routes_not_misclassified: true`; all validation flags passed.
+- No IBC movements have yet been observed in the forward-collected window, so `routes` and `discovered_chains` are currently empty.
+- This validates movement detection/classification infrastructure only. Holder-ranking support for a third chain remains pending until its NETA denom, endpoint and custody reconciliation are verified.
