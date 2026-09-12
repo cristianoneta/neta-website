@@ -118,7 +118,26 @@ def parse_pool(items):
             out.append({"id":event_id("osmosis",h,"pool631",i),"timestamp":ts,"height":height,"type":"swap","chain":"osmosis","market":"pool-631","wallet":who,"wallet_id":identity(who),"direction":direction,"neta_raw":raw,"txhash":h})
     return out
 
-def parse_ibc(items):
+def address_prefix(address):
+    if not address or "1" not in address: return None
+    prefix=address.split("1",1)[0].lower()
+    return prefix if re.fullmatch(r"[a-z0-9]{2,20}",prefix) else None
+
+def resolve_remote_chain(a,registry,outbound):
+    explicit=a.get("chain_id") or a.get("dest_chain_id") or a.get("destination_chain_id")
+    if explicit:
+        for chain_id,cfg in registry["chains"].items():
+            if explicit==chain_id or explicit in cfg.get("chain_ids",[]): return chain_id,"event_chain_id"
+    channel=a.get("channel") or a.get("channel_id") or a.get("dest_channel") or a.get("dest_channel_id")
+    if channel and channel in registry.get("juno_channels",{}):
+        return registry["juno_channels"][channel],"verified_channel"
+    remote_address=a.get("receiver") if outbound else a.get("sender")
+    prefix=address_prefix(remote_address)
+    if prefix and prefix in registry.get("prefixes",{}):
+        return registry["prefixes"][prefix],"address_prefix"
+    return ("unknown:"+channel if channel else "unknown"),"unresolved"
+
+def parse_ibc(items,registry):
     out=[]
     for it in items:
         h,height,ts=txmeta(it)
@@ -128,11 +147,15 @@ def parse_ibc(items):
             a=attrs(ev)
             if a.get("_contract_address")!=JUNO_BRIDGE or a.get("denom")!=CW20_DENOM: continue
             action=a.get("action")
-            if action=="transfer": src,dst="juno","osmosis"
-            elif action=="receive" and a.get("success")=="true": src,dst="osmosis","juno"
+            if action=="transfer":
+                remote,method=resolve_remote_chain(a,registry,True); src,dst="juno",remote
+            elif action=="receive" and a.get("success")=="true":
+                remote,method=resolve_remote_chain(a,registry,False); src,dst=remote,"juno"
             else: continue
             raw=int(a.get("amount") or 0)
-            if raw>0: out.append({"id":event_id("juno",h,"ibc",i),"timestamp":ts,"height":height,"type":"ibc","from_chain":src,"to_chain":dst,"sender":a.get("sender"),"receiver":a.get("receiver"),"neta_raw":raw,"txhash":h})
+            channel=a.get("channel") or a.get("channel_id") or a.get("dest_channel") or a.get("dest_channel_id")
+            verified=remote in registry["chains"] and registry["chains"][remote].get("movement_verified",False)
+            if raw>0: out.append({"id":event_id("juno",h,"ibc",i),"timestamp":ts,"height":height,"type":"ibc","from_chain":src,"to_chain":dst,"remote_chain":remote,"chain_resolution":method,"chain_verified":verified,"channel":channel,"sender":a.get("sender"),"receiver":a.get("receiver"),"neta_raw":raw,"txhash":h})
     return out
 
 def load_json(path,default):
@@ -140,12 +163,21 @@ def load_json(path,default):
 def write_json(path,data):
     path.parent.mkdir(parents=True,exist_ok=True); path.write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
 
-def aggregate(root,all_events,state,metadata):
+def aggregate(root,all_events,state,metadata,registry):
     t=now(); cutoff=t-dt.timedelta(hours=24)
     recent=[e for e in all_events if parse_time(e["timestamp"])>=cutoff]
     flows=[e for e in recent if e["type"]=="ibc"]; swaps=[e for e in recent if e["type"]=="swap"]
-    j2o=sum(e["neta_raw"] for e in flows if e["from_chain"]=="juno")/1e6
-    o2j=sum(e["neta_raw"] for e in flows if e["from_chain"]=="osmosis")/1e6
+    route_raw={}
+    for e in flows:
+        key=(e["from_chain"],e["to_chain"]); route_raw[key]=route_raw.get(key,0)+e["neta_raw"]
+    routes=[{"from_chain":a,"to_chain":b,"neta":round(raw/1e6,6),"transfers":sum(1 for e in flows if e["from_chain"]==a and e["to_chain"]==b)} for (a,b),raw in sorted(route_raw.items())]
+    j2o=route_raw.get(("juno","osmosis"),0)/1e6
+    o2j=route_raw.get(("osmosis","juno"),0)/1e6
+    discovered={}
+    for e in (x for x in all_events if x["type"]=="ibc"):
+        remote=e.get("remote_chain") or (e["to_chain"] if e["from_chain"]=="juno" else e["from_chain"])
+        x=discovered.setdefault(remote,{"id":remote,"name":registry["chains"].get(remote,{}).get("name",remote),"movement_verified":bool(e.get("chain_verified")),"ranking_supported":registry["chains"].get(remote,{}).get("ranking_supported",False),"events":0})
+        x["events"]+=1
     movers={}
     for e in swaps:
         x=movers.setdefault(e["wallet_id"],{"wallet":e.get("wallet"),"bought_raw":0,"sold_raw":0,"swaps":0})
@@ -159,11 +191,13 @@ def aggregate(root,all_events,state,metadata):
     def public(x): return {"wallet":x["wallet"],"net_neta":round(x["net_raw"]/1e6,6),"bought_neta":round(x["bought_raw"]/1e6,6),"sold_neta":round(x["sold_raw"]/1e6,6),"swaps":x["swaps"]}
     supply=float(metadata["total_supply_neta"]); osmo=float(metadata["excluded_bridge_escrow_neta"])
     started=parse_time(state["collection_started_at"]); coverage=min(1,(t-started).total_seconds()/86400)
-    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":True,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True},"periods":{"24h":{"available":coverage>=1,"coverage_percent":round(coverage*100,2)},"7d":{"available":False},"30d":{"available":False},"90d":{"available":False}},"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows)},"market":{"swaps":len(swaps),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
+    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":True,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True,"unknown_routes_not_misclassified":all(not (e.get("chain_resolution")=="unresolved" and e.get("remote_chain")=="osmosis") for e in flows)},"periods":{"24h":{"available":coverage>=1,"coverage_percent":round(coverage*100,2)},"7d":{"available":False},"30d":{"available":False},"90d":{"available":False}},"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows),"routes":routes,"discovered_chains":sorted(discovered.values(),key=lambda x:x["id"])},"market":{"swaps":len(swaps),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--root",default="."); a=ap.parse_args(); root=Path(a.root)
     state_path=root/"data/map/state.json"; state=load_json(state_path,{})
+    registry=load_json(root/"data/map/chains.json",{})
+    if registry.get("schema_version")!=1 or "juno" not in registry.get("chains",{}): raise RuntimeError("invalid chain registry")
     j_latest,j_ep=latest(JUNO_LCD); o_latest,o_ep=latest(OSMO_LCD)
     if not state:
         state={"schema_version":1,"collection_started_at":iso(now()),"juno_last_height":j_latest,"osmosis_last_height":o_latest}
@@ -176,7 +210,7 @@ def main():
         wynd,_=query_txs(JUNO_LCD,jq(f"wasm._contract_address='{WYND_PAIR}'"))
         bridge,_=query_txs(JUNO_LCD,jq(f"wasm._contract_address='{JUNO_BRIDGE}'"))
         pool,_=query_txs(OSMO_LCD,oq("token_swapped.pool_id='631'"))
-        new=parse_wynd(wynd)+parse_ibc(bridge)+parse_pool(pool)
+        new=parse_wynd(wynd)+parse_ibc(bridge,registry)+parse_pool(pool)
         state["juno_last_height"]=j_latest; state["osmosis_last_height"]=o_latest
     existing=[]
     for p in sorted((root/"data/map/days").glob("*.json")):
@@ -189,7 +223,7 @@ def main():
     for day,es in by_day.items(): write_json(root/f"data/map/days/{day}.json",{"date":day,"events":es})
     metadata=load_json(root/"metadata.json",{})
     if not metadata.get("validation",{}).get("passed"): raise RuntimeError("holder metadata is not validated")
-    public=aggregate(root,all_events,state,metadata)
+    public=aggregate(root,all_events,state,metadata,registry)
     if not all(public["validation"].values()): raise RuntimeError("Map validation failed")
     state["updated_at"]=public["generated_at"]; state["juno_endpoint"]=j_ep; state["osmosis_endpoint"]=o_ep
     write_json(state_path,state); write_json(root/"data/map/map-of-neta.json",public)

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "origin_chain": "juno",
+  "chains": {
+    "juno": {
+      "name": "Juno",
+      "chain_ids": [
+        "juno-1"
+      ],
+      "prefixes": [
+        "juno"
+      ],
+      "movement_verified": true,
+      "ranking_supported": true,
+      "asset": {
+        "type": "cw20",
+        "denom": "cw20:juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
+      }
+    },
+    "osmosis": {
+      "name": "Osmosis",
+      "chain_ids": [
+        "osmosis-1"
+      ],
+      "prefixes": [
+        "osmo"
+      ],
+      "movement_verified": true,
+      "ranking_supported": true,
+      "asset": {
+        "type": "bank",
+        "denom": "ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A"
+      },
+      "lcd": [
+        "https://osmosis-api.polkachu.com",
+        "https://lcd.osmosis.zone"
+      ]
+    },
+    "terra": {
+      "name": "Terra",
+      "chain_ids": [
+        "phoenix-1"
+      ],
+      "prefixes": [
+        "terra"
+      ],
+      "movement_verified": false,
+      "ranking_supported": false
+    },
+    "cosmoshub": {
+      "name": "Cosmos Hub",
+      "chain_ids": [
+        "cosmoshub-4"
+      ],
+      "prefixes": [
+        "cosmos"
+      ],
+      "movement_verified": false,
+      "ranking_supported": false
+    }
+  },
+  "prefixes": {
+    "juno": "juno",
+    "osmo": "osmosis",
+    "terra": "terra",
+    "cosmos": "cosmoshub"
+  },
+  "juno_channels": {},
+  "policy": {
+    "unknown_route_id": "unknown:<channel>",
+    "publish_movements_before_ranking_support": true,
+    "ranking_requires_verified_denom_and_endpoint": true
+  }
+}

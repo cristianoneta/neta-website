@@ -7,6 +7,8 @@ on:
     paths:
       - ".github/workflows/update-map-of-neta.yml"
       - "scripts/update_map_of_neta.py"
+      - "scripts/test_map_chain_detection.py"
+      - "data/map/chains.json"
       - "map-of-neta.html"
       - "map-of-neta.css"
       - "map-of-neta.js"
@@ -50,6 +52,9 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
         if: steps.gate.outputs.run == 'true'
+      - name: Test multichain route classification
+        if: steps.gate.outputs.run == 'true'
+        run: python scripts/test_map_chain_detection.py
       - name: Collect and validate new events
         if: steps.gate.outputs.run == 'true'
         run: python scripts/update_map_of_neta.py --root .

@@ -313,3 +313,13 @@ Diagnostic findings:
 - Production now uses the authentic chain-registry PNG artwork, recolored deterministically into a dark/mint phosphor palette while preserving original geometry, shading, transparency and internal detail.
 - Assets: `assets/juno-matrix-official.png` and `assets/osmosis-matrix-official.png`.
 - Matrix digits and the horizontal scan beam remain independent CSS layers behind/over the unmodified logo artwork; no filter collapses the Juno disc and no custom-drawn flask replaces Osmosis.
+
+
+## Multichain NETA detection — WORKING 2026-09-12
+
+- Chain Registry search currently finds NETA officially on Juno and Osmosis only; no verified Terra NETA denom was found.
+- The old Map parser hard-coded every outgoing CW20-ICS20 transfer as Juno→Osmosis and every receive as Osmosis→Juno.
+- New resolution order: explicit event chain ID, verified Juno channel mapping, remote Bech32 prefix, then `unknown:<channel>`. Unknown routes are never silently labeled Osmosis.
+- Shared registry: `data/map/chains.json`. Terra/Cosmos Hub are detection-only until exact NETA denom and reliable LCD are verified.
+- Map exports generic `flows.routes` and `flows.discovered_chains` while retaining legacy Juno/Osmosis totals.
+- Ranking remains fail-closed: movement detection may precede ranking support, but holder balances require verified denom, endpoint and custody reconciliation.
