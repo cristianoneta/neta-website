@@ -3,10 +3,12 @@
 from __future__ import annotations
 import base64
 import binascii
+import csv
 import json
 import re
 from collections import defaultdict
 from datetime import datetime, timezone
+from pathlib import Path
 import requests
 import update_neta_data as u
 
@@ -77,6 +79,29 @@ def main():
         (x["release"] or {}).get("value", 2**127),
         x["owner"],
     ))
+
+    out_dir = Path("docs/diagnostics")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with (out_dir / "dao_claims_detail.csv").open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["wallet", "claim_neta", "freigegeben_seit_utc", "status"])
+        for x in releases:
+            w.writerow([x["owner"], f'{x["amount_raw"]/1_000_000:.6f}', (x["release"] or {}).get("iso", ""), x["status"]])
+
+    by_wallet = {}
+    for x in releases:
+        row = by_wallet.setdefault(x["owner"], {"amount_raw": 0, "first": None, "last": None, "claims": 0})
+        row["amount_raw"] += x["amount_raw"]
+        row["claims"] += 1
+        iso = (x["release"] or {}).get("iso")
+        if iso:
+            row["first"] = iso if row["first"] is None or iso < row["first"] else row["first"]
+            row["last"] = iso if row["last"] is None or iso > row["last"] else row["last"]
+    with (out_dir / "dao_claims_by_wallet.csv").open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["wallet", "claimable_neta", "anzahl_claims", "erster_claim_frei_seit_utc", "letzter_claim_frei_seit_utc"])
+        for owner, row in sorted(by_wallet.items(), key=lambda kv: (-kv[1]["amount_raw"], kv[0])):
+            w.writerow([owner, f'{row["amount_raw"]/1_000_000:.6f}', row["claims"], row["first"] or "", row["last"] or ""])
     out = {
         "snapshot": {"height": height, "time": now.isoformat(), "endpoint": endpoint},
         "totals_raw": dict(totals),
