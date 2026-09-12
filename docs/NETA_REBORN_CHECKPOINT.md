@@ -418,3 +418,52 @@ Read this checkpoint first. Then:
 4. update this checkpoint with the evidence;
 5. create and show the user a frontend draft **before** changing production;
 6. do not publish until the user explicitly approves the draft.
+
+
+### WYND recovery top-five discovery — VALIDATED 2026-09-12
+
+Read-only diagnostic branch: `diagnostic/wynd-recovery-discovery`.
+
+Evidence files:
+- `docs/diagnostics/wynd_recovery_discovery.json`
+- `docs/diagnostics/wynd_recovery_validation.json`
+
+The deployed factory was derived from the known JUNO/NETA pair's on-chain creator:
+- Factory: `juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s`
+- Factory code ID: `2285`
+- 32 registered pairs were enumerated and all 32 pair/pool/LP/stake records were read successfully.
+- Discovery snapshot: Juno height `41699538`, generated `2026-09-12T20:37:27.855545Z`.
+- Price source: CoinGecko simple/price, timestamp `2026-09-12T20:36:32.960143Z`.
+- Pools with both priced assets use the sum of both externally priced reserves. Pools with one priced reserve use twice that reserve and are explicitly marked as an estimate; unpriced token values are never guessed.
+
+Validated top five by current recoverable USD pool value:
+
+| Rank | Pool | Estimated value | Pair |
+|---|---|---:|---|
+| 1 | JUNO / ATOM | $26,794.33 | `juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3` |
+| 2 | JUNO / USDC | $13,169.87 | `juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj` |
+| 3 | JUNO / OSMO | $4,502.50 | `juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt` |
+| 4 | WYND / USDC | $3,044.23 | `juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve` |
+| 5 | JUNO / NETA | $2,181.41 | `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra` |
+
+All five selected deployments share:
+- pair code ID `2289`, CW2 `wyndex-pair 1.0.0`;
+- LP code ID `1699`, CW2 `crates.io:cw20-base 1.0.1`;
+- stake code ID `2291`, CW2 `crates.io:wyndex_stake 2.0.0`;
+- unbonding periods of 7, 14, 28 and 42 days.
+
+Fail-closed economic reconciliation completed at Juno height `41700372`:
+- JUNO/ATOM: supply `89,761,104,045`; stake custody `87,491,323,725`; active `71,525,759,016`; claims `15,965,564,709`; difference zero.
+- JUNO/USDC: supply `52,511,840,165`; stake custody `52,026,132,133`; active `45,677,563,933`; claims `6,348,568,200`; difference zero.
+- JUNO/OSMO: supply `104,783,420,853`; stake custody `104,279,904,828`; active `94,669,225,628`; claims `9,610,679,200`; difference zero.
+- WYND/USDC: supply `74,958,722,515`; stake custody `71,688,224,514`; active `58,163,579,814`; claims `13,524,644,700`; difference zero.
+- JUNO/NETA: supply `8,961,136,120`; stake custody `8,738,464,169`; active `7,157,563,479`; claims `1,580,900,690`; difference zero.
+
+Across all five, every claim record was matured and claimable at the validation snapshot; actively unbonding records were zero. The deployed stake v2.0.0 contracts do not support the later `unbond_all` query, so the recovery UI must not depend on it.
+
+Validated serialized action families for these deployments:
+- Stake unbond: `{"unbond":{"tokens":"<raw_lp>","unbonding_period":<seconds>}}`
+- Stake claim: `{"claim":{}}`
+- LP withdrawal: execute CW20 `send` on the allowlisted LP token, with the allowlisted pair as `contract` and Base64 hook `{"withdraw_liquidity":{"assets":[]}}`.
+
+The UI must still re-query the connected wallet immediately before preview/signing. Signing remains disabled until simulation with controlled positions is complete.
