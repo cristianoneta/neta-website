@@ -237,3 +237,8 @@ Required invariant:
 `juno_custody_addresses + osmosis_primary_state_addresses - overlap == economic_master_entries`
 
 The metadata key names remain unchanged to preserve the existing frontend. Commit `850047c52341837bfd723c0fc17b9cd52cd1015e` changes only the indexer's calculation behind those values and adds a fail-closed validation flag, `custody_holder_union_equals_economic_holders`.
+
+
+### Frontend cache refresh incident — 2026-09-12
+
+The corrected production metadata was committed successfully at `eaff76a5c6fbcecb611c2875d18f01a729d1238e`, but the public page continued to display the preceding snapshot because `index.html` referenced generated assets with the unchanged fixed cache key `v=20260912-3`. Commit `0f6f75d64f996a1b55350700ec83d8ea8a727619` advances the invisible asset cache key to `v=20260912-4`; no visual frontend behavior changed. When generated data semantics change, refresh the asset query version or adopt a generated content/version key so browsers and the Pages CDN cannot retain an older `data.js`.
