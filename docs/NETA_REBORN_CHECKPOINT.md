@@ -274,3 +274,12 @@ Diagnostic findings:
 - The 24H period remains marked unavailable until a complete 24 hours has been collected. Longer periods remain unavailable until their full real history exists.
 - The production page is `map-of-neta.html`; chain balances are sourced from validated holder metadata and displayed rounded, while raw stored values retain six decimals.
 - Completed oversized discovery output and its temporary workflow/script were removed before production.
+
+
+## Map of NETA visual/navigation update — DEPLOYED 2026-09-12
+
+- Juno and Osmosis nodes use authentic chain-registry logo assets stored locally as `assets/juno-chain.png` and `assets/osmosis-chain.png`.
+- Both marks are rendered in the site's phosphor-green Matrix palette while preserving their recognizable geometry.
+- A restrained, irregular CSS flicker adds brief opacity shifts, horizontal clipping/glitch lines and scanlines; `prefers-reduced-motion` disables animation.
+- Period controls include `180D` and `1Y` after `90D`; they remain disabled until sufficient verified forward-collected history exists.
+- Map of NETA includes the same Telegram community CTA and footer treatment as the other pages.
