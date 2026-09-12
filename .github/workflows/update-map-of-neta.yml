@@ -7,6 +7,12 @@ on:
     paths:
       - ".github/workflows/update-map-of-neta.yml"
       - "scripts/update_map_of_neta.py"
+      - "map-of-neta.html"
+      - "map-of-neta.css"
+      - "map-of-neta.js"
+      - "index.html"
+      - "what-is-neta.html"
+      - "neta-dao.html"
   schedule:
     - cron: "17 0,6,12,18 * * *"
     - cron: "17 1,7,13,19 * * *"
