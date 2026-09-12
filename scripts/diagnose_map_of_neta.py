@@ -35,14 +35,14 @@ def get_first(bases: list[str], path: str, params: Any=None) -> dict:
     return {"ok":False,"errors":errors}
 
 def lcd_txs(bases: list[str], events: list[str], limit: int=8) -> dict:
-    params=[("events",e) for e in events]
-    params += [("pagination.limit",str(limit)),("order_by","ORDER_BY_DESC")]
+    query=" AND ".join(events)
+    params={"query":query,"pagination.limit":str(limit),"order_by":"ORDER_BY_DESC"}
     return get_first(bases,"/cosmos/tx/v1beta1/txs",params)
 
 def rpc_search(bases: list[str], query: str, limit: int=8) -> dict:
     return get_first(bases,"/tx_search",{
         "query":json.dumps(query),"prove":"false","page":"1",
-        "per_page":str(limit),"order_by":"desc"
+        "per_page":str(limit),"order_by":json.dumps("desc")
     })
 
 def b64text(x: str) -> str:
