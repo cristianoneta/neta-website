@@ -1,0 +1,51 @@
+{
+  "chains": [
+    {
+      "id": "juno-1",
+      "name": "Juno",
+      "neta": 21401.18846,
+      "role": "origin"
+    },
+    {
+      "id": "osmosis-1",
+      "name": "Osmosis",
+      "neta": 10485.41154,
+      "role": "ibc"
+    }
+  ],
+  "collection_started_at": "2026-09-12T18:05:26.203149Z",
+  "flows": {
+    "juno_to_osmosis_neta": 0.0,
+    "net_to_osmosis_neta": 0.0,
+    "osmosis_to_juno_neta": 0.0,
+    "transfers": 0,
+    "volume_neta": 0.0
+  },
+  "generated_at": "2026-09-12T18:05:26.203554Z",
+  "market": {
+    "power_buyers": [],
+    "swaps": 0,
+    "top_sellers": []
+  },
+  "periods": {
+    "24h": {
+      "available": false,
+      "coverage_percent": 0.0
+    },
+    "30d": {
+      "available": false
+    },
+    "7d": {
+      "available": false
+    },
+    "90d": {
+      "available": false
+    }
+  },
+  "schema_version": 1,
+  "validation": {
+    "cursors_monotonic": true,
+    "event_ids_unique": true,
+    "passed": true
+  }
+}
