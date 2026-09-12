@@ -1,64 +1,23 @@
 #!/usr/bin/env python3
 """Read-only diagnostic for WYND JUNO/NETA LP ownership.
 
-This does not change the production economic-holder ranking. It reconstructs
-current LP token balances, checks LP supply, reads the pool's NETA reserve and
-flags large LP holders that are CosmWasm contracts (possible staking custody).
+Uses CW20 smart queries rather than assuming a specific raw storage layout.
+This never changes the production economic-holder ranking.
 """
 from __future__ import annotations
 
 import base64
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import requests
 
-from update_neta_data import JUNO, NETA, S, TIMEOUT, jint, jval, nskey
+from update_neta_data import JUNO, NETA, S, TIMEOUT
 
 LP = "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x"
 PAIR = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OUT = Path("wynd_lp_diagnostic.json")
-
-
-def b64decode_loose(value: str) -> bytes:
-    """Accept normal or URL-safe base64 with omitted padding."""
-    value = value.strip()
-    value += "=" * ((4 - len(value) % 4) % 4)
-    return base64.b64decode(value, altchars=b"-_")
-
-
-def contract_state_loose(address: str):
-    rows = []
-    key = None
-    endpoint = None
-    while True:
-        q = {"pagination.limit": "5000"}
-        if key:
-            q["pagination.key"] = key
-        last = None
-        for base in JUNO:
-            try:
-                r = S.get(
-                    base.rstrip("/") + f"/cosmwasm/wasm/v1/contract/{address}/state",
-                    params=q,
-                    timeout=TIMEOUT,
-                )
-                r.raise_for_status()
-                data = r.json()
-                endpoint = base
-                break
-            except Exception as exc:
-                last = exc
-        else:
-            raise RuntimeError(f"state query failed for {address}: {last}")
-
-        for model in data.get("models", []):
-            rows.append((b64decode_loose(model["key"]), b64decode_loose(model["value"])))
-        key = (data.get("pagination") or {}).get("next_key")
-        if not key:
-            break
-    print(f"WYND LP contract state: {len(rows):,} rows via {endpoint}")
-    return rows
 
 
 def smart(contract: str, msg: dict) -> dict:
@@ -67,22 +26,48 @@ def smart(contract: str, msg: dict) -> dict:
     last = None
     for base in JUNO:
         try:
-            r = S.get(
+            r = requests.get(
                 base.rstrip("/") + f"/cosmwasm/wasm/v1/contract/{contract}/smart/{q}",
+                headers={"User-Agent": "NETA-Reborn-LP-Diagnostic/1.0"},
                 timeout=TIMEOUT,
             )
             r.raise_for_status()
-            return r.json().get("data", r.json())
+            body = r.json()
+            return body.get("data", body)
         except Exception as exc:
             last = exc
     raise RuntimeError(f"smart query failed for {contract}: {last}")
 
 
+def all_accounts() -> list[str]:
+    accounts: list[str] = []
+    start_after = None
+    while True:
+        query = {"all_accounts": {"limit": 100}}
+        if start_after:
+            query["all_accounts"]["start_after"] = start_after
+        data = smart(LP, query)
+        batch = data.get("accounts", [])
+        if not batch:
+            break
+        accounts.extend(batch)
+        if len(batch) < 100:
+            break
+        start_after = batch[-1]
+    return accounts
+
+
+def balance_of(address: str) -> tuple[str, int]:
+    data = smart(LP, {"balance": {"address": address}})
+    return address, int(data["balance"])
+
+
 def is_contract(address: str) -> bool:
     for base in JUNO:
         try:
-            r = S.get(
+            r = requests.get(
                 base.rstrip("/") + f"/cosmwasm/wasm/v1/contract/{address}",
+                headers={"User-Agent": "NETA-Reborn-LP-Diagnostic/1.0"},
                 timeout=12,
             )
             if r.status_code == 200:
@@ -95,36 +80,26 @@ def is_contract(address: str) -> bool:
 
 
 def main() -> None:
-    balances = {}
-    token_info = None
-    minter = None
+    token_info = smart(LP, {"token_info": {}})
+    try:
+        minter = smart(LP, {"minter": {}})
+    except Exception:
+        minter = None
 
-    for key, value in contract_state_loose(LP):
-        ns, suffix = nskey(key)
-        if ns == "balance" and suffix:
-            address = suffix.decode()
-            amount = jint(value)
+    accounts = all_accounts()
+    if not accounts:
+        raise RuntimeError("CW20 all_accounts returned zero LP accounts")
+
+    balances: dict[str, int] = {}
+    with ThreadPoolExecutor(max_workers=12) as ex:
+        futures = [ex.submit(balance_of, a) for a in accounts]
+        for fut in as_completed(futures):
+            address, amount = fut.result()
             if amount > 0:
                 balances[address] = amount
-        elif key == b"token_info" or ns == "token_info":
-            try:
-                token_info = jval(value)
-            except Exception:
-                pass
-        elif key == b"minter" or ns == "minter":
-            try:
-                minter = jval(value)
-            except Exception:
-                pass
-
-    if not balances:
-        raise RuntimeError("LP scan returned zero positive balances")
 
     direct_sum = sum(balances.values())
-    declared_supply = None
-    if isinstance(token_info, dict) and "total_supply" in token_info:
-        declared_supply = int(token_info["total_supply"])
-    lp_supply = declared_supply if declared_supply is not None else direct_sum
+    lp_supply = int(token_info["total_supply"])
     if direct_sum != lp_supply:
         raise RuntimeError(f"LP balance sum {direct_sum} != declared supply {lp_supply}")
 
@@ -138,21 +113,20 @@ def main() -> None:
         contract = is_contract(address)
         if contract:
             contract_lp_raw += amount
-        top.append(
-            {
-                "address": address,
-                "lp_raw": amount,
-                "lp_share_percent": amount / lp_supply * 100,
-                "neta_claim": pool_neta_raw * amount / lp_supply / 1_000_000,
-                "is_contract": contract,
-            }
-        )
+        top.append({
+            "address": address,
+            "lp_raw": amount,
+            "lp_share_percent": amount / lp_supply * 100,
+            "neta_claim": pool_neta_raw * amount / lp_supply / 1_000_000,
+            "is_contract": contract,
+        })
 
     result = {
         "lp_token": LP,
         "pair": PAIR,
         "token_info": token_info,
         "minter": minter,
+        "cw20_accounts": len(accounts),
         "positive_direct_holders": len(balances),
         "lp_supply_raw": lp_supply,
         "lp_balance_sum_raw": direct_sum,
@@ -167,7 +141,7 @@ def main() -> None:
     }
     OUT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    print(f"WYND LP holders: {len(balances):,}")
+    print(f"WYND LP accounts: {len(accounts):,}; positive holders: {len(balances):,}")
     print(f"LP supply check: {direct_sum} == {lp_supply}")
     print(f"Pool NETA: {pool_neta_raw / 1_000_000:,.6f}")
     print(f"Top 100 share: {result['top_100_lp_share_percent']:.4f}%")
