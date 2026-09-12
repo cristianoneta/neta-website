@@ -78,6 +78,13 @@ Current diagnostic approach scans Osmosis `lockup` KV state and unwraps PeriodLo
 ### Locked-position age investigation — OPEN
 We also want to answer whether the Pool 631 positions are ancient locks from the 2022 incentive era or were touched/rebonded later.
 
+Parser finding (2026-09-12):
+- Osmosis `PeriodLock` protobuf is confirmed as ID=1, owner=2, duration=3, end_time=4, coins=5.
+- Diagnostic run 15 failed because the generic protobuf reader returned negative `int64` timestamp seconds as an unsigned two's-complement integer. Python then raised `OverflowError: timestamp out of range`.
+- For locks whose unlocking has not started, Go's zero time is serialized as year 0001, equivalent to Unix seconds `-62135596800`. This is a sentinel meaning “no unlocking end time”, not a future timestamp.
+- Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` fixes signed `int64`/`int32` decoding and maps this zero-time sentinel to `None`.
+- The post-fix diagnostic reconciliation is still **OPEN** until its workflow output is inspected. Do not yet claim Pool 631 economic-owner closure.
+
 PeriodLock contains at least ID, owner, duration, end time and coins. `end_time` is useful for distinguishing still-locked versus unlocking positions, but creation time is not necessarily stored directly in the current lock object. Exact creation/last-touch dates may therefore require transaction/event history keyed by lock ID and owner.
 
 For every PeriodLock containing `gamm/pool/631`, collect:
@@ -101,7 +108,9 @@ Diagnostic module: `scripts/lp_attribution.py`
 
 It is intentionally read-only and should be used to prove the attribution before production integration.
 
-Run 14 (`34691326477`, head `aaecec0b725899d58fa987889e4eaa9434976cbe`) completed on 2026-09-12 with **failure** after the combined attribution step ran for about seven minutes. The failure occurred after the earlier base64-padding issue had been fixed. The exact downstream failure still needs to be isolated; do not claim Osmosis lockup reconciliation is green until a later run proves it.
+Run 14 (`34691326477`, head `aaecec0b725899d58fa987889e4eaa9434976cbe`) completed on 2026-09-12 with **failure** after the combined attribution step ran for about seven minutes. The failure occurred after the earlier base64-padding issue had been fixed.
+
+Run 15 then isolated the downstream failure to `PeriodLock.end_time` decoding: a negative protobuf `int64` representing Go zero time was interpreted as unsigned and overflowed Python datetime. Commit `8402fd20380e4c2d4a24fa8824219078c78a020b` corrects that parser on the diagnostic branch and triggered the next diagnostic run. Its final reconciliation result still needs inspection; do not claim Osmosis lockup reconciliation is green until that output proves it.
 
 ## Production integration plan — NOT YET EXECUTED
 Only after Osmosis reconciliation is green:
