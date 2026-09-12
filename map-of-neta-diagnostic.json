@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T17:53:02.393305Z",
+  "generated_at": "2026-09-12T17:54:22.454590Z",
   "purpose": "event-shape discovery only; not production Map of NETA data",
   "constants": {
     "wynd_pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
@@ -12,59 +12,77 @@
     "wynd_lcd_pair": {
       "ok": false,
       "errors": [
-        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13, \"message\":\"query cannot be empty\", \"details\":[]}",
+        "https://juno-api.lavenderfive.com:443: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://api-juno.itastakers.com: HTTPSConnectionPool(host='api-juno.itastakers.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='api-juno.itastakers.com', port=443): Failed to resolve 'api-juno.itastakers.com' ([Errno -2] Name or service not known)\")); body="
       ]
     },
     "wynd_lcd_swap": {
       "ok": false,
       "errors": [
-        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&events=wasm.action%3D%27swap%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&events=wasm.action%3D%27swap%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13, \"message\":\"query cannot be empty\", \"details\":[]}",
+        "https://juno-api.lavenderfive.com:443: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&events=wasm.action%3D%27swap%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://api-juno.itastakers.com: HTTPSConnectionPool(host='api-juno.itastakers.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra%27&events=wasm.action%3D%27swap%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='api-juno.itastakers.com', port=443): Failed to resolve 'api-juno.itastakers.com' ([Errno -2] Name or service not known)\")); body="
       ]
     },
     "juno_bridge_lcd": {
       "ok": false,
       "errors": [
-        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13, \"message\":\"query cannot be empty\", \"details\":[]}",
+        "https://juno-api.lavenderfive.com:443: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://api-juno.itastakers.com: HTTPSConnectionPool(host='api-juno.itastakers.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='api-juno.itastakers.com', port=443): Failed to resolve 'api-juno.itastakers.com' ([Errno -2] Name or service not known)\")); body="
       ]
     },
     "juno_neta_lcd": {
       "ok": false,
       "errors": [
-        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+        "https://juno-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13, \"message\":\"query cannot be empty\", \"details\":[]}",
+        "https://juno-api.lavenderfive.com:443: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://api-juno.itastakers.com: HTTPSConnectionPool(host='api-juno.itastakers.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=wasm._contract_address%3D%27juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='api-juno.itastakers.com', port=443): Failed to resolve 'api-juno.itastakers.com' ([Errno -2] Name or service not known)\")); body="
       ]
     },
     "pool631_lcd": {
       "ok": false,
       "errors": [
-        "https://osmosis-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-api.polkachu.com/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC",
-        "https://lcd.osmosis.zone: 500 Server Error: Internal Server Error for url: https://lcd.osmosis.zone/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC"
+        "https://osmosis-api.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-api.polkachu.com/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13,\"message\":\"query cannot be empty\",\"details\":[]}",
+        "https://lcd.osmosis.zone: 500 Server Error: Internal Server Error for url: https://lcd.osmosis.zone/cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC; body={\"code\":13,\"message\":\"query cannot be empty\",\"details\":[]}",
+        "https://osmosis-api.lavenderfive.com:443: HTTPSConnectionPool(host='osmosis-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='osmosis-api.lavenderfive.com', port=443): Failed to resolve 'osmosis-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://api-osmosis-ia.cosmosia.notional.ventures: HTTPSConnectionPool(host='api-osmosis-ia.cosmosia.notional.ventures', port=443): Max retries exceeded with url: /cosmos/tx/v1beta1/txs?events=token_swapped.pool_id%3D%27631%27&pagination.limit=8&order_by=ORDER_BY_DESC (Caused by NameResolutionError(\"HTTPSConnection(host='api-osmosis-ia.cosmosia.notional.ventures', port=443): Failed to resolve 'api-osmosis-ia.cosmosia.notional.ventures' ([Errno -2] Name or service not known)\")); body="
       ]
     },
     "pool631_rpc": {
       "ok": false,
       "errors": [
-        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc",
-        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc"
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.lavenderfive.com:443: HTTPSConnectionPool(host='osmosis-rpc.lavenderfive.com', port=443): Max retries exceeded with url: /tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc (Caused by NameResolutionError(\"HTTPSConnection(host='osmosis-rpc.lavenderfive.com', port=443): Failed to resolve 'osmosis-rpc.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://rpc-osmosis.ecostake.com: 500 Server Error: Internal Server Error for url: https://rpc-osmosis.ecostake.com/tx_search?query=%22token_swapped.pool_id%3D%27631%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}"
       ]
     },
     "osmo_neta_packets": {
       "ok": false,
       "errors": [
-        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc",
-        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc"
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.lavenderfive.com:443: HTTPSConnectionPool(host='osmosis-rpc.lavenderfive.com', port=443): Max retries exceeded with url: /tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc (Caused by NameResolutionError(\"HTTPSConnection(host='osmosis-rpc.lavenderfive.com', port=443): Failed to resolve 'osmosis-rpc.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://rpc-osmosis.ecostake.com: 500 Server Error: Internal Server Error for url: https://rpc-osmosis.ecostake.com/tx_search?query=%22send_packet.packet_data+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}"
       ]
     },
     "osmo_neta_transfers": {
       "ok": false,
       "errors": [
-        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc",
-        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc"
+        "https://rpc.osmosis.zone: 500 Server Error: Internal Server Error for url: https://rpc.osmosis.zone/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://osmosis-rpc.polkachu.com/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://osmosis-rpc.lavenderfive.com:443: HTTPSConnectionPool(host='osmosis-rpc.lavenderfive.com', port=443): Max retries exceeded with url: /tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc (Caused by NameResolutionError(\"HTTPSConnection(host='osmosis-rpc.lavenderfive.com', port=443): Failed to resolve 'osmosis-rpc.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://rpc-osmosis.ecostake.com: 500 Server Error: Internal Server Error for url: https://rpc-osmosis.ecostake.com/tx_search?query=%22transfer.amount+CONTAINS+%27ibc%2F297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}"
       ]
     },
     "juno_bridge_rpc": {
       "ok": false,
       "errors": [
-        "https://juno-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-rpc.polkachu.com/tx_search?query=%22wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27%22&prove=false&page=1&per_page=8&order_by=desc"
+        "https://juno-rpc.polkachu.com: 500 Server Error: Internal Server Error for url: https://juno-rpc.polkachu.com/tx_search?query=%22wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27%22&prove=false&page=1&per_page=8&order_by=desc; body={\"jsonrpc\":\"2.0\",\"id\":-1,\"error\":{\"code\":-32602,\"message\":\"Invalid params\",\"data\":\"error converting http params to arguments: invalid character 'd' looking for beginning of value\"}}",
+        "https://juno-rpc.lavenderfive.com:443: HTTPSConnectionPool(host='juno-rpc.lavenderfive.com', port=443): Max retries exceeded with url: /tx_search?query=%22wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27%22&prove=false&page=1&per_page=8&order_by=desc (Caused by NameResolutionError(\"HTTPSConnection(host='juno-rpc.lavenderfive.com', port=443): Failed to resolve 'juno-rpc.lavenderfive.com' ([Errno -5] No address associated with hostname)\")); body=",
+        "https://rpc-juno.itastakers.com: HTTPSConnectionPool(host='rpc-juno.itastakers.com', port=443): Max retries exceeded with url: /tx_search?query=%22wasm._contract_address%3D%27juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn%27%22&prove=false&page=1&per_page=8&order_by=desc (Caused by NameResolutionError(\"HTTPSConnection(host='rpc-juno.itastakers.com', port=443): Failed to resolve 'rpc-juno.itastakers.com' ([Errno -2] Name or service not known)\")); body="
       ]
     }
   }
