@@ -1,11 +1,10 @@
-name: Diagnose WYND LP ownership
+name: Diagnose Osmosis Pool 631 LP ownership
 
 on:
   push:
     branches: [diagnostic/wynd-lp-attribution]
     paths:
       - ".github/workflows/diagnose-wynd-lp.yml"
-      - "scripts/diagnose_wynd_lp.py"
   workflow_dispatch:
 
 permissions:
@@ -24,19 +23,79 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Patch diagnostic parser for WYND stake keys and locked tokens
+      - name: Diagnose Pool 631
         run: |
           python - <<'PY'
-          from pathlib import Path
-          p=Path('scripts/diagnose_wynd_lp.py')
-          s=p.read_text()
-          s=s.replace('HEX_RE=re.compile(r"^[0-9a-fA-F]+$")', 'HEX_RE=re.compile(r"^[0-9a-fA-F]+$")\nADDR_RE=re.compile(rb"juno1[0-9a-z]{38}")')
-          s=s.replace('if ns=="staked_balances" and suf:', 'if ns=="stake" and suf:')
-          s=s.replace('a=suf.decode(); x=amount_from_obj(obj)', 'm=ADDR_RE.search(suf)\n                if not m: raise ValueError("wallet address not found in stake key")\n                a=m.group(0).decode(); x=amount_from_obj(obj)\n                if isinstance(obj,dict) and isinstance(obj.get("locked_tokens"),list):\n                    x=(x or 0)+sum(int(v[1]) for v in obj["locked_tokens"] if isinstance(v,list) and len(v)>1)')
-          p.write_text(s)
+          import json, sys, requests
+          sys.path.insert(0,'scripts')
+          import update_neta_data as u
+
+          POOL_ID=631
+          SHARE_DENOM='gamm/pool/631'
+          POOL_ADDR='osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x'
+          LCD=['https://osmosis-api.polkachu.com','https://lcd.osmosis.zone']
+
+          height,rpc=u.latest_height()
+          print('height',height,'rpc',rpc)
+
+          holders={}; failures=[]
+          for n in (20,32):
+            for first in range(256):
+              try: pairs=u.subspace(bytes([2,n,first]),height,rpc)
+              except Exception as e: failures.append((n,first,str(e))); continue
+              for k,v in pairs:
+                try: raw,denom=u.bank_key(k)
+                except Exception: continue
+                if denom!=SHARE_DENOM: continue
+                amt=u.bank_amount(v) if u.DENOM==SHARE_DENOM else None
+                if amt is None:
+                  # same exact balance codec, but don't enforce NETA denom
+                  try:
+                    s=v.decode('ascii')
+                    if s.isdigit(): amt=int(s)
+                    else:
+                      denom2=None; amount=None
+                      for f,w,x in u.fields(v):
+                        if w!=2: continue
+                        if f==1: denom2=x.decode('utf-8')
+                        elif f==2: amount=int(x.decode('ascii'))
+                      if denom2 is not None and denom2!=SHARE_DENOM: raise ValueError('denom mismatch')
+                      if amount is None: raise ValueError('no amount')
+                      amt=amount
+                  except Exception as e: raise RuntimeError(f'cannot decode {SHARE_DENOM}: {e}')
+                if amt>0:
+                  a=u.b32enc('osmo',raw); holders[a]=holders.get(a,0)+amt
+          if failures: raise RuntimeError(f'incomplete bank scan: {len(failures)} failures')
+
+          pool=None; supply=None
+          for base in LCD:
+            try:
+              r=requests.get(base+f'/osmosis/gamm/v1beta1/pools/{POOL_ID}',timeout=30); r.raise_for_status(); pool=r.json().get('pool');
+              if pool: break
+            except Exception as e: print('pool endpoint failed',base,e)
+          for base in LCD:
+            try:
+              r=requests.get(base+'/cosmos/bank/v1beta1/supply/by_denom',params={'denom':SHARE_DENOM},timeout=30); r.raise_for_status(); d=r.json(); supply=int((d.get('amount') or {}).get('amount','0'))
+              if supply: break
+            except Exception as e: print('supply endpoint failed',base,e)
+
+          neta_bal=None
+          for base in LCD:
+            try:
+              r=requests.get(base+f'/cosmos/bank/v1beta1/balances/{POOL_ADDR}/by_denom',params={'denom':u.DENOM},timeout=30); r.raise_for_status(); neta_bal=int((r.json().get('balance') or {}).get('amount','0'))
+              break
+            except Exception as e: print('neta balance endpoint failed',base,e)
+
+          direct_sum=sum(holders.values())
+          result={
+            'height':height,'rpc':rpc,'share_denom':SHARE_DENOM,'share_holders':len(holders),
+            'direct_share_sum_raw':direct_sum,'supply_raw':supply,'supply_check': supply==direct_sum if supply is not None else None,
+            'pool_neta_raw':neta_bal,'pool_neta':neta_bal/1e6 if neta_bal is not None else None,
+            'pool':pool,
+            'top_share_holders':[{'address':a,'shares_raw':x,'share_percent':(x/supply*100 if supply else None),'neta_claim':(neta_bal*x/supply/1e6 if supply and neta_bal is not None else None)} for a,x in sorted(holders.items(),key=lambda z:(-z[1],z[0]))[:25]]
+          }
+          print(json.dumps(result,indent=2))
+          if supply is None: raise RuntimeError('could not read GAMM share supply')
+          if neta_bal is None: raise RuntimeError('could not read pool NETA balance')
+          if direct_sum!=supply: raise RuntimeError(f'GAMM share sum {direct_sum} != supply {supply}')
           PY
-      - name: Run WYND LP diagnostic
-        run: python scripts/diagnose_wynd_lp.py
-      - name: Show WYND LP diagnostic
-        if: always()
-        run: cat wynd_lp_diagnostic.json || true
