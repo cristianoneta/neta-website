@@ -53,6 +53,22 @@ Important WYND edge case: seven non-empty `locked_tokens` entries inside stake o
 
 Small historical snapshot differences are acceptable for exploratory work because the pool is small, but production attribution should use a consistent snapshot/height where possible.
 
+## NETA DAO claims / “Unstaking” — VALIDATED
+
+Diagnostic snapshot: Juno height `41688972`, block time `2026-09-12T12:25:44.563839Z`.
+
+The production indexer currently sums every DAO `claims` entry into `neta_dao_unstaking` without evaluating `release_at`. A dedicated diagnostic classified each claim against the snapshot block time/height:
+
+- Total claims: `702.382593 NETA`
+- Claim records: `295`
+- Wallets: `289`
+- Still locked / actively unbonding: `0 NETA`, `0` records
+- Matured and immediately claimable: `702.382593 NETA`, all `295` records
+- Oldest still-unclaimed release time: `2022-11-15T17:38:37.201157Z`
+- Latest release time: `2026-08-19T16:57:21.974613Z`
+
+Conclusion: the website label “Unstaking” is technically misleading for the current snapshot. These tokens remain held in the DAO contract and economically attributable to their owners, but none is still time-locked. They are matured, unclaimed withdrawals. Before production integration, consider renaming/splitting the field into `Claimable` and `Unbonding`; current `Unstaking` would entirely map to `Claimable` at this snapshot.
+
 ## Osmosis NETA/OSMO Pool 631 — VALIDATED
 Pool:
 - Pool ID: `631`
