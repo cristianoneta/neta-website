@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-09-12T10:20:21.632064Z",
+  "validation": {
+    "passed": true,
+    "cw20_balance_sum_equals_supply": true,
+    "juno_ics20_escrow_equals_osmosis_primary_state": true,
+    "dao_contract_balance_equals_active_plus_unstaking_plus_residual": true,
+    "economic_total_plus_residual_equals_supply": true
+  },
+  "total_supply_neta": 31886.6,
+  "total_supply_source": "cw20_token_info",
+  "juno_custody_addresses": 9179,
+  "osmosis_primary_state_addresses": 2166,
+  "dao_active_stakers": 2090,
+  "dao_active_staking_neta": 4180.135927,
+  "dao_unstaking_wallets": 287,
+  "dao_unstaking_neta": 702.382593,
+  "economic_master_entries": 12179,
+  "cross_chain_matches": 668,
+  "wallet_attributed_neta": 31886.39,
+  "dao_residual_neta": 0.21,
+  "excluded_bridge_escrow_neta": 10485.41154,
+  "gini": 0.881085,
+  "concentration_neta": {
+    "top_1": 1613.335373,
+    "top_5": 5838.077177,
+    "top_10": 7514.75942,
+    "top_25": 10302.592622,
+    "top_50": 12594.199002,
+    "top_100": 15108.119658,
+    "top_1_percent": 15778.073061,
+    "top_1_percent_wallets": 122
+  },
+  "osmosis": {
+    "height": 70419195,
+    "rpc": "https://rpc.osmosis.zone",
+    "method": "bank primary state prefix scan (20-byte + 32-byte addresses)"
+  },
+  "juno": {
+    "method": "CosmWasm AllContractState / cw-storage-plus balance namespace"
+  },
+  "dao": {
+    "method": "CosmWasm AllContractState / staked_balances + claims namespaces"
+  }
+}
