@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: neta-daily-data-${{ github.event_name }}
@@ -58,9 +59,11 @@ jobs:
         run: cat metadata.json
       - name: Commit changed data
         if: steps.gate.outputs.run == 'true' && github.event_name != 'pull_request'
+        id: commit_data
         shell: bash
         run: |
           if git diff --quiet -- holders.json address_index.json metadata.json data.js address-index.js; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No data changes."
             exit 0
           fi
@@ -68,8 +71,18 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add holders.json address_index.json metadata.json data.js address-index.js
           git commit -m "chore: daily NETA on-chain data update"
-          # main may have moved while the multi-minute on-chain scan was running.
-          # Rebase only this generated-data commit onto the latest main, then push.
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Request GitHub Pages rebuild
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'pull_request' && steps.commit_data.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          curl --fail-with-body -L -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"
