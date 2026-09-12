@@ -49,6 +49,14 @@ jobs:
       - name: Diagnose Osmosis discrepancy
         if: steps.gate.outputs.run == 'true' && github.event_name == 'pull_request'
         run: python scripts/diagnose_osmo.py
+      - name: Upload Osmosis diagnostic snapshot
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: osmosis-diagnostic-snapshot
+          path: diagnostics/osmo-current.json
+          if-no-files-found: warn
+          retention-days: 3
       - name: Fetch and validate all NETA data
         if: steps.gate.outputs.run == 'true'
         run: python scripts/run_neta_data.py --output .
