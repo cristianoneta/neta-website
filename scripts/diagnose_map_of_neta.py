@@ -69,9 +69,11 @@ def compact_lcd(result: dict) -> dict:
         body={}
         if i<len(txs): body=((txs[i].get("body") or {}).get("messages") or [])
         events=[]
+        source_events=resp.get("events") or []
         for log in resp.get("logs") or []:
-            for ev in log.get("events") or []:
-                events.append({"type":ev.get("type"),"attributes":{a.get("key"):a.get("value") for a in ev.get("attributes") or []}})
+            source_events += log.get("events") or []
+        for ev in source_events:
+            events.append({"type":ev.get("type"),"attributes":{a.get("key"):a.get("value") for a in ev.get("attributes") or []}})
         out.append({"hash":resp.get("txhash"),"height":resp.get("height"),"timestamp":resp.get("timestamp"),"code":resp.get("code"),"messages":body,"events":events})
     return {"ok":True,"endpoint":result.get("endpoint"),"txs":out,"pagination":d.get("pagination")}
 
