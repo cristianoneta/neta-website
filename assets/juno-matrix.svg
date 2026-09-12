@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Juno">
-<defs>
- <pattern id="bits" width="42" height="22" patternUnits="userSpaceOnUse"><text x="0" y="15" font-family="monospace" font-size="15" font-weight="700" fill="#62ffc2">0101</text></pattern>
- <mask id="mark"><rect width="200" height="200" fill="black"/><circle cx="100" cy="100" r="84" fill="none" stroke="white" stroke-width="12"/><path fill="white" d="M94 43h12v39l27-27 9 9-29 29h41v13h-41l29 29-9 9-27-27v40H94v-40l-28 28-9-9 30-30H45V93h42L57 63l9-9 28 28z"/><path fill="white" d="M70 149h60v12H70z"/></mask>
-</defs>
-<circle cx="100" cy="100" r="91" fill="#010805" stroke="#0b6f4d" stroke-width="2"/>
-<rect width="200" height="200" fill="url(#bits)" mask="url(#mark)"><animateTransform attributeName="transform" type="translate" values="0 -22;0 0" dur="2.8s" repeatCount="indefinite"/></rect>
-<circle cx="100" cy="100" r="84" fill="none" stroke="#00ff9d" stroke-width="2" opacity=".8"/>
-<path d="M100 45v110M59 100h82M68 67l64 66M132 67l-64 66" stroke="#00ff9d" stroke-width="2" opacity=".55"/>
+<defs><clipPath id="disc"><circle cx="100" cy="100" r="88"/></clipPath><filter id="g"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<g clip-path="url(#disc)" font-family="monospace" font-size="14" fill="#00ff9d" opacity=".48">
+ <g><text x="18" y="18">0</text><text x="18" y="42">1</text><text x="18" y="66">0</text><text x="18" y="90">1</text><text x="18" y="114">1</text><text x="18" y="138">0</text><text x="18" y="162">1</text><animateTransform attributeName="transform" type="translate" values="0 -48;0 48" dur="3.4s" repeatCount="indefinite"/></g>
+ <g><text x="43" y="8">1</text><text x="43" y="32">0</text><text x="43" y="56">1</text><text x="43" y="80">0</text><text x="43" y="104">1</text><text x="43" y="128">0</text><text x="43" y="152">0</text><animateTransform attributeName="transform" type="translate" values="0 -48;0 48" dur="2.7s" repeatCount="indefinite"/></g>
+ <g><text x="151" y="15">1</text><text x="151" y="39">1</text><text x="151" y="63">0</text><text x="151" y="87">1</text><text x="151" y="111">0</text><text x="151" y="135">1</text><text x="151" y="159">0</text><animateTransform attributeName="transform" type="translate" values="0 -48;0 48" dur="3s" repeatCount="indefinite"/></g>
+ <g><text x="176" y="2">0</text><text x="176" y="26">1</text><text x="176" y="50">1</text><text x="176" y="74">0</text><text x="176" y="98">1</text><text x="176" y="122">0</text><text x="176" y="146">1</text><animateTransform attributeName="transform" type="translate" values="0 -48;0 48" dur="3.8s" repeatCount="indefinite"/></g>
+</g>
+<circle cx="100" cy="100" r="86" fill="none" stroke="#62ffc2" stroke-width="9" filter="url(#g)"/>
+<path d="M94 43h12v39l27-27 9 9-29 29h41v13h-41l29 29-9 9-27-27v40H94v-40l-28 28-9-9 30-30H45V93h42L57 63l9-9 28 28zM70 149h60v12H70z" fill="#62ffc2" filter="url(#g)"/>
+<rect x="15" y="94" width="170" height="3" fill="#c9ffea" opacity=".75"><animate attributeName="y" values="20;180" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;.6;0" dur="4.8s" repeatCount="indefinite"/></rect>
 </svg>

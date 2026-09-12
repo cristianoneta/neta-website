@@ -18,3 +18,10 @@
 /* v3 — transparent matrix-code logo artwork; overrides the lossy PNG recolor */
 .chain-logo{padding:1px!important;filter:drop-shadow(0 0 5px rgba(0,255,157,.65))!important}
 .chain-logo-shell{background:radial-gradient(circle,#03140d 0,#010805 72%);box-shadow:0 0 13px rgba(0,255,157,.2),inset 0 0 12px rgba(0,255,157,.1)}
+
+
+/* v4 — selected holographic-scan variant */
+.chain-logo-shell:after{left:5%;right:5%;top:0;height:1px;background:#b8ffe3;box-shadow:0 0 4px #b8ffe3,0 0 10px var(--g),0 0 18px var(--g);opacity:0;animation:chain-holographic-scan 4.8s linear infinite}
+.osmo-node .chain-logo-shell:after{animation-delay:-2.2s}
+@keyframes chain-holographic-scan{0%,12%{opacity:0;transform:translateY(4px)}18%{opacity:.9}54%{opacity:.75}61%,100%{opacity:0;transform:translateY(51px)}}
+@media(prefers-reduced-motion:reduce){.chain-logo-shell:after{animation:none;display:none}}

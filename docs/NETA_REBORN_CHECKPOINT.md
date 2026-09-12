@@ -290,3 +290,11 @@ Diagnostic findings:
 - The first monochrome PNG approach was rejected: a global CSS filter recolored Juno's opaque dark disc together with its emblem, producing a solid green circle.
 - Production now uses transparent, purpose-built `juno-matrix.svg` and `osmosis-matrix.svg` artwork. Their recognizable chain silhouettes are filled with visible binary-code texture in the Matrix palette.
 - The surrounding irregular flicker remains secondary; logo recognition and code texture are the primary visual treatment.
+
+
+### Map logo selection — 2026-09-12
+
+- The selected final direction is concept variant C, “Holographic Scan”.
+- Original Juno and Osmosis silhouettes remain crisp in the foreground.
+- Binary columns move vertically from top to bottom behind the emblems.
+- A bright horizontal scan beam passes through each logo at offset intervals; the general flicker remains restrained.
