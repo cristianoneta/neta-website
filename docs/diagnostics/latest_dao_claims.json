@@ -2,6 +2,2958 @@
 {
   "all_claims_neta": 702.382593,
   "all_claims_raw": 702382593,
+  "all_releases": [
+    {
+      "amount_raw": 516137,
+      "owner": "juno13njw5d4vhepn7cplsh6kmfvwmueanjqyzz40ms",
+      "release": {
+        "iso": "2022-11-15T17:38:37.201157+00:00",
+        "kind": "at_time",
+        "value": 1668533917201157388
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1wqtsfjrkdd6s48dn2545ejvt7kerms3np743n9",
+      "release": {
+        "iso": "2022-11-16T18:51:09.572272+00:00",
+        "kind": "at_time",
+        "value": 1668624669572271663
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 10212,
+      "owner": "juno1zaertzj3cuqs0yzw4arglrukph3vyvmrhscevm",
+      "release": {
+        "iso": "2022-11-22T07:10:56.978784+00:00",
+        "kind": "at_time",
+        "value": 1669101056978783913
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1035,
+      "owner": "juno1vjvnf2j2evcxh7h0fj7eevk3qfxay2q4putcw4",
+      "release": {
+        "iso": "2022-12-01T07:07:08.297822+00:00",
+        "kind": "at_time",
+        "value": 1669878428297821949
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 50,
+      "owner": "juno14kee6p7j54gfxzzl65jv2pxrflz4aqu7wgu5g3",
+      "release": {
+        "iso": "2022-12-12T16:33:12.206206+00:00",
+        "kind": "at_time",
+        "value": 1670862792206206294
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1,
+      "owner": "juno16mrjtqffn3awme2eczhlpwzj7mnatkeluvhj6c",
+      "release": {
+        "iso": "2022-12-14T18:56:55.703630+00:00",
+        "kind": "at_time",
+        "value": 1671044215703629895
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 94718,
+      "owner": "juno173sxh0zms7d8nwwr96ahaaw657u3dj84wwyyja",
+      "release": {
+        "iso": "2022-12-18T19:04:10.280969+00:00",
+        "kind": "at_time",
+        "value": 1671390250280969270
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 4833491,
+      "owner": "juno14pwe87zgx7geymn3kdj5hgr3mnw8yf8de6hya7",
+      "release": {
+        "iso": "2022-12-21T06:58:03.732502+00:00",
+        "kind": "at_time",
+        "value": 1671605883732502014
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 530063,
+      "owner": "juno13r98wmyr69njansayex5u6t7lldh9a5zfxq67c",
+      "release": {
+        "iso": "2022-12-27T20:36:41.937356+00:00",
+        "kind": "at_time",
+        "value": 1672173401937356333
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1009560,
+      "owner": "juno16792px533n9tqm4hgpx8hsqvxrss53976u9w77",
+      "release": {
+        "iso": "2022-12-31T03:45:49.183900+00:00",
+        "kind": "at_time",
+        "value": 1672458349183899567
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1n7qz350r986ka4gq0ze5vu8ud9pwyq9fu8ampe",
+      "release": {
+        "iso": "2023-01-05T12:54:31.973514+00:00",
+        "kind": "at_time",
+        "value": 1672923271973514353
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1qcsaaqwy3fq0k4g4k23lyr7fshdsfrgtyapam2",
+      "release": {
+        "iso": "2023-01-05T12:55:17.407310+00:00",
+        "kind": "at_time",
+        "value": 1672923317407309480
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno13cmyzqqqcp5zzp5shjtgqyaardphn3e3lxm656",
+      "release": {
+        "iso": "2023-01-05T12:55:41.049518+00:00",
+        "kind": "at_time",
+        "value": 1672923341049517907
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1p2zhxj0ld8dgxu6vsxnmfn547hq6m2lh2v7nps",
+      "release": {
+        "iso": "2023-01-05T12:56:11.108055+00:00",
+        "kind": "at_time",
+        "value": 1672923371108054961
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1qk47r3uedx239ku9mxkntuw0kcv5fkz6exltnf",
+      "release": {
+        "iso": "2023-01-05T12:56:35.088408+00:00",
+        "kind": "at_time",
+        "value": 1672923395088407964
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1ahl5zxgggk3ped3n20thdw3trfcpdta88epr7g",
+      "release": {
+        "iso": "2023-01-05T12:56:53.492962+00:00",
+        "kind": "at_time",
+        "value": 1672923413492961631
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1tezhz36cvu8z5tvgwva7sud5sdh7uzaccsts5c",
+      "release": {
+        "iso": "2023-01-05T12:57:16.996741+00:00",
+        "kind": "at_time",
+        "value": 1672923436996740824
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1xn09sfuauf5wq8mts6g8w6q05clqmcvy8wk4u8",
+      "release": {
+        "iso": "2023-01-05T12:57:35.515958+00:00",
+        "kind": "at_time",
+        "value": 1672923455515957559
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1y0z608wva8ds5867668vcg90rwrmu6p4q4mvsq",
+      "release": {
+        "iso": "2023-01-05T12:57:53.639846+00:00",
+        "kind": "at_time",
+        "value": 1672923473639846068
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1yvxt3q2ltknygfvthdl5uvdwtt9nam6z3dn4f9",
+      "release": {
+        "iso": "2023-01-05T12:58:17.436697+00:00",
+        "kind": "at_time",
+        "value": 1672923497436696490
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 6305,
+      "owner": "juno185cd5utlg02pw2jvz7fdfqgn0ud8gu6hzk878r",
+      "release": {
+        "iso": "2023-01-21T14:05:59.850653+00:00",
+        "kind": "at_time",
+        "value": 1674309959850652740
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 678,
+      "owner": "juno1tdnzny8pmvxrzjan636x9tw8yqfys3q0qe6fkf",
+      "release": {
+        "iso": "2023-01-22T16:02:14.594661+00:00",
+        "kind": "at_time",
+        "value": 1674403334594660900
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1tg20eujl62v226h0404thnu4pu42rd8vypt35g",
+      "release": {
+        "iso": "2023-01-29T11:56:13.540823+00:00",
+        "kind": "at_time",
+        "value": 1674993373540822396
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 27,
+      "owner": "juno1e00s43ktrvh55uwu8r8z7puvyzv429mluln364",
+      "release": {
+        "iso": "2023-01-30T15:20:02.920516+00:00",
+        "kind": "at_time",
+        "value": 1675092002920515827
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 240,
+      "owner": "juno1e00s43ktrvh55uwu8r8z7puvyzv429mluln364",
+      "release": {
+        "iso": "2023-01-30T15:55:28.074993+00:00",
+        "kind": "at_time",
+        "value": 1675094128074992626
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno1m234dnn4huwga92r44f23xmu03qa90xm2exq4j",
+      "release": {
+        "iso": "2023-02-04T01:12:44.380476+00:00",
+        "kind": "at_time",
+        "value": 1675473164380475827
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1305976,
+      "owner": "juno12zq7crlxsd5zak5rjp0k5mlycjy5netmcee9rl",
+      "release": {
+        "iso": "2023-02-07T13:05:38.850791+00:00",
+        "kind": "at_time",
+        "value": 1675775138850791111
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1244724,
+      "owner": "juno1jle25kyk88cssjt2c6k53t5a2d7jfca63he66c",
+      "release": {
+        "iso": "2023-02-07T13:06:20.889606+00:00",
+        "kind": "at_time",
+        "value": 1675775180889606063
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno15kgrzzlpnszd8n7gld8c3rk445n2ztzy0nnwkc",
+      "release": {
+        "iso": "2023-02-07T13:06:50.492192+00:00",
+        "kind": "at_time",
+        "value": 1675775210492192321
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1lcdvgnfxn00pk5tqy2ual4f4z59j8szyfgjmyw",
+      "release": {
+        "iso": "2023-02-07T13:07:08.565815+00:00",
+        "kind": "at_time",
+        "value": 1675775228565815087
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1g3wt9ap64w0kvcqhtd3p56jlqhnaaw7egclm5h",
+      "release": {
+        "iso": "2023-02-07T13:07:32.525491+00:00",
+        "kind": "at_time",
+        "value": 1675775252525491170
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno196ypcvpcwy0kgy90px49478pf0kedq8ctmzpc9",
+      "release": {
+        "iso": "2023-02-07T13:08:03.087831+00:00",
+        "kind": "at_time",
+        "value": 1675775283087831288
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1mvl5rj8cj4mgmu78gldr0lpmxc0ewf4jja6rp0",
+      "release": {
+        "iso": "2023-02-07T13:08:20.911165+00:00",
+        "kind": "at_time",
+        "value": 1675775300911164782
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1yz3t5mfgga2queewsa70w3j9vt54du0ahuqndd",
+      "release": {
+        "iso": "2023-02-07T13:08:38.807704+00:00",
+        "kind": "at_time",
+        "value": 1675775318807704431
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1hqr492lj8tduq4lgprtq4ra5wpkpxwfflj3gzk",
+      "release": {
+        "iso": "2023-02-07T13:08:57.539717+00:00",
+        "kind": "at_time",
+        "value": 1675775337539716859
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1ywzjpcefz6wjuzwk977365vqythttv0zza8wch",
+      "release": {
+        "iso": "2023-02-07T13:09:15.876664+00:00",
+        "kind": "at_time",
+        "value": 1675775355876663997
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1qw8vwzfzquczf43gpk909tcrl5dnqe950khu2p",
+      "release": {
+        "iso": "2023-02-07T23:39:39.987095+00:00",
+        "kind": "at_time",
+        "value": 1675813179987094690
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1ey5aeyezjug2xzuswl9ahkhn0mycnrvza0hqj4",
+      "release": {
+        "iso": "2023-02-08T09:10:01.390455+00:00",
+        "kind": "at_time",
+        "value": 1675847401390454986
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1kc5aczjdyggu4yt08v44fplnhkwx98pgu7zkmv",
+      "release": {
+        "iso": "2023-02-15T18:16:05.355242+00:00",
+        "kind": "at_time",
+        "value": 1676484965355242262
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 4546794,
+      "owner": "juno1mf90w34uxzlxuydeetc2dkyc5c993rle7sj3he",
+      "release": {
+        "iso": "2023-02-17T10:16:16.171492+00:00",
+        "kind": "at_time",
+        "value": 1676628976171491723
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 893834,
+      "owner": "juno1d58f52r5nhdytsudtkgnwy7yjtx74gvls5qa83",
+      "release": {
+        "iso": "2023-02-21T16:49:39.104551+00:00",
+        "kind": "at_time",
+        "value": 1676998179104551045
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 12600,
+      "owner": "juno1mhc78futma93vnhaf8p3gz4t9z0uudgypzsn0v",
+      "release": {
+        "iso": "2023-02-22T14:15:27.848363+00:00",
+        "kind": "at_time",
+        "value": 1677075327848363284
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1zpqf4a6fxha06d3tft8f52s88zkd9t8sh6jal3",
+      "release": {
+        "iso": "2023-03-03T15:06:06.180321+00:00",
+        "kind": "at_time",
+        "value": 1677855966180320775
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010000,
+      "owner": "juno10dsca8rfjvn9zawyne2ptf056grf0gptjqpltu",
+      "release": {
+        "iso": "2023-03-09T21:21:15.271282+00:00",
+        "kind": "at_time",
+        "value": 1678396875271282463
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1014633,
+      "owner": "juno1p9phcs6g4ls4d3sfvzapk89tttu627fff8sfz9",
+      "release": {
+        "iso": "2023-03-14T20:16:32.730703+00:00",
+        "kind": "at_time",
+        "value": 1678824992730702725
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1lh8lw6zp2hjcmx0s9pkl38j36mqk6tfffw8mw8",
+      "release": {
+        "iso": "2023-03-14T23:40:31.706881+00:00",
+        "kind": "at_time",
+        "value": 1678837231706880728
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2105881,
+      "owner": "juno1yera5r8ancdhedeyqcumjwgpxe53au95t6un8l",
+      "release": {
+        "iso": "2023-03-16T21:59:02.582613+00:00",
+        "kind": "at_time",
+        "value": 1679003942582612470
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 59113,
+      "owner": "juno1px2q40q3twagt23d4jc7nwdu2kdw59dhxsl4kr",
+      "release": {
+        "iso": "2023-03-18T11:59:57.523130+00:00",
+        "kind": "at_time",
+        "value": 1679140797523130274
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 7000000,
+      "owner": "juno1f9288phuzredp9n83r8kg5aj69medzz9p9k90v",
+      "release": {
+        "iso": "2023-03-21T22:45:30.659286+00:00",
+        "kind": "at_time",
+        "value": 1679438730659286057
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1q4ewktp8yzu6qs592klf9cmjl0y3g02zrrw9qf",
+      "release": {
+        "iso": "2023-04-06T22:08:16.313866+00:00",
+        "kind": "at_time",
+        "value": 1680818896313865942
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 516984,
+      "owner": "juno1m4qjakxzf9qlgpjpd0jws4qk2jq9gnttnxacg7",
+      "release": {
+        "iso": "2023-04-10T06:44:43.973061+00:00",
+        "kind": "at_time",
+        "value": 1681109083973060806
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 103819,
+      "owner": "juno1xzqhvaczuwj0munmu3eyrhuh5pwragmvhcdv2r",
+      "release": {
+        "iso": "2023-04-10T09:17:56.025909+00:00",
+        "kind": "at_time",
+        "value": 1681118276025909478
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1020000,
+      "owner": "juno1323uenwvychnv4gplx9895w43tcd66lu6cvkgx",
+      "release": {
+        "iso": "2023-04-15T20:12:20.053034+00:00",
+        "kind": "at_time",
+        "value": 1681589540053033556
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 521983,
+      "owner": "juno1wnrq9jsxqm7plqk60kn6vhphyjgdh9achcwyqr",
+      "release": {
+        "iso": "2023-04-20T02:26:39.400149+00:00",
+        "kind": "at_time",
+        "value": 1681957599400148962
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 557468,
+      "owner": "juno1qgf2r9jzap77e4mqqpsm4devef5yetllavq93r",
+      "release": {
+        "iso": "2023-04-20T02:27:58.844475+00:00",
+        "kind": "at_time",
+        "value": 1681957678844475291
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno10numeh299y20p5hrnmkn0wv4cm6n23zj7278mh",
+      "release": {
+        "iso": "2023-04-21T20:01:16.979360+00:00",
+        "kind": "at_time",
+        "value": 1682107276979359955
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1zhek7k2g4qpnmhh867gfy3edqu0sjyfxj9sjr5",
+      "release": {
+        "iso": "2023-04-24T08:14:04.522365+00:00",
+        "kind": "at_time",
+        "value": 1682324044522364612
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1vckd82u0vwl5yx74dy6ctjg36unqkdkzsln9vu",
+      "release": {
+        "iso": "2023-04-24T22:50:04.272986+00:00",
+        "kind": "at_time",
+        "value": 1682376604272986257
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1phjay9jyx7wty20qpts2t78eqq22dvaqy3hl5x",
+      "release": {
+        "iso": "2023-05-02T17:56:53.783138+00:00",
+        "kind": "at_time",
+        "value": 1683050213783137908
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 507603,
+      "owner": "juno144vf3489s7ddj3y43mpfxqvga40u2mhlpn6mvg",
+      "release": {
+        "iso": "2023-05-03T23:40:52.117484+00:00",
+        "kind": "at_time",
+        "value": 1683157252117484154
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1174276,
+      "owner": "juno1dmg852ek58jncpphrlgm6e8rzqlk8qnstaytj6",
+      "release": {
+        "iso": "2023-05-06T14:34:29.962629+00:00",
+        "kind": "at_time",
+        "value": 1683383669962628775
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1412258,
+      "owner": "juno12hkf4hsuspm3g7mcdd2jhq9zmmdp756hzdam3l",
+      "release": {
+        "iso": "2023-05-06T16:31:31.127453+00:00",
+        "kind": "at_time",
+        "value": 1683390691127452758
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 200000,
+      "owner": "juno1t75npj8jggjyax7jnvj6tjzgxsls4e4mz7c4tq",
+      "release": {
+        "iso": "2023-05-07T10:52:14.180378+00:00",
+        "kind": "at_time",
+        "value": 1683456734180378093
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 134517,
+      "owner": "juno178wsr62lq25crpvag0r5wep2jplw3jqvs67ka3",
+      "release": {
+        "iso": "2023-05-23T10:07:20.507152+00:00",
+        "kind": "at_time",
+        "value": 1684836440507151797
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1xzsu93xry7wze2xfggukprhvpcq8vsrdv34fps",
+      "release": {
+        "iso": "2023-06-03T16:31:53.384177+00:00",
+        "kind": "at_time",
+        "value": 1685809913384176654
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1rwldprss28md49qkdh5w05e86f4q8ah4v5fpsp",
+      "release": {
+        "iso": "2023-06-03T16:32:24.046454+00:00",
+        "kind": "at_time",
+        "value": 1685809944046454215
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1mx8k2yka8x4weqhrdm2w0hs2d0jwuy7q3c8rfv",
+      "release": {
+        "iso": "2023-06-03T16:32:59.728080+00:00",
+        "kind": "at_time",
+        "value": 1685809979728079518
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010000,
+      "owner": "juno1m0nrf6hwu2x6va7uvxa4897f2ugr0hlv2ad0rj",
+      "release": {
+        "iso": "2023-06-05T00:43:09.006448+00:00",
+        "kind": "at_time",
+        "value": 1685925789006447498
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 9906,
+      "owner": "juno1gxe0aq7wd3c0ufqy8gmw9sg29ed4q9vt2mt2tz",
+      "release": {
+        "iso": "2023-06-05T18:15:20.774390+00:00",
+        "kind": "at_time",
+        "value": 1685988920774390413
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1697395,
+      "owner": "juno180pdyeng2am7mmqwm9ruvftsddmd2vyj0pddhp",
+      "release": {
+        "iso": "2023-06-06T10:01:07.824354+00:00",
+        "kind": "at_time",
+        "value": 1686045667824354020
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno164jfqkhjwcugqg0kl8m4a9hxsnks6nul6v4v2c",
+      "release": {
+        "iso": "2023-06-17T16:01:58.500966+00:00",
+        "kind": "at_time",
+        "value": 1687017718500965726
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 89533088,
+      "owner": "juno1vsjmzmeagn6ra3agntdpfcy72a0ck5pxh6sjg9",
+      "release": {
+        "iso": "2023-06-18T06:41:01.875809+00:00",
+        "kind": "at_time",
+        "value": 1687070461875808913
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1013552,
+      "owner": "juno15mmgzuzjmhk4wmvt8553anr0kvma79phtrkgvy",
+      "release": {
+        "iso": "2023-06-21T04:54:50.908818+00:00",
+        "kind": "at_time",
+        "value": 1687323290908817564
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1313872,
+      "owner": "juno1geu3ck8727u0gadksks9phdxpeueqz95msnjn3",
+      "release": {
+        "iso": "2023-06-23T00:12:16.941404+00:00",
+        "kind": "at_time",
+        "value": 1687479136941404210
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1006244,
+      "owner": "juno1jhk96f78lzgty80s5yu33n0fc7fxvc0jx0xu3m",
+      "release": {
+        "iso": "2023-06-26T08:29:35.438753+00:00",
+        "kind": "at_time",
+        "value": 1687768175438752608
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1006078,
+      "owner": "juno1lxxqd420n4saq04rqjw30w04s6ckngytdudksk",
+      "release": {
+        "iso": "2023-06-26T08:30:41.710014+00:00",
+        "kind": "at_time",
+        "value": 1687768241710014246
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1001381,
+      "owner": "juno1dxa4svt7t9ev6x3vxynfq0haxuv0llmw9xz3ck",
+      "release": {
+        "iso": "2023-06-26T08:52:29.485654+00:00",
+        "kind": "at_time",
+        "value": 1687769549485653572
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1085283,
+      "owner": "juno136rh00tyhnff8062sm0c0pcl6ncnktljs2wj06",
+      "release": {
+        "iso": "2023-06-26T09:01:27.012107+00:00",
+        "kind": "at_time",
+        "value": 1687770087012106549
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1029114,
+      "owner": "juno1ldend3xauhy4eya94jp0gjz5ffyf7xtfedw9ng",
+      "release": {
+        "iso": "2023-06-26T11:18:04.773672+00:00",
+        "kind": "at_time",
+        "value": 1687778284773672136
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1003288,
+      "owner": "juno1z0lln903z8gywd9scqtkgnwnztx33w6l5wrv02",
+      "release": {
+        "iso": "2023-06-26T11:25:35.814361+00:00",
+        "kind": "at_time",
+        "value": 1687778735814360563
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1018905,
+      "owner": "juno1ugtt87ssgte7mcamgv27pj4wfsx9s9hre29lpl",
+      "release": {
+        "iso": "2023-06-26T11:34:45.716026+00:00",
+        "kind": "at_time",
+        "value": 1687779285716025668
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1016310,
+      "owner": "juno18vavh7el44qzhm96003ugfcvk0u3ny9zs25nz6",
+      "release": {
+        "iso": "2023-06-26T11:54:38.862232+00:00",
+        "kind": "at_time",
+        "value": 1687780478862232253
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1015510,
+      "owner": "juno1pa4k0td2e6qgzy53tmjh0fxamjg6tlh3k906vh",
+      "release": {
+        "iso": "2023-06-26T12:01:46.353982+00:00",
+        "kind": "at_time",
+        "value": 1687780906353981958
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1014569,
+      "owner": "juno13wch9cqvesgw3c0rs0uuqt8q608zyyqwsdt2a8",
+      "release": {
+        "iso": "2023-06-26T12:09:07.180339+00:00",
+        "kind": "at_time",
+        "value": 1687781347180338525
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1014872,
+      "owner": "juno1kdmpysndjk5m6lvu3sz4mz25e6y04vnmn93n54",
+      "release": {
+        "iso": "2023-06-26T12:15:38.324582+00:00",
+        "kind": "at_time",
+        "value": 1687781738324581538
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1008961,
+      "owner": "juno1l0mlqmxn20cmp02ulweq67gyafjz4qkffv6x8u",
+      "release": {
+        "iso": "2023-06-26T12:25:33.990692+00:00",
+        "kind": "at_time",
+        "value": 1687782333990692197
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1008270,
+      "owner": "juno1wt8a4wkkka7rnt7xcrruqcwtqfyl5kjcajladc",
+      "release": {
+        "iso": "2023-06-26T12:33:12.944241+00:00",
+        "kind": "at_time",
+        "value": 1687782792944241337
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1028474,
+      "owner": "juno18uv2g8n46hycfduh7ejkhyxkgdgkzlxyahs9mu",
+      "release": {
+        "iso": "2023-06-26T12:57:03.849337+00:00",
+        "kind": "at_time",
+        "value": 1687784223849336652
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1023724,
+      "owner": "juno1hm32q2gchf9we4m0tc38d7702ygv5me3k857md",
+      "release": {
+        "iso": "2023-06-27T04:20:36.679832+00:00",
+        "kind": "at_time",
+        "value": 1687839636679832163
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1022893,
+      "owner": "juno1gglmyhqcdt50vq7dz5472xvlcgtesl5w7a4xwm",
+      "release": {
+        "iso": "2023-06-27T04:27:54.915771+00:00",
+        "kind": "at_time",
+        "value": 1687840074915771207
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1021235,
+      "owner": "juno17sruvlfr9pxtrsgzrqtz486uh9m6pp95gcx8te",
+      "release": {
+        "iso": "2023-06-27T04:35:01.058764+00:00",
+        "kind": "at_time",
+        "value": 1687840501058764516
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1023792,
+      "owner": "juno1za96gr65kwen7etgnjjvscwgh5k9xyp2eykadt",
+      "release": {
+        "iso": "2023-06-27T04:41:25.656395+00:00",
+        "kind": "at_time",
+        "value": 1687840885656394840
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1024039,
+      "owner": "juno1as5fx6l52s6vp67h2x5lupxn2p3rhyuejqg52c",
+      "release": {
+        "iso": "2023-06-27T04:47:21.672403+00:00",
+        "kind": "at_time",
+        "value": 1687841241672403134
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1021177,
+      "owner": "juno12jqudm0nrfds5g55rn2jzt3c3hvzyqx8rnytcd",
+      "release": {
+        "iso": "2023-06-27T04:53:27.024302+00:00",
+        "kind": "at_time",
+        "value": 1687841607024302273
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1029440,
+      "owner": "juno1l9hc8cmqykjfcxy7kdwch432hdt3xlj9qdk9k6",
+      "release": {
+        "iso": "2023-06-27T04:59:34.117350+00:00",
+        "kind": "at_time",
+        "value": 1687841974117350167
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1wxunq2xwsw7zqcuukxeketyvp6ptj3rrtsqtyt",
+      "release": {
+        "iso": "2023-07-08T14:23:42.995449+00:00",
+        "kind": "at_time",
+        "value": 1688826222995449154
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 4309901,
+      "owner": "juno1dryykk7eyxncr7elnl36dvx7agulxn6wdefdv9",
+      "release": {
+        "iso": "2023-07-23T13:45:35.166972+00:00",
+        "kind": "at_time",
+        "value": 1690119935166972086
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 49,
+      "owner": "juno124mke74y8gm9n49hd6akr3wkwunv3vfhy7zvuj",
+      "release": {
+        "iso": "2023-07-30T22:06:40.383693+00:00",
+        "kind": "at_time",
+        "value": 1690754800383692471
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 107827,
+      "owner": "juno1dee49wp72ynkqyjrs6wetq8y2zegdmsw8vt38u",
+      "release": {
+        "iso": "2023-07-31T09:14:48.382094+00:00",
+        "kind": "at_time",
+        "value": 1690794888382093952
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 15000000,
+      "owner": "juno1s33zct2zhhaf60x4a90cpe9yquw99jj0zen8pt",
+      "release": {
+        "iso": "2023-07-31T12:24:32.300735+00:00",
+        "kind": "at_time",
+        "value": 1690806272300734775
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1fmnxm3exvkk3zs4vskz28xxvhw6ckygtytd7ru",
+      "release": {
+        "iso": "2023-07-31T19:27:56.152038+00:00",
+        "kind": "at_time",
+        "value": 1690831676152037686
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1004747,
+      "owner": "juno1ysxxxwee4g8lahfla6ngn4amc9yqffpsslsysj",
+      "release": {
+        "iso": "2023-08-05T00:35:22.052340+00:00",
+        "kind": "at_time",
+        "value": 1691195722052340303
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 0,
+      "owner": "juno1ylfytnu0p6rehr8wjm9emzyk2pr8yv2wz2c9fq",
+      "release": {
+        "iso": "2023-08-16T22:46:55.720700+00:00",
+        "kind": "at_time",
+        "value": 1692226015720700102
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2117674,
+      "owner": "juno10r72d93uwd4ugeyatdrrvufeq80vrex6n2yex2",
+      "release": {
+        "iso": "2023-08-17T04:18:54.964828+00:00",
+        "kind": "at_time",
+        "value": 1692245934964827868
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3000000,
+      "owner": "juno1q86973k9dt66l090yg2vw24ajj98pry5g2qtyl",
+      "release": {
+        "iso": "2023-08-18T14:39:47.880148+00:00",
+        "kind": "at_time",
+        "value": 1692369587880148444
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 617497,
+      "owner": "juno15vhalwk5m77uql6h664xckrzak5g6rkrxdltwg",
+      "release": {
+        "iso": "2023-08-22T13:58:24.701547+00:00",
+        "kind": "at_time",
+        "value": 1692712704701546642
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1w8800khamp94n7htclskt0hdlxe9rn8c47wp7p",
+      "release": {
+        "iso": "2023-08-27T07:58:17.411522+00:00",
+        "kind": "at_time",
+        "value": 1693123097411521708
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1djqpcjyy2rcphlestk64l3c8pt48udh3hnk4rn",
+      "release": {
+        "iso": "2023-08-27T13:23:43.723179+00:00",
+        "kind": "at_time",
+        "value": 1693142623723178800
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 510000,
+      "owner": "juno178uwvwx7ulj2snpd3sneswsd8xu4g3ur0yh437",
+      "release": {
+        "iso": "2023-09-14T08:26:25.389491+00:00",
+        "kind": "at_time",
+        "value": 1694679985389490492
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1246209,
+      "owner": "juno1w7dndq5ru7v5yuulavfxw5av9dp5e6gwslvrcq",
+      "release": {
+        "iso": "2023-09-23T10:23:32.484205+00:00",
+        "kind": "at_time",
+        "value": 1695464612484204832
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100476,
+      "owner": "juno1g0xluyamawjq5g097qtzm840dcf3unhn6q70y4",
+      "release": {
+        "iso": "2023-09-23T10:24:08.407547+00:00",
+        "kind": "at_time",
+        "value": 1695464648407547248
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1018400,
+      "owner": "juno1j2rad9qfxfqnahghdhh7nvnuwt3eh4s4ahm9yh",
+      "release": {
+        "iso": "2023-09-27T11:46:38.080017+00:00",
+        "kind": "at_time",
+        "value": 1695815198080016574
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3569567,
+      "owner": "juno1uz07k6e0txmv3agfczp4yqm7zsl32fkw4qahxz",
+      "release": {
+        "iso": "2023-11-11T17:58:18.693190+00:00",
+        "kind": "at_time",
+        "value": 1699725498693190173
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno1fyttsl05k4x0vrr685f7wuqehdcmacm2s8se8g",
+      "release": {
+        "iso": "2023-12-06T07:38:20.136664+00:00",
+        "kind": "at_time",
+        "value": 1701848300136663939
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 9499,
+      "owner": "juno1snnphc4n9d2cpfg0a8w3d3qmt8sh7ha4n6jqtz",
+      "release": {
+        "iso": "2024-01-23T03:15:01.304006+00:00",
+        "kind": "at_time",
+        "value": 1705979701304006255
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1ylfytnu0p6rehr8wjm9emzyk2pr8yv2wz2c9fq",
+      "release": {
+        "iso": "2024-01-23T18:00:34.090825+00:00",
+        "kind": "at_time",
+        "value": 1706032834090825304
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 220000,
+      "owner": "juno1kw45ze5k8zdfyyzxmk3zlqa73egjlhjdtus0l8",
+      "release": {
+        "iso": "2024-01-25T09:44:55.492383+00:00",
+        "kind": "at_time",
+        "value": 1706175895492382939
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1009982,
+      "owner": "juno1zmd2dgrh25r39f0rj404jzsq9trq76cd6kxl7k",
+      "release": {
+        "iso": "2024-01-28T18:25:06.104028+00:00",
+        "kind": "at_time",
+        "value": 1706466306104028109
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1vje9rhpcaen9jw53xrf22hpnvyhzvnwv3vp70f",
+      "release": {
+        "iso": "2024-01-29T23:36:06.199185+00:00",
+        "kind": "at_time",
+        "value": 1706571366199185005
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 665324,
+      "owner": "juno1w2thvet5hp3rssqts0kg4sjnk2kydrsrm5wkrm",
+      "release": {
+        "iso": "2024-01-30T23:40:01.563834+00:00",
+        "kind": "at_time",
+        "value": 1706658001563834179
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1m3567wl3jl0dwvm5m3et07hwmg83vvn892n0ej",
+      "release": {
+        "iso": "2024-02-08T01:18:15.555690+00:00",
+        "kind": "at_time",
+        "value": 1707355095555690275
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1zd2j8zjnnjk86funkde8gh6szpcrt5h96ngfl9",
+      "release": {
+        "iso": "2024-02-10T02:04:44.175874+00:00",
+        "kind": "at_time",
+        "value": 1707530684175873873
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1016611,
+      "owner": "juno1xmlnhjnm4sdygxqwt7ewjxf67lnde0ck4gfvck",
+      "release": {
+        "iso": "2024-02-11T09:24:19.767649+00:00",
+        "kind": "at_time",
+        "value": 1707643459767648680
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1vszqaujmj8daqn9uuhwz0247jxmu7eq6m4f87j",
+      "release": {
+        "iso": "2024-02-12T07:58:00.679047+00:00",
+        "kind": "at_time",
+        "value": 1707724680679047090
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 10000000,
+      "owner": "juno1jp2c9j2ap28cd7ftzlw2ngf3tfyktzlycmv54a",
+      "release": {
+        "iso": "2024-02-12T19:52:41.949152+00:00",
+        "kind": "at_time",
+        "value": 1707767561949151644
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 0,
+      "owner": "juno10ef8qz2mcsdyalm3fjq9j0l3w2qpnnu9xmzzgy",
+      "release": {
+        "iso": "2024-02-15T03:11:15.846483+00:00",
+        "kind": "at_time",
+        "value": 1707966675846483407
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1zdexhg5hnu7tyl0x36d0vmwfu364jr2stj9tcx",
+      "release": {
+        "iso": "2024-02-23T18:06:32.230219+00:00",
+        "kind": "at_time",
+        "value": 1708711592230218704
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1001000,
+      "owner": "juno10ycq2rvf56zl49z2mnyg4ttqjmfmjz992gxglc",
+      "release": {
+        "iso": "2024-03-03T16:23:37.579496+00:00",
+        "kind": "at_time",
+        "value": 1709483017579495856
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1019960,
+      "owner": "juno1fu2y5077zrl2s9sef2v4d8wg9ppvmhrjl0l9pa",
+      "release": {
+        "iso": "2024-03-09T05:25:15.304489+00:00",
+        "kind": "at_time",
+        "value": 1709961915304488944
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 14000000,
+      "owner": "juno10m0k4a3tudk6mglc9nez5w9yjvgkk9kuecl8jt",
+      "release": {
+        "iso": "2024-03-11T09:43:13.030223+00:00",
+        "kind": "at_time",
+        "value": 1710150193030223200
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1cwecw85ecn5zjppfsm59ddsa7gqa3pnfatvcpz",
+      "release": {
+        "iso": "2024-03-12T14:25:51.302439+00:00",
+        "kind": "at_time",
+        "value": 1710253551302439120
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1ncfc7rwtga6q92rgv4djlfac8faaavjn87shns",
+      "release": {
+        "iso": "2024-03-13T00:26:59.894330+00:00",
+        "kind": "at_time",
+        "value": 1710289619894330100
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno15ut3tn7twxtwnnv4r7fqvmnxhy2ynp39hnfswr",
+      "release": {
+        "iso": "2024-03-13T06:33:37.791871+00:00",
+        "kind": "at_time",
+        "value": 1710311617791871275
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1f0kcpeuys5mhdcpq87xmgh4vny8vwkl0t6tk2m",
+      "release": {
+        "iso": "2024-03-13T16:03:32.083594+00:00",
+        "kind": "at_time",
+        "value": 1710345812083593665
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2013028,
+      "owner": "juno1prkt7s379wupzh8nmuefa9hw5xyddqwk9dpjf3",
+      "release": {
+        "iso": "2024-03-15T21:03:01.993484+00:00",
+        "kind": "at_time",
+        "value": 1710536581993484586
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1017078,
+      "owner": "juno14kc7pmt50a3ju3g3kk6t5v3arrznrjfh9ug9n7",
+      "release": {
+        "iso": "2024-03-17T15:41:21.664966+00:00",
+        "kind": "at_time",
+        "value": 1710690081664966417
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 210000,
+      "owner": "juno12gmpp2fp2axr7r92w2na6ucq04svvka6z833fv",
+      "release": {
+        "iso": "2024-03-20T16:49:47.731725+00:00",
+        "kind": "at_time",
+        "value": 1710953387731725534
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno18dpnjxslnrv6jryek3weqs5ndukussuma9rsrf",
+      "release": {
+        "iso": "2024-03-20T18:34:58.091036+00:00",
+        "kind": "at_time",
+        "value": 1710959698091035725
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3000000,
+      "owner": "juno1ah04s9xxkn8e8qlrs0qm7udw5ltt6te7rr0jur",
+      "release": {
+        "iso": "2024-03-22T21:18:25.824482+00:00",
+        "kind": "at_time",
+        "value": 1711142305824482544
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1035952,
+      "owner": "juno1jfy2dg4dka0qkccp2zfyk65dz6xqv0y6a5ldnp",
+      "release": {
+        "iso": "2024-03-26T00:02:08.526212+00:00",
+        "kind": "at_time",
+        "value": 1711411328526211385
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 14299283,
+      "owner": "juno1pvcm3nx4qtuljps2uu6c7teaqmzr9jvlmnjl0t",
+      "release": {
+        "iso": "2024-03-26T04:39:46.043960+00:00",
+        "kind": "at_time",
+        "value": 1711427986043959521
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1xx5rslmmtxxcyqqk0s5x9m5azxayfcveydk45l",
+      "release": {
+        "iso": "2024-03-27T19:05:40.580976+00:00",
+        "kind": "at_time",
+        "value": 1711566340580975927
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1crj4kn35lyff9ru5ky40zqzlpafdqrq24zz4ka",
+      "release": {
+        "iso": "2024-03-27T22:39:59.383666+00:00",
+        "kind": "at_time",
+        "value": 1711579199383665690
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1z7293l0m85qgj8s8xd34eaxmz9j7av6adyf0e4",
+      "release": {
+        "iso": "2024-03-28T01:59:32.113223+00:00",
+        "kind": "at_time",
+        "value": 1711591172113222837
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1hruemq3recacnk4k2pfj6vpuqay4awek7hjnda",
+      "release": {
+        "iso": "2024-03-28T02:01:02.709153+00:00",
+        "kind": "at_time",
+        "value": 1711591262709152661
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 10000000,
+      "owner": "juno1a8u02d5y8a9mlwkkvwegeurhxu8kc970wmutcz",
+      "release": {
+        "iso": "2024-03-28T20:15:28.826749+00:00",
+        "kind": "at_time",
+        "value": 1711656928826749108
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno17uld3yhlryf7v8zzl0v6eekaf87zvngu2uzmh7",
+      "release": {
+        "iso": "2024-03-29T02:53:05.284350+00:00",
+        "kind": "at_time",
+        "value": 1711680785284350452
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1em77tkwz4cm32v22uu8x9fj4kwr0q7tsl45spk",
+      "release": {
+        "iso": "2024-03-29T03:09:34.059283+00:00",
+        "kind": "at_time",
+        "value": 1711681774059283033
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 537640,
+      "owner": "juno1zqslqupp7jft8sf23ydqppy3yn4fmdws5qtwp5",
+      "release": {
+        "iso": "2024-03-29T03:11:48.633162+00:00",
+        "kind": "at_time",
+        "value": 1711681908633161671
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 6742,
+      "owner": "juno13hntztxnj65qd0ndtcfyksv6ye9mcgty8mf98l",
+      "release": {
+        "iso": "2024-03-30T16:12:11.116192+00:00",
+        "kind": "at_time",
+        "value": 1711815131116191610
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1005197,
+      "owner": "juno1mllj5s5fw80e30l3gafupg364p35kpm3xz7x8t",
+      "release": {
+        "iso": "2024-04-07T16:32:42.645358+00:00",
+        "kind": "at_time",
+        "value": 1712507562645357974
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1qtfxjjf5lrsjnf0y8n0rwg200thp245ygwquzm",
+      "release": {
+        "iso": "2024-04-08T08:18:21.963700+00:00",
+        "kind": "at_time",
+        "value": 1712564301963699806
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3000000,
+      "owner": "juno1a992k43zy470dlpnmcu3wzxd9gq3yp4aly32cf",
+      "release": {
+        "iso": "2024-04-08T08:19:29.997176+00:00",
+        "kind": "at_time",
+        "value": 1712564369997176052
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1nfl4mkc0xglpxmsnzu35cd6x3ptnkkc7r7kgs6",
+      "release": {
+        "iso": "2024-04-09T10:30:59.309649+00:00",
+        "kind": "at_time",
+        "value": 1712658659309648622
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno17pwjvfwvysx9watqft76rgjdkvvc9angzxyyrw",
+      "release": {
+        "iso": "2024-04-09T10:34:49.337134+00:00",
+        "kind": "at_time",
+        "value": 1712658889337134040
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1ul6dz9wez5xctu3mjcqzlp2e4r40jl4k3nsyct",
+      "release": {
+        "iso": "2024-04-09T10:42:34.732496+00:00",
+        "kind": "at_time",
+        "value": 1712659354732495914
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1qr20et89w8z85fjkelakvfx0d3t0nvqkj6v7te",
+      "release": {
+        "iso": "2024-04-10T05:50:52.023862+00:00",
+        "kind": "at_time",
+        "value": 1712728252023861949
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1034408,
+      "owner": "juno17ecu06sjnny263s9ngnpcuu4300wtzlwdku565",
+      "release": {
+        "iso": "2024-04-11T11:18:48.502314+00:00",
+        "kind": "at_time",
+        "value": 1712834328502313727
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 501000,
+      "owner": "juno149dd9ynts3tda9fdu08y8u6q3wx88apgqsqqxg",
+      "release": {
+        "iso": "2024-04-12T09:20:16.474763+00:00",
+        "kind": "at_time",
+        "value": 1712913616474763385
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1012053,
+      "owner": "juno199s7sp2sfcu9s7z9qf9js4pxj3clem42xvy8n7",
+      "release": {
+        "iso": "2024-04-12T09:20:54.565710+00:00",
+        "kind": "at_time",
+        "value": 1712913654565710011
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 508171,
+      "owner": "juno1y6603qh08ttze6vaqr3ucmclq4xxj88xypjlhf",
+      "release": {
+        "iso": "2024-04-16T08:24:13.240113+00:00",
+        "kind": "at_time",
+        "value": 1713255853240113443
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1143024,
+      "owner": "juno1jvh4twzc0d2svn0u5xw26xsu8qmequ4vl7rzml",
+      "release": {
+        "iso": "2024-04-16T20:00:00.752299+00:00",
+        "kind": "at_time",
+        "value": 1713297600752298815
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1mg83cpata7hz33cuw3v0z4l0zrtlchnqv3zgfl",
+      "release": {
+        "iso": "2024-04-17T00:08:56.556829+00:00",
+        "kind": "at_time",
+        "value": 1713312536556828659
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1075350,
+      "owner": "juno14ee37sr25lrrt0vvgyrx8ru4gh6jl0wxaf5pn6",
+      "release": {
+        "iso": "2024-04-17T08:54:58.416100+00:00",
+        "kind": "at_time",
+        "value": 1713344098416100324
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 32528,
+      "owner": "juno1l7s5a7vp9j7welu48g8ply3eg8mce33cfa9y7a",
+      "release": {
+        "iso": "2024-04-17T21:02:28.496582+00:00",
+        "kind": "at_time",
+        "value": 1713387748496581832
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1001844,
+      "owner": "juno12zj672nek2fjrgsrje6dfje84lt34ycw78a8qx",
+      "release": {
+        "iso": "2024-04-27T20:19:10.107209+00:00",
+        "kind": "at_time",
+        "value": 1714249150107208733
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2500000,
+      "owner": "juno1pu0q2fq6s823u7kt3ljtgs8vt58kkrwgksjk75",
+      "release": {
+        "iso": "2024-04-28T16:32:41.132974+00:00",
+        "kind": "at_time",
+        "value": 1714321961132974052
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2500000,
+      "owner": "juno1pu0q2fq6s823u7kt3ljtgs8vt58kkrwgksjk75",
+      "release": {
+        "iso": "2024-04-28T16:33:18.077732+00:00",
+        "kind": "at_time",
+        "value": 1714321998077732421
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 261492,
+      "owner": "juno1qdzgugsx5zueucmj54ugr7rtllkksh37qvcc5q",
+      "release": {
+        "iso": "2024-05-02T07:31:05.587661+00:00",
+        "kind": "at_time",
+        "value": 1714635065587661278
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1ypsvuflcpdqr2msfqu3u77pqqspgl2htngezd5",
+      "release": {
+        "iso": "2024-05-04T01:07:20.213576+00:00",
+        "kind": "at_time",
+        "value": 1714784840213576193
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1082q0w0avzvgzvzwkz3hvj2xavycdfnvjh29j3",
+      "release": {
+        "iso": "2024-05-04T01:09:12.441915+00:00",
+        "kind": "at_time",
+        "value": 1714784952441915258
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 100000,
+      "owner": "juno14apve2mug3wtceuwhkfdnkht85e3s6cmsruvg6",
+      "release": {
+        "iso": "2024-05-04T10:49:28.350322+00:00",
+        "kind": "at_time",
+        "value": 1714819768350321979
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 7187,
+      "owner": "juno1gcafwtsrr3596x7jcslfm7376en8p59u7s5uja",
+      "release": {
+        "iso": "2024-05-09T16:28:07.385391+00:00",
+        "kind": "at_time",
+        "value": 1715272087385391083
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1wgxe26nrqxtrd2kcq3gy5pcvy5d85gelyghpk2",
+      "release": {
+        "iso": "2024-05-14T11:18:03.578885+00:00",
+        "kind": "at_time",
+        "value": 1715685483578884924
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1v2c35zp594pkeg3l4kafcvyck0fhnl32ep8tes",
+      "release": {
+        "iso": "2024-05-14T12:44:20.006542+00:00",
+        "kind": "at_time",
+        "value": 1715690660006541709
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno19kk2gcxyhp9qe8nrldctdjqygevqa3hn5wgreu",
+      "release": {
+        "iso": "2024-05-17T08:18:25.095122+00:00",
+        "kind": "at_time",
+        "value": 1715933905095121593
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 516113,
+      "owner": "juno103hn5wdhau9ly968z7n3a9360v7gw9v9d0vmsp",
+      "release": {
+        "iso": "2024-05-19T21:56:19.643216+00:00",
+        "kind": "at_time",
+        "value": 1716155779643216125
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1uaux0dl3gh40y9czng2eqn2d52uu8afvx3cpsn",
+      "release": {
+        "iso": "2024-05-27T15:59:42.466465+00:00",
+        "kind": "at_time",
+        "value": 1716825582466464455
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1023787,
+      "owner": "juno19uf9yk3h3m0ztn0zk60llj5l6mu93xpm02gahm",
+      "release": {
+        "iso": "2024-05-29T12:43:28.912345+00:00",
+        "kind": "at_time",
+        "value": 1716986608912345370
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 8000000,
+      "owner": "juno1ff8j98rrzksn579vdt3kehyk6dsed8777j6qjl",
+      "release": {
+        "iso": "2024-05-29T16:35:43.780450+00:00",
+        "kind": "at_time",
+        "value": 1717000543780449562
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1062082,
+      "owner": "juno1qa9n2hntgwtgjrnl2tl5cwn6k5t7wuz6kdhu4l",
+      "release": {
+        "iso": "2024-05-31T14:40:02.020152+00:00",
+        "kind": "at_time",
+        "value": 1717166402020151588
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2162,
+      "owner": "juno1qvd7dlxreh7yycj3s36mu0cpmqk766ujyzclnn",
+      "release": {
+        "iso": "2024-05-31T21:00:18.958315+00:00",
+        "kind": "at_time",
+        "value": 1717189218958315069
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 0,
+      "owner": "juno1vxqzju8s4lmf63madzmaekz7lk6x4nvq3al0gu",
+      "release": {
+        "iso": "2024-06-01T23:46:41.802551+00:00",
+        "kind": "at_time",
+        "value": 1717285601802551364
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno130klgc4fe2jxwan6eq6lhszk2efa99qvajg957",
+      "release": {
+        "iso": "2024-06-03T21:10:33.404431+00:00",
+        "kind": "at_time",
+        "value": 1717449033404431334
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1487926,
+      "owner": "juno1ue6qhv8xp760d8ht3fp20rnfs7wg84tg4k4gnp",
+      "release": {
+        "iso": "2024-06-04T21:38:27.933821+00:00",
+        "kind": "at_time",
+        "value": 1717537107933821169
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno12tdulmvjmsmpaqrpshz0emu0h9sqz5x5jkmerz",
+      "release": {
+        "iso": "2024-06-05T21:38:23.849874+00:00",
+        "kind": "at_time",
+        "value": 1717623503849874129
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1xmnd36lsev76lw8n68wz35fty2qrsdg3phrm6y",
+      "release": {
+        "iso": "2024-06-05T21:39:22.519274+00:00",
+        "kind": "at_time",
+        "value": 1717623562519274041
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1gv8dtln9fxc7tpknagxn2h73zfzjkl0f3pwlpk",
+      "release": {
+        "iso": "2024-06-05T21:39:45.307114+00:00",
+        "kind": "at_time",
+        "value": 1717623585307113576
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1zj0p0a58sx8c5lf5lt7xfpwgysl4q4wafsftf6",
+      "release": {
+        "iso": "2024-06-05T21:40:08.766197+00:00",
+        "kind": "at_time",
+        "value": 1717623608766197259
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno15xqtcn87vwskr25aj0g78fksfk2dpm8q3z6sk0",
+      "release": {
+        "iso": "2024-06-05T21:40:34.371864+00:00",
+        "kind": "at_time",
+        "value": 1717623634371863685
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 227808,
+      "owner": "juno1vxqzju8s4lmf63madzmaekz7lk6x4nvq3al0gu",
+      "release": {
+        "iso": "2024-06-06T00:19:28.401350+00:00",
+        "kind": "at_time",
+        "value": 1717633168401350601
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000001,
+      "owner": "juno1qtfxjjf5lrsjnf0y8n0rwg200thp245ygwquzm",
+      "release": {
+        "iso": "2024-06-07T08:43:39.334427+00:00",
+        "kind": "at_time",
+        "value": 1717749819334427432
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1a992k43zy470dlpnmcu3wzxd9gq3yp4aly32cf",
+      "release": {
+        "iso": "2024-06-07T08:45:24.582536+00:00",
+        "kind": "at_time",
+        "value": 1717749924582535949
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1379vm20rs8mlcwsc8urfvjz97tmgmxurh63aau",
+      "release": {
+        "iso": "2024-06-09T20:29:35.014122+00:00",
+        "kind": "at_time",
+        "value": 1717964975014121811
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1124349,
+      "owner": "juno1hezey746cjnkrafjujdtfs52cv4qw6jdsavyg5",
+      "release": {
+        "iso": "2024-06-12T04:02:46.624408+00:00",
+        "kind": "at_time",
+        "value": 1718164966624407702
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 344553,
+      "owner": "juno15j46nt4mfsl3m0dugf8e5zxvjp8hgla4936aws",
+      "release": {
+        "iso": "2024-06-16T02:07:58.897726+00:00",
+        "kind": "at_time",
+        "value": 1718503678897725483
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1e7thmsxdvgef636sljs322mxxwl563mmnlnac5",
+      "release": {
+        "iso": "2024-06-17T19:00:01.461682+00:00",
+        "kind": "at_time",
+        "value": 1718650801461681614
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1506,
+      "owner": "juno1c5g8xw3dfcxypw65j7aa4j29hetr4wy4ju0fpa",
+      "release": {
+        "iso": "2024-06-28T17:22:36.658248+00:00",
+        "kind": "at_time",
+        "value": 1719595356658248415
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno10394355uak9czzqmgedmsfyt9gzd0jlpl6eq2c",
+      "release": {
+        "iso": "2024-07-05T16:02:59.895279+00:00",
+        "kind": "at_time",
+        "value": 1720195379895278963
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno12utvy8hljexu6h0z3eux35wwsjvetz0arh360a",
+      "release": {
+        "iso": "2024-07-05T19:52:15.047871+00:00",
+        "kind": "at_time",
+        "value": 1720209135047871330
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 510000,
+      "owner": "juno1qdh9gzkzeaxfdlg9cqlq805ksa8y43vtq4vkmv",
+      "release": {
+        "iso": "2024-07-08T20:41:10.289810+00:00",
+        "kind": "at_time",
+        "value": 1720471270289810120
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2006956,
+      "owner": "juno1j5z473jelsax74ht74vxfng2jhc0hvrkgz6lh7",
+      "release": {
+        "iso": "2024-07-09T17:24:04.892397+00:00",
+        "kind": "at_time",
+        "value": 1720545844892397007
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1008000,
+      "owner": "juno1hn5pknmjdqnnxvmgjcz7srtt872lnjmak43pls",
+      "release": {
+        "iso": "2024-07-21T23:51:29.996070+00:00",
+        "kind": "at_time",
+        "value": 1721605889996069741
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 449481,
+      "owner": "juno1qmxnq0dstuygxu6jdgcxr2pupnp9h6pvxzmp76",
+      "release": {
+        "iso": "2024-07-23T14:23:19.854568+00:00",
+        "kind": "at_time",
+        "value": 1721744599854568129
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 200000,
+      "owner": "juno14eqgrtjzqkg76q6k6thh8xrmf6tea2gvgk3qsx",
+      "release": {
+        "iso": "2024-09-08T14:42:35.095453+00:00",
+        "kind": "at_time",
+        "value": 1725806555095452842
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno1pswe4zg8agsn8vjqtp5y7p69c2uu9znc943a2p",
+      "release": {
+        "iso": "2024-09-11T11:20:04.573020+00:00",
+        "kind": "at_time",
+        "value": 1726053604573020298
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010000,
+      "owner": "juno14wcs3fsvmsdx9flecwj0ryezfuzvms2w57l7rc",
+      "release": {
+        "iso": "2024-10-10T13:53:53.257725+00:00",
+        "kind": "at_time",
+        "value": 1728568433257725462
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3636824,
+      "owner": "juno10lcueka7tzjfcx0xcenq5jq8345vspcr8z4jja",
+      "release": {
+        "iso": "2024-11-03T16:53:08.998751+00:00",
+        "kind": "at_time",
+        "value": 1730652788998750586
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1200000,
+      "owner": "juno1qvd4xzc3xq25wedwttggta5wu9v5jkv0jpulzx",
+      "release": {
+        "iso": "2024-11-27T17:33:37.109874+00:00",
+        "kind": "at_time",
+        "value": 1732728817109874083
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1200000,
+      "owner": "juno1wjfvqa4ea4nlwjlpt8n9rgzemdgqxgfgnzvy9x",
+      "release": {
+        "iso": "2024-11-27T17:34:28.376755+00:00",
+        "kind": "at_time",
+        "value": 1732728868376755051
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 200000,
+      "owner": "juno14tjdfud46edn3009v4fm5jmx8v7ny5ydyhphp2",
+      "release": {
+        "iso": "2024-11-27T17:34:56.784997+00:00",
+        "kind": "at_time",
+        "value": 1732728896784997359
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1fmmkme8sa5a9lvf5z4dqv8slk7je26cpmsun2y",
+      "release": {
+        "iso": "2024-12-15T19:15:23.247637+00:00",
+        "kind": "at_time",
+        "value": 1734290123247636498
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno19pe553u82zthd3jedt0jf7hszu92jx50v9yhw7",
+      "release": {
+        "iso": "2024-12-18T18:32:49.807180+00:00",
+        "kind": "at_time",
+        "value": 1734546769807180396
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010000,
+      "owner": "juno1cq8lqenh33u87wlw2f387pujze8r84k3vfmglc",
+      "release": {
+        "iso": "2024-12-18T19:19:56.596982+00:00",
+        "kind": "at_time",
+        "value": 1734549596596981838
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000019,
+      "owner": "juno13m36fkmqvy9neth6pvvfdps7h6r5tz2rcnyxhz",
+      "release": {
+        "iso": "2024-12-23T09:10:18.398722+00:00",
+        "kind": "at_time",
+        "value": 1734945018398722388
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1vfga73yc98melxja48z6l6me9y8plcf2kke430",
+      "release": {
+        "iso": "2025-01-04T14:23:25.766417+00:00",
+        "kind": "at_time",
+        "value": 1736000605766416758
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 100000,
+      "owner": "juno1kxykphkk82x4pk5nzq2kq5f2r6n69k73vsff62",
+      "release": {
+        "iso": "2025-01-06T07:38:02.630393+00:00",
+        "kind": "at_time",
+        "value": 1736149082630393269
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 100000,
+      "owner": "juno100fjd4fgvavlevh44wqtfl8e46ryyzmhy0gkqj",
+      "release": {
+        "iso": "2025-01-08T08:53:16.434162+00:00",
+        "kind": "at_time",
+        "value": 1736326396434162007
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2006124,
+      "owner": "juno16e4q5jzwwg9smjuh9pcwfgnwslxnxjd95u4wrh",
+      "release": {
+        "iso": "2025-01-10T22:31:02.917984+00:00",
+        "kind": "at_time",
+        "value": 1736548262917984347
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1102059,
+      "owner": "juno1ehgps9n084r3qpw67j59ardmmj20zs8pdw7hty",
+      "release": {
+        "iso": "2025-02-06T09:07:02.698161+00:00",
+        "kind": "at_time",
+        "value": 1738832822698160748
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno185eyku8zusq4mukcl4724yuv9stcu2lexqdqz8",
+      "release": {
+        "iso": "2025-02-08T22:06:17.454029+00:00",
+        "kind": "at_time",
+        "value": 1739052377454028905
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1yh562ndgnmtwur8rnr0urhqsrnjadycmpu4mep",
+      "release": {
+        "iso": "2025-02-15T18:17:09.280376+00:00",
+        "kind": "at_time",
+        "value": 1739643429280376263
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 200000,
+      "owner": "juno1nwqq6jxcw8kcvk6deqesaslpatgzfdql08eww3",
+      "release": {
+        "iso": "2025-02-16T05:54:39.564455+00:00",
+        "kind": "at_time",
+        "value": 1739685279564454735
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1050000,
+      "owner": "juno1c5fkllf3j9nmr2hkuvyuf6xh73lyuf76wplr0z",
+      "release": {
+        "iso": "2025-02-17T19:40:02.751061+00:00",
+        "kind": "at_time",
+        "value": 1739821202751060869
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1050000,
+      "owner": "juno1jf7kner635kk5u6wtx64uy8d9y3nwunsx57njc",
+      "release": {
+        "iso": "2025-02-17T19:40:39.878919+00:00",
+        "kind": "at_time",
+        "value": 1739821239878919031
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 12306967,
+      "owner": "juno13gd97ke6erejqk2p050xkpc63jhtujrejmvj90",
+      "release": {
+        "iso": "2025-02-18T01:05:29.854753+00:00",
+        "kind": "at_time",
+        "value": 1739840729854753523
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 506149,
+      "owner": "juno1uhc2jpk7z4mlgt9u7xpf2vgleupf3ehw3s744r",
+      "release": {
+        "iso": "2025-02-18T03:37:47.067962+00:00",
+        "kind": "at_time",
+        "value": 1739849867067962282
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1xpjenqlc2x8e67c9zcjp2cqskxwdzm99mz4jdk",
+      "release": {
+        "iso": "2025-02-18T07:15:45.611932+00:00",
+        "kind": "at_time",
+        "value": 1739862945611932081
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1wc4pu9w2gmd62h0an9gaej3wwsdfxceyh3g4x7",
+      "release": {
+        "iso": "2025-02-18T07:18:25.202956+00:00",
+        "kind": "at_time",
+        "value": 1739863105202955929
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1002136,
+      "owner": "juno1a8l3qtcq8x5k82du5ekmg0m2zw8ek9w3xdemez",
+      "release": {
+        "iso": "2025-02-18T11:01:21.418307+00:00",
+        "kind": "at_time",
+        "value": 1739876481418306800
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno19yssr677uxtauv8hpfg4t4ystqx4dj9xjwc89j",
+      "release": {
+        "iso": "2025-02-18T19:06:28.294738+00:00",
+        "kind": "at_time",
+        "value": 1739905588294737561
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1vk6z2aa4hwf5kkd07248q8sm5xqzdduekrupq4",
+      "release": {
+        "iso": "2025-02-18T19:08:10.683596+00:00",
+        "kind": "at_time",
+        "value": 1739905690683595624
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 28519,
+      "owner": "juno1az0f6dhncud2ku4smyp0vz38fyhgtd4jllwl04",
+      "release": {
+        "iso": "2025-02-18T19:23:14.823797+00:00",
+        "kind": "at_time",
+        "value": 1739906594823796994
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1t5zgnfz0jrvflywjmgs95rey3un57n4204dfnm",
+      "release": {
+        "iso": "2025-02-18T19:49:05.014924+00:00",
+        "kind": "at_time",
+        "value": 1739908145014923621
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 40000000,
+      "owner": "juno1fwvsuv9y9pdatktpyyaww5z04kwgzc7g58vfr9",
+      "release": {
+        "iso": "2025-02-18T22:11:30.829131+00:00",
+        "kind": "at_time",
+        "value": 1739916690829130982
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno1qh25fcfkwh0mxcdh5563kgyylq77fqep0rq8tm",
+      "release": {
+        "iso": "2025-02-19T00:34:47.426555+00:00",
+        "kind": "at_time",
+        "value": 1739925287426554759
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2506313,
+      "owner": "juno1fgwaqndwpl2hmk6vv98vt07fkefvx46wmvsl8n",
+      "release": {
+        "iso": "2025-02-19T02:59:39.666848+00:00",
+        "kind": "at_time",
+        "value": 1739933979666848335
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1hl8zvg27k44pl9aglkn056lrpwvc5zn39dru55",
+      "release": {
+        "iso": "2025-02-19T04:27:34.990682+00:00",
+        "kind": "at_time",
+        "value": 1739939254990682234
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1s7etsu4shngp35zq5nef5629hpqulcls876yr9",
+      "release": {
+        "iso": "2025-02-20T17:57:08.205079+00:00",
+        "kind": "at_time",
+        "value": 1740074228205079313
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno18a6aqwqmm2ltfjkh4w8ya0z5yx5grra34fws2n",
+      "release": {
+        "iso": "2025-02-20T21:47:11.586718+00:00",
+        "kind": "at_time",
+        "value": 1740088031586718077
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 100000,
+      "owner": "juno1xrv89wtat29mkgr3y3hed7pn2a4uxp733fmp7l",
+      "release": {
+        "iso": "2025-02-21T21:56:50.571131+00:00",
+        "kind": "at_time",
+        "value": 1740175010571131434
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1014216,
+      "owner": "juno1l5wc57dhjham2qrugkp6rmruymjueuywhmyht6",
+      "release": {
+        "iso": "2025-02-23T05:55:45.620013+00:00",
+        "kind": "at_time",
+        "value": 1740290145620013292
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1012080,
+      "owner": "juno10j27mjxv706lkvmw8ewpcwa8ajp3srmju6vgkq",
+      "release": {
+        "iso": "2025-02-23T05:56:45.580456+00:00",
+        "kind": "at_time",
+        "value": 1740290205580456438
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1052645,
+      "owner": "juno17lp0xs8aauzn6dcs606lk6mwtd894q0ja958v4",
+      "release": {
+        "iso": "2025-02-23T05:57:22.624523+00:00",
+        "kind": "at_time",
+        "value": 1740290242624522877
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1047729,
+      "owner": "juno1jpz8wm76l32cs4aq25zx8r3ef9segan7yz9fzj",
+      "release": {
+        "iso": "2025-02-23T05:57:51.054214+00:00",
+        "kind": "at_time",
+        "value": 1740290271054214120
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1083810,
+      "owner": "juno1vezvslv7gx7ml7xlxaxu0u7ykhy8ttvd3mn2ay",
+      "release": {
+        "iso": "2025-02-23T05:58:19.321991+00:00",
+        "kind": "at_time",
+        "value": 1740290299321991313
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1090390,
+      "owner": "juno1qf0kxkk60qrcj5qa7v7t439249qfkcd47nu7lk",
+      "release": {
+        "iso": "2025-02-24T04:23:01.763517+00:00",
+        "kind": "at_time",
+        "value": 1740370981763516687
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 14327756,
+      "owner": "juno1l5fl0x0mz0euezyyww846ufs4znlw9cy5ch9sx",
+      "release": {
+        "iso": "2025-02-24T20:37:10.096462+00:00",
+        "kind": "at_time",
+        "value": 1740429430096461677
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 396036,
+      "owner": "juno1l50xgw8fccuscvtnjmvyutxadryglfplysezu0",
+      "release": {
+        "iso": "2025-02-26T17:24:29.280600+00:00",
+        "kind": "at_time",
+        "value": 1740590669280599495
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5533,
+      "owner": "juno10pys5yyuh895rezrqlzd5m5ja5hje655tc35xm",
+      "release": {
+        "iso": "2025-03-02T07:54:45.313638+00:00",
+        "kind": "at_time",
+        "value": 1740902085313638127
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1hc4gzcqx2j2f4vt9ezprh28rxglnegytm4flxa",
+      "release": {
+        "iso": "2025-03-02T10:54:30.772275+00:00",
+        "kind": "at_time",
+        "value": 1740912870772275094
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno139ey05mq4jz2tahflhxn8akr6t8yu62hfmexsn",
+      "release": {
+        "iso": "2025-03-02T11:12:14.984609+00:00",
+        "kind": "at_time",
+        "value": 1740913934984608769
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1a8gx9m553deeajj8jcdlp37tgwqyy2c06578qf",
+      "release": {
+        "iso": "2025-03-03T21:23:39.186135+00:00",
+        "kind": "at_time",
+        "value": 1741037019186135076
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1hcj67a0jfmy3pk4nth37zc2jntw5my53jpxdl5",
+      "release": {
+        "iso": "2025-03-07T15:04:03.833797+00:00",
+        "kind": "at_time",
+        "value": 1741359843833796857
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 250000,
+      "owner": "juno1tlpzqu6tg3ry82mvxdsc8vnm3aqnqmvq4kzh62",
+      "release": {
+        "iso": "2025-03-07T15:05:50.360154+00:00",
+        "kind": "at_time",
+        "value": 1741359950360154027
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1zqqj40n9vuve4hl84a0rhdzqkxzk42ttc0lzyg",
+      "release": {
+        "iso": "2025-03-11T21:30:48.748182+00:00",
+        "kind": "at_time",
+        "value": 1741728648748181710
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3515521,
+      "owner": "juno1ka7qn8fwynsdfhj5kegrm8w6vlrtnm9qga2hfh",
+      "release": {
+        "iso": "2025-03-12T17:38:24.776687+00:00",
+        "kind": "at_time",
+        "value": 1741801104776687038
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1500000,
+      "owner": "juno1dk7nzc3g39np23tr2chsut5w5he59cqmpxeunp",
+      "release": {
+        "iso": "2025-03-18T19:04:59.748898+00:00",
+        "kind": "at_time",
+        "value": 1742324699748897480
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2000000,
+      "owner": "juno1cclvds6qkapm7d6m8akag2z2kqgqct5gdt8xt5",
+      "release": {
+        "iso": "2025-04-18T12:30:42.565308+00:00",
+        "kind": "at_time",
+        "value": 1744979442565308026
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 20000903,
+      "owner": "juno1cq7gq7vwejp2dstj8xsszumf2a6cvjgz6wk29a",
+      "release": {
+        "iso": "2025-04-26T03:45:54.654117+00:00",
+        "kind": "at_time",
+        "value": 1745639154654116648
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2230400,
+      "owner": "juno1fhezjhpz3qxzmumvmsfw98favl8920waclls6x",
+      "release": {
+        "iso": "2025-04-29T16:34:15.157519+00:00",
+        "kind": "at_time",
+        "value": 1745944455157518902
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 33420000,
+      "owner": "juno1fh9clee65xka5rcmd9afl44xdd6d0zw6c9fp6h",
+      "release": {
+        "iso": "2025-05-19T16:39:04.270377+00:00",
+        "kind": "at_time",
+        "value": 1747672744270377413
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1589430,
+      "owner": "juno1n9fpafyxzg48eqzhqz86j9qpa2qf4gvq9jepxr",
+      "release": {
+        "iso": "2025-05-30T20:13:21.556868+00:00",
+        "kind": "at_time",
+        "value": 1748636001556867758
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 10000000,
+      "owner": "juno1h8n4qh8u66psn6jf55vtq232rhjkr6wxm0hv3c",
+      "release": {
+        "iso": "2025-06-10T19:42:43.554971+00:00",
+        "kind": "at_time",
+        "value": 1749584563554971447
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3000000,
+      "owner": "juno104tlrtp7642rgx5nhqnfrp3y943daepgqlw066",
+      "release": {
+        "iso": "2025-06-14T13:34:38.196551+00:00",
+        "kind": "at_time",
+        "value": 1749908078196551442
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 5000000,
+      "owner": "juno19nmj0pugzugswrtkge2nkklh74lfphvkwrlrvm",
+      "release": {
+        "iso": "2025-07-18T11:32:12.687486+00:00",
+        "kind": "at_time",
+        "value": 1752838332687486032
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 500000,
+      "owner": "juno1ks2z0xl2dczwlavfyk24v36xhl9jx3xg788l7s",
+      "release": {
+        "iso": "2025-08-02T08:16:10.876459+00:00",
+        "kind": "at_time",
+        "value": 1754122570876459399
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010000,
+      "owner": "juno1kw82htksxcmgfcjpkvwqmn447zhk62sg52mjkk",
+      "release": {
+        "iso": "2025-08-07T10:55:54.810822+00:00",
+        "kind": "at_time",
+        "value": 1754564154810822547
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1ffvhvyrntp4l99xqgn2vvly6v4kn2xlhcfvfzr",
+      "release": {
+        "iso": "2025-08-18T14:43:52.452473+00:00",
+        "kind": "at_time",
+        "value": 1755528232452473461
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 150000,
+      "owner": "juno1yq8g7javg0n4uczlcw64nmxwf4kc4cyeprl34m",
+      "release": {
+        "iso": "2025-10-02T00:46:53.470321+00:00",
+        "kind": "at_time",
+        "value": 1759366013470321106
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1010119,
+      "owner": "juno19c57m42ugzjhcdrd8qepql8ue2c97lhwdpzk9p",
+      "release": {
+        "iso": "2025-10-12T17:43:37.523580+00:00",
+        "kind": "at_time",
+        "value": 1760291017523580333
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 300000,
+      "owner": "juno16dgmlh68xdmaf07wlkv85jnfc9zc0xmpm3d63a",
+      "release": {
+        "iso": "2025-10-30T21:28:32.723108+00:00",
+        "kind": "at_time",
+        "value": 1761859712723107476
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 50000000,
+      "owner": "juno1vfh72k8p556hq9vhv7am6luxuj0mqscmw33cnx",
+      "release": {
+        "iso": "2025-11-17T17:57:38.496436+00:00",
+        "kind": "at_time",
+        "value": 1763402258496435599
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 0,
+      "owner": "juno1d8xtuav36xg7hp6lv6u69gexpd8sunaeqepz08",
+      "release": {
+        "iso": "2025-11-19T22:48:53.838781+00:00",
+        "kind": "at_time",
+        "value": 1763592533838780675
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 2001624,
+      "owner": "juno1hred7tch78xhjkrmsggwu246qhl52h597zsmef",
+      "release": {
+        "iso": "2025-12-07T21:00:21.423337+00:00",
+        "kind": "at_time",
+        "value": 1765141221423337154
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 10001251,
+      "owner": "juno1880z6724rrl8dnlmt82v59uw7ek0dvayhc3e4g",
+      "release": {
+        "iso": "2025-12-31T17:17:34.142509+00:00",
+        "kind": "at_time",
+        "value": 1767201454142509240
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 3000000,
+      "owner": "juno1s7p8qqe7ucs23nmnld3p746hsk25aujtt20sr2",
+      "release": {
+        "iso": "2026-01-01T19:50:59.187441+00:00",
+        "kind": "at_time",
+        "value": 1767297059187441349
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1012813,
+      "owner": "juno1fje95rhe9te60pmvwqt436kf8my6ty6cuhf8m3",
+      "release": {
+        "iso": "2026-01-03T10:41:09.445754+00:00",
+        "kind": "at_time",
+        "value": 1767436869445754056
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1800000,
+      "owner": "juno1a9h9wjwpaxhuu9exfjfrky6rwzhtungd4c0vfu",
+      "release": {
+        "iso": "2026-01-05T03:37:32.535203+00:00",
+        "kind": "at_time",
+        "value": 1767584252535203038
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000107,
+      "owner": "juno1h28e9hc5nd98ezg5ym6w9jag3kk8fjv2nsq2p7",
+      "release": {
+        "iso": "2026-01-05T11:53:51.837667+00:00",
+        "kind": "at_time",
+        "value": 1767614031837666525
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1002099,
+      "owner": "juno18zhhdrjd5qfvewnu5lkkgv6w7rtcmzh3ffwtg7",
+      "release": {
+        "iso": "2026-01-12T09:44:52.846718+00:00",
+        "kind": "at_time",
+        "value": 1768211092846717932
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 26343204,
+      "owner": "juno1fdf6fe8z0wq8rpjnphc9x9mgh34auq209aveda",
+      "release": {
+        "iso": "2026-01-12T11:22:59.523682+00:00",
+        "kind": "at_time",
+        "value": 1768216979523681853
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1500661,
+      "owner": "juno1xtjnzwmf6gadsmw555tyl8dz05pcp9frzugalv",
+      "release": {
+        "iso": "2026-01-12T22:54:19.185125+00:00",
+        "kind": "at_time",
+        "value": 1768258459185124814
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1001121,
+      "owner": "juno13nhlg7cqspec5e0yv0n6nts3zcmfnc6hzjmjy2",
+      "release": {
+        "iso": "2026-01-21T13:04:54.579601+00:00",
+        "kind": "at_time",
+        "value": 1769000694579601159
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 6010000,
+      "owner": "juno1xjfgaw24t5yl094l72r9wdz03tzhpdajsk9rce",
+      "release": {
+        "iso": "2026-02-14T21:48:59.301765+00:00",
+        "kind": "at_time",
+        "value": 1771105739301765307
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 15002691,
+      "owner": "juno1n8j9xve22sh5arf2kfdtdde46udztadapjn4fy",
+      "release": {
+        "iso": "2026-03-10T21:11:51.852919+00:00",
+        "kind": "at_time",
+        "value": 1773177111852918975
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1006207,
+      "owner": "juno1s67dxfqx2wnhjpd4w27dw9cn734fa4l039tvze",
+      "release": {
+        "iso": "2026-03-19T18:46:36.063925+00:00",
+        "kind": "at_time",
+        "value": 1773945996063924504
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000446,
+      "owner": "juno1d8hqrj8saengp0734ha8zhzsr2az8a9e78c5ct",
+      "release": {
+        "iso": "2026-03-23T10:07:59.714815+00:00",
+        "kind": "at_time",
+        "value": 1774260479714815258
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1100000,
+      "owner": "juno1nuy5effr6xkhy9a7xpkfjmvyv43ys0f43vtzu4",
+      "release": {
+        "iso": "2026-03-24T14:12:55.969540+00:00",
+        "kind": "at_time",
+        "value": 1774361575969540421
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1w45ahwhrvnqky9mgud38x4yxnhlu4jpe3lkmrh",
+      "release": {
+        "iso": "2026-03-24T14:13:20.647330+00:00",
+        "kind": "at_time",
+        "value": 1774361600647329895
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000783,
+      "owner": "juno1w7y3vd7q4xavtntt5tgkgm88wcv3j2rk5tcv8h",
+      "release": {
+        "iso": "2026-04-27T23:13:25.158795+00:00",
+        "kind": "at_time",
+        "value": 1777331605158795397
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1g8yq39gcysxam0hzw5qqwj67p8fce086ye968s",
+      "release": {
+        "iso": "2026-06-12T07:42:59.184624+00:00",
+        "kind": "at_time",
+        "value": 1781250179184624040
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 516669,
+      "owner": "juno1v9w49rtdpkwxeje8xnx9pnf9z9hyr2e06dh9av",
+      "release": {
+        "iso": "2026-07-08T16:08:21.875891+00:00",
+        "kind": "at_time",
+        "value": 1783526901875891362
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1000000,
+      "owner": "juno1xxzc8awwllqq4waxtej8u8vlyr89lmuyx2xwtc",
+      "release": {
+        "iso": "2026-08-11T15:22:58.101257+00:00",
+        "kind": "at_time",
+        "value": 1786461778101257388
+      },
+      "status": "claimable"
+    },
+    {
+      "amount_raw": 1003463,
+      "owner": "juno1gcatcjwteap6zzmu4ryq2g235jmrncltfn993p",
+      "release": {
+        "iso": "2026-08-19T16:57:21.974613+00:00",
+        "kind": "at_time",
+        "value": 1787158641974612641
+      },
+      "status": "claimable"
+    }
+  ],
   "earliest_releases": [
     {
       "amount_raw": 516137,
@@ -503,8 +3455,8 @@
   },
   "snapshot": {
     "endpoint": "https://juno-api.polkachu.com",
-    "height": 41688972,
-    "time": "2026-09-12T12:25:44.563839+00:00"
+    "height": 41689016,
+    "time": "2026-09-12T12:27:45.840867+00:00"
   },
   "totals_neta": {
     "claimable": 702.382593
