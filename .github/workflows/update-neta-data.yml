@@ -57,7 +57,7 @@ jobs:
 
       - name: Fetch and validate all NETA data
         if: steps.gate.outputs.run == 'true'
-        run: python scripts/update_neta_data.py --output .
+        run: python scripts/run_neta_data.py --output .
 
       - name: Show validation summary
         if: steps.gate.outputs.run == 'true'
