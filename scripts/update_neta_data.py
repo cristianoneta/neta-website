@@ -10,6 +10,9 @@ NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
 DAO="juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh"
 ESCROW="juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn"
 DENOM="ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A"
+WYND_PAIR="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
+OSMO_POOL_ADDR="osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x"
+OSMO_SHARE_DENOM="gamm/pool/631"
 JUNO=["https://juno-api.polkachu.com"]
 OSMO=["https://rpc.osmosis.zone","https://osmosis-rpc.polkachu.com"]
 TIMEOUT=45
@@ -106,8 +109,23 @@ def scan_juno():
     if sm!=supply: raise RuntimeError(f"CW20 balance sum {sm} != supply {supply}")
     log(f"Juno: {len(bal):,} holders / {supply/1e6:,.6f} NETA"); return bal,supply,src
 
+def juno_snapshot():
+    d,ep=req_json(JUNO,"/cosmos/base/tendermint/v1beta1/blocks/latest")
+    h=d["block"]["header"]
+    when=dt.datetime.fromisoformat(h["time"].replace("Z","+00:00"))
+    return int(h["height"]),int(when.timestamp()*1_000_000_000),when.isoformat(),ep
+
+def claim_is_released(release_at,height,now_ns):
+    if not isinstance(release_at,dict) or len(release_at)!=1:
+        raise ValueError(f"unexpected release_at: {release_at!r}")
+    kind,value=next(iter(release_at.items())); value=int(value)
+    if kind=="at_time": return value<=now_ns
+    if kind=="at_height": return value<=height
+    raise ValueError(f"unexpected release_at kind: {kind}")
+
 def scan_dao():
-    staked={}; claims={}; stored_total=None
+    height,now_ns,block_time,endpoint=juno_snapshot()
+    staked={}; unbonding={}; claimable={}; stored_total=None; claim_records=0
     for k,v in contract_state(DAO):
         ns,suf=nskey(k)
         if ns=="staked_balances" and suf:
@@ -117,15 +135,21 @@ def scan_dao():
             a=suf.decode(); x=jval(v)
             if isinstance(x,dict): x=x.get("claims",x.get("items",[]))
             if not isinstance(x,list): raise ValueError(f"unexpected claims for {a}")
-            amt=sum(int(i.get("amount",0)) for i in x if isinstance(i,dict))
-            if amt>0: claims[a]=claims.get(a,0)+amt
+            for item in x:
+                if not isinstance(item,dict): continue
+                amt=int(item.get("amount",0))
+                if amt<=0: continue
+                target=claimable if claim_is_released(item.get("release_at"),height,now_ns) else unbonding
+                target[a]=target.get(a,0)+amt; claim_records+=1
         elif k==b"total_staked" or ns=="total_staked":
             try: stored_total=jint(v)
             except Exception: pass
     active=sum(staked.values())
     if stored_total is not None and active!=stored_total: raise RuntimeError(f"active {active} != total_staked {stored_total}")
-    log(f"DAO: {len(staked):,} active / {active/1e6:,.6f}; {len(claims):,} unstaking / {sum(claims.values())/1e6:,.6f}")
-    return staked,claims
+    log(f"DAO at Juno {height:,} ({block_time}): {len(staked):,} active / {active/1e6:,.6f}; "
+        f"{len(unbonding):,} unbonding / {sum(unbonding.values())/1e6:,.6f}; "
+        f"{len(claimable):,} claimable / {sum(claimable.values())/1e6:,.6f}")
+    return staked,unbonding,claimable,{"height":height,"block_time":block_time,"endpoint":endpoint,"claim_records":claim_records}
 
 # ---- protobuf + Osmosis bank KV scan ----
 def varint(buf,p):
@@ -168,7 +192,7 @@ def kvpairs(buf):
             except Exception: pass
     if buf and not out: raise ValueError("non-empty subspace response without KVPairs")
     return out
-def bank_amount(raw):
+def bank_amount(raw,expected_denom=DENOM):
     """Decode Cosmos SDK bank BalanceValueCodec exactly.
 
     Current balances are math.Int.Marshal() (ASCII decimal bytes). Legacy
@@ -194,7 +218,7 @@ def bank_amount(raw):
             if not a.isdigit(): raise ValueError(f"invalid Coin amount {a!r}")
             amount=int(a)
     if amount is None: raise ValueError(f"cannot decode bank balance value: {raw.hex()}")
-    if denom is not None and denom!=DENOM:
+    if denom is not None and denom!=expected_denom:
         raise ValueError(f"bank value denom mismatch: {denom}")
     return amount
 def latest_height():
@@ -211,7 +235,7 @@ def bank_key(k):
     return k[2:2+n],k[2+n:].decode()
 def scan_osmo():
     height,rpc=latest_height(); log(f"Osmosis primary-state height {height:,} via {rpc}")
-    holders={}; failures=[]
+    holders={}; pool_shares={}; failures=[]
     for n in (20,32):
         for first in range(256):
             try: pairs=subspace(bytes([2,n,first]),height,rpc)
@@ -219,33 +243,43 @@ def scan_osmo():
             for k,v in pairs:
                 try: raw,denom=bank_key(k)
                 except Exception: continue
-                if denom!=DENOM: continue
-                amt=bank_amount(v)
+                if denom not in (DENOM,OSMO_SHARE_DENOM): continue
+                amt=bank_amount(v,denom)
                 if amt>0:
-                    a=b32enc("osmo",raw); holders[a]=holders.get(a,0)+amt
+                    a=b32enc("osmo",raw)
+                    target=holders if denom==DENOM else pool_shares
+                    target[a]=target.get(a,0)+amt
     if failures:
         sample='; '.join(f"{n}/{b:02x}: {e}" for n,b,e in failures[:5]); raise RuntimeError(f"Osmosis incomplete: {len(failures)} of 512 scans failed. {sample}")
     if not holders: raise RuntimeError("Osmosis scan returned zero holders")
-    log(f"Osmosis: {len(holders):,} holders / {sum(holders.values())/1e6:,.6f} NETA")
-    return holders,height,rpc
+    if not pool_shares: raise RuntimeError("Osmosis scan returned zero Pool 631 share holders")
+    log(f"Osmosis: {len(holders):,} NETA holders; {len(pool_shares):,} Pool 631 share holders")
+    return holders,pool_shares,height,rpc
 
 # ---- economic attribution ----
 def ekey(addr,chain):
     p=payload(addr); return ("p20",p.hex()) if len(p)==20 else (chain,addr)
-def merge(juno,osmo,staked,claims,supply):
+def merge(juno,osmo,staked,unbonding,claimable,lp_neta,supply):
     g={}
-    def row(key,addr): return g.setdefault(key,{"juno_address":None,"osmosis_address":None,"address_bytes":len(payload(addr)),"juno_raw":0,"osmosis_raw":0,"staking_raw":0,"unstaking_raw":0})
+    def row(key,addr): return g.setdefault(key,{"juno_address":None,"osmosis_address":None,"address_bytes":len(payload(addr)),"juno_raw":0,"osmosis_raw":0,"staking_raw":0,"unstaking_raw":0,"claimable_raw":0,"lp_raw":0})
     for a,x in juno.items():
-        if a in (ESCROW,DAO): continue
+        if a in (ESCROW,DAO,WYND_PAIR): continue
         r=row(ekey(a,"juno"),a); r["juno_address"]=a; r["juno_raw"]+=x
     for a,x in osmo.items():
+        if a==OSMO_POOL_ADDR: continue
         r=row(ekey(a,"osmo"),a); r["osmosis_address"]=a; r["osmosis_raw"]+=x
-    for src,f in ((staked,"staking_raw"),(claims,"unstaking_raw")):
+    for src,f in ((staked,"staking_raw"),(unbonding,"unstaking_raw"),(claimable,"claimable_raw")):
         for a,x in src.items():
             r=row(ekey(a,"juno"),a); r["juno_address"]=r["juno_address"] or a; r[f]+=x
+    for a,x in lp_neta.items():
+        chain="juno" if a.startswith("juno1") else "osmo"
+        r=row(ekey(a,chain),a)
+        if chain=="juno": r["juno_address"]=r["juno_address"] or a
+        else: r["osmosis_address"]=r["osmosis_address"] or a
+        r["lp_raw"]+=x
     rows=[]
     for r in g.values():
-        total=r["juno_raw"]+r["osmosis_raw"]+r["staking_raw"]+r["unstaking_raw"]
+        total=r["juno_raw"]+r["osmosis_raw"]+r["staking_raw"]+r["unstaking_raw"]+r["claimable_raw"]+r["lp_raw"]
         if total<=0: continue
         primary=r["juno_address"] or r["osmosis_address"]; typ,label=LABELS.get(primary,("wallet",None))
         rows.append({**r,"total_raw":total,"type":typ,"label":label,"cross_chain_match":bool(r["juno_address"] and r["osmosis_address"])})
@@ -257,23 +291,33 @@ def merge(juno,osmo,staked,claims,supply):
     return rows,residual
 
 def pub(r,supply):
-    return {"rank":r["rank"],"juno_address":r["juno_address"],"osmosis_address":r["osmosis_address"],"address_bytes":r["address_bytes"],"juno_neta":round(r["juno_raw"]/1e6,6),"osmosis_neta":round(r["osmosis_raw"]/1e6,6),"neta_dao_staking":round(r["staking_raw"]/1e6,6),"neta_dao_unstaking":round(r["unstaking_raw"]/1e6,6),"total_neta":round(r["total_raw"]/1e6,6),"type":r["type"],"label":r["label"],"supply_percent":round(r["total_raw"]/supply*100,8),"cross_chain_match":r["cross_chain_match"]}
+    return {"rank":r["rank"],"juno_address":r["juno_address"],"osmosis_address":r["osmosis_address"],"address_bytes":r["address_bytes"],"juno_neta":round(r["juno_raw"]/1e6,6),"osmosis_neta":round(r["osmosis_raw"]/1e6,6),"neta_dao_staking":round(r["staking_raw"]/1e6,6),"neta_dao_unstaking":round(r["unstaking_raw"]/1e6,6),"neta_dao_claimable":round(r["claimable_raw"]/1e6,6),"lp_neta":round(r["lp_raw"]/1e6,6),"total_neta":round(r["total_raw"]/1e6,6),"type":r["type"],"label":r["label"],"supply_percent":round(r["total_raw"]/supply*100,8),"cross_chain_match":r["cross_chain_match"]}
 def gini(vals):
     xs=sorted(v for v in vals if v>=0); sm=sum(xs); n=len(xs)
     return 0 if not xs or sm==0 else (2*sum((i+1)*x for i,x in enumerate(xs)))/(n*sm)-(n+1)/n
 def build(out):
-    juno,supply,supply_src=scan_juno(); staked,claims=scan_dao(); osmo,height,rpc=scan_osmo()
+    juno,supply,supply_src=scan_juno()
+    staked,unbonding,claimable,dao_snapshot=scan_dao()
+    osmo,osmo_shares,height,rpc=scan_osmo()
+    import lp_attribution as lp
+    wynd_lp,wynd_meta=lp.wynd_attribution()
+    osmo_lp,osmo_lp_meta=lp.osmosis_attribution(osmo_shares,height,rpc)
+    lp_neta=dict(wynd_lp)
+    for a,x in osmo_lp.items(): lp_neta[a]=lp_neta.get(a,0)+x
     escrow=juno.get(ESCROW,0); osmo_total=sum(osmo.values())
     if escrow!=osmo_total: raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != Osmosis {osmo_total/1e6:.6f}")
-    dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(claims.values()); dao_res=dao_balance-active-unst
+    if juno.get(WYND_PAIR,0)!=sum(wynd_lp.values()): raise RuntimeError("WYND pool direct NETA != attributed LP NETA")
+    if osmo.get(OSMO_POOL_ADDR,0)!=sum(osmo_lp.values()): raise RuntimeError("Pool 631 direct NETA != attributed LP NETA")
+    dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(unbonding.values()); claim=sum(claimable.values())
+    dao_res=dao_balance-active-unst-claim
     if dao_res<0: raise RuntimeError("DAO attribution exceeds staking contract balance")
-    rows,residual=merge(juno,osmo,staked,claims,supply)
+    rows,residual=merge(juno,osmo,staked,unbonding,claimable,lp_neta,supply)
     if residual!=dao_res: raise RuntimeError(f"economic residual {residual} != DAO residual {dao_res}")
     if residual>1_000_000: raise RuntimeError("residual > 1 NETA")
     public=[pub(r,supply) for r in rows]; ranked=sum(r["total_raw"] for r in rows)
     def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
     onepct=max(1,(len(rows)+99)//100)
-    meta={"schema_version":2,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_active_plus_unstaking_plus_residual":True,"economic_total_plus_residual_equals_supply":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":len(juno),"osmosis_primary_state_addresses":len(osmo),"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(claims),"dao_unstaking_neta":round(unst/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"bank primary state prefix scan (20-byte + 32-byte addresses)"},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace"},"dao":{"method":"CosmWasm AllContractState / staked_balances + claims namespaces"}}
+    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_residual_equals_supply":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":len(juno),"osmosis_primary_state_addresses":len(osmo),"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
     idx={}
     for r in public:
         for a in (r["juno_address"],r["osmosis_address"]):
