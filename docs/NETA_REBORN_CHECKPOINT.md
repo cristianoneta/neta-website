@@ -452,7 +452,7 @@ All five selected deployments share:
 - stake code ID `2291`, CW2 `crates.io:wyndex_stake 2.0.0`;
 - unbonding periods of 7, 14, 28 and 42 days.
 
-Fail-closed economic reconciliation completed at Juno height `41700372`:
+Fail-closed economic reconciliation for the initial top five completed before the final top-eight run:
 - JUNO/ATOM: supply `89,761,104,045`; stake custody `87,491,323,725`; active `71,525,759,016`; claims `15,965,564,709`; difference zero.
 - JUNO/USDC: supply `52,511,840,165`; stake custody `52,026,132,133`; active `45,677,563,933`; claims `6,348,568,200`; difference zero.
 - JUNO/OSMO: supply `104,783,420,853`; stake custody `104,279,904,828`; active `94,669,225,628`; claims `9,610,679,200`; difference zero.
@@ -467,3 +467,29 @@ Validated serialized action families for these deployments:
 - LP withdrawal: execute CW20 `send` on the allowlisted LP token, with the allowlisted pair as `contract` and Base64 hook `{"withdraw_liquidity":{"assets":[]}}`.
 
 The UI must still re-query the connected wallet immediately before preview/signing. Signing remains disabled until simulation with controlled positions is complete.
+
+
+### WYND recovery top-eight frontend foundation — VALIDATED 2026-09-12
+
+The selected scope is now ranks 1–8: JUNO/ATOM, JUNO/USDC, JUNO/OSMO, WYND/USDC, JUNO/NETA, WYND/JUNO, WYND/ATOM and WYND/OSMO.
+
+Final read-only validation:
+- Diagnostic output generated at `2026-09-12T21:03:23.499321Z`.
+- Juno snapshot height `41700087`, block time `2026-09-12T20:59:17.788755915Z`.
+- All eight pools use pair code ID `2289`, LP code ID `1699` and stake code ID `2291`.
+- For every pool, direct LP balances equal total LP supply exactly.
+- For every pool, active stake including `locked_tokens` plus claims equals stake-contract LP custody exactly.
+- Every observed claim record was matured and claimable; actively unbonding records were zero.
+- All live pair and required stake query shapes passed.
+- The deployed `stake.unbond_all` query remains unsupported and excluded.
+
+Additional pool reconciliations:
+- WYND/JUNO: supply `250,846,698,920`; stake custody `242,151,413,511`; active `198,000,063,111`; claims `44,151,350,400`; difference zero; 798 claim records, all claimable.
+- WYND/ATOM: supply `16,230,598,229`; stake custody `16,018,688,288`; active `7,012,992,488`; claims `9,005,695,800`; difference zero; 87 claim records, all claimable.
+- WYND/OSMO: supply `95,380,460,556`; stake custody `51,166,119,305`; active `42,938,276,505`; claims `8,227,842,800`; difference zero; 150 claim records, all claimable.
+
+Frontend foundation artifacts:
+- `data/recovery/wynd-pools.json`: generated Top-8 allowlist with exact contract addresses, code IDs/CW2 versions, assets/decimals, unbonding periods, validated query/action schemas and snapshot evidence.
+- `docs/recovery/WYND_RECOVERY_STATE_MACHINE.md`: fail-closed wallet/action state machine.
+- Registry status: `VALIDATED_FOR_READ_ONLY_FRONTEND`.
+- Signing is intentionally disabled until controlled simulation and tiny-position transaction tests have validated gas, fees, events, rejection paths and post-transaction refresh.
