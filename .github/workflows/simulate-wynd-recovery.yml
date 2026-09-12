@@ -1,0 +1,44 @@
+name: Simulate WYND recovery actions
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [diagnostic/wynd-recovery-discovery]
+    paths:
+      - ".github/workflows/simulate-wynd-recovery.yml"
+      - "scripts/simulate_wynd_recovery.py"
+
+permissions:
+  contents: write
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run unsigned non-broadcast simulations
+        id: simulation
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p docs/diagnostics
+          set -o pipefail
+          python scripts/simulate_wynd_recovery.py 2>&1 | tee docs/diagnostics/latest_wynd_recovery_simulation.log
+      - name: Persist evidence
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/diagnostics/latest_wynd_recovery_simulation.log
+          if [ -f docs/diagnostics/wynd_recovery_simulation.json ]; then git add docs/diagnostics/wynd_recovery_simulation.json; fi
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Record unsigned recovery simulations"
+          git push
+      - name: Fail if simulation failed
+        if: always() && steps.simulation.outcome != 'success'
+        run: exit 1
