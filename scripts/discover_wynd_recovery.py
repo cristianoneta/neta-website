@@ -60,14 +60,16 @@ def native_meta(denom):
 
 def asset_key(info):
     if "token" in info:
-        return "cw20:" + info["token"]["contract_addr"]
-    return "native:" + info["native"]["denom"]
+        value = info["token"]
+        return "cw20:" + (value if isinstance(value, str) else value["contract_addr"])
+    value = info["native"]
+    return "native:" + (value if isinstance(value, str) else value["denom"])
 
 
 def asset_meta(info, cache):
     key = asset_key(info)
     if key not in cache:
-        cache[key] = token_info(info["token"]["contract_addr"]) if "token" in info else native_meta(info["native"]["denom"])
+        cache[key] = token_info(key[5:]) if key.startswith("cw20:") else native_meta(key[7:])
     return cache[key]
 
 
