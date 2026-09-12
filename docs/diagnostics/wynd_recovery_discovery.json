@@ -126,9 +126,9 @@
   "factory": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
   "factory_code_id": "2285",
   "failures": [],
-  "generated_at": "2026-09-12T20:34:39.109946+00:00",
-  "juno_block_time": "2026-09-12T20:33:55.187282980Z",
-  "juno_height": "41699538",
+  "generated_at": "2026-09-12T20:37:27.855545+00:00",
+  "juno_block_time": "2026-09-12T20:36:27.314894493Z",
+  "juno_height": "41699592",
   "lcd": "https://juno-api.polkachu.com",
   "pair_count": 32,
   "pairs": [
@@ -136,6 +136,7 @@
       "assets": [
         {
           "amount_raw": "11637849482",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -144,10 +145,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "2800912495",
+          "coingecko_id": "mars-protocol",
           "info": {
             "native": "ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
           },
@@ -157,7 +161,9 @@
             "display": "transfer/channel-209/umars",
             "name": "transfer/channel-209/umars IBC token",
             "symbol": "UMARS"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.00965841"
         }
       ],
       "direct_lp_raw": "1492693063",
@@ -170,14 +176,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "54.104723",
       "stake": "juno1fpgrwgz78uhxfudv0ay78veutwftxhm6zsfw27m7c7c28je6n87qd25f80",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "3920021095"
+      "stake_custody_lp_raw": "3920021095",
+      "usd_rank": 18,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "704329280",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -186,10 +199,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "6551597282",
+          "coingecko_id": "mars-protocol",
           "info": {
             "native": "ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
           },
@@ -199,7 +215,9 @@
             "display": "transfer/channel-209/umars",
             "name": "transfer/channel-209/umars IBC token",
             "symbol": "UMARS"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.00965841"
         }
       ],
       "direct_lp_raw": "920035368",
@@ -212,14 +230,22 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "71.385293",
       "stake": "juno14qa84053dlc2ydgq32wq2ymkcgr67k0dtwjn503en58cfdr9s2rqmue6h0",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "1102616528"
+      "stake_custody_lp_raw": "1102616528",
+      "usd_rank": 16,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno",
+        "native:ibc/281FEE887CDF71EB9C1FEFC554822DCB06BE4E8A8BFF944ED64E3D03437E9384"
+      ],
+      "valuation_method": "sum_of_both_external_price_anchors"
     },
     {
       "assets": [
         {
           "amount_raw": "244679741192",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -228,10 +254,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "50490454397556467",
+          "coingecko_id": "weth",
           "info": {
             "native": "ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17"
           },
@@ -241,7 +270,9 @@
             "display": "transfer/channel-71/weth-wei",
             "name": "transfer/channel-71/weth-wei IBC token",
             "symbol": "WETH-WEI"
-          }
+          },
+          "resolved_decimals": 18,
+          "usd_price": "2521.62"
         }
       ],
       "direct_lp_raw": "2109004496558",
@@ -254,14 +285,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "254.635479",
       "stake": "juno1jl2l7rs2arevjhjccr7n7etvcfuakfu304fx4k0m9n7pahxf67hsw6egaa",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "106463850185432"
+      "stake_custody_lp_raw": "106463850185432",
+      "usd_rank": 10,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "89313519",
+          "coingecko_id": "cosmos",
           "info": {
             "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
           },
@@ -271,10 +309,13 @@
             "display": "transfer/channel-1/uatom",
             "name": "transfer/channel-1/uatom IBC token",
             "symbol": "UATOM"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "1.61"
         },
         {
           "amount_raw": "6068074989",
+          "coingecko_id": null,
           "info": {
             "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
           },
@@ -283,7 +324,9 @@
             "decimals": 6,
             "name": "seJUNO",
             "symbol": "SEJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "5682038",
@@ -296,14 +339,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "287.589531",
       "stake": "juno1kzpq7ynt44yrkt2uhej4v4km6a0g8dc3t6m4r7j95n4dm7na3sjq7mdtna",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "717440355"
+      "stake_custody_lp_raw": "717440355",
+      "usd_rank": 9,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "1287121970271",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -312,10 +362,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "247749685",
+          "coingecko_id": "cosmos",
           "info": {
             "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
           },
@@ -325,7 +378,9 @@
             "display": "transfer/channel-1/uatom",
             "name": "transfer/channel-1/uatom IBC token",
             "symbol": "UATOM"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "1.61"
         }
       ],
       "direct_lp_raw": "211909941",
@@ -338,14 +393,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "797.753986",
       "stake": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "16018688288"
+      "stake_custody_lp_raw": "16018688288",
+      "usd_rank": 7,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "1176686925783",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -354,10 +416,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "8229757377",
+          "coingecko_id": "cosmos",
           "info": {
             "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
           },
@@ -367,7 +432,9 @@
             "display": "transfer/channel-1/uatom",
             "name": "transfer/channel-1/uatom IBC token",
             "symbol": "UATOM"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "1.61"
         }
       ],
       "direct_lp_raw": "2269780320",
@@ -380,14 +447,22 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "26794.328972",
       "stake": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "87491323725"
+      "stake_custody_lp_raw": "87491323725",
+      "usd_rank": 1,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno",
+        "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+      ],
+      "valuation_method": "sum_of_both_external_price_anchors"
     },
     {
       "assets": [
         {
           "amount_raw": "4242929776408",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -396,10 +471,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "1522296730",
+          "coingecko_id": "usd-coin",
           "info": {
             "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
           },
@@ -409,7 +487,9 @@
             "display": "transfer/channel-71/uusdc",
             "name": "transfer/channel-71/uusdc IBC token",
             "symbol": "UUSDC"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.999881"
         }
       ],
       "direct_lp_raw": "3270498001",
@@ -422,14 +502,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "3044.231153",
       "stake": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "71688224514"
+      "stake_custody_lp_raw": "71688224514",
+      "usd_rank": 4,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "538681414798",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -438,10 +525,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "6970128023",
+          "coingecko_id": "usd-coin",
           "info": {
             "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
           },
@@ -451,7 +541,9 @@
             "display": "transfer/channel-71/uusdc",
             "name": "transfer/channel-71/uusdc IBC token",
             "symbol": "UUSDC"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.999881"
         }
       ],
       "direct_lp_raw": "485708032",
@@ -464,14 +556,22 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "13169.866418",
       "stake": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "52026132133"
+      "stake_custody_lp_raw": "52026132133",
+      "usd_rank": 2,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno",
+        "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+      ],
+      "valuation_method": "sum_of_both_external_price_anchors"
     },
     {
       "assets": [
         {
           "amount_raw": "1049051126020",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -480,10 +580,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "9976669553",
+          "coingecko_id": "osmosis",
           "info": {
             "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
           },
@@ -493,7 +596,9 @@
             "display": "transfer/channel-0/uosmo",
             "name": "transfer/channel-0/uosmo IBC token",
             "symbol": "UOSMO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.03378799"
         }
       ],
       "direct_lp_raw": "44214341251",
@@ -506,14 +611,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "674.183222",
       "stake": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "51166119305"
+      "stake_custody_lp_raw": "51166119305",
+      "usd_rank": 8,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "196499314148",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -522,10 +634,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "66315587461",
+          "coingecko_id": "osmosis",
           "info": {
             "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
           },
@@ -535,7 +650,9 @@
             "display": "transfer/channel-0/uosmo",
             "name": "transfer/channel-0/uosmo IBC token",
             "symbol": "UOSMO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.03378799"
         }
       ],
       "direct_lp_raw": "503516025",
@@ -548,14 +665,22 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "4502.503271",
       "stake": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "104279904828"
+      "stake_custody_lp_raw": "104279904828",
+      "usd_rank": 3,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno",
+        "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+      ],
+      "valuation_method": "sum_of_both_external_price_anchors"
     },
     {
       "assets": [
         {
           "amount_raw": "232972274460",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -564,10 +689,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "1138289623306",
+          "coingecko_id": "stargaze",
           "info": {
             "native": "ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885"
           },
@@ -577,7 +705,9 @@
             "display": "transfer/channel-20/ustars",
             "name": "transfer/channel-20/ustars IBC token",
             "symbol": "USTARS"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.00005223"
         }
       ],
       "direct_lp_raw": "167293333",
@@ -590,14 +720,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "118.905734",
       "stake": "juno1dqaqj5xzlm2pz3x54cc40hwkurradm6fgjj83pp8qkjrqht2y7pqg6ch6l",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "489927242376"
+      "stake_custody_lp_raw": "489927242376",
+      "usd_rank": 12,
+      "valuation_anchor_asset_keys": [
+        "native:ibc/F6B367385300865F654E110976B838502504231705BAC0849B0651C226385885"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "240075230932",
+          "coingecko_id": null,
           "info": {
             "token": "juno10gthz5ufgrpuk5cscve2f0hjp56wgp90psqxcrqlg4m9mcu9dh8q4864xy"
           },
@@ -606,10 +743,13 @@
             "decimals": 6,
             "name": "Kleomedes",
             "symbol": "KLEO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "731508931",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -618,7 +758,9 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         }
       ],
       "direct_lp_raw": "2023560208",
@@ -631,14 +773,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "16.840272",
       "stake": "juno1d4qcgcc0yw65e7cyw3vta80s0wvttn2p3uwzhq0hyamjtt96ytwsl0mvlt",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "9769620147"
+      "stake_custody_lp_raw": "9769620147",
+      "usd_rank": 19,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "710288094",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -647,10 +796,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "31306936555",
+          "coingecko_id": null,
           "info": {
             "token": "juno14lycavan8gvpjn97aapzvwmsj8kyrvf644p05r0hu79namyj3ens87650k"
           },
@@ -659,7 +811,9 @@
             "decimals": 6,
             "name": "Signal",
             "symbol": "SGNL"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "434496357",
@@ -672,14 +826,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "16.351741",
       "stake": "juno1r2haw70fwu0z8s5n6em5gd097f8mplyxqs5uz3zch69h3llk64xssqp64l",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "4066269925"
+      "stake_custody_lp_raw": "4066269925",
+      "usd_rank": 20,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "94756144452",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -688,10 +849,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "959341093",
+          "coingecko_id": null,
           "info": {
             "token": "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
           },
@@ -700,7 +864,9 @@
             "decimals": 6,
             "name": "NETA",
             "symbol": "NETA"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "222671951",
@@ -713,14 +879,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "2181.407733",
       "stake": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "8738464169"
+      "stake_custody_lp_raw": "8738464169",
+      "usd_rank": 5,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "493261929",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -729,10 +902,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "114096867494",
+          "coingecko_id": null,
           "info": {
             "token": "juno19rqljkh95gh40s7qdx40ksx3zq5tm4qsmsrdz9smw668x9zdr3lqtg33mf"
           },
@@ -741,7 +917,9 @@
             "decimals": 6,
             "name": "SEASY",
             "symbol": "SEASY"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "565820555",
@@ -754,14 +932,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "11.355521",
       "stake": "juno1un4052t70d64zj3qepch5qehqymuy653kqzgrl8eqzf3ns0p4kassg7pea",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "6737805759"
+      "stake_custody_lp_raw": "6737805759",
+      "usd_rank": 23,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "6245403409",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -770,10 +955,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "94178035",
+          "coingecko_id": null,
           "info": {
             "token": "juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a"
           },
@@ -782,7 +970,9 @@
             "decimals": 6,
             "name": "Eris Amplified JUNO",
             "symbol": "ampJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "1000",
@@ -795,14 +985,18 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": null,
       "stake": "juno10sc6f842cguwrekeca40k9lpcsrt5r8hc6zpx60d43r9tpxxm00qftj50t",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "751698053"
+      "stake_custody_lp_raw": "751698053",
+      "valuation_anchor_asset_keys": [],
+      "valuation_method": "unpriced_no_external_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "583352123",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -811,10 +1005,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "336330183",
+          "coingecko_id": null,
           "info": {
             "token": "juno1a0khag6cfzu5lrwazmyndjgvlsuk7g4vn9jd8ceym8f4jf6v2l9q6d348a"
           },
@@ -823,7 +1020,9 @@
             "decimals": 6,
             "name": "Eris Amplified JUNO",
             "symbol": "ampJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "516600",
@@ -836,14 +1035,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "13.429513",
       "stake": "juno1w0xpg7mwfh3wjkfv90gyu7k4vqwnepcwe9mletyjsk9lpwlvqg7qseq6v3",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "425757482"
+      "stake_custody_lp_raw": "425757482",
+      "usd_rank": 22,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "21311811942",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -852,10 +1058,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "263999113",
+          "coingecko_id": null,
           "info": {
             "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
           },
@@ -864,7 +1073,9 @@
             "decimals": 6,
             "name": "seJUNO",
             "symbol": "SEJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "47196825",
@@ -877,14 +1088,18 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": null,
       "stake": "juno153a72ges9fq52kvutgztr59udxhv4eq025p5za3xl0yvq22a7j8qfw6pmp",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "2276473345"
+      "stake_custody_lp_raw": "2276473345",
+      "valuation_anchor_asset_keys": [],
+      "valuation_method": "unpriced_no_external_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "4124521935",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -893,10 +1108,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "1939810947",
+          "coingecko_id": null,
           "info": {
             "token": "juno1dd0k0um5rqncfueza62w9sentdfh3ec4nw4aq4lk5hkjl63vljqscth9gv"
           },
@@ -905,7 +1123,9 @@
             "decimals": 6,
             "name": "seJUNO",
             "symbol": "SEJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "909215112",
@@ -918,14 +1138,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "94.951774",
       "stake": "juno1shgke28jvl3ycfdlkx0mkvnmrunlvujd80q7zk499s9vx0zcqcvs2zsz3y",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "1792216303"
+      "stake_custody_lp_raw": "1792216303",
+      "usd_rank": 15,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "193001313906",
+          "coingecko_id": null,
           "info": {
             "token": "juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz"
           },
@@ -934,10 +1161,13 @@
             "decimals": 6,
             "name": "Howl Token",
             "symbol": "HOWL"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "23147613174",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -946,7 +1176,9 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "27162547231",
@@ -959,14 +1191,18 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": null,
       "stake": "juno19jayj30q6t8ruu58q8ayj7py5czzf9pm84s25qs3pnuakd5a50cswc5m2c",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "37775967163"
+      "stake_custody_lp_raw": "37775967163",
+      "valuation_anchor_asset_keys": [],
+      "valuation_method": "unpriced_no_external_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "1475649696820",
+          "coingecko_id": null,
           "info": {
             "token": "juno1g0wuyu2f49ncf94r65278puxzclf5arse9f3kvffxyv4se4vgdmsk4dvqz"
           },
@@ -975,10 +1211,13 @@
             "decimals": 6,
             "name": "Howl Token",
             "symbol": "HOWL"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "4912334097",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -987,7 +1226,9 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         }
       ],
       "direct_lp_raw": "245571812",
@@ -1000,14 +1241,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "113.088219",
       "stake": "juno1tfryulnedmfs9hqs9hyvupramfddv90pz3dpp7h886tl6kuftflskypwh7",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "83366146591"
+      "stake_custody_lp_raw": "83366146591",
+      "usd_rank": 13,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "10903130911",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1016,10 +1264,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "5931503232372",
+          "coingecko_id": null,
           "info": {
             "token": "juno1j0a9ymgngasfn3l5me8qpd53l5zlm9wurfdk7r65s5mg6tkxal3qpgf5se"
           },
@@ -1028,7 +1279,9 @@
             "decimals": 6,
             "name": "Gelotto",
             "symbol": "GLTO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "8087731752",
@@ -1041,14 +1294,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "251.004030",
       "stake": "juno14l8dhtl8rfwu4d97q6mp0ycnnhlrhssgjknkr2p9e34g0nxvcczqlur0yp",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "230879530593"
+      "stake_custody_lp_raw": "230879530593",
+      "usd_rank": 11,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "613802301",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -1057,10 +1317,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "3408406",
+          "coingecko_id": null,
           "info": {
             "token": "juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa"
           },
@@ -1069,7 +1332,9 @@
             "decimals": 3,
             "name": "CannaLabs",
             "symbol": "CANLAB"
-          }
+          },
+          "resolved_decimals": 3,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "7445600",
@@ -1082,14 +1347,18 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": null,
       "stake": "juno1l6vy80rm9x2r63rgcj5u3an7ge035udu986jf2dm65mx8yz0hw6su64ghn",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "37594996"
+      "stake_custody_lp_raw": "37594996",
+      "valuation_anchor_asset_keys": [],
+      "valuation_method": "unpriced_no_external_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "60551227",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -1098,10 +1367,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "10208521782148",
+          "coingecko_id": null,
           "info": {
             "token": "juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h"
           },
@@ -1110,7 +1382,9 @@
             "decimals": 6,
             "name": "Czar Gov Token",
             "symbol": "CZAR"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "625548952",
@@ -1123,14 +1397,18 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": null,
       "stake": "juno15aqhjcm4x886pje3ae8mxl46wft5spuwp3fpcscz0x2g6n00dqns49v22y",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "22411462675"
+      "stake_custody_lp_raw": "22411462675",
+      "valuation_anchor_asset_keys": [],
+      "valuation_method": "unpriced_no_external_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "1613862041931",
+          "coingecko_id": null,
           "info": {
             "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
           },
@@ -1139,10 +1417,13 @@
             "decimals": 6,
             "name": "Wynd DAO Governance Token",
             "symbol": "WYND"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "45175243541",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1151,7 +1432,9 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         }
       ],
       "direct_lp_raw": "8695285409",
@@ -1164,14 +1447,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "1039.991931",
       "stake": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "242151413511"
+      "stake_custody_lp_raw": "242151413511",
+      "usd_rank": 6,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "2124028890",
+          "coingecko_id": null,
           "info": {
             "token": "juno1naunqzk6jseqeqhq43nm6kdneraws2rkmteprjzppw6j9xcrurxqx0ld9e"
           },
@@ -1180,10 +1470,13 @@
             "decimals": 6,
             "name": "wyJUNO",
             "symbol": "wyJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         },
         {
           "amount_raw": "676860288",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1192,7 +1485,9 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         }
       ],
       "direct_lp_raw": "295832597",
@@ -1205,14 +1500,21 @@
       "pair_type": {
         "lsd": {}
       },
+      "recoverable_pool_value_usd": "15.582190",
       "stake": "juno1qkqah87ks56v20nqwtjvrfa08p85d8qszjd9zck7h6ln37mzrsksgy7fh9",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "24195809648"
+      "stake_custody_lp_raw": "24195809648",
+      "usd_rank": 21,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "68176959",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1221,10 +1523,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "1131012155",
+          "coingecko_id": null,
           "info": {
             "token": "juno1p8x807f6h222ur0vssqy3qk6mcpa40gw2pchquz5atl935t7kvyq894ne3"
           },
@@ -1233,7 +1538,9 @@
             "decimals": 6,
             "name": "MUSE",
             "symbol": "MUSE"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "15527127",
@@ -1246,14 +1553,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "1.569521",
       "stake": "juno182rvmpzq2hcvsr0xqnugvm4tz59l7hdgkhnnqnwklc3th8wmxxcsxeu5fx",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "246936500"
+      "stake_custody_lp_raw": "246936500",
+      "usd_rank": 25,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "4411122721",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1262,10 +1576,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "15067932696",
+          "coingecko_id": null,
           "info": {
             "token": "juno1r4pzw8f9z0sypct5l9j906d47z998ulwvhvqe5xdwgy8wf84583sxwh0pa"
           },
@@ -1274,7 +1591,9 @@
             "decimals": 6,
             "name": "RACOON",
             "symbol": "RAC"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "184308277",
@@ -1287,14 +1606,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "101.549691",
       "stake": "juno1lkek4vzhum6vx4v36akftzqw60ul76lmrktkzl84quf3wq66uctqy734aj",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "7365013905"
+      "stake_custody_lp_raw": "7365013905",
+      "usd_rank": 14,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "198112556",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1303,10 +1629,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "306442869",
+          "coingecko_id": null,
           "info": {
             "token": "juno1rws84uz7969aaa7pej303udhlkt3j9ca0l3egpcae98jwak9quzq8szn2l"
           },
@@ -1315,7 +1644,9 @@
             "decimals": 6,
             "name": "POSTHUMAN",
             "symbol": "PHMN"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "27590691",
@@ -1328,14 +1659,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "4.560805",
       "stake": "juno1sjkc38sy6aj3e8jerr40nhqm5xdcdc99ejtp46smjxs63tk3dj5svg0kqt",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "196428799"
+      "stake_custody_lp_raw": "196428799",
+      "usd_rank": 24,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "20108428",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1344,10 +1682,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "4107237",
+          "coingecko_id": null,
           "info": {
             "token": "juno1vn38rzq0wc7zczp4dhy0h5y5kxh2jjzeahwe30c9cc6dw3lkyk5qn5rmfa"
           },
@@ -1356,7 +1697,9 @@
             "decimals": 3,
             "name": "CannaLabs",
             "symbol": "CANLAB"
-          }
+          },
+          "resolved_decimals": 3,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "25489",
@@ -1369,14 +1712,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "0.462922",
       "stake": "juno1wjcak50p8y7ajyu5n4u88s8ah58fa520442flthy7dq55v6fatqqrd395z",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "3050418"
+      "stake_custody_lp_raw": "3050418",
+      "usd_rank": 26,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "2676339987",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1385,10 +1735,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "2303419753",
+          "coingecko_id": null,
           "info": {
             "token": "juno1wwnhkagvcd3tjz6f8vsdsw5plqnw8qy2aj3rrhqr2axvktzv9q2qz8jxn3"
           },
@@ -1397,7 +1750,9 @@
             "decimals": 6,
             "name": "bJUNO",
             "symbol": "BJUNO"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "1167858101",
@@ -1410,14 +1765,21 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "61.612772",
       "stake": "juno1l2auxggxa5n9yled8zrf4zxtahergzgs2t9vykf66uckwwk9n3zq2j3yq7",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "1205471330"
+      "stake_custody_lp_raw": "1205471330",
+      "usd_rank": 17,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     },
     {
       "assets": [
         {
           "amount_raw": "693946",
+          "coingecko_id": "juno-network",
           "info": {
             "native": "ujuno"
           },
@@ -1426,10 +1788,13 @@
             "decimals": null,
             "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
             "symbol": "ujuno"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01151064"
         },
         {
           "amount_raw": "52446009504091",
+          "coingecko_id": null,
           "info": {
             "token": "juno1x02k67asfmjawgc96dj8nxq6se3fmx36gedgs5hvkjegdhfy97rs3jgj2h"
           },
@@ -1438,7 +1803,9 @@
             "decimals": 6,
             "name": "Czar Gov Token",
             "symbol": "CZAR"
-          }
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
         }
       ],
       "direct_lp_raw": "1427854088",
@@ -1451,14 +1818,38 @@
       "pair_type": {
         "xyk": {}
       },
+      "recoverable_pool_value_usd": "0.015976",
       "stake": "juno122kx9l5z9lld74hjka0mg7exwxuwj2d0plwx03pwg3z4433vct8s4e9jr8",
       "stake_code_id": "2291",
-      "stake_custody_lp_raw": "3955404495"
+      "stake_custody_lp_raw": "3955404495",
+      "usd_rank": 27,
+      "valuation_anchor_asset_keys": [
+        "native:ujuno"
+      ],
+      "valuation_method": "two_times_single_external_price_anchor"
     }
   ],
+  "price_source": "CoinGecko simple/price",
+  "price_timestamp": "2026-09-12T20:36:32.960143+00:00",
+  "prices_usd": {
+    "cosmos": "1.61",
+    "juno-network": "0.01151064",
+    "mars-protocol": "0.00965841",
+    "osmosis": "0.03378799",
+    "stargaze": "0.00005223",
+    "usd-coin": "0.999881",
+    "weth": "2521.62"
+  },
   "reference_pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
   "reference_pair_creator": "juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s",
   "status": "VALIDATED",
+  "top_five_pair_addresses": [
+    "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+    "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+    "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+    "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+    "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
+  ],
   "validation": {
     "all_pairs_queried": true,
     "factory_derived_from_reference_creator": true,
