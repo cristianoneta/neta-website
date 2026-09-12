@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""Economic NETA attribution for validated WYND and Osmosis Pool 631 LP positions.
+
+Read-only. Returns underlying NETA by economic wallet and fails closed unless every
+LP share and every pool NETA unit is reconciled.
+"""
+from __future__ import annotations
+import base64, json, re
+import requests
+import update_neta_data as u
+
+WYND_LP="juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x"
+WYND_PAIR="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
+WYND_STAKE="juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7"
+OSMO_POOL_ID=631
+OSMO_SHARE_DENOM="gamm/pool/631"
+OSMO_POOL_ADDR="osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x"
+OSMO_LOCKUP_ADDR="osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc"
+OSMO_LCD=["https://osmosis-api.polkachu.com","https://lcd.osmosis.zone"]
+ADDR_RE=re.compile(rb"juno1[0-9a-z]{38}")
+
+
+def smart(contract,msg):
+    q=base64.b64encode(json.dumps(msg,separators=(",",":" )).encode()).decode()
+    d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{contract}/smart/{q}")
+    return d.get("data",d)
+
+
+def amount_from_obj(obj):
+    if isinstance(obj,int): return obj
+    if isinstance(obj,str) and obj.isdigit(): return int(obj)
+    if isinstance(obj,dict):
+        for k in ("amount","balance","stake","staked","value"):
+            if k in obj:
+                x=amount_from_obj(obj[k])
+                if x is not None:return x
+    return None
+
+
+def parse_json(raw):
+    try:return json.loads(raw.decode())
+    except Exception:return None
+
+
+def wynd_attribution():
+    lp_rows=u.contract_state(WYND_LP)
+    direct={}
+    token_info=None
+    for k,v in lp_rows:
+        ns,suf=u.nskey(k)
+        if ns=="balance" and suf:
+            a=suf.decode(); x=u.jint(v)
+            if x>0: direct[a]=x
+        elif k==b"token_info" or ns=="token_info":
+            try: token_info=u.jval(v)
+            except Exception: pass
+    if not token_info or "total_supply" not in token_info: raise RuntimeError("WYND LP total supply unavailable")
+    supply=int(token_info["total_supply"])
+    if sum(direct.values())!=supply: raise RuntimeError("WYND direct LP balances do not equal supply")
+    custody=direct.get(WYND_STAKE,0)
+    if custody<=0: raise RuntimeError("WYND stake contract has no LP custody")
+
+    active={}; claims={}; unknown=[]
+    for k,v in u.contract_state(WYND_STAKE):
+        ns,suf=u.nskey(k); obj=parse_json(v)
+        if ns=="stake":
+            try:
+                m=ADDR_RE.search(suf)
+                if not m: raise ValueError("wallet missing from composite stake key")
+                a=m.group(0).decode()
+                x=amount_from_obj(obj)
+                if x is None:x=u.jint(v)
+                if isinstance(obj,dict) and isinstance(obj.get("locked_tokens"),list):
+                    x=(x or 0)+sum(int(z[1]) for z in obj["locked_tokens"] if isinstance(z,list) and len(z)>1)
+                if x:active[a]=active.get(a,0)+x
+            except Exception as e: unknown.append((k.hex(),str(e)))
+        elif ns=="claims" and suf:
+            try:
+                a=suf.decode()
+                items=obj if isinstance(obj,list) else (obj.get("claims",[]) if isinstance(obj,dict) else [])
+                x=sum((amount_from_obj(item) or 0) for item in items)
+                if x:claims[a]=claims.get(a,0)+x
+            except Exception as e: unknown.append((k.hex(),str(e)))
+    if unknown: raise RuntimeError(f"WYND unparsed stake rows: {len(unknown)}")
+    if sum(active.values())+sum(claims.values())!=custody:
+        raise RuntimeError("WYND active+claims do not equal stake-contract LP custody")
+
+    economic={a:x for a,x in direct.items() if a!=WYND_STAKE}
+    for src in (active,claims):
+        for a,x in src.items():economic[a]=economic.get(a,0)+x
+    if sum(economic.values())!=supply: raise RuntimeError("WYND economic LP shares do not equal LP supply")
+
+    pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
+    neta={a:(pool_neta*x)//supply for a,x in economic.items()}
+    # Allocate integer rounding dust deterministically to the largest share holder.
+    dust=pool_neta-sum(neta.values())
+    if dust:
+        top=max(economic,key=lambda a:(economic[a],a)); neta[top]+=dust
+    if sum(neta.values())!=pool_neta: raise RuntimeError("WYND NETA attribution mismatch")
+    return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values())}
+
+
+def bank_amount_any(raw,expected_denom):
+    if not raw: raise ValueError("empty bank value")
+    try:s=raw.decode("ascii")
+    except UnicodeDecodeError:s=""
+    if s.isdigit():return int(s)
+    denom=None; amount=None
+    for f,w,x in u.fields(raw):
+        if w!=2:continue
+        if f==1:denom=x.decode("utf-8")
+        elif f==2:
+            a=x.decode("ascii")
+            if not a.isdigit():raise ValueError("invalid amount")
+            amount=int(a)
+    if amount is None:raise ValueError("cannot decode bank amount")
+    if denom is not None and denom!=expected_denom:raise ValueError(f"denom mismatch {denom}")
+    return amount
+
+
+def subspace_store(store,prefix,height,rpc,timeout=180):
+    q={"path":f'"/store/{store}/subspace"',"data":"0x"+prefix.hex(),"height":str(height),"prove":"false"}
+    r=u.S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=timeout); r.raise_for_status(); d=r.json()["result"]["response"]
+    if int(d.get("code",0) or 0)!=0:raise RuntimeError(f"ABCI {store} code {d.get('code')}: {d.get('log')}")
+    raw=base64.b64decode(d.get("value") or ""); return u.kvpairs(raw) if raw else []
+
+
+def key_store(store,key,height,rpc):
+    q={"path":f'"/store/{store}/key"',"data":"0x"+key.hex(),"height":str(height),"prove":"false"}
+    r=u.S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=60); r.raise_for_status(); d=r.json()["result"]["response"]
+    if int(d.get("code",0) or 0)!=0:raise RuntimeError(f"ABCI {store} code {d.get('code')}: {d.get('log')}")
+    return base64.b64decode(d.get("value") or "")
+
+
+def parse_coin(buf):
+    denom=None; amount=None
+    for f,w,x in u.fields(buf):
+        if w!=2:continue
+        if f==1:denom=x.decode()
+        elif f==2:amount=int(x.decode())
+    return denom,amount
+
+
+def parse_lock(buf):
+    owner=None; coins=[]
+    for f,w,x in u.fields(buf):
+        if f==2 and w==2:owner=x.decode()
+        elif f==5 and w==2:coins.append(parse_coin(x))
+    return owner,coins
+
+
+def osmosis_attribution():
+    height,rpc=u.latest_height(); direct={}; failures=[]
+    for n in (20,32):
+        for first in range(256):
+            try:pairs=u.subspace(bytes([2,n,first]),height,rpc)
+            except Exception as e:failures.append((n,first,str(e)));continue
+            for k,v in pairs:
+                try:raw,denom=u.bank_key(k)
+                except Exception:continue
+                if denom!=OSMO_SHARE_DENOM:continue
+                x=bank_amount_any(v,OSMO_SHARE_DENOM)
+                if x>0:
+                    a=u.b32enc("osmo",raw);direct[a]=direct.get(a,0)+x
+    if failures:raise RuntimeError(f"Osmosis LP bank scan incomplete: {len(failures)} prefixes failed")
+
+    pool=None
+    for base in OSMO_LCD:
+        try:
+            r=requests.get(base+f"/osmosis/gamm/v1beta1/pools/{OSMO_POOL_ID}",timeout=30);r.raise_for_status();pool=r.json().get("pool")
+            if pool:break
+        except Exception:pass
+    if not pool:raise RuntimeError("Osmosis Pool 631 query failed")
+    supply=int(pool["total_shares"]["amount"])
+    pool_neta=next((int(x["token"]["amount"]) for x in pool["pool_assets"] if x["token"]["denom"]==u.DENOM),None)
+    if pool_neta is None:raise RuntimeError("Pool 631 NETA reserve missing")
+    if sum(direct.values())!=supply:raise RuntimeError("Pool 631 bank share sum != supply")
+
+    lock_module=direct.get(OSMO_LOCKUP_ADDR,0)
+    locks=subspace_store("lockup",b"\x02",height,rpc)
+    locked={}
+    for _,v in locks:
+        owner,coins=parse_lock(v)
+        for denom,amount in coins:
+            if denom==OSMO_SHARE_DENOM and amount:
+                if not owner:raise RuntimeError("Pool 631 lock without owner")
+                locked[owner]=locked.get(owner,0)+amount
+    if sum(locked.values())!=lock_module:raise RuntimeError("Pool 631 lock owners != lockup module balance")
+
+    economic={a:x for a,x in direct.items() if a!=OSMO_LOCKUP_ADDR}
+    for a,x in locked.items():economic[a]=economic.get(a,0)+x
+    if sum(economic.values())!=supply:raise RuntimeError("Pool 631 economic LP shares != supply")
+
+    neta={a:(pool_neta*x)//supply for a,x in economic.items()}
+    dust=pool_neta-sum(neta.values())
+    if dust:
+        top=max(economic,key=lambda a:(economic[a],a));neta[top]+=dust
+    if sum(neta.values())!=pool_neta:raise RuntimeError("Pool 631 NETA attribution mismatch")
+    return neta,{"height":height,"rpc":rpc,"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"direct_share_holders":len(direct),"economic_wallets":len(economic),"lockup_module_shares_raw":lock_module,"lock_owners":len(locked)}
+
+
+def build():
+    wynd,wm=wynd_attribution(); osmo,om=osmosis_attribution()
+    result={"wynd":wm,"osmosis_pool_631":om,"wynd_wallet_neta_raw":wynd,"osmosis_pool_631_wallet_neta_raw":osmo}
+    return result
+
+
+if __name__=="__main__":
+    out=build()
+    print(json.dumps({"wynd":out["wynd"],"osmosis_pool_631":out["osmosis_pool_631"],"checks":{"wynd_wallet_sum_raw":sum(out["wynd_wallet_neta_raw"].values()),"osmosis_wallet_sum_raw":sum(out["osmosis_pool_631_wallet_neta_raw"].values())}},indent=2))
