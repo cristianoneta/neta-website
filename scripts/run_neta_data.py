@@ -37,15 +37,15 @@ import update_neta_data
 
 
 def _parallel_scan_osmo():
-    """Scan all 512 bank prefixes with conservative concurrency + retries.
+    """Scan all 512 bank prefixes with bounded concurrency + retries.
 
-    We deliberately use only two workers. A failed prefix is retried with
-    exponential backoff and, when available, the secondary Osmosis RPC.
-    Every prefix must still succeed or the whole run aborts.
+    Four workers provide a speed-up over the conservative validation setup
+    while keeping exponential backoff and secondary-RPC fallback. Every
+    prefix must still succeed or the whole run aborts.
     """
     height, primary_rpc = update_neta_data.latest_height()
     rpc_candidates = [primary_rpc] + [x for x in update_neta_data.OSMO if x != primary_rpc]
-    workers = 2
+    workers = 4
     update_neta_data.log(
         f"Osmosis primary-state height {height:,} via {primary_rpc}; "
         f"{workers} parallel workers with retry/backoff"
@@ -79,7 +79,7 @@ def _parallel_scan_osmo():
                 return local
             except Exception as exc:
                 last_exc = exc
-                # Backoff is intentionally capped so a temporary 429 does not
+                # Backoff is intentionally capped so temporary 429s do not
                 # turn a daily run into a very long job.
                 time.sleep(min(0.75 * (2 ** attempt), 8.0))
         raise RuntimeError(f"all retry attempts failed: {last_exc}")
