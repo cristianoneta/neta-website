@@ -550,3 +550,27 @@ Unsigned simulation:
 - Real existing position owners were used only as unsigned simulation sender context.
 - All simulations returned result data; no signature was created and no transaction was broadcast.
 - A controlled tiny-position broadcast and post-transaction state verification remain required before signing can be enabled.
+
+
+### Keplr recovery frontend — READ-ONLY DRAFT VALIDATED 2026-09-12
+
+The draft now provides:
+- Keplr-only connection through the injected provider on chain ID `juno-1`.
+- Juno-address verification and safe handling of `keplr_keystorechange`.
+- Live code-ID verification for every allowlisted pair, LP and stake contract.
+- Live Top-8 queries for direct LP, all stake periods and claims.
+- Correct stake semantics: deployed `all_staked.stake` already includes its `total_locked` subset; freely unbondable LP is therefore `stake - total_locked`, never `stake + total_locked`.
+- Separate 7D/14D/28D/42D rows and period-specific Unbond previews.
+- Current time and Juno height claim classification.
+- Immediate revalidation of contract code IDs and wallet state before every preview.
+- Proportional Pair `share` query for expected Withdraw assets.
+- Exact memo and serialized Unbond, Claim and CW20 Send/WithdrawLiquidity preview.
+- Signing remains hard-disabled pending the controlled broadcast gate.
+- Blackout pauses during the asynchronous preview/revalidation flow and while the dialog is open.
+
+Automated evidence:
+- JavaScript syntax check passed.
+- `scripts/test_wynd_recovery_frontend.py` passed all registry, Keplr, chain, allowlist, locked-stake, claim-height, revalidation, memo and signing-gate assertions.
+- Persisted log: `docs/diagnostics/latest_wynd_recovery_frontend_test.log`.
+
+The draft remains on `diagnostic/wynd-recovery-discovery` and is not published.
