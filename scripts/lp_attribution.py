@@ -67,6 +67,17 @@ def parse_json(raw):
     except Exception:return None
 
 
+def allocate_exact(pool_neta,economic,supply):
+    """Largest-remainder allocation; deterministic and exactly reserve-conserving."""
+    out={a:(pool_neta*x)//supply for a,x in economic.items()}
+    dust=pool_neta-sum(out.values())
+    if dust:
+        order=sorted(economic,key=lambda a:((pool_neta*economic[a])%supply,a),reverse=True)
+        for a in order[:dust]: out[a]+=1
+    if sum(out.values())!=pool_neta: raise RuntimeError("LP NETA allocation mismatch")
+    return out
+
+
 def wynd_attribution():
     lp_rows=contract_state(WYND_LP)
     direct={}; token_info=None
@@ -115,11 +126,7 @@ def wynd_attribution():
     if sum(economic.values())!=supply: raise RuntimeError("WYND economic LP shares do not equal LP supply")
 
     pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
-    neta={a:(pool_neta*x)//supply for a,x in economic.items()}
-    dust=pool_neta-sum(neta.values())
-    if dust:
-        top=max(economic,key=lambda a:(economic[a],a)); neta[top]+=dust
-    if sum(neta.values())!=pool_neta: raise RuntimeError("WYND NETA attribution mismatch")
+    neta=allocate_exact(pool_neta,economic,supply)
     return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values())}
 
 
@@ -199,20 +206,21 @@ def parse_lock(buf):
     return {"id":lock_id,"owner":owner,"duration_seconds":duration,"end_time":end_time,"coins":coins}
 
 
-def osmosis_attribution():
-    height,rpc=u.latest_height(); direct={}; failures=[]
-    for n in (20,32):
-        for first in range(256):
-            try:pairs=u.subspace(bytes([2,n,first]),height,rpc)
-            except Exception as e:failures.append((n,first,str(e)));continue
-            for k,v in pairs:
-                try:raw,denom=u.bank_key(k)
-                except Exception:continue
-                if denom!=OSMO_SHARE_DENOM:continue
-                x=bank_amount_any(v,OSMO_SHARE_DENOM)
-                if x>0:
-                    a=u.b32enc("osmo",raw);direct[a]=direct.get(a,0)+x
-    if failures:raise RuntimeError(f"Osmosis LP bank scan incomplete: {len(failures)} prefixes failed")
+def osmosis_attribution(direct=None,height=None,rpc=None):
+    if direct is None:
+        height,rpc=u.latest_height(); direct={}; failures=[]
+        for n in (20,32):
+            for first in range(256):
+                try:pairs=u.subspace(bytes([2,n,first]),height,rpc)
+                except Exception as e:failures.append((n,first,str(e)));continue
+                for k,v in pairs:
+                    try:raw,denom=u.bank_key(k)
+                    except Exception:continue
+                    if denom!=OSMO_SHARE_DENOM:continue
+                    x=bank_amount_any(v,OSMO_SHARE_DENOM)
+                    if x>0:
+                        a=u.b32enc("osmo",raw);direct[a]=direct.get(a,0)+x
+        if failures:raise RuntimeError(f"Osmosis LP bank scan incomplete: {len(failures)} prefixes failed")
 
     pool=None
     for base in OSMO_LCD:
@@ -265,11 +273,7 @@ def osmosis_attribution():
     for a,x in locked.items():economic[a]=economic.get(a,0)+x
     if sum(economic.values())!=supply:raise RuntimeError("Pool 631 economic LP shares != supply")
 
-    neta={a:(pool_neta*x)//supply for a,x in economic.items()}
-    dust=pool_neta-sum(neta.values())
-    if dust:
-        top=max(economic,key=lambda a:(economic[a],a));neta[top]+=dust
-    if sum(neta.values())!=pool_neta:raise RuntimeError("Pool 631 NETA attribution mismatch")
+    neta=allocate_exact(pool_neta,economic,supply)
     return neta,{"height":height,"rpc":rpc,"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"direct_share_holders":len(direct),"economic_wallets":len(economic),"lockup_module_shares_raw":lock_module,"lock_owners":len(locked),"lock_records":len(pool_locks),"active_lock_records":len(active),"unlocking_lock_records":len(unlocking)}
 
 
