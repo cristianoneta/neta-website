@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "status": "NOT_STARTED_DRAFT",
+  "memo_tag": "netareborn.com/wynd-recovery:v1",
+  "collection_started_at": null,
+  "updated_at": null,
+  "valuation_policy": "LP share of pool reserves valued in USD at the confirmed transaction block; source and timestamp retained per event.",
+  "pools": {}
+}
