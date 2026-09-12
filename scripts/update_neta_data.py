@@ -261,21 +261,21 @@ def ekey(addr,chain):
     p=payload(addr); return ("p20",p.hex()) if len(p)==20 else (chain,addr)
 def merge(juno,osmo,staked,unbonding,claimable,lp_neta,supply):
     g={}
-    def row(key,addr): return g.setdefault(key,{"juno_address":None,"osmosis_address":None,"address_bytes":len(payload(addr)),"juno_raw":0,"osmosis_raw":0,"staking_raw":0,"unstaking_raw":0,"claimable_raw":0,"lp_raw":0})
+    def row(key,addr): return g.setdefault(key,{"juno_address":None,"osmosis_address":None,"address_bytes":len(payload(addr)),"juno_raw":0,"osmosis_raw":0,"staking_raw":0,"unstaking_raw":0,"claimable_raw":0,"lp_raw":0,"juno_custody":False,"osmosis_custody":False})
     for a,x in juno.items():
         if a in (ESCROW,DAO,WYND_PAIR): continue
-        r=row(ekey(a,"juno"),a); r["juno_address"]=a; r["juno_raw"]+=x
+        r=row(ekey(a,"juno"),a); r["juno_address"]=a; r["juno_raw"]+=x; r["juno_custody"]=True
     for a,x in osmo.items():
         if a==OSMO_POOL_ADDR: continue
-        r=row(ekey(a,"osmo"),a); r["osmosis_address"]=a; r["osmosis_raw"]+=x
+        r=row(ekey(a,"osmo"),a); r["osmosis_address"]=a; r["osmosis_raw"]+=x; r["osmosis_custody"]=True
     for src,f in ((staked,"staking_raw"),(unbonding,"unstaking_raw"),(claimable,"claimable_raw")):
         for a,x in src.items():
-            r=row(ekey(a,"juno"),a); r["juno_address"]=r["juno_address"] or a; r[f]+=x
+            r=row(ekey(a,"juno"),a); r["juno_address"]=r["juno_address"] or a; r[f]+=x; r["juno_custody"]=True
     for a,x in lp_neta.items():
         chain="juno" if a.startswith("juno1") else "osmo"
         r=row(ekey(a,chain),a)
-        if chain=="juno": r["juno_address"]=r["juno_address"] or a
-        else: r["osmosis_address"]=r["osmosis_address"] or a
+        if chain=="juno": r["juno_address"]=r["juno_address"] or a; r["juno_custody"]=True
+        else: r["osmosis_address"]=r["osmosis_address"] or a; r["osmosis_custody"]=True
         r["lp_raw"]+=x
     rows=[]
     for r in g.values():
@@ -315,9 +315,14 @@ def build(out):
     if residual!=dao_res: raise RuntimeError(f"economic residual {residual} != DAO residual {dao_res}")
     if residual>1_000_000: raise RuntimeError("residual > 1 NETA")
     public=[pub(r,supply) for r in rows]; ranked=sum(r["total_raw"] for r in rows)
+    juno_custody=sum(1 for r in rows if r["juno_custody"])
+    osmosis_custody=sum(1 for r in rows if r["osmosis_custody"])
+    custody_overlap=sum(1 for r in rows if r["juno_custody"] and r["osmosis_custody"])
+    if juno_custody+osmosis_custody-custody_overlap!=len(rows):
+        raise RuntimeError("custody-holder union does not equal economic holders")
     def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
     onepct=max(1,(len(rows)+99)//100)
-    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_residual_equals_supply":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":len(juno),"osmosis_primary_state_addresses":len(osmo),"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
+    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
     idx={}
     for r in public:
         for a in (r["juno_address"],r["osmosis_address"]):
