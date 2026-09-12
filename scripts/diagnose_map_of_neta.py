@@ -16,10 +16,10 @@ WYND_PAIR="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
 JUNO_BRIDGE="juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn"
 OSMO_DENOM="ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A"
-JUNO_LCD=["https://juno-api.polkachu.com"]
-OSMO_LCD=["https://osmosis-api.polkachu.com","https://lcd.osmosis.zone"]
-JUNO_RPC=["https://juno-rpc.polkachu.com"]
-OSMO_RPC=["https://rpc.osmosis.zone","https://osmosis-rpc.polkachu.com"]
+JUNO_LCD=["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com:443","https://api-juno.itastakers.com"]
+OSMO_LCD=["https://osmosis-api.polkachu.com","https://lcd.osmosis.zone","https://osmosis-api.lavenderfive.com:443","https://api-osmosis-ia.cosmosia.notional.ventures"]
+JUNO_RPC=["https://juno-rpc.polkachu.com","https://juno-rpc.lavenderfive.com:443","https://rpc-juno.itastakers.com"]
+OSMO_RPC=["https://rpc.osmosis.zone","https://osmosis-rpc.polkachu.com","https://osmosis-rpc.lavenderfive.com:443","https://rpc-osmosis.ecostake.com"]
 S=requests.Session()
 S.headers.update({"User-Agent":"NETA-Map-Diagnostic/0.1 (+https://netareborn.com)"})
 
@@ -31,7 +31,7 @@ def get_first(bases: list[str], path: str, params: Any=None) -> dict:
             r.raise_for_status()
             return {"endpoint":base,"ok":True,"data":r.json()}
         except Exception as e:
-            errors.append(f"{base}: {e}")
+            errors.append(f"{base}: {e}; body={getattr(getattr(e, 'response', None), 'text', '')[:500]}")
     return {"ok":False,"errors":errors}
 
 def lcd_txs(bases: list[str], events: list[str], limit: int=8) -> dict:
