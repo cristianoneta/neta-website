@@ -25,15 +25,19 @@ jobs:
         id: discovery
         continue-on-error: true
         run: python scripts/discover_wynd_recovery.py
+      - name: Validate top-five recovery state
+        id: validation
+        continue-on-error: true
+        run: python scripts/validate_wynd_recovery.py
       - name: Persist evidence
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/diagnostics/wynd_recovery_discovery.json
+          git add docs/diagnostics/wynd_recovery_discovery.json docs/diagnostics/wynd_recovery_validation.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Record WYND recovery pool discovery"
           git push
       - name: Fail when discovery is incomplete
-        if: always() && steps.discovery.outcome != 'success'
+        if: always() && (steps.discovery.outcome != 'success' || steps.validation.outcome != 'success')
         run: exit 1
