@@ -2,10 +2,14 @@
 """Economic NETA attribution for validated WYND and Osmosis Pool 631 LP positions.
 
 Read-only. Returns underlying NETA by economic wallet and fails closed unless every
-LP share and every pool NETA unit is reconciled.
+LP share and every pool NETA unit is reconciled. Diagnostic output also summarizes
+Pool 631 PeriodLock metadata so old bonded positions can be distinguished from
+positions already unlocking.
 """
 from __future__ import annotations
 import base64, json, re
+from collections import Counter
+from datetime import datetime, timezone
 import requests
 import update_neta_data as u
 
@@ -65,8 +69,7 @@ def parse_json(raw):
 
 def wynd_attribution():
     lp_rows=contract_state(WYND_LP)
-    direct={}
-    token_info=None
+    direct={}; token_info=None
     for k,v in lp_rows:
         ns,suf=u.nskey(k)
         if ns=="balance" and suf:
@@ -154,12 +157,33 @@ def parse_coin(buf):
     return denom,amount
 
 
-def parse_lock(buf):
-    owner=None; coins=[]
+def parse_duration(buf):
+    sec=0; nanos=0
     for f,w,x in u.fields(buf):
-        if f==2 and w==2:owner=x.decode()
+        if f==1 and w==0:sec=int(x)
+        elif f==2 and w==0:nanos=int(x)
+    return sec+nanos/1_000_000_000
+
+
+def parse_timestamp(buf):
+    sec=0; nanos=0
+    for f,w,x in u.fields(buf):
+        if f==1 and w==0:sec=int(x)
+        elif f==2 and w==0:nanos=int(x)
+    if sec==0 and nanos==0:return None
+    return datetime.fromtimestamp(sec+nanos/1_000_000_000,tz=timezone.utc).isoformat()
+
+
+def parse_lock(buf):
+    # Osmosis PeriodLock protobuf: ID=1, owner=2, duration=3, end_time=4, coins=5.
+    lock_id=None; owner=None; duration=None; end_time=None; coins=[]
+    for f,w,x in u.fields(buf):
+        if f==1 and w==0:lock_id=int(x)
+        elif f==2 and w==2:owner=x.decode()
+        elif f==3 and w==2:duration=parse_duration(x)
+        elif f==4 and w==2:end_time=parse_timestamp(x)
         elif f==5 and w==2:coins.append(parse_coin(x))
-    return owner,coins
+    return {"id":lock_id,"owner":owner,"duration_seconds":duration,"end_time":end_time,"coins":coins}
 
 
 def osmosis_attribution():
@@ -191,14 +215,38 @@ def osmosis_attribution():
 
     lock_module=direct.get(OSMO_LOCKUP_ADDR,0)
     locks=subspace_store("lockup",b"\x02",height,rpc)
-    locked={}
+    locked={}; pool_locks=[]
     for _,v in locks:
-        owner,coins=parse_lock(v)
-        for denom,amount in coins:
+        lock=parse_lock(v)
+        for denom,amount in lock["coins"]:
             if denom==OSMO_SHARE_DENOM and amount:
-                if not owner:raise RuntimeError("Pool 631 lock without owner")
-                locked[owner]=locked.get(owner,0)+amount
-    if sum(locked.values())!=lock_module:raise RuntimeError("Pool 631 lock owners != lockup module balance")
+                if not lock["owner"]:raise RuntimeError("Pool 631 lock without owner")
+                locked[lock["owner"]]=locked.get(lock["owner"],0)+amount
+                pool_locks.append({"id":lock["id"],"owner":lock["owner"],"amount":amount,"duration_seconds":lock["duration_seconds"],"end_time":lock["end_time"]})
+
+    locked_sum=sum(locked.values())
+    duration_counts=Counter(int(x["duration_seconds"] or 0) for x in pool_locks)
+    active=[x for x in pool_locks if not x["end_time"]]
+    unlocking=[x for x in pool_locks if x["end_time"]]
+    print("POOL631_LOCK_DIAGNOSTIC="+json.dumps({
+        "height":height,
+        "lockup_module_bank_shares_raw":lock_module,
+        "periodlock_pool631_shares_raw":locked_sum,
+        "difference_raw":locked_sum-lock_module,
+        "pool631_lock_records":len(pool_locks),
+        "unique_lock_owners":len(locked),
+        "active_no_end_time_records":len(active),
+        "active_no_end_time_shares_raw":sum(x["amount"] for x in active),
+        "unlocking_with_end_time_records":len(unlocking),
+        "unlocking_with_end_time_shares_raw":sum(x["amount"] for x in unlocking),
+        "duration_counts":dict(sorted(duration_counts.items())),
+        "min_lock_id":min((x["id"] for x in pool_locks if x["id"] is not None),default=None),
+        "max_lock_id":max((x["id"] for x in pool_locks if x["id"] is not None),default=None),
+        "unlocking_end_times":sorted([x["end_time"] for x in unlocking]),
+        "sample_locks":sorted(pool_locks,key=lambda x:x["amount"],reverse=True)[:20],
+    },sort_keys=True))
+
+    if locked_sum!=lock_module:raise RuntimeError(f"Pool 631 lock owners != lockup module balance: locks={locked_sum} module={lock_module} diff={locked_sum-lock_module}")
 
     economic={a:x for a,x in direct.items() if a!=OSMO_LOCKUP_ADDR}
     for a,x in locked.items():economic[a]=economic.get(a,0)+x
@@ -209,7 +257,7 @@ def osmosis_attribution():
     if dust:
         top=max(economic,key=lambda a:(economic[a],a));neta[top]+=dust
     if sum(neta.values())!=pool_neta:raise RuntimeError("Pool 631 NETA attribution mismatch")
-    return neta,{"height":height,"rpc":rpc,"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"direct_share_holders":len(direct),"economic_wallets":len(economic),"lockup_module_shares_raw":lock_module,"lock_owners":len(locked)}
+    return neta,{"height":height,"rpc":rpc,"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"direct_share_holders":len(direct),"economic_wallets":len(economic),"lockup_module_shares_raw":lock_module,"lock_owners":len(locked),"lock_records":len(pool_locks),"active_lock_records":len(active),"unlocking_lock_records":len(unlocking)}
 
 
 def build():
