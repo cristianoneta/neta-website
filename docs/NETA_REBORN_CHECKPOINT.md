@@ -574,3 +574,34 @@ Automated evidence:
 - Persisted log: `docs/diagnostics/latest_wynd_recovery_frontend_test.log`.
 
 The draft remains on `diagnostic/wynd-recovery-discovery` and is not published.
+
+
+### End-of-day checkpoint — frontend handoff for 2026-09-13
+
+Current outcome:
+- The validated Top-8 recovery registry, state machine, unsigned simulations, statistics collector and Keplr read-only frontend are preserved on `diagnostic/wynd-recovery-discovery`.
+- The user reviewed an initial visual preview. A ChatGPT file-preview limitation caused the modular HTML to open without its relative CSS; this was a preview-delivery issue, not a defect in the repository frontend.
+- A self-contained styled preview was generated only as a local conversation artifact to show the visual direction. It is not the production implementation and should not replace the modular `wynd-recovery.html`, `wynd-recovery.css` and `wynd-recovery.js` files.
+- Production remains unchanged and the recovery page is still unpublished.
+- Keplr signing and transaction broadcast remain deliberately disabled.
+- Public recovery statistics remain at zero and must not start collecting before the actual production launch.
+
+Validated safety boundary:
+- Read-only position discovery and all preview construction may continue.
+- Do not enable signing merely because unsigned simulations succeeded.
+- Before signing is enabled, complete a consenting tiny-position broadcast for Unbond, Claim and Withdraw Liquidity, verify emitted events and post-transaction wallet/contract state, and confirm suitable gas/fee margins.
+- Continue to revalidate chain ID, Juno address, allowlisted addresses, deployed code IDs and current wallet position immediately before every action.
+- Preserve the locked-stake rule: freely unbondable LP equals `all_staked.stake - total_locked`.
+- Claim maturity must continue to support both timestamp and block-height release conditions.
+
+Recommended continuation tomorrow:
+1. Open this checkpoint and inspect the latest branch state before making changes.
+2. Run the existing recovery frontend and collector tests again.
+3. Produce a proper served desktop/mobile preview of the modular frontend and review the actual rendered UI with the user.
+4. Refine the visual layout and language based on that review; keep signing hard-disabled.
+5. Decide how to obtain a consenting tiny controlled LP position for the three broadcast tests.
+6. Implement and validate post-transaction refresh, error/rejection handling and gas/fee margins.
+7. Only after the controlled broadcast gate is green, prepare a separate publication review. Do not merge or publish without the user's explicit approval.
+
+Immediate next-chat instruction:
+> Read `docs/NETA_REBORN_CHECKPOINT.md` first, check branch `diagnostic/wynd-recovery-discovery`, then continue with the proper served desktop/mobile preview. Do not publish and do not enable signing yet.
