@@ -68,4 +68,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add holders.json address_index.json metadata.json data.js address-index.js
           git commit -m "chore: daily NETA on-chain data update"
-          git push
+          # main may have moved while the multi-minute on-chain scan was running.
+          # Rebase only this generated-data commit onto the latest main, then push.
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
