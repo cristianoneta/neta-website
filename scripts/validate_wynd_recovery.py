@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed ownership and message-shape validation for the selected WYND pools."""
+"""Fail-closed ownership and message-shape validation for the top-eight WYND pools."""
 from __future__ import annotations
 
 import base64
@@ -207,15 +207,24 @@ def validate_pool(pool, height, block_nanos):
 
 def main():
     discovery = json.loads(DISCOVERY.read_text(encoding="utf-8"))
-    if discovery.get("status") != "VALIDATED" or len(discovery.get("top_five_pair_addresses", [])) != 5:
-        raise RuntimeError("validated top-five discovery required")
+    ranked = sorted(
+        (p for p in discovery.get("pairs", []) if p.get("usd_rank") is not None),
+        key=lambda p: int(p["usd_rank"]),
+    )
+    selected = ranked[:8]
+    if discovery.get("status") != "VALIDATED" or len(selected) != 8:
+        raise RuntimeError("validated top-eight discovery required")
     latest, _ = u.req_json(u.JUNO, "/cosmos/base/tendermint/v1beta1/blocks/latest")
     header = latest.get("block", {}).get("header", {})
     height = int(header["height"])
     stamp = header["time"].replace("Z", "+00:00")
     block_nanos = int(datetime.fromisoformat(stamp).timestamp() * 1_000_000_000)
-    by_address = {p["pair"]: p for p in discovery["pairs"]}
-    results = [validate_pool(by_address[address], height, block_nanos) for address in discovery["top_five_pair_addresses"]]
+    results = [validate_pool(pool, height, block_nanos) for pool in selected]
+    for pool, validation in zip(selected, results):
+        validation["rank"] = int(pool["usd_rank"])
+        validation["assets"] = pool["assets"]
+        validation["recoverable_pool_value_usd"] = pool["recoverable_pool_value_usd"]
+        validation["valuation_method"] = pool["valuation_method"]
     code_sets = {
         "pair": sorted({str(p["pair_code_id"]) for p in results}),
         "lp": sorted({str(p["lp_code_id"]) for p in results}),
@@ -228,7 +237,8 @@ def main():
         "juno_block_time": header["time"],
         "discovery_generated_at": discovery["generated_at"],
         "code_id_sets": code_sets,
-        "all_top_five_share_same_pair_and_stake_code": len(code_sets["pair"]) == 1 and len(code_sets["stake"]) == 1,
+        "selected_pool_count": 8,
+        "all_top_eight_share_same_pair_and_stake_code": len(code_sets["pair"]) == 1 and len(code_sets["stake"]) == 1,
         "pools": results,
     }
     OUT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
