@@ -127,7 +127,7 @@ def wynd_attribution():
 
     pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
     neta=allocate_exact(pool_neta,economic,supply)
-    return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values())}
+    return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values()),"pair_self_lp_raw":economic.get(WYND_PAIR,0),"pair_self_neta_raw":neta.get(WYND_PAIR,0)}
 
 
 def bank_amount_any(raw,expected_denom):
