@@ -1,10 +1,1 @@
 WYND recovery frontend safety tests passed
-Address-first Top-8 lookup assertions passed
-Read-only address/action separation assertions passed
-Per-pool LP USD and underlying-asset assertions passed
-Daily Top-8 pool reserve and USD snapshot assertions passed
-Each pool card renders both reserve-token quantities and symbols
-Existing tagged Claim/Unstake event valuations remain immutable
-Global blackout pause/resume assertions passed
-Hero-anchored WYND mascot: immediate load flicker + 15-second cycle assertions passed
-Signing remains hard-disabled
