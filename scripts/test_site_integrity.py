@@ -70,6 +70,7 @@ for page in PAGES:
 
 recovery = (ROOT / "wynd-recovery.js").read_text(encoding="utf-8")
 map_script = (ROOT / "map-of-neta.js").read_text(encoding="utf-8")
+address_index = (ROOT / "address-index.js").read_text(encoding="utf-8")
 wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
 styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 assert 'position:sticky;top:0' in styles
@@ -87,4 +88,7 @@ assert "signing_enabled:enabled" in recovery
 assert "signAndBroadcast" not in recovery
 assert "https://www.mintscan.io/osmosis/address/" in map_script
 assert 'link.rel="noopener noreferrer"' in map_script
+assert "window.NETA_ADDRESS_ROWS" in address_index
+assert "Object.create(null)" in address_index
+assert (ROOT / "address-index.js").stat().st_size < 2_000_000
 print(f"Site integrity tests passed for {len(PAGES)} pages")

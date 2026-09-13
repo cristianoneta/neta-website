@@ -1,4 +1,4 @@
-const M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX;
+const M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX,A=window.NETA_ADDRESS_ROWS;
 const S=M.stats||M;
 const f=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:6}).format(Number(n||0));
 const stake=h=>Number(h.neta_dao_staking||0),unstake=h=>Number(h.neta_dao_unstaking||0),claimable=h=>Number(h.neta_dao_claimable||0),lp=h=>Number(h.lp_neta||0);
@@ -6,7 +6,7 @@ const supply=Number(S.total_supply_neta||0),totalEntries=Number(S.economic_maste
 document.querySelector("#stats").innerHTML=[["TOTAL SUPPLY",S.total_supply_neta],["ECONOMIC HOLDERS",S.economic_master_entries],["JUNO CUSTODY",S.juno_custody_addresses],["OSMOSIS CUSTODY",S.osmosis_primary_state_addresses],["DAO STAKED",S.dao_active_staking_neta],["DAO UNSTAKING",S.dao_unstaking_neta],["DAO CLAIMABLE",S.dao_claimable_neta],["LP NETA",S.lp_neta]].map(x=>`<div class="stat"><div class="k">${x[0]}</div><div class="v">${f(x[1])}</div></div>`).join("");
 document.querySelector("#updated").textContent="LAST UPDATED: "+new Date(M.generated_at).toLocaleString();
 const sh=a=>a?(a.length>24?a.slice(0,12)+"…"+a.slice(-7):a):"—";
-const allRows=(()=>{const seen=new Set(),rows=[];for(const h of Object.values(I||{})){const k=h.rank??`${h.juno_address||''}|${h.osmosis_address||''}`;if(seen.has(k))continue;seen.add(k);rows.push(h)}return rows.length?rows:H})();
+const allRows=A?.length?A:H;
 let sortKey="total_neta",sortDir=-1;
 const val=(h,k)=>k==="neta_dao_staking"?stake(h):k==="neta_dao_unstaking"?unstake(h):k==="neta_dao_claimable"?claimable(h):k==="lp_neta"?lp(h):Number(h[k]||0);
 function sorted(){return [...allRows].sort((a,b)=>{const d=val(a,sortKey)-val(b,sortKey);return d?sortDir*d:Number(a.rank||0)-Number(b.rank||0)}).slice(0,100)}

@@ -23,6 +23,7 @@ LABELS={
  "osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x":("pool","Osmosis Pool 631"),
  NETA:("token_contract","NETA Token Contract"),
 }
+ADDRESS_INDEX_FIELDS=("rank","juno_address","osmosis_address","juno_neta","osmosis_neta","neta_dao_staking","neta_dao_unstaking","neta_dao_claimable","lp_neta","total_neta","type","label")
 
 def log(x): print(f"[NETA] {x}",flush=True)
 
@@ -292,6 +293,21 @@ def merge(juno,osmo,staked,unbonding,claimable,lp_neta,supply):
 
 def pub(r,supply):
     return {"rank":r["rank"],"juno_address":r["juno_address"],"osmosis_address":r["osmosis_address"],"address_bytes":r["address_bytes"],"juno_neta":round(r["juno_raw"]/1e6,6),"osmosis_neta":round(r["osmosis_raw"]/1e6,6),"neta_dao_staking":round(r["staking_raw"]/1e6,6),"neta_dao_unstaking":round(r["unstaking_raw"]/1e6,6),"neta_dao_claimable":round(r["claimable_raw"]/1e6,6),"lp_neta":round(r["lp_raw"]/1e6,6),"total_neta":round(r["total_raw"]/1e6,6),"type":r["type"],"label":r["label"],"supply_percent":round(r["total_raw"]/supply*100,8),"cross_chain_match":r["cross_chain_match"]}
+
+def write_address_index(out, rows):
+    """Write each economic holder once; the browser creates Juno/Osmosis aliases."""
+    compact=[[row.get(field) for field in ADDRESS_INDEX_FIELDS] for row in rows]
+    payload={"schema_version":4,"fields":ADDRESS_INDEX_FIELDS,"rows":compact}
+    bootstrap=(
+        "(()=>{const K="+json.dumps(ADDRESS_INDEX_FIELDS,separators=(',',':'))+
+        ",R="+json.dumps(compact,separators=(',',':'))+
+        ";window.NETA_ADDRESS_ROWS=R.map(v=>Object.fromEntries(K.map((k,i)=>[k,v[i]])));"
+        "const I=Object.create(null);for(const r of window.NETA_ADDRESS_ROWS)"
+        "for(const a of [r.juno_address,r.osmosis_address])if(a)I[a]=r;"
+        "window.NETA_ADDRESS_INDEX=I})();\n"
+    )
+    (out/"address_index.json").write_text(json.dumps(payload,separators=(',',':')),encoding='utf-8')
+    (out/"address-index.js").write_text(bootstrap,encoding='utf-8')
 def gini(vals):
     xs=sorted(v for v in vals if v>=0); sm=sum(xs); n=len(xs)
     return 0 if not xs or sm==0 else (2*sum((i+1)*x for i,x in enumerate(xs)))/(n*sm)-(n+1)/n
@@ -323,15 +339,10 @@ def build(out):
     def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
     onepct=max(1,(len(rows)+99)//100)
     meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
-    idx={}
-    for r in public:
-        for a in (r["juno_address"],r["osmosis_address"]):
-            if a: idx[a]=r
     (out/"holders.json").write_text(json.dumps(public,separators=(',',':')),encoding='utf-8')
-    (out/"address_index.json").write_text(json.dumps(idx,separators=(',',':')),encoding='utf-8')
+    write_address_index(out,public)
     (out/"metadata.json").write_text(json.dumps(meta,indent=2),encoding='utf-8')
     (out/"data.js").write_text("window.NETA_METADATA="+json.dumps(meta,separators=(',',':'))+";\nwindow.NETA_TOP_HOLDERS="+json.dumps(public[:100],separators=(',',':'))+";\n",encoding='utf-8')
-    (out/"address-index.js").write_text("window.NETA_ADDRESS_INDEX="+json.dumps(idx,separators=(',',':'))+";\n",encoding='utf-8')
     return meta
 
 def main():
