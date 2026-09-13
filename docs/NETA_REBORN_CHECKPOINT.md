@@ -627,6 +627,14 @@ Immediate next-chat instruction:
 - Mutable daily pool values are never used to revalue old community achievements.
 - Every confirmed tagged Unbond or Claim event receives an immutable `usd_value`, `price_source`, `price_timestamp`, `valuation_method` and `valuation_locked: true` when first collected. Already-known event IDs are excluded from valuation and cannot be overwritten on later collector runs.
 - Aggregate `Unstaked via NETA Reborn` and `Claimed via NETA Reborn` totals are always recomputed from those immutable per-event USD values. Example: an LP claim recorded as USD 10 remains USD 10 even if its assets later become worth USD 10 million.
+
+## WYND Recovery Top-10 economic LP leaderboard — LIVE 2026-09-13
+
+- `scripts/update_wynd_recovery_leaderboard.py` reconstructs economic LP ownership across the validated Top-8 pools from full LP-token and stake-contract state.
+- Per Juno wallet it combines direct LP, active stake and all LP claims. The stake contract's LP custody balance is excluded before stake/claim attribution, preventing double counting.
+- Each pool position is valued as its share of the matching daily pool USD snapshot in `data/recovery/wynd-market.json`; values are summed across pools and the ten largest wallets are stored in `data/recovery/wynd-leaderboard.json`.
+- The frontend shows total USD and a per-pool USD breakdown. Selecting a ranked address runs the existing public read-only Top-8 position lookup.
+- The daily market workflow refreshes the market snapshot first and the leaderboard second, then persists both files and requests a Pages rebuild.
 ## Global Matrix blackout effect — DEPLOYED 2026-09-13
 
 - Shared assets: `matrix-blackout.css` and `matrix-blackout.js`.

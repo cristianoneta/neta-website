@@ -7,6 +7,7 @@ const $=selector=>document.querySelector(selector);
 let registry=null;
 let stats=null;
 let market=null;
+let leaderboard=null;
 let wallet=null;
 let viewedAddress=null;
 let chainHeight=0;
@@ -101,6 +102,18 @@ function renderPools(){
     root.append(card);
   }
   $("#pool-total-usd").textContent=money(totalPoolUsd);
+}
+
+function renderLeaderboard(){
+  const root=$("#leaderboard-list");
+  const rows=leaderboard?.top_wallets||[];
+  root.innerHTML=rows.map(row=>`<article class="leader-row"><span class="leader-rank">${String(row.rank).padStart(2,"0")}</span><button class="leader-address" type="button" data-address="${row.address}">${shortAddress(row.address)}</button><strong class="leader-total">${money(row.total_usd)}</strong><div class="leader-pools">${row.pools.map(pool=>`<span><b>${pool.name}</b> ${money(pool.usd_value)}</span>`).join("")}</div></article>`).join("")||"LEADERBOARD SNAPSHOT UNAVAILABLE";
+  root.querySelectorAll("[data-address]").forEach(button=>button.onclick=()=>{
+    $("#wallet-address").value=button.dataset.address;
+    refreshPositions(button.dataset.address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
+    $("#address-form").scrollIntoView({behavior:"smooth",block:"center"});
+  });
+  $("#leaderboard-updated").textContent=leaderboard?.updated_at?`UPDATED ${new Date(leaderboard.updated_at).toLocaleString()}`:"DAILY SNAPSHOT UNAVAILABLE";
 }
 
 function classifyClaims(claims){
@@ -312,16 +325,18 @@ function startGhost(){
 
 async function init(){
   startGhost();
-  const [registryResponse,statsResponse,marketResponse,blockResponse]=await Promise.all([
+  const [registryResponse,statsResponse,marketResponse,leaderboardResponse,blockResponse]=await Promise.all([
     fetch("data/recovery/wynd-pools.json"),
     fetch("data/recovery/recovery-stats.json"),
     fetch("data/recovery/wynd-market.json"),
+    fetch("data/recovery/wynd-leaderboard.json"),
     fetch(`${LCD}/cosmos/base/tendermint/v1beta1/blocks/latest`),
   ]);
   if(!registryResponse.ok)throw new Error("TOP-8 REGISTRY UNAVAILABLE");
   registry=await registryResponse.json();
   stats=statsResponse.ok?await statsResponse.json():{pools:{}};
   market=marketResponse.ok?await marketResponse.json():{pools:{}};
+  leaderboard=leaderboardResponse.ok?await leaderboardResponse.json():{top_wallets:[]};
   if(registry.status!=="VALIDATED_FOR_READ_ONLY_FRONTEND"||registry.pools.length!==8)throw new Error("REGISTRY VALIDATION FAILED");
   if(blockResponse.ok)chainHeight=Number((await blockResponse.json()).block.header.height);
   $("#market-updated").textContent=market?.updated_at
@@ -329,6 +344,7 @@ async function init(){
     :"DAILY MARKET SNAPSHOT PENDING";
   renderImpact();
   renderPools();
+  renderLeaderboard();
   $("#address-form").addEventListener("submit",event=>{
     event.preventDefault();
     const address=$("#wallet-address").value.trim().toLowerCase();
