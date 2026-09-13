@@ -33,7 +33,11 @@ jobs:
           git add data/recovery/wynd-market.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "chore: update WYND recovery market data"
-          git push
+          for attempt in 1 2 3; do
+            if git push; then break; fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            git pull --rebase origin main
+          done
           curl --fail-with-body --request POST \
             --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${{ github.token }}" \
