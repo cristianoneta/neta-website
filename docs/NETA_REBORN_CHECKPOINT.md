@@ -701,3 +701,9 @@ Immediate next-chat instruction:
   a session flag restores the connected display across navigation.
 - This shared connection dispatches the wallet state to WYND Recovery, while its
   signing feature flag remains hard-disabled.
+- Connecting on Ranking now fills the address and renders the wallet's complete
+  rank panel automatically.
+- Clicking the connected wallet opens an accessible account menu with snapshot
+  rank and total NETA, View My Rank, Copy Address and Disconnect This Site.
+  Disconnect clears local state and connected authority everywhere; permanent
+  site-permission revocation remains a separate action inside Keplr.

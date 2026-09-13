@@ -36,9 +36,9 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'wallet-header.js?v=1', 'id="keplr-connect"',
+    'wallet-header.js?v=2', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=1',
-    'wynd-recovery.js?v=20260913-8',
+    'wynd-recovery.js?v=20260913-9',
     'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
 ]:
     assert required in html, required

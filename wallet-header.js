@@ -7,6 +7,10 @@
   if(!button)return;
   const label=button.querySelector("[data-wallet-label]");
   const balance=button.querySelector("[data-wallet-balance]");
+  const menu=document.querySelector("#wallet-menu");
+  const menuAddress=menu?.querySelector("[data-wallet-menu-address]");
+  const menuTotal=menu?.querySelector("[data-wallet-menu-total]");
+  const menuRank=menu?.querySelector("[data-wallet-menu-rank]");
   let indexPromise=null;
   let connecting=false;
 
@@ -61,6 +65,28 @@
     balance.textContent=message;
   }
 
+  function setMenu(open){
+    if(!menu)return;
+    menu.hidden=!open;
+    button.setAttribute("aria-expanded",String(open));
+  }
+
+  function resetButton(){
+    button.dataset.state="";
+    button.title="";
+    button.setAttribute("aria-label","Connect Keplr wallet");
+    label.textContent="CONNECT KEPLR";
+    balance.textContent="READ-ONLY";
+    setMenu(false);
+  }
+
+  function disconnect(){
+    sessionStorage.removeItem(SESSION_KEY);
+    window.NETA_WALLET_STATE=null;
+    resetButton();
+    dispatchEvent(new CustomEvent("neta:wallet-disconnected"));
+  }
+
   async function connect({silent=false}={}){
     if(connecting)return;
     if(!window.keplr){
@@ -90,6 +116,12 @@
       button.dataset.state="connected";
       label.textContent=short(address);
       balance.textContent=`${format(total)} NETA`;
+      button.setAttribute("aria-label",`Open Keplr account menu for ${short(address)}`);
+      button.setAttribute("aria-haspopup","dialog");
+      button.setAttribute("aria-expanded","false");
+      if(menuAddress)menuAddress.textContent=address;
+      if(menuTotal)menuTotal.textContent=`${format(total)} NETA`;
+      if(menuRank)menuRank.textContent=position?.rank?`RANK #${position.rank}`:"UNRANKED";
       button.title=position
         ?`Total NETA: ${format(total)} · Juno ${format(position.juno_neta)} · Osmosis ${format(position.osmosis_neta)} · DAO ${format(Number(position.neta_dao_staking||0)+Number(position.neta_dao_unstaking||0)+Number(position.neta_dao_claimable||0))} · LP ${format(position.lp_neta)}`
         :"No NETA position in the current ranking snapshot";
@@ -105,7 +137,29 @@
     }
   }
 
-  button.addEventListener("click",()=>connect().catch(()=>{}));
-  window.addEventListener("keplr_keystorechange",()=>connect({silent:true}));
+  button.addEventListener("click",()=>{
+    if(window.NETA_WALLET_STATE){setMenu(menu?.hidden!==false);return;}
+    connect().catch(()=>{});
+  });
+  menu?.querySelector('[data-wallet-action="ranking"]')?.addEventListener("click",event=>{
+    if(location.pathname.endsWith("/index.html")||location.pathname==="/"){
+      event.preventDefault();
+      setMenu(false);
+      dispatchEvent(new CustomEvent("neta:wallet-connected",{detail:window.NETA_WALLET_STATE}));
+      document.querySelector("#rankPanelResult")?.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+  });
+  menu?.querySelector('[data-wallet-action="copy"]')?.addEventListener("click",async event=>{
+    const action=event.currentTarget;
+    try{
+      await navigator.clipboard.writeText(window.NETA_WALLET_STATE.address);
+      action.firstChild.textContent="ADDRESS COPIED ";
+      setTimeout(()=>{action.firstChild.textContent="COPY ADDRESS ";},1600);
+    }catch{action.firstChild.textContent="COPY FAILED ";}
+  });
+  menu?.querySelector('[data-wallet-action="disconnect"]')?.addEventListener("click",disconnect);
+  document.addEventListener("click",event=>{if(!menu?.hidden&&!button.parentElement.contains(event.target))setMenu(false)});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!menu?.hidden){setMenu(false);button.focus();}});
+  window.addEventListener("keplr_keystorechange",()=>{if(sessionStorage.getItem(SESSION_KEY)==="1")connect({silent:true})});
   if(sessionStorage.getItem(SESSION_KEY)==="1")connect({silent:true});
 })();

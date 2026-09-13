@@ -496,6 +496,14 @@ function acceptHeaderWallet(detail){
 }
 
 window.addEventListener("neta:wallet-connected",event=>acceptHeaderWallet(event.detail));
+window.addEventListener("neta:wallet-disconnected",()=>{
+  wallet=null;
+  contractChecks.clear();
+  pendingAction=null;
+  const dialog=$("#preview-dialog");
+  if(dialog.open)dialog.close();
+  if(viewedAddress)refreshPositions(viewedAddress).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
+});
 
 init().catch(error=>{
   $("#pool-grid").textContent=`RECOVERY DATA UNAVAILABLE: ${error.message}`;
