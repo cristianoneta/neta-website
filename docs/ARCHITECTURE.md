@@ -29,6 +29,11 @@
   the ranking, including matched Osmosis, DAO and LP attribution. Juno and
   Osmosis addresses are matched by their identical Bech32 payload; no signature
   is requested for this display.
+- Connected state exposes an accessible account menu with snapshot rank, total,
+  copy-address and local-session disconnect. Disconnecting clears browser state
+  and transaction authority but does not claim to revoke Keplr's extension-side
+  site permission. The Ranking page consumes the shared wallet event to run the
+  same lookup as a manually entered address.
 - Wallet inspection evaluates at most three pools concurrently. Each LCD attempt
   times out after eight seconds and falls back to the next configured endpoint.
 - A failed pool produces a partial total and can be retried independently; it

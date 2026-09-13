@@ -52,7 +52,8 @@ for page in PAGES:
     assert source.count("<!-- site-header:start -->") == 1
     assert source.count("<!-- site-footer:start -->") == 1
     assert 'id="keplr-connect"' in source
-    assert 'src="wallet-header.js?v=1"' in source
+    assert 'id="wallet-menu"' in source
+    assert 'src="wallet-header.js?v=2"' in source
     for asset in parser.assets:
         parsed = urlsplit(asset)
         if parsed.scheme or parsed.netloc or asset.startswith("#"):
@@ -68,7 +69,10 @@ assert 'window.keplr.enable(CHAIN_ID)' in wallet_header
 assert 'position?.total_neta' in wallet_header
 assert 'index[osmosisAddress]' in wallet_header
 assert 'neta:wallet-connected' in wallet_header
+assert 'neta:wallet-disconnected' in wallet_header
+assert 'data-wallet-action="disconnect"' in wallet_header
 assert 'acceptHeaderWallet' in recovery
+assert 'neta:wallet-disconnected' in recovery
 assert "setInterval(flash,9000)" in recovery
 assert "SIGNING_CONFIG?.enabled===true" in recovery
 assert "signing_enabled:enabled" in recovery

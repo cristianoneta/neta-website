@@ -72,6 +72,17 @@ test("shared Keplr header shows the ranking's total NETA position", async ({page
   await expect(page.locator("[data-wallet-label]")).toHaveText(expected.short);
   await expect(page.locator("[data-wallet-balance]")).toHaveText(`${expected.total} NETA`);
   await expect(page.locator("#keplr-connect")).toHaveAttribute("data-state", "connected");
+  await expect(page.locator("#q")).toHaveValue(await page.evaluate(() => window.__testWalletAddress));
+  await expect(page.locator("#rankPanelResult")).toBeVisible();
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-menu")).toBeVisible();
+  await expect(page.locator("[data-wallet-menu-rank]")).toContainText("RANK #");
+  await page.locator('[data-wallet-action="disconnect"]').click();
+  await expect(page.locator("[data-wallet-label]")).toHaveText("CONNECT KEPLR");
+  await expect(page.locator("#rankPanelDefault")).toBeVisible();
+  await expect(page.locator("#result")).toBeHidden();
+  expect(await page.evaluate(() => ({state: window.NETA_WALLET_STATE, session: sessionStorage.getItem("neta:keplr-connected")}))).toEqual({state: null, session: null});
 });
 
 test("Keplr total resolves a wallet represented only by its Osmosis address", async ({page}) => {
