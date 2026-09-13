@@ -420,6 +420,213 @@ Read this checkpoint first. Then:
 6. do not publish until the user explicitly approves the draft.
 
 
+### WYND recovery top-five discovery — VALIDATED 2026-09-12
+
+Read-only diagnostic branch: `diagnostic/wynd-recovery-discovery`.
+
+Evidence files:
+- `docs/diagnostics/wynd_recovery_discovery.json`
+- `docs/diagnostics/wynd_recovery_validation.json`
+
+The deployed factory was derived from the known JUNO/NETA pair's on-chain creator:
+- Factory: `juno16adshp473hd9sruwztdqrtsfckgtd69glqm6sqk0hc4q40c296qsxl3u3s`
+- Factory code ID: `2285`
+- 32 registered pairs were enumerated and all 32 pair/pool/LP/stake records were read successfully.
+- Discovery snapshot: Juno height `41699538`, generated `2026-09-12T20:37:27.855545Z`.
+- Price source: CoinGecko simple/price, timestamp `2026-09-12T20:36:32.960143Z`.
+- Pools with both priced assets use the sum of both externally priced reserves. Pools with one priced reserve use twice that reserve and are explicitly marked as an estimate; unpriced token values are never guessed.
+
+Validated top five by current recoverable USD pool value:
+
+| Rank | Pool | Estimated value | Pair |
+|---|---|---:|---|
+| 1 | JUNO / ATOM | $26,794.33 | `juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3` |
+| 2 | JUNO / USDC | $13,169.87 | `juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj` |
+| 3 | JUNO / OSMO | $4,502.50 | `juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt` |
+| 4 | WYND / USDC | $3,044.23 | `juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve` |
+| 5 | JUNO / NETA | $2,181.41 | `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra` |
+
+All five selected deployments share:
+- pair code ID `2289`, CW2 `wyndex-pair 1.0.0`;
+- LP code ID `1699`, CW2 `crates.io:cw20-base 1.0.1`;
+- stake code ID `2291`, CW2 `crates.io:wyndex_stake 2.0.0`;
+- unbonding periods of 7, 14, 28 and 42 days.
+
+Fail-closed economic reconciliation for the initial top five completed before the final top-eight run:
+- JUNO/ATOM: supply `89,761,104,045`; stake custody `87,491,323,725`; active `71,525,759,016`; claims `15,965,564,709`; difference zero.
+- JUNO/USDC: supply `52,511,840,165`; stake custody `52,026,132,133`; active `45,677,563,933`; claims `6,348,568,200`; difference zero.
+- JUNO/OSMO: supply `104,783,420,853`; stake custody `104,279,904,828`; active `94,669,225,628`; claims `9,610,679,200`; difference zero.
+- WYND/USDC: supply `74,958,722,515`; stake custody `71,688,224,514`; active `58,163,579,814`; claims `13,524,644,700`; difference zero.
+- JUNO/NETA: supply `8,961,136,120`; stake custody `8,738,464,169`; active `7,157,563,479`; claims `1,580,900,690`; difference zero.
+
+Across all five, every claim record was matured and claimable at the validation snapshot; actively unbonding records were zero. The deployed stake v2.0.0 contracts do not support the later `unbond_all` query, so the recovery UI must not depend on it.
+
+Validated serialized action families for these deployments:
+- Stake unbond: `{"unbond":{"tokens":"<raw_lp>","unbonding_period":<seconds>}}`
+- Stake claim: `{"claim":{}}`
+- LP withdrawal: execute CW20 `send` on the allowlisted LP token, with the allowlisted pair as `contract` and Base64 hook `{"withdraw_liquidity":{"assets":[]}}`.
+
+The UI must still re-query the connected wallet immediately before preview/signing. Signing remains disabled until simulation with controlled positions is complete.
+
+
+### WYND recovery top-eight frontend foundation — VALIDATED 2026-09-12
+
+The selected scope is now ranks 1–8: JUNO/ATOM, JUNO/USDC, JUNO/OSMO, WYND/USDC, JUNO/NETA, WYND/JUNO, WYND/ATOM and WYND/OSMO.
+
+Final read-only validation:
+- Diagnostic output generated at `2026-09-12T21:03:23.499321Z`.
+- Juno snapshot height `41700087`, block time `2026-09-12T20:59:17.788755915Z`.
+- All eight pools use pair code ID `2289`, LP code ID `1699` and stake code ID `2291`.
+- For every pool, direct LP balances equal total LP supply exactly.
+- For every pool, active stake including `locked_tokens` plus claims equals stake-contract LP custody exactly.
+- Every observed claim record was matured and claimable; actively unbonding records were zero.
+- All live pair and required stake query shapes passed.
+- The deployed `stake.unbond_all` query remains unsupported and excluded.
+
+Additional pool reconciliations:
+- WYND/JUNO: supply `250,846,698,920`; stake custody `242,151,413,511`; active `198,000,063,111`; claims `44,151,350,400`; difference zero; 798 claim records, all claimable.
+- WYND/ATOM: supply `16,230,598,229`; stake custody `16,018,688,288`; active `7,012,992,488`; claims `9,005,695,800`; difference zero; 87 claim records, all claimable.
+- WYND/OSMO: supply `95,380,460,556`; stake custody `51,166,119,305`; active `42,938,276,505`; claims `8,227,842,800`; difference zero; 150 claim records, all claimable.
+
+Frontend foundation artifacts:
+- `data/recovery/wynd-pools.json`: generated Top-8 allowlist with exact contract addresses, code IDs/CW2 versions, assets/decimals, unbonding periods, validated query/action schemas and snapshot evidence.
+- `docs/recovery/WYND_RECOVERY_STATE_MACHINE.md`: fail-closed wallet/action state machine.
+- Registry status: `VALIDATED_FOR_READ_ONLY_FRONTEND`.
+- Signing is intentionally disabled until controlled simulation and tiny-position transaction tests have validated gas, fees, events, rejection paths and post-transaction refresh.
+
+
+### WYND recovery frontend draft and achievement statistics — WORKING 2026-09-12
+
+Draft files on `diagnostic/wynd-recovery-discovery`:
+- `wynd-recovery.html`
+- `wynd-recovery.css`
+- `wynd-recovery.js`
+- `data/recovery/recovery-stats.json`
+
+Implemented draft behavior:
+- Loads only the validated Top-8 registry.
+- Connects a Juno wallet through an injected Keplr/Leap provider and reads direct LP, active stake, internal locked components, claimable LP and still-unbonding LP.
+- Uses current block height as well as block time to classify claim maturity.
+- Never offers locked stake as freely unbondable.
+- Shows transaction previews with signing disabled.
+- Implements the requested 0.5-second blackout every 5 seconds, an ON/OFF control, reduced-motion handling and automatic suspension while a preview dialog is open.
+- Shows aggregate and per-pool `Unstaked via NETA Reborn` and `Claimed via NETA Reborn` USD statistics.
+
+Statistics attribution decision:
+- Site-created transactions use memo `netareborn.com/wynd-recovery:v1`.
+- Only confirmed, allowlisted transactions with the exact memo may be counted.
+- Collection starts at launch with zero; no historical action is attributed retroactively.
+- Unstaked USD is valued when an Unbond transaction is confirmed.
+- Claimed USD is valued when a Claim transaction returns LP to the wallet.
+- These are separate process milestones; the same LP value may appear in both and the figures must not be summed as unique recovered value.
+- Production collector implementation and price-at-block validation remain required before publication.
+
+Testing without the user's own stake:
+- Read-only empty-wallet behavior can be tested immediately.
+- State-dependent execute messages can be tested with unsigned chain simulation using existing on-chain position holders as the sender context; this does not sign, broadcast or move their assets.
+- Final broadcast testing still requires a consenting test wallet or a tiny controlled position.
+
+
+### Recovery statistics collector and unsigned simulations — VALIDATED 2026-09-12
+
+Statistics implementation:
+- `scripts/update_wynd_recovery_stats.py`
+- `scripts/test_wynd_recovery_stats.py`
+- `.github/workflows/update-wynd-recovery-stats.yml`
+- Exact public memo: `netareborn.com/wynd-recovery:v1`.
+- Forward-only cursor with five-block finality buffer.
+- Only successful transactions with the exact memo, an allowlisted stake contract and a recognized `unbond` or `claim` event are accepted.
+- Deterministic event IDs prevent duplicate counting.
+- USD values use the LP share of live pool reserves at the first successful collector run after confirmation, with price source and timestamp retained per event.
+- Statistics parser and Top-8 registry dry-run completed successfully.
+- Collection is intentionally not initialized on the unpublished branch; the official counters start at production launch.
+
+Unsigned simulation:
+- Evidence: `docs/diagnostics/wynd_recovery_simulation.json`.
+- Network: `juno-1`; representative JUNO/ATOM pool uses the same validated pair/LP/stake code IDs as all Top-8 pools.
+- Unbond succeeded in simulation: 215,620 gas used.
+- Claim succeeded in simulation: 221,614 gas used.
+- CW20 Send + WithdrawLiquidity hook succeeded in simulation: 320,811 gas used.
+- Real existing position owners were used only as unsigned simulation sender context.
+- All simulations returned result data; no signature was created and no transaction was broadcast.
+- A controlled tiny-position broadcast and post-transaction state verification remain required before signing can be enabled.
+
+
+### Keplr recovery frontend — READ-ONLY DRAFT VALIDATED 2026-09-12
+
+The draft now provides:
+- Keplr-only connection through the injected provider on chain ID `juno-1`.
+- Juno-address verification and safe handling of `keplr_keystorechange`.
+- Live code-ID verification for every allowlisted pair, LP and stake contract.
+- Live Top-8 queries for direct LP, all stake periods and claims.
+- Correct stake semantics: deployed `all_staked.stake` already includes its `total_locked` subset; freely unbondable LP is therefore `stake - total_locked`, never `stake + total_locked`.
+- Separate 7D/14D/28D/42D rows and period-specific Unbond previews.
+- Current time and Juno height claim classification.
+- Immediate revalidation of contract code IDs and wallet state before every preview.
+- Proportional Pair `share` query for expected Withdraw assets.
+- Exact memo and serialized Unbond, Claim and CW20 Send/WithdrawLiquidity preview.
+- Signing remains hard-disabled pending the controlled broadcast gate.
+- Blackout pauses during the asynchronous preview/revalidation flow and while the dialog is open.
+
+Automated evidence:
+- JavaScript syntax check passed.
+- `scripts/test_wynd_recovery_frontend.py` passed all registry, Keplr, chain, allowlist, locked-stake, claim-height, revalidation, memo and signing-gate assertions.
+- Persisted log: `docs/diagnostics/latest_wynd_recovery_frontend_test.log`.
+
+The draft remains on `diagnostic/wynd-recovery-discovery` and is not published.
+
+
+### End-of-day checkpoint — frontend handoff for 2026-09-13
+
+Current outcome:
+- The validated Top-8 recovery registry, state machine, unsigned simulations, statistics collector and Keplr read-only frontend are preserved on `diagnostic/wynd-recovery-discovery`.
+- The user reviewed an initial visual preview. A ChatGPT file-preview limitation caused the modular HTML to open without its relative CSS; this was a preview-delivery issue, not a defect in the repository frontend.
+- A self-contained styled preview was generated only as a local conversation artifact to show the visual direction. It is not the production implementation and should not replace the modular `wynd-recovery.html`, `wynd-recovery.css` and `wynd-recovery.js` files.
+- Production remains unchanged and the recovery page is still unpublished.
+- Keplr signing and transaction broadcast remain deliberately disabled.
+- Public recovery statistics remain at zero and must not start collecting before the actual production launch.
+
+Validated safety boundary:
+- Read-only position discovery and all preview construction may continue.
+- Do not enable signing merely because unsigned simulations succeeded.
+- Before signing is enabled, complete a consenting tiny-position broadcast for Unbond, Claim and Withdraw Liquidity, verify emitted events and post-transaction wallet/contract state, and confirm suitable gas/fee margins.
+- Continue to revalidate chain ID, Juno address, allowlisted addresses, deployed code IDs and current wallet position immediately before every action.
+- Preserve the locked-stake rule: freely unbondable LP equals `all_staked.stake - total_locked`.
+- Claim maturity must continue to support both timestamp and block-height release conditions.
+
+Recommended continuation tomorrow:
+1. Open this checkpoint and inspect the latest branch state before making changes.
+2. Run the existing recovery frontend and collector tests again.
+3. Produce a proper served desktop/mobile preview of the modular frontend and review the actual rendered UI with the user.
+4. Refine the visual layout and language based on that review; keep signing hard-disabled.
+5. Decide how to obtain a consenting tiny controlled LP position for the three broadcast tests.
+6. Implement and validate post-transaction refresh, error/rejection handling and gas/fee margins.
+7. Only after the controlled broadcast gate is green, prepare a separate publication review. Do not merge or publish without the user's explicit approval.
+
+Immediate next-chat instruction:
+> Read `docs/NETA_REBORN_CHECKPOINT.md` first, check branch `diagnostic/wynd-recovery-discovery`, then continue with the proper served desktop/mobile preview. Do not publish and do not enable signing yet.
+
+### Address-first Recovery UX and WYND offline ghost — WORKING 2026-09-13
+
+- The Recovery page now supports a read-only `juno1…` address lookup without requiring Keplr.
+- The same Top-8 allowlist, live code-ID validation, stake/locked/claim classification and fail-closed queries are used for connected and unconnected addresses.
+- Per pool, the draft shows direct LP, active stake, freely unbondable LP, locked LP, claimable LP, still-unbonding LP, proportional underlying assets and an estimated USD value.
+- The cross-pool headline sums the eight estimated wallet position values.
+- USD values are explicitly estimates derived from the wallet's economic LP share and the validated pool-value snapshot; they are not live execution quotes.
+- Read-only inspection never enables actions. Preview controls are enabled only when the inspected address exactly matches the connected Keplr Juno account.
+- The Recovery page now consumes the shared global Matrix blackout assets and emits pause/resume events around Keplr and transaction-preview flows.
+- A project asset, `assets/wynd-offline-mascot.png`, depicts the abandoned WYND mascot as an empty magical robe draped over a dead branch. It flickers briefly every 30 seconds on the Recovery page only, defers while dialogs are open and is disabled by `prefers-reduced-motion`.
+- Signing and broadcasting remain hard-disabled. The page remains unpublished on `diagnostic/wynd-recovery-discovery` pending visual review and controlled tiny-position broadcast tests.
+
+### Recovery design alignment and valuation semantics — WORKING 2026-09-13
+
+- The Recovery page now reuses the same header, `[ NETA ]` logo, navigation, Matrix background, typography, green palette, panel borders, spacing and footer conventions as the existing `WHAT IS NETA` and `NETA DAO` subpages. The functional section order remains unchanged.
+- Daily market snapshot: `scripts/update_wynd_recovery_market.py` writes `data/recovery/wynd-market.json`; `.github/workflows/update-wynd-recovery-market.yml` schedules it once per UTC day after publication.
+- Each pool row stores and displays both live reserve quantities (for example ATOM + JUNO) and the current estimated total pool USD value, with source and update timestamp.
+- Each inspected wallet position continues to use a live Pair `share` query to display its proportional underlying token quantities.
+- Mutable daily pool values are never used to revalue old community achievements.
+- Every confirmed tagged Unbond or Claim event receives an immutable `usd_value`, `price_source`, `price_timestamp`, `valuation_method` and `valuation_locked: true` when first collected. Already-known event IDs are excluded from valuation and cannot be overwritten on later collector runs.
+- Aggregate `Unstaked via NETA Reborn` and `Claimed via NETA Reborn` totals are always recomputed from those immutable per-event USD values. Example: an LP claim recorded as USD 10 remains USD 10 even if its assets later become worth USD 10 million.
 ## Global Matrix blackout effect — DEPLOYED 2026-09-13
 
 - Shared assets: `matrix-blackout.css` and `matrix-blackout.js`.

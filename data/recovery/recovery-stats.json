@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "status": "NOT_STARTED_DRAFT",
+  "memo_tag": "netareborn.com/wynd-recovery:v1",
+  "collection_started_at": null,
+  "updated_at": null,
+  "valuation_policy": "LP share of live pool reserves valued at the first successful collector run after confirmation; source and timestamp retained per event.",
+  "double_count_notice": "Unstaked and Claimed are separate milestones and must not be added as unique recovered value.",
+  "pools": {}
+}

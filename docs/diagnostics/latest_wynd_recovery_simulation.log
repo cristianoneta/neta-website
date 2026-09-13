@@ -1,0 +1,63 @@
+{
+  "status": "VALIDATED",
+  "network": "juno-1",
+  "representative_pool": "ujuno / ATOM",
+  "representative_code_ids": {
+    "pair": 2289,
+    "lp": 1699,
+    "stake": 2291
+  },
+  "unsigned": true,
+  "broadcast": false,
+  "tests": [
+    {
+      "action": "unbond",
+      "sender_context": "juno100d4eyphlr8tjdstpk8t3dtksf5k474e7jt90z",
+      "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "message": {
+        "unbond": {
+          "tokens": "1",
+          "unbonding_period": 1209600
+        }
+      },
+      "gas_info": {
+        "gas_wanted": "100000000",
+        "gas_used": "215620"
+      },
+      "result_present": true,
+      "broadcast": false
+    },
+    {
+      "action": "claim",
+      "sender_context": "juno103dqhh5m32cvp320n24j4uvuc6xrn72gvgexaz",
+      "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "message": {
+        "claim": {}
+      },
+      "gas_info": {
+        "gas_wanted": "100000000",
+        "gas_used": "221614"
+      },
+      "result_present": true,
+      "broadcast": false
+    },
+    {
+      "action": "withdraw",
+      "sender_context": "juno102h9qge2arxe0xnzk9nj5yqmmdycwjcfvl2tss",
+      "contract": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "message": {
+        "send": {
+          "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+          "amount": "503400",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "gas_info": {
+        "gas_wanted": "100000000",
+        "gas_used": "320811"
+      },
+      "result_present": true,
+      "broadcast": false
+    }
+  ]
+}

@@ -1,0 +1,884 @@
+{
+  "all_top_eight_share_same_pair_and_stake_code": true,
+  "code_id_sets": {
+    "lp": [
+      "1699"
+    ],
+    "pair": [
+      "2289"
+    ],
+    "stake": [
+      "2291"
+    ]
+  },
+  "discovery_generated_at": "2026-09-12T20:59:21.661812+00:00",
+  "generated_at": "2026-09-12T21:03:23.499321+00:00",
+  "juno_block_time": "2026-09-12T20:59:17.788755915Z",
+  "juno_height": "41700087",
+  "pools": [
+    {
+      "active_stake_lp_raw": "71525759016",
+      "active_stake_wallets": 8394,
+      "assets": [
+        {
+          "amount_raw": "1176686925783",
+          "coingecko_id": "juno-network",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01140799"
+        },
+        {
+          "amount_raw": "8229757377",
+          "coingecko_id": "cosmos",
+          "info": {
+            "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+          },
+          "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-1/uatom",
+            "name": "transfer/channel-1/uatom IBC token",
+            "symbol": "UATOM"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "1.61"
+        }
+      ],
+      "claim_records": 461,
+      "claim_wallets": 422,
+      "claimable_records": 461,
+      "claims_lp_raw": "15965564709",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "lp_total_supply_raw": "89761104045",
+      "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "71525759016"
+        },
+        "total_unbonding": {
+          "total_unbonding": "15965564709"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 1,
+      "recoverable_pool_value_usd": "26673.542059",
+      "stake": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "87491323725",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "sum_of_both_external_price_anchors"
+    },
+    {
+      "active_stake_lp_raw": "45677563933",
+      "active_stake_wallets": 1562,
+      "assets": [
+        {
+          "amount_raw": "538681414798",
+          "coingecko_id": "juno-network",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01140799"
+        },
+        {
+          "amount_raw": "6970128023",
+          "coingecko_id": "usd-coin",
+          "info": {
+            "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+          },
+          "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-71/uusdc",
+            "name": "transfer/channel-71/uusdc IBC token",
+            "symbol": "UUSDC"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.999866"
+        }
+      ],
+      "claim_records": 119,
+      "claim_wallets": 113,
+      "claimable_records": 119,
+      "claims_lp_raw": "6348568200",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",
+      "lp_total_supply_raw": "52511840165",
+      "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "45677563933"
+        },
+        "total_unbonding": {
+          "total_unbonding": "6348568200"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 2,
+      "recoverable_pool_value_usd": "13114.466219",
+      "stake": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "52026132133",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "sum_of_both_external_price_anchors"
+    },
+    {
+      "active_stake_lp_raw": "94669225628",
+      "active_stake_wallets": 2493,
+      "assets": [
+        {
+          "amount_raw": "196499314148",
+          "coingecko_id": "juno-network",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01140799"
+        },
+        {
+          "amount_raw": "66315587461",
+          "coingecko_id": "osmosis",
+          "info": {
+            "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+          },
+          "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-0/uosmo",
+            "name": "transfer/channel-0/uosmo IBC token",
+            "symbol": "UOSMO"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.03342003"
+        }
+      ],
+      "claim_records": 205,
+      "claim_wallets": 176,
+      "claimable_records": 205,
+      "claims_lp_raw": "9610679200",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",
+      "lp_total_supply_raw": "104783420853",
+      "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "94669225628"
+        },
+        "total_unbonding": {
+          "total_unbonding": "9610679200"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 3,
+      "recoverable_pool_value_usd": "4457.931133",
+      "stake": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "104279904828",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "sum_of_both_external_price_anchors"
+    },
+    {
+      "active_stake_lp_raw": "58163579814",
+      "active_stake_wallets": 1682,
+      "assets": [
+        {
+          "amount_raw": "4242929776408",
+          "coingecko_id": null,
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
+        },
+        {
+          "amount_raw": "1522296730",
+          "coingecko_id": "usd-coin",
+          "info": {
+            "native": "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034"
+          },
+          "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-71/uusdc",
+            "name": "transfer/channel-71/uusdc IBC token",
+            "symbol": "UUSDC"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.999866"
+        }
+      ],
+      "claim_records": 177,
+      "claim_wallets": 175,
+      "claimable_records": 177,
+      "claims_lp_raw": "13524644700",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",
+      "lp_total_supply_raw": "74958722515",
+      "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "58163579814"
+        },
+        "total_unbonding": {
+          "total_unbonding": "13524644700"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 4,
+      "recoverable_pool_value_usd": "3044.185484",
+      "stake": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "71688224514",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "two_times_single_external_price_anchor"
+    },
+    {
+      "active_stake_lp_raw": "7157563479",
+      "active_stake_wallets": 3334,
+      "assets": [
+        {
+          "amount_raw": "94756144452",
+          "coingecko_id": "juno-network",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01140799"
+        },
+        {
+          "amount_raw": "959341093",
+          "coingecko_id": null,
+          "info": {
+            "token": "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
+          },
+          "key": "cw20:juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",
+          "metadata": {
+            "decimals": 6,
+            "name": "NETA",
+            "symbol": "NETA"
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
+        }
+      ],
+      "claim_records": 197,
+      "claim_wallets": 182,
+      "claimable_records": 197,
+      "claims_lp_raw": "1580900690",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",
+      "lp_total_supply_raw": "8961136120",
+      "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "7157563479"
+        },
+        "total_unbonding": {
+          "total_unbonding": "1580900690"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 5,
+      "recoverable_pool_value_usd": "2161.954297",
+      "stake": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "8738464169",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "two_times_single_external_price_anchor"
+    },
+    {
+      "active_stake_lp_raw": "198000063111",
+      "active_stake_wallets": 10742,
+      "assets": [
+        {
+          "amount_raw": "1613862041931",
+          "coingecko_id": null,
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
+        },
+        {
+          "amount_raw": "45175243541",
+          "coingecko_id": "juno-network",
+          "info": {
+            "native": "ujuno"
+          },
+          "key": "native:ujuno",
+          "metadata": {
+            "decimals": null,
+            "error": "https://juno-api.polkachu.com: 404 Client Error: Not Found for url: https://juno-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/ujuno; https://juno-api.lavenderfive.com: HTTPSConnectionPool(host='juno-api.lavenderfive.com', port=443): Max retries exceeded with url: /cosmos/bank/v1beta1/denoms_metadata/ujuno (Caused by NameResolutionError(\"HTTPSConnection(host='juno-api.lavenderfive.com', port=443): Failed to resolve 'juno-api.lavenderfive.com' ([Errno -5] No address associated with hostname)\"))",
+            "symbol": "ujuno"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.01140799"
+        }
+      ],
+      "claim_records": 798,
+      "claim_wallets": 718,
+      "claimable_records": 798,
+      "claims_lp_raw": "44151350400",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1stg339rrg9guqsuv205yayq2ttzwz4583luc9pznvexe7rtrtrksdxstg3",
+      "lp_total_supply_raw": "250846698920",
+      "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "198000063111"
+        },
+        "total_unbonding": {
+          "total_unbonding": "44151350400"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 6,
+      "recoverable_pool_value_usd": "1030.717453",
+      "stake": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "242151413511",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "two_times_single_external_price_anchor"
+    },
+    {
+      "active_stake_lp_raw": "7012992488",
+      "active_stake_wallets": 920,
+      "assets": [
+        {
+          "amount_raw": "1287121970271",
+          "coingecko_id": null,
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
+        },
+        {
+          "amount_raw": "247749685",
+          "coingecko_id": "cosmos",
+          "info": {
+            "native": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
+          },
+          "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-1/uatom",
+            "name": "transfer/channel-1/uatom IBC token",
+            "symbol": "UATOM"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "1.61"
+        }
+      ],
+      "claim_records": 87,
+      "claim_wallets": 86,
+      "claimable_records": 87,
+      "claims_lp_raw": "9005695800",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1k5vhzkssgh35zlv9hqaasetslgqyal6jane86umrqvrjav9eg3hq3pxa0l",
+      "lp_total_supply_raw": "16230598229",
+      "pair": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "7012992488"
+        },
+        "total_unbonding": {
+          "total_unbonding": "9005695800"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 7,
+      "recoverable_pool_value_usd": "797.753986",
+      "stake": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "16018688288",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "two_times_single_external_price_anchor"
+    },
+    {
+      "active_stake_lp_raw": "42938276505",
+      "active_stake_wallets": 1671,
+      "assets": [
+        {
+          "amount_raw": "1049051126020",
+          "coingecko_id": null,
+          "info": {
+            "token": "juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9"
+          },
+          "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
+          "metadata": {
+            "decimals": 6,
+            "name": "Wynd DAO Governance Token",
+            "symbol": "WYND"
+          },
+          "resolved_decimals": 6,
+          "usd_price": null
+        },
+        {
+          "amount_raw": "9976669553",
+          "coingecko_id": "osmosis",
+          "info": {
+            "native": "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518"
+          },
+          "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
+          "metadata": {
+            "decimals": 0,
+            "display": "transfer/channel-0/uosmo",
+            "name": "transfer/channel-0/uosmo IBC token",
+            "symbol": "UOSMO"
+          },
+          "resolved_decimals": 6,
+          "usd_price": "0.03342003"
+        }
+      ],
+      "claim_records": 150,
+      "claim_wallets": 142,
+      "claimable_records": 150,
+      "claims_lp_raw": "8227842800",
+      "execute_message_templates": {
+        "claim": {
+          "claim": {}
+        },
+        "unbond": {
+          "unbond": {
+            "tokens": "<raw_lp>",
+            "unbonding_period": "<seconds>"
+          }
+        },
+        "withdraw_liquidity_cw20_send": {
+          "send": {
+            "amount": "<raw_lp>",
+            "contract": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
+            "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+          }
+        }
+      },
+      "lp_code_id": "1699",
+      "lp_contract_version": {
+        "contract": "crates.io:cw20-base",
+        "version": "1.0.1"
+      },
+      "lp_token": "juno1dx6djxrsr4f4mqjn3vsp6v0yrg78stv3d8qyp66k209qmzn7r3eqne7mwf",
+      "lp_total_supply_raw": "95380460556",
+      "pair": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
+      "pair_code_id": "2289",
+      "pair_contract_version": {
+        "contract": "wyndex-pair",
+        "version": "1.0.0"
+      },
+      "query_responses": {
+        "total_staked": {
+          "total_staked": "42938276505"
+        },
+        "total_unbonding": {
+          "total_unbonding": "8227842800"
+        },
+        "unbond_all": {
+          "error": "all endpoints failed for /cosmwasm/wasm/v1/contract/juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy/smart/eyJ1bmJvbmRfYWxsIjp7fX0=: 500 Server Error: Internal Server Error for url: https://juno-api.polkachu.com/cosmwasm/wasm/v1/contract/juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy/smart/eyJ1bmJvbmRfYWxsIjp7fX0=",
+          "supported": false
+        }
+      },
+      "rank": 8,
+      "recoverable_pool_value_usd": "666.841192",
+      "stake": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
+      "stake_code_id": "2291",
+      "stake_contract_version": {
+        "contract": "crates.io:wyndex_stake",
+        "version": "2.0.0"
+      },
+      "stake_custody_lp_raw": "51166119305",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unbonding_records": 0,
+      "validation": {
+        "active_plus_claims_equals_stake_custody": true,
+        "claim_release_shapes_known": true,
+        "direct_lp_equals_total_supply": true,
+        "pair_query_shapes_live": true,
+        "stake_query_shapes_live": true
+      },
+      "valuation_method": "two_times_single_external_price_anchor"
+    }
+  ],
+  "selected_pool_count": 8,
+  "status": "VALIDATED"
+}

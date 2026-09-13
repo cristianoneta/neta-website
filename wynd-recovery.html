@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Non-custodial recovery interface for legacy WYND DEX liquidity positions.">
+  <title>WYND Recovery Mission — NETA Reborn</title>
+  <link rel="stylesheet" href="styles.css?v=20260913-4">
+  <link rel="stylesheet" href="wynd-recovery.css">
+  <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <header>
+    <a class="logo" href="index.html"><img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span></a>
+    <nav aria-label="Primary navigation">
+      <a href="index.html">RANKING</a>
+      <a href="map-of-neta.html">MAP OF NETA</a>
+      <a href="what-is-neta.html">WHAT IS NETA</a>
+      <a href="neta-dao.html">NETA DAO</a>
+      <a class="active" href="wynd-recovery.html">WYND RECOVERY</a>
+      <a href="#" title="Coming next">VALUE CALCULATOR</a>
+    </nav>
+    <div class="motto">PEOPLE / POWER / PROTOCOL</div>
+  </header>
+
+  <main class="about-page recovery-page">
+    <section class="about-hero recovery-hero">
+      <div class="about-copy">
+        <div class="kicker">NON-CUSTODIAL / JUNO-1 / LEGACY WYND</div>
+        <h1>RECOVER YOUR <b>LP.</b></h1>
+        <p class="lead">Find liquidity that still belongs to you.</p>
+        <p>Check any public Juno address across the eight validated WYND pools. See the LP position, its underlying tokens and its current USD value before connecting a wallet.</p>
+        <div class="terminal-line">&gt; READ-ONLY DISCOVERY IS LIVE_</div>
+      </div>
+      <div id="wynd-offline-ghost" class="recovery-mascot" aria-hidden="true"><img src="assets/wynd-offline-mascot.png" alt=""></div>
+    </section>
+
+    <section class="recovery-lookup panel">
+      <div class="lookup-copy"><div class="kicker">CHECK A PUBLIC POSITION</div><h2>NO CONNECTION REQUIRED.</h2><p>Enter a Juno address or use the currently selected Keplr account.</p></div>
+      <div class="lookup-controls">
+        <form id="address-form" class="search recovery-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="wallet-address" name="wallet-address" type="text" autocomplete="off" spellcheck="false" placeholder="Enter any Juno address ..." aria-describedby="wallet-status">
+          <button type="submit">SEARCH</button>
+        </form>
+        <div class="recovery-tools"><div class="hint">No wallet connection required.</div><button id="connect-wallet" class="ghost-button" type="button">CONNECT KEPLR</button></div>
+        <div id="wallet-status" class="wallet-status" aria-live="polite">ENTER AN ADDRESS OR CONNECT KEPLR</div>
+      </div>
+    </section>
+
+    <section class="impact" aria-labelledby="impact-title">
+      <div class="section-heading">
+        <div><div class="kicker">COMMUNITY RECOVERY LOG</div><h2 id="impact-title">WHAT WE RECOVERED TOGETHER.</h2></div>
+        <p id="stats-updated" class="timestamp">FORWARD COLLECTION NOT STARTED</p>
+      </div>
+      <div class="impact-total">
+        <article><span>UNSTAKED VIA NETA REBORN</span><strong id="total-unstaked">$0.00</strong><small id="total-unbond-txs">0 confirmed transactions</small></article>
+        <article><span>CLAIMED VIA NETA REBORN</span><strong id="total-claimed">$0.00</strong><small id="total-claim-txs">0 confirmed transactions</small></article>
+      </div>
+      <p class="method-note">Only confirmed transactions created by this interface and carrying its public memo tag are counted. Each USD value is fixed permanently when that Unstake or Claim is first confirmed and valued; later token-price changes never rewrite historical achievement. Unstaked and Claimed are separate milestones and must not be added as unique recovered value.</p>
+    </section>
+
+    <section class="pools" aria-labelledby="pools-title">
+      <div class="section-heading">
+        <div><div class="kicker">ALLOWLISTED CONTRACTS ONLY</div><h2 id="pools-title">RECOVERY TARGETS.</h2></div>
+        <p id="market-updated" class="timestamp">POOL RESERVES + USD VALUES UPDATE DAILY</p>
+      </div>
+      <div id="position-summary" class="position-summary" hidden><span>ESTIMATED VALUE ACROSS TOP 8</span><strong id="position-total-usd">$0.00</strong><small id="position-address"></small></div>
+      <div id="pool-grid" class="pool-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <dialog id="preview-dialog">
+    <form method="dialog">
+      <p class="kicker">TRANSACTION PREVIEW</p>
+      <h2 id="preview-title">ACTION LOCKED</h2>
+      <pre id="preview-message"></pre>
+      <p>Signing is disabled in this draft. The live interface will re-query the wallet and contract versions immediately before approval.</p>
+      <button class="terminal-button" value="close">CLOSE</button>
+    </form>
+  </dialog>
+
+  <footer><div>[ NETA ] &nbsp; RECOVER, VERIFY, NEVER TRUST BLINDLY.</div><div>BUILT ON JUNO</div></footer>
+  <script src="about.js"></script>
+  <script src="wynd-recovery.js" defer></script>
+  <script src="matrix-blackout.js?v=20260913-1" defer></script>
+</body>
+</html>
