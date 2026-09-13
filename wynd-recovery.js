@@ -62,9 +62,11 @@ function renderImpact(){
 function renderPools(){
   const root=$("#pool-grid");
   root.innerHTML="";
+  let totalPoolUsd=0;
   for(const pool of registry.pools){
     const community=poolStats(pool.pair.address);
     const live=marketPool(pool);
+    totalPoolUsd+=Number(live.pool_value_usd||0);
     const reserves=live.assets.length
       ?live.assets.map(asset=>`${Number(asset.display).toLocaleString(undefined,{maximumFractionDigits:6})} ${asset.symbol}`).join(" + ")
       :"DAILY RESERVE SNAPSHOT PENDING";
@@ -98,6 +100,7 @@ function renderPools(){
       </div>`;
     root.append(card);
   }
+  $("#pool-total-usd").textContent=money(totalPoolUsd);
 }
 
 function classifyClaims(claims){
