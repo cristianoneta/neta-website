@@ -780,3 +780,60 @@ live tests and cancellation/rejection paths pass.
   adding the browser signing bundle and requesting Keplr approval must remain a
   separate reviewed change. The user must explicitly approve the displayed
   amounts and fee immediately before signing.
+
+## End-of-day checkpoint — liquidity pilot handoff 2026-09-13
+
+### Completed and merged
+
+- PR #32 prepared the wallet-scoped JUNO/NETA liquidity pilot while keeping it
+  disabled in production.
+- PR #33 added the reproducible unsigned simulator, static non-broadcast safety
+  test and persisted diagnostic evidence.
+- Kleomedes accepted the atomic two-message simulation at Juno height
+  41,731,281: CW20 `increase_allowance` followed by `provide_liquidity`.
+- Simulated deposit: exactly 1,000,000 `ujuno` plus 10,124 raw NETA
+  (1 JUNO + 0.010124 NETA). Gas used: 387,047.
+- No signature was created and no transaction was broadcast.
+- Production `main` is at `e8d8c0538e7645e5ac28929012be6cc73a78415a`
+  after merging PR #33.
+
+### Prepared locally but not published
+
+- Local commit `d902c93` enables only `liquidityPilot.enabled`; general
+  Unbond/Claim/Withdraw signing remains disabled.
+- Authorization is restricted to wallet
+  `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, the exact allowlisted
+  JUNO/NETA pair, exactly 1 JUNO and at most 10,200 raw NETA.
+- The pinned CosmJS browser signing bundle was built locally as
+  `assets/recovery-signing-client.js` (about 1.7 MB; about 310 KB zipped).
+- Local verification passed: site integrity, recovery frontend safety,
+  activation gate, JavaScript syntax/build, unsigned pilot safeguards and all
+  15 Playwright scenarios.
+- The local commit could not be pushed because this workspace's plain Git HTTPS
+  client has no username/token credential. The authenticated GitHub connector
+  remains available for normal repository files and PR operations.
+- Remote branch `pilot/enable-juno-neta-liquidity` exists but still equals the
+  disabled production base. No activation PR has been opened.
+
+### Continue tomorrow
+
+1. Do not recreate the implementation or rerun discovery.
+2. Upload the already-built `assets/recovery-signing-client.js` to
+   `assets/` on remote branch `pilot/enable-juno-neta-liquidity`, or restore
+   authenticated local Git push access and push local commit `d902c93`.
+3. Transfer the three small activation changes if the full local commit was not
+   pushed: `recovery-signing-config.js`,
+   `scripts/test_recovery_signing_gate.py` and
+   `scripts/test_wynd_recovery_frontend.py`.
+4. Open a dedicated activation PR, confirm its diff contains only the bundle,
+   the one pilot flag change and the two adjusted tests, then wait for all
+   required GitHub checks.
+5. Before merging, obtain a fresh explicit user confirmation. Merging makes the
+   wallet-scoped button publicly reachable but does not itself sign or broadcast.
+6. After Pages deploy, connect the exact Keplr wallet on WYND Recovery, inspect
+   the live preview and verify the recomputed NETA ratio and simulated gas.
+7. The user alone approves or rejects the Keplr prompt. Record the transaction
+   hash, events, fee/gas and before/after balances only if a broadcast is
+   explicitly approved and confirmed.
+8. Disable and remove the temporary pilot in a follow-up PR immediately after
+   the controlled test.
