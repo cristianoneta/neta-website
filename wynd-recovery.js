@@ -320,7 +320,7 @@ function startGhost(){
     setTimeout(()=>ghost.classList.remove("visible"),3900);
   };
   flash();
-  setInterval(flash,15000);
+  setInterval(flash,9000);
 }
 
 async function init(){
