@@ -8,6 +8,8 @@ on:
       - ".github/workflows/simulate-wynd-recovery.yml"
       - "scripts/simulate_wynd_recovery.py"
       - "scripts/test_wynd_recovery_simulation.py"
+      - "scripts/simulate_wynd_liquidity_pilot.py"
+      - "scripts/test_wynd_liquidity_pilot_simulation.py"
       - "data/recovery/wynd-pools.json"
 
 permissions:
@@ -31,6 +33,7 @@ jobs:
           mkdir -p docs/diagnostics
           set -o pipefail
           PYTHONPATH=scripts python scripts/test_wynd_recovery_simulation.py
+          PYTHONPATH=scripts python scripts/test_wynd_liquidity_pilot_simulation.py
           PYTHONPATH=scripts python scripts/simulate_wynd_recovery.py 2>&1 | tee docs/diagnostics/latest_wynd_recovery_simulation.log
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
