@@ -8,10 +8,13 @@ html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
 
 # This release prepares the signing path but must not make it reachable.
-assert config.count("enabled:false") == 1
+assert config.count("enabled:false") == 2
 assert "enabled:true" not in config
 assert "writable:false" in config and "configurable:false" in config
 assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
+assert 'liquidityPilot:Object.freeze({enabled:false' in config
+assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
+assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
 assert '<button id="execute-action"' in html
 assert 'hidden disabled' in html
 assert 'if(!pendingAction||!pilotAuthorized(' in frontend
@@ -20,6 +23,16 @@ assert "pilotAuthorized(pool,action,request)" in frontend
 assert "pilot.wallet!==wallet.address" in frontend
 assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
 assert "request.raw<=limit" in frontend
+for required in [
+    "liquidityPilotAuthorized()",
+    'pool.name!=="ujuno / NETA"',
+    "LIVE NETA RATIO EXCEEDS PILOT CAP",
+    "increase_allowance",
+    "provide_liquidity",
+    "simulateMultiple",
+    "executeMultiple",
+]:
+    assert required in frontend, required
 
 # Every prospective transaction is reconstructed and checked immediately before use.
 for required in [
@@ -39,6 +52,7 @@ for required in [
 assert "SigningCosmWasmClient.connectWithSigner" in client
 assert "client.simulate" in client
 assert "client.execute" in client
+assert "client.executeMultiple" in client
 assert "broadcastTx" not in client
 # The disabled release deliberately does not ship the large signing bundle.
 # A later enabling PR must build, review and add it explicitly.
