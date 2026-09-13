@@ -15,7 +15,13 @@ assert "/cosmos/tx/v1beta1/txs" not in source
 assert "broadcast_tx" not in source
 assert '"broadcast": False' in source
 assert 'len(pools) != 8' in source
-assert 'len(pools) * 2' in source
+assert 'len(pools) * 3' in source
 assert '("unbond", unbond_sender' in source
 assert '("claim", c["claim"]' in source
+assert '("withdraw", withdraw_sender' in source
+assert '"unbond_invalid_period"' in source
+assert '"unbond_exceeds_position"' in source
+assert '"claim_without_position"' in source
+assert '"withdraw_exceeds_balance"' in source
+assert '"claim_wrong_contract"' in source
 print("WYND recovery all-pool simulation safety tests passed")
