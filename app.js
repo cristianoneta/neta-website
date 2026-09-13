@@ -1,11 +1,3 @@
-const matrixBackground=document.createElement("script");matrixBackground.src="matrix-background.js?v=1";document.head.append(matrixBackground);
-const valueCalculatorLink=[...document.querySelectorAll("header nav a")].find(link=>link.textContent.trim()==="VALUE CALCULATOR");
-if(valueCalculatorLink&&!document.querySelector('header nav a[href="wynd-recovery.html"]')){
-  const recoveryLink=document.createElement("a");
-  recoveryLink.href="wynd-recovery.html";
-  recoveryLink.textContent="WYND RECOVERY";
-  valueCalculatorLink.before(recoveryLink);
-}
 const M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX;
 const S=M.stats||M;
 const f=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:6}).format(Number(n||0));

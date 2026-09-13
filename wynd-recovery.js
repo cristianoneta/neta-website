@@ -1,8 +1,9 @@
-const LCD="https://juno-api.polkachu.com";
+const LCD_ENDPOINTS=["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"];
 const CHAIN_ID="juno-1";
 const TX_MEMO="netareborn.com/wynd-recovery:v1";
 const ADDRESS_PATTERN=/^juno1[0-9a-z]{38}$/;
 const $=selector=>document.querySelector(selector);
+const chainClient=new window.NetaCosmosClient(LCD_ENDPOINTS);
 
 let registry=null;
 let stats=null;
@@ -22,17 +23,11 @@ const encode=value=>btoa(unescape(encodeURIComponent(JSON.stringify(value))));
 const shortAddress=address=>`${address.slice(0,12)}…${address.slice(-8)}`;
 
 async function smart(contract,message){
-  const response=await fetch(`${LCD}/cosmwasm/wasm/v1/contract/${contract}/smart/${encodeURIComponent(encode(message))}`);
-  if(!response.ok)throw new Error(`RPC ${response.status}`);
-  const data=await response.json();
-  return data.data??data;
+  return chainClient.smart(contract,message);
 }
 
 async function contractInfo(address){
-  const response=await fetch(`${LCD}/cosmwasm/wasm/v1/contract/${address}`);
-  if(!response.ok)throw new Error(`RPC ${response.status}`);
-  const data=await response.json();
-  return data.contract_info??data;
+  return chainClient.contractInfo(address);
 }
 
 function poolStats(pair){

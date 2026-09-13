@@ -1,0 +1,40 @@
+name: Test site integrity
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - "*.html"
+      - "*.js"
+      - "*.css"
+      - "assets/**"
+      - "scripts/site_shell.py"
+      - "scripts/test_site_integrity.py"
+      - ".github/workflows/test-site-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify shared shell and public pages
+        run: python scripts/test_site_integrity.py
+      - name: Check browser JavaScript syntax
+        shell: bash
+        run: |
+          for file in *.js; do
+            node --check "$file"
+          done
+
