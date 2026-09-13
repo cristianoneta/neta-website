@@ -34,10 +34,10 @@
 - Stake-contract custody is excluded from the economic-owner leaderboard to
   avoid double counting.
 - Signing remains disabled until the documented safety gates pass. Its dormant
-  Keplr path uses a pinned, locally built CosmJS bundle and an immutable
-  `enabled:false` production configuration; CI verifies both the gate and the
-  reproducibility of the committed bundle. The bundle is loaded on demand only
-  after the signing flag is enabled.
+  Keplr path uses a pinned CosmJS dependency and an immutable `enabled:false`
+  production configuration. CI proves that the adapter builds, but the disabled
+  release omits the large generated bundle entirely. Adding that artifact and
+  enabling the flag therefore require a later explicit review.
 
 ## Refactor rules
 

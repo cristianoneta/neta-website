@@ -6,7 +6,6 @@ config = (root / "recovery-signing-config.js").read_text()
 frontend = (root / "wynd-recovery.js").read_text()
 html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
-bundle = root / "assets/recovery-signing-client.js"
 
 # This release prepares the signing path but must not make it reachable.
 assert config.count("enabled:false") == 1
@@ -36,7 +35,9 @@ assert "SigningCosmWasmClient.connectWithSigner" in client
 assert "client.simulate" in client
 assert "client.execute" in client
 assert "broadcastTx" not in client
-assert bundle.is_file() and bundle.stat().st_size > 0
+# The disabled release deliberately does not ship the large signing bundle.
+# A later enabling PR must build, review and add it explicitly.
+assert not (root / "assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 
 print("Recovery signing gate remains hard-disabled and guarded")

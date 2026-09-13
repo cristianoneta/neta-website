@@ -14,7 +14,6 @@ on:
       - "wynd-recovery.js"
       - "recovery-signing-config.js"
       - "src/recovery-signing-client.js"
-      - "assets/recovery-signing-client.js"
       - "package.json"
       - "package-lock.json"
       - "data/recovery/wynd-pools.json"
@@ -39,7 +38,8 @@ jobs:
           set -o pipefail
           npm ci
           npm run build:recovery-signing
-          git diff --exit-code -- assets/recovery-signing-client.js
+          test -s assets/recovery-signing-client.js
+          rm assets/recovery-signing-client.js
           node --check wynd-recovery.js
           node --check recovery-signing-config.js
           python scripts/test_wynd_recovery_frontend.py
