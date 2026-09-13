@@ -1,6 +1,7 @@
 const LCD_ENDPOINTS=["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"];
 const CHAIN_ID="juno-1";
 const TX_MEMO="netareborn.com/wynd-recovery:v1";
+const SIGNING_CONFIG=window.NETA_RECOVERY_SIGNING;
 const ADDRESS_PATTERN=/^juno1[0-9a-z]{38}$/;
 const $=selector=>document.querySelector(selector);
 const chainClient=new window.NetaCosmosClient(LCD_ENDPOINTS);
@@ -15,6 +16,8 @@ let chainHeight=0;
 const contractChecks=new Map();
 const positions=new Map();
 let queryGeneration=0;
+let pendingAction=null;
+let signingClientPromise=null;
 const POOL_QUERY_CONCURRENCY=3;
 
 const money=value=>new Intl.NumberFormat("en-US",{
@@ -190,6 +193,59 @@ async function loadPosition(pool,address){
   return result;
 }
 
+function signingEnabled(){
+  return SIGNING_CONFIG?.enabled===true
+    &&SIGNING_CONFIG.chainId===CHAIN_ID
+    &&SIGNING_CONFIG.memo===TX_MEMO
+    &&Array.isArray(SIGNING_CONFIG.rpcEndpoints)
+    &&SIGNING_CONFIG.rpcEndpoints.length>0;
+}
+
+function loadSigningClient(){
+  if(window.NetaRecoverySigning)return Promise.resolve(window.NetaRecoverySigning);
+  if(signingClientPromise)return signingClientPromise;
+  signingClientPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="assets/recovery-signing-client.js?v=1";
+    script.onload=()=>window.NetaRecoverySigning
+      ?resolve(window.NetaRecoverySigning)
+      :reject(new Error("SIGNING CLIENT DID NOT INITIALIZE"));
+    script.onerror=()=>reject(new Error("SIGNING CLIENT UNAVAILABLE"));
+    document.head.append(script);
+  });
+  return signingClientPromise;
+}
+
+async function prepareAction(pool,action,request){
+  if(!wallet||wallet.address!==viewedAddress)throw new Error("CONNECTED WALLET NO LONGER MATCHES VIEWED ADDRESS");
+  const contracts=await verifyContracts(pool,true);
+  if(!contracts.valid)throw new Error("LIVE CONTRACT CODE-ID MISMATCH");
+  const position=await loadPosition(pool,wallet.address);
+  let contract;
+  let message;
+  let expected=null;
+  if(action==="unbond"){
+    const row=position.byPeriod.find(item=>item.period===request.period);
+    if(!row||row.available<request.raw)throw new Error("AVAILABLE STAKE CHANGED");
+    if(!pool.unbonding_periods_seconds.includes(request.period))throw new Error("UNALLOWLISTED UNBONDING PERIOD");
+    contract=pool.stake.address;
+    message={unbond:{tokens:request.raw.toString(),unbonding_period:request.period}};
+  }else if(action==="claim"){
+    if(position.claimable<request.raw)throw new Error("CLAIMABLE POSITION CHANGED");
+    contract=pool.stake.address;
+    message={claim:{}};
+  }else if(action==="withdraw"){
+    if(position.direct<request.raw)throw new Error("DIRECT LP BALANCE CHANGED");
+    contract=pool.lp_token.address;
+    const hook={withdraw_liquidity:{assets:[]}};
+    message={send:{contract:pool.pair.address,amount:request.raw.toString(),msg:encode(hook)}};
+    expected=await expectedAssets(pool,request.raw);
+  }else{
+    throw new Error("UNALLOWLISTED RECOVERY ACTION");
+  }
+  return{contract,message,expected};
+}
+
 async function showPreview(pool,action,request){
   if(!wallet||wallet.address!==viewedAddress){
     $("#wallet-status").textContent="CONNECT THIS EXACT ADDRESS IN KEPLR TO PREVIEW ACTIONS";
@@ -199,38 +255,56 @@ async function showPreview(pool,action,request){
   dispatchEvent(new Event("neta:blackout-pause"));
   $("#wallet-status").textContent="RE-VALIDATING POSITION…";
   try{
-    const contracts=await verifyContracts(pool,true);
-    if(!contracts.valid)throw new Error("LIVE CONTRACT CODE-ID MISMATCH");
-    const position=await loadPosition(pool,wallet.address);
-    let contract;
-    let message;
-    let expected=null;
-    if(action==="unbond"){
-      const row=position.byPeriod.find(item=>item.period===request.period);
-      if(!row||row.available<request.raw)throw new Error("AVAILABLE STAKE CHANGED");
-      contract=pool.stake.address;
-      message={unbond:{tokens:request.raw.toString(),unbonding_period:request.period}};
-    }else if(action==="claim"){
-      if(position.claimable<request.raw)throw new Error("CLAIMABLE POSITION CHANGED");
-      contract=pool.stake.address;
-      message={claim:{}};
-    }else{
-      if(position.direct<request.raw)throw new Error("DIRECT LP BALANCE CHANGED");
-      contract=pool.lp_token.address;
-      const hook={withdraw_liquidity:{assets:[]}};
-      message={send:{contract:pool.pair.address,amount:request.raw.toString(),msg:encode(hook)}};
-      expected=await expectedAssets(pool,request.raw);
-    }
+    const prepared=await prepareAction(pool,action,request);
+    pendingAction={pool,action,request,prepared};
+    const enabled=signingEnabled();
     $("#preview-title").textContent=`${action.toUpperCase()} // ${pool.name.replaceAll("ujuno","JUNO")}`;
     $("#preview-message").textContent=JSON.stringify({
-      network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract,message,
-      expected_assets:expected,signing_enabled:false,
+      network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract:prepared.contract,message:prepared.message,
+      expected_assets:prepared.expected,signing_enabled:enabled,
     },null,2);
+    $("#transaction-status").textContent=enabled?"READY FOR FINAL LIVE REVALIDATION":"SIGNING FEATURE FLAG: OFF";
+    $("#execute-action").hidden=!enabled;
+    $("#execute-action").disabled=!enabled;
     $("#preview-dialog").showModal();
   }catch(error){
     document.body.classList.remove("modal-open");
     dispatchEvent(new Event("neta:blackout-resume"));
     $("#wallet-status").textContent=error.message.toUpperCase();
+  }
+}
+
+async function executePendingAction(){
+  if(!signingEnabled()||!pendingAction)throw new Error("SIGNING FEATURE FLAG IS OFF");
+  const button=$("#execute-action");
+  button.disabled=true;
+  $("#transaction-status").textContent="FINAL CONTRACT + POSITION REVALIDATION…";
+  try{
+    const signingClient=await loadSigningClient();
+    await window.keplr.enable(CHAIN_ID);
+    const signer=window.keplr.getOfflineSigner(CHAIN_ID);
+    const accounts=await signer.getAccounts();
+    if(accounts[0]?.address!==wallet.address||wallet.address!==viewedAddress)throw new Error("KEPLR ACCOUNT CHANGED");
+    const fresh=await prepareAction(pendingAction.pool,pendingAction.action,pendingAction.request);
+    if(JSON.stringify(fresh.message)!==JSON.stringify(pendingAction.prepared.message)||fresh.contract!==pendingAction.prepared.contract){
+      throw new Error("RECOVERY ACTION CHANGED DURING APPROVAL");
+    }
+    $("#transaction-status").textContent="CONNECTING SIGNING RPC…";
+    const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
+    const gas=await signingClient.simulate(connection.client,wallet.address,fresh.contract,fresh.message,TX_MEMO);
+    const cap=SIGNING_CONFIG.gasCaps[pendingAction.action];
+    if(!Number.isSafeInteger(gas)||gas<=0||gas>cap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${cap}`);
+    $("#transaction-status").textContent=`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR SIGNATURE…`;
+    const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
+    if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    $("#transaction-status").textContent=`CONFIRMED // ${result.transactionHash}`;
+    pendingAction=null;
+    await refreshPositions(wallet.address);
+  }catch(error){
+    $("#transaction-status").textContent=`BLOCKED // ${error.message}`;
+    throw error;
+  }finally{
+    button.disabled=!signingEnabled();
   }
 }
 
@@ -427,9 +501,11 @@ async function init(){
   });
   $("#connect-wallet").onclick=()=>connect().catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
   $("#preview-dialog").addEventListener("close",()=>{
+    pendingAction=null;
     document.body.classList.remove("modal-open");
     dispatchEvent(new Event("neta:blackout-resume"));
   });
+  $("#execute-action").onclick=()=>executePendingAction().catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
   window.addEventListener("keplr_keystorechange",()=>{
     wallet=null;
     contractChecks.clear();

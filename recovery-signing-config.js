@@ -1,0 +1,13 @@
+Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
+  value:Object.freeze({
+    enabled:false,
+    chainId:"juno-1",
+    rpcEndpoints:Object.freeze(["https://juno-rpc.polkachu.com:443"]),
+    gasPrice:"0.075ujuno",
+    gasAdjustment:1.4,
+    gasCaps:Object.freeze({unbond:500000,claim:500000,withdraw:700000}),
+    memo:"netareborn.com/wynd-recovery:v1",
+  }),
+  writable:false,
+  configurable:false,
+});

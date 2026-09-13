@@ -33,7 +33,11 @@
   with `valuation_locked: true` are never repriced.
 - Stake-contract custody is excluded from the economic-owner leaderboard to
   avoid double counting.
-- Signing remains disabled until the documented safety gates pass.
+- Signing remains disabled until the documented safety gates pass. Its dormant
+  Keplr path uses a pinned, locally built CosmJS bundle and an immutable
+  `enabled:false` production configuration; CI verifies both the gate and the
+  reproducibility of the committed bundle. The bundle is loaded on demand only
+  after the signing flag is enabled.
 
 ## Refactor rules
 
