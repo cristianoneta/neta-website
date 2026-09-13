@@ -147,6 +147,22 @@ test("Keplr total resolves a wallet represented only by its Osmosis address", as
   await expect(page.locator("[data-wallet-balance]")).toHaveText(`${expected} NETA`);
 });
 
+test("compact address index keeps one canonical row with both address aliases", async ({page}) => {
+  await page.goto("/index.html", {waitUntil: "domcontentloaded"});
+  const result = await page.evaluate(() => {
+    const row = window.NETA_ADDRESS_ROWS.find(item => item.juno_address && item.osmosis_address);
+    return {
+      rowCount: window.NETA_ADDRESS_ROWS.length,
+      expectedCount: window.NETA_METADATA.economic_master_entries,
+      sameObject: window.NETA_ADDRESS_INDEX[row.juno_address] === window.NETA_ADDRESS_INDEX[row.osmosis_address],
+      rank: window.NETA_ADDRESS_INDEX[row.juno_address].rank,
+    };
+  });
+  expect(result.rowCount).toBe(result.expectedCount);
+  expect(result.sameObject).toBe(true);
+  expect(result.rank).toBeGreaterThan(0);
+});
+
 test("recovery falls back by endpoint and isolates one failed pool", async ({page}) => {
   const codeIds = new Map();
   for (const pool of registry.pools) {
