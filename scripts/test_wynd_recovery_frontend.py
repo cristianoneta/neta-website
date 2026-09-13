@@ -31,7 +31,7 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'cosmos-client.js?v=1', 'wynd-recovery.js?v=20260913-4', 'wynd-recovery.css?v=20260913-2',
+    'cosmos-client.js?v=1', 'wynd-recovery.js?v=20260913-5', 'wynd-recovery.css?v=20260913-2',
 ]:
     assert required in html, required
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
