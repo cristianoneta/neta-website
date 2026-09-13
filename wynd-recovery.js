@@ -27,6 +27,28 @@ const amount=(raw,decimals=6)=>Number(raw||0)/10**decimals;
 const encode=value=>btoa(unescape(encodeURIComponent(JSON.stringify(value))));
 const shortAddress=address=>`${address.slice(0,12)}…${address.slice(-8)}`;
 
+function node(tag,className,text){
+  const element=document.createElement(tag);
+  if(className)element.className=className;
+  if(text!==undefined)element.textContent=text;
+  return element;
+}
+
+function labelValue(className,label,value,strongTag="strong"){
+  const box=node("div",className);
+  box.append(node("span","",label),node(strongTag,"",value));
+  return box;
+}
+
+function disabledAction(label){
+  const button=node("button","",label);button.disabled=true;return button;
+}
+
+function renderRetry(errorBox,error,retry){
+  const button=node("button","","RETRY THIS POOL");button.type="button";button.onclick=retry;
+  errorBox.replaceChildren(node("span","",error.message),button);
+}
+
 async function smart(contract,message){
   return chainClient.smart(contract,message);
 }
@@ -62,7 +84,7 @@ function renderImpact(){
 
 function renderPools(){
   const root=$("#pool-grid");
-  root.innerHTML="";
+  root.replaceChildren();
   let totalPoolUsd=0;
   for(const pool of registry.pools){
     const community=poolStats(pool.pair.address);
@@ -71,35 +93,23 @@ function renderPools(){
     const reserves=live.assets.length
       ?live.assets.map(asset=>`${Number(asset.display).toLocaleString(undefined,{maximumFractionDigits:6})} ${asset.symbol}`).join(" + ")
       :"DAILY RESERVE SNAPSHOT PENDING";
-    const card=document.createElement("details");
+    const card=node("details","pool-card"),summary=node("summary","pool-head"),identity=node("div","pool-identity"),detail=node("div","pool-detail"),position=node("div","position");
     card.className="pool-card";
     card.dataset.pair=pool.pair.address;
-    card.innerHTML=`
-      <summary class="pool-head">
-        <span class="pool-rank">${String(pool.rank).padStart(2,"0")}</span>
-        <div class="pool-identity"><h3>${pool.name.replaceAll("ujuno","JUNO")}</h3><span>LEGACY WYND POOL</span></div>
-        <div class="pool-reserves"><span>POOL RESERVES</span><strong>${reserves}</strong></div>
-        <div class="pool-value"><span>DAILY VALUE</span><strong>${money(live.pool_value_usd)}</strong></div>
-        <span class="validated" data-field="contract-status">REGISTRY OK</span>
-      </summary>
-      <div class="pool-detail">
-        <div class="pool-community"><div><span>UNSTAKED VIA SITE</span><strong>${money(community.unstaked_usd)}</strong></div><div><span>CLAIMED VIA SITE</span><strong>${money(community.claimed_usd)}</strong></div></div>
-        <div class="position">
-          <div class="position-total"><span>THIS WALLET IN THIS POOL</span><strong data-field="position-usd">—</strong></div>
-          <div class="underlying" data-field="underlying"><span>ESTIMATED UNDERLYING ASSETS</span><strong>—</strong></div>
-          <div class="position-breakdown">
-            <div class="position-line"><span>DIRECT LP</span><strong data-field="direct">—</strong></div>
-            <div class="position-line"><span>ACTIVE STAKE</span><strong data-field="active">—</strong></div>
-            <div class="position-line"><span>AVAILABLE TO UNBOND</span><strong data-field="available">—</strong></div>
-            <div class="position-line"><span>LOCKED COMPONENT</span><strong data-field="locked">—</strong></div>
-            <div class="position-line"><span>CLAIMABLE LP</span><strong data-field="claimable">—</strong></div>
-            <div class="position-line"><span>UNBONDING LP</span><strong data-field="unbonding">—</strong></div>
-          </div>
-          <div class="periods" data-field="periods"></div>
-          <div class="query-error" data-field="query-error"></div>
-          <div class="actions" data-field="actions"><button disabled>ENTER ADDRESS OR CONNECT KEPLR</button></div>
-        </div>
-      </div>`;
+    identity.append(node("h3","",pool.name.replaceAll("ujuno","JUNO")),node("span","","LEGACY WYND POOL"));
+    const status=node("span","validated","REGISTRY OK");status.dataset.field="contract-status";
+    summary.append(node("span","pool-rank",String(pool.rank).padStart(2,"0")),identity,labelValue("pool-reserves","POOL RESERVES",reserves),labelValue("pool-value","DAILY VALUE",money(live.pool_value_usd)),status);
+    const communityBox=node("div","pool-community");communityBox.append(labelValue("","UNSTAKED VIA SITE",money(community.unstaked_usd)),labelValue("","CLAIMED VIA SITE",money(community.claimed_usd)));
+    const total=labelValue("position-total","THIS WALLET IN THIS POOL","—");total.querySelector("strong").dataset.field="position-usd";
+    const underlying=labelValue("underlying","ESTIMATED UNDERLYING ASSETS","—");underlying.dataset.field="underlying";
+    const breakdown=node("div","position-breakdown");
+    for(const [field,label] of [["direct","DIRECT LP"],["active","ACTIVE STAKE"],["available","AVAILABLE TO UNBOND"],["locked","LOCKED COMPONENT"],["claimable","CLAIMABLE LP"],["unbonding","UNBONDING LP"]]){
+      const line=labelValue("position-line",label,"—");line.querySelector("strong").dataset.field=field;breakdown.append(line);
+    }
+    const periods=node("div","periods");periods.dataset.field="periods";
+    const queryError=node("div","query-error");queryError.dataset.field="query-error";
+    const actions=node("div","actions");actions.dataset.field="actions";actions.append(disabledAction("ENTER ADDRESS OR CONNECT KEPLR"));
+    position.append(total,underlying,breakdown,periods,queryError,actions);detail.append(communityBox,position);card.append(summary,detail);
     root.append(card);
   }
   $("#pool-total-usd").textContent=money(totalPoolUsd);
@@ -108,7 +118,14 @@ function renderPools(){
 function renderLeaderboard(){
   const root=$("#leaderboard-list");
   const rows=leaderboard?.top_wallets||[];
-  root.innerHTML=rows.map(row=>`<article class="leader-row"><span class="leader-rank">${String(row.rank).padStart(2,"0")}</span><button class="leader-address" type="button" data-address="${row.address}">${shortAddress(row.address)}</button><strong class="leader-total">${money(row.total_usd)}</strong><div class="leader-pools">${row.pools.map(pool=>`<span><b>${pool.name}</b> ${money(pool.usd_value)}</span>`).join("")}</div></article>`).join("")||"LEADERBOARD SNAPSHOT UNAVAILABLE";
+  root.replaceChildren();
+  if(!rows.length)root.textContent="LEADERBOARD SNAPSHOT UNAVAILABLE";
+  for(const row of rows){
+    const article=node("article","leader-row"),address=node("button","leader-address",shortAddress(row.address)),pools=node("div","leader-pools");
+    address.type="button";address.dataset.address=row.address;
+    for(const pool of row.pools){const item=node("span");item.append(node("b","",pool.name),document.createTextNode(` ${money(pool.usd_value)}`));pools.append(item)}
+    article.append(node("span","leader-rank",String(row.rank).padStart(2,"0")),address,node("strong","leader-total",money(row.total_usd)),pools);root.append(article);
+  }
   root.querySelectorAll("[data-address]").forEach(button=>button.onclick=()=>{
     $("#wallet-address").value=button.dataset.address;
     refreshPositions(button.dataset.address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
@@ -311,16 +328,16 @@ function renderPosition(pool,position,valid){
   const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
   if(position.totalEconomic>0n)card.open=true;
   const decimals=pool.lp_token.decimals||6;
-  card.querySelector('[data-field="query-error"]').innerHTML="";
+  card.querySelector('[data-field="query-error"]').replaceChildren();
   for(const key of ["direct","active","available","locked","claimable","unbonding"]){
     card.querySelector(`[data-field="${key}"]`).textContent=amount(position[key],decimals).toLocaleString(undefined,{maximumFractionDigits:6});
   }
   card.querySelector('[data-field="position-usd"]').textContent=money(position.positionUsd);
-  card.querySelector('[data-field="underlying"]').innerHTML=`<span>ESTIMATED UNDERLYING ASSETS</span><strong>${position.underlying.length?position.underlying.map(asset=>`${asset.display} ${asset.symbol}`).join(" + "):"NO LP POSITION"}</strong>`;
-  card.querySelector('[data-field="periods"]').innerHTML=position.byPeriod.map(row=>`
-    <div class="period-row"><span>${row.period/86400}D STAKE</span><strong>${amount(row.active,decimals).toLocaleString()}</strong><small>${amount(row.available,decimals).toLocaleString()} available</small></div>`).join("");
+  card.querySelector('[data-field="underlying"] strong').textContent=position.underlying.length?position.underlying.map(asset=>`${asset.display} ${asset.symbol}`).join(" + "):"NO LP POSITION";
+  const periods=card.querySelector('[data-field="periods"]');periods.replaceChildren();
+  for(const row of position.byPeriod){const period=node("div","period-row");period.append(node("span","",`${row.period/86400}D STAKE`),node("strong","",amount(row.active,decimals).toLocaleString()),node("small","",`${amount(row.available,decimals).toLocaleString()} available`));periods.append(period)}
   const actions=card.querySelector('[data-field="actions"]');
-  actions.innerHTML="";
+  actions.replaceChildren();
   const ownsAddress=Boolean(wallet&&wallet.address===viewedAddress);
   const add=(label,action,request)=>{
     const button=document.createElement("button");
@@ -333,9 +350,7 @@ function renderPosition(pool,position,valid){
   if(position.claimable>0n)add("PREVIEW CLAIM","claim",{raw:position.claimable});
   if(position.direct>0n)add("PREVIEW WITHDRAW","withdraw",{raw:position.direct});
   if(!actions.children.length){
-    actions.innerHTML=position.totalEconomic>0n&&!ownsAddress
-      ?"<button disabled>CONNECT THIS WALLET FOR ACTIONS</button>"
-      :"<button disabled>NO ACTION AVAILABLE</button>";
+    actions.append(disabledAction(position.totalEconomic>0n&&!ownsAddress?"CONNECT THIS WALLET FOR ACTIONS":"NO ACTION AVAILABLE"));
   }
 }
 
@@ -376,7 +391,7 @@ async function retryPool(pool,address,generation){
   const errorBox=card.querySelector('[data-field="query-error"]');
   card.dataset.queryState="checking";
   badge.textContent="RETRYING…";
-  errorBox.innerHTML="";
+  errorBox.replaceChildren();
   updatePositionSummary(address,generation);
   try{
     const [check,position]=await Promise.all([verifyContracts(pool,true),loadPosition(pool,address)]);
@@ -390,8 +405,7 @@ async function retryPool(pool,address,generation){
     if(generation!==queryGeneration)return;
     card.dataset.queryState="failed";
     badge.textContent="QUERY FAILED";
-    errorBox.innerHTML=`<span>${error.message}</span><button type="button">RETRY THIS POOL</button>`;
-    errorBox.querySelector("button").onclick=()=>retryPool(pool,address,generation);
+    renderRetry(errorBox,error,()=>retryPool(pool,address,generation));
   }
   updatePositionSummary(address,generation);
 }
@@ -411,7 +425,7 @@ async function refreshPositions(address){
     const badge=card.querySelector('[data-field="contract-status"]');
     card.dataset.queryState="checking";
     badge.textContent="CHECKING…";
-    card.querySelector('[data-field="query-error"]').innerHTML="";
+    card.querySelector('[data-field="query-error"]').replaceChildren();
     try{
       const [check,position]=await Promise.all([verifyContracts(pool),loadPosition(pool,address)]);
       if(generation!==queryGeneration||address!==viewedAddress)return;
@@ -426,10 +440,9 @@ async function refreshPositions(address){
       card.open=true;
       badge.textContent="QUERY FAILED";
       badge.classList.add("invalid");
-      card.querySelector('[data-field="actions"]').innerHTML="<button disabled>ACTIONS UNAVAILABLE</button>";
+      card.querySelector('[data-field="actions"]').replaceChildren(disabledAction("ACTIONS UNAVAILABLE"));
       const errorBox=card.querySelector('[data-field="query-error"]');
-      errorBox.innerHTML=`<span>${error.message}</span><button type="button">RETRY THIS POOL</button>`;
-      errorBox.querySelector("button").onclick=()=>retryPool(pool,address,generation);
+      renderRetry(errorBox,error,()=>retryPool(pool,address,generation));
     }
     updatePositionSummary(address,generation);
   });

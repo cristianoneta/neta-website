@@ -29,6 +29,12 @@ FOOTER_RE = re.compile(
     r"(?:<!-- site-footer:start -->\n)?<footer\b.*?</footer>(?:\n<!-- site-footer:end -->)?",
     re.DOTALL,
 )
+CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">')
+CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
+ASSET_VERSIONS = {
+    "index.html": {"app.js": "20260913-5"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20260913-11"},
+}
 
 
 def render_header(active_page: str) -> str:
@@ -77,6 +83,15 @@ def render_footer() -> str:
 
 
 def expected_page(source: str, page: str) -> str:
+    if CSP_RE.search(source):
+        source = CSP_RE.sub(CSP_META, source, count=1)
+    else:
+        viewport = '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        if viewport not in source:
+            raise RuntimeError(f"{page}: viewport marker missing")
+        source = source.replace(viewport, viewport + CSP_META, 1)
+    for asset, version in ASSET_VERSIONS.get(page, {}).items():
+        source = re.sub(rf"{re.escape(asset)}\?v=[^\"']+", f"{asset}?v={version}", source)
     source, header_count = HEADER_RE.subn(render_header(page), source, count=1)
     source, footer_count = FOOTER_RE.subn(render_footer(), source, count=1)
     if header_count != 1 or footer_count != 1:
