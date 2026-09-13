@@ -23,6 +23,7 @@ for required in [
     'loadPosition(pool,address)', 'wallet.address===viewedAddress',
     'positionUsd', 'expectedAssets(pool,totalEconomic)',
     'data/recovery/wynd-market.json', 'data/recovery/wynd-leaderboard.json', 'POOL RESERVES',
+    'chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")',
     'flash();', 'setInterval(flash,9000)', 'neta-matrix-active', 'neta:blackout-pause', 'neta:blackout-resume',
 ]:
     assert required in js, required
@@ -36,6 +37,7 @@ for required in [
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
     assert 'href="wynd-recovery.html"' in (root/page).read_text(), page
 assert 'recoveryLink.href="wynd-recovery.html"' not in app
+assert '`${LCD}/' not in js
 assert '<a class="active" aria-current="page" href="wynd-recovery.html">WYND RECOVERY</a>' in html
 assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
