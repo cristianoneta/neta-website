@@ -14,6 +14,8 @@ let viewedAddress=null;
 let chainHeight=0;
 const contractChecks=new Map();
 const positions=new Map();
+let queryGeneration=0;
+const POOL_QUERY_CONCURRENCY=3;
 
 const money=value=>new Intl.NumberFormat("en-US",{
   style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2,
@@ -91,6 +93,7 @@ function renderPools(){
             <div class="position-line"><span>UNBONDING LP</span><strong data-field="unbonding">—</strong></div>
           </div>
           <div class="periods" data-field="periods"></div>
+          <div class="query-error" data-field="query-error"></div>
           <div class="actions" data-field="actions"><button disabled>ENTER ADDRESS OR CONNECT KEPLR</button></div>
         </div>
       </div>`;
@@ -227,6 +230,7 @@ function renderPosition(pool,position,valid){
   const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
   if(position.totalEconomic>0n)card.open=true;
   const decimals=pool.lp_token.decimals||6;
+  card.querySelector('[data-field="query-error"]').innerHTML="";
   for(const key of ["direct","active","available","locked","claimable","unbonding"]){
     card.querySelector(`[data-field="${key}"]`).textContent=amount(position[key],decimals).toLocaleString(undefined,{maximumFractionDigits:6});
   }
@@ -254,34 +258,100 @@ function renderPosition(pool,position,valid){
   }
 }
 
+async function runWithConcurrency(items,limit,worker){
+  let next=0;
+  const runners=Array.from({length:Math.min(limit,items.length)},async()=>{
+    while(next<items.length){
+      const index=next++;
+      await worker(items[index],index);
+    }
+  });
+  await Promise.all(runners);
+}
+
+function updatePositionSummary(address,generation){
+  if(generation!==queryGeneration)return;
+  const cards=[...document.querySelectorAll(".pool-card")];
+  const complete=cards.filter(card=>["success","failed"].includes(card.dataset.queryState)).length;
+  const failed=cards.filter(card=>card.dataset.queryState==="failed").length;
+  const totalUsd=[...positions.values()].reduce((sum,position)=>sum+position.positionUsd,0);
+  $("#position-total-usd").textContent=money(totalUsd);
+  $("#position-address").textContent=failed
+    ?`PARTIAL VALUE · ${failed} POOL${failed===1?"":"S"} UNAVAILABLE · ${address}`
+    :address;
+  if(complete<8){
+    $("#wallet-status").textContent=`CHECKED ${complete}/8 // ${shortAddress(address)}`;
+  }else{
+    $("#wallet-status").textContent=wallet?.address===address
+      ?`CONNECTED + CHECKED ${8-failed}/8${failed?" · RETRY AVAILABLE":""} // ${address}`
+      :`READ-ONLY CHECK ${8-failed}/8${failed?" · RETRY AVAILABLE":" COMPLETE"} // ${address}`;
+  }
+}
+
+async function retryPool(pool,address,generation){
+  if(generation!==queryGeneration||address!==viewedAddress)return;
+  const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
+  const badge=card.querySelector('[data-field="contract-status"]');
+  const errorBox=card.querySelector('[data-field="query-error"]');
+  card.dataset.queryState="checking";
+  badge.textContent="RETRYING…";
+  errorBox.innerHTML="";
+  updatePositionSummary(address,generation);
+  try{
+    const [check,position]=await Promise.all([verifyContracts(pool,true),loadPosition(pool,address)]);
+    if(generation!==queryGeneration)return;
+    card.dataset.queryState="success";
+    badge.textContent=check.valid?"LIVE CODE OK":"CODE MISMATCH";
+    badge.classList.toggle("invalid",!check.valid);
+    renderPosition(pool,position,check.valid);
+  }catch(error){
+    if(generation!==queryGeneration)return;
+    card.dataset.queryState="failed";
+    badge.textContent="QUERY FAILED";
+    errorBox.innerHTML=`<span>${error.message}</span><button type="button">RETRY THIS POOL</button>`;
+    errorBox.querySelector("button").onclick=()=>retryPool(pool,address,generation);
+  }
+  updatePositionSummary(address,generation);
+}
+
 async function refreshPositions(address){
+  const generation=++queryGeneration;
   viewedAddress=address;
   positions.clear();
   $("#wallet-address").value=address;
   $("#position-summary").hidden=false;
   $("#position-address").textContent=address;
   $("#position-total-usd").textContent="CALCULATING…";
-  let done=0;
-  let totalUsd=0;
-  for(const pool of registry.pools){
+  document.querySelectorAll(".pool-card").forEach(card=>card.dataset.queryState="pending");
+  await runWithConcurrency(registry.pools,POOL_QUERY_CONCURRENCY,async pool=>{
+    if(generation!==queryGeneration)return;
     const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
+    const badge=card.querySelector('[data-field="contract-status"]');
+    card.dataset.queryState="checking";
+    badge.textContent="CHECKING…";
+    card.querySelector('[data-field="query-error"]').innerHTML="";
     try{
       const [check,position]=await Promise.all([verifyContracts(pool),loadPosition(pool,address)]);
-      const badge=card.querySelector('[data-field="contract-status"]');
+      if(generation!==queryGeneration)return;
       badge.textContent=check.valid?"LIVE CODE OK":"CODE MISMATCH";
       badge.classList.toggle("invalid",!check.valid);
-      totalUsd+=position.positionUsd;
+      card.dataset.queryState="success";
       renderPosition(pool,position,check.valid);
     }catch(error){
-      card.querySelector('[data-field="contract-status"]').textContent="QUERY FAILED";
-      card.querySelector('[data-field="actions"]').innerHTML=`<button disabled>${error.message}</button>`;
+      if(generation!==queryGeneration)return;
+      card.dataset.queryState="failed";
+      card.open=true;
+      badge.textContent="QUERY FAILED";
+      badge.classList.add("invalid");
+      card.querySelector('[data-field="actions"]').innerHTML="<button disabled>ACTIONS UNAVAILABLE</button>";
+      const errorBox=card.querySelector('[data-field="query-error"]');
+      errorBox.innerHTML=`<span>${error.message}</span><button type="button">RETRY THIS POOL</button>`;
+      errorBox.querySelector("button").onclick=()=>retryPool(pool,address,generation);
     }
-    $("#wallet-status").textContent=`CHECKED ${++done}/8 // ${shortAddress(address)}`;
-  }
-  $("#position-total-usd").textContent=money(totalUsd);
-  $("#wallet-status").textContent=wallet?.address===address
-    ?`CONNECTED + CHECKED // ${address}`
-    :`READ-ONLY ADDRESS CHECK COMPLETE // ${address}`;
+    updatePositionSummary(address,generation);
+  });
+  if(generation!==queryGeneration)return;
+  updatePositionSummary(address,generation);
 }
 
 async function connect(){

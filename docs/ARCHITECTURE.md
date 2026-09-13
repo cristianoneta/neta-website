@@ -24,6 +24,10 @@
 - Exactly eight validated WYND pools are exposed.
 - Pair, LP-token and stake contracts are allowlisted by address and code ID.
 - Wallet inspection does not require a connected wallet.
+- Wallet inspection evaluates at most three pools concurrently. Each LCD attempt
+  times out after eight seconds and falls back to the next configured endpoint.
+- A failed pool produces a partial total and can be retried independently; it
+  never enables transaction actions or removes successful pool results.
 - Live pool reserves and current USD totals may refresh daily.
 - Unstake and claim values are fixed at collection time. Existing event records
   with `valuation_locked: true` are never repriced.
