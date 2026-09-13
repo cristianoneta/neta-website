@@ -60,6 +60,9 @@ for page in PAGES:
     assert source.count("<!-- site-footer:start -->") == 1
     assert 'id="keplr-connect"' in source
     assert 'id="wallet-menu"' in source
+    assert source.count('http-equiv="Content-Security-Policy"') == 1
+    assert "script-src 'self'" in source
+    assert "object-src 'none'" in source
     assert 'src="wallet-header.js?v=2"' in source
     for asset in parser.assets:
         parsed = urlsplit(asset)
@@ -88,6 +91,12 @@ assert "signing_enabled:enabled" in recovery
 assert "signAndBroadcast" not in recovery
 assert "https://www.mintscan.io/osmosis/address/" in map_script
 assert 'link.rel="noopener noreferrer"' in map_script
+for browser_script in ROOT.glob("*.js"):
+    if browser_script.name in {"address-index.js", "data.js"}:
+        continue
+    source = browser_script.read_text(encoding="utf-8")
+    assert ".innerHTML" not in source, f"{browser_script.name}: innerHTML is forbidden"
+    assert "insertAdjacentHTML" not in source, f"{browser_script.name}: HTML string insertion is forbidden"
 assert "window.NETA_ADDRESS_ROWS" in address_index
 assert "Object.create(null)" in address_index
 assert (ROOT / "address-index.js").stat().st_size < 2_000_000

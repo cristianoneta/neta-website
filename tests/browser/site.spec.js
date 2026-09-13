@@ -163,6 +163,20 @@ test("compact address index keeps one canonical row with both address aliases", 
   expect(result.rank).toBeGreaterThan(0);
 });
 
+test("ranking treats snapshot labels as text instead of HTML", async ({page}) => {
+  await page.goto("/index.html", {waitUntil: "domcontentloaded"});
+  const address = await page.evaluate(() => {
+    const row = window.NETA_ADDRESS_ROWS[0];
+    row.label = '<img id="snapshot-injection" src=x onerror="window.__snapshotInjected=true">';
+    return row.juno_address || row.osmosis_address;
+  });
+  await page.locator("#q").fill(address);
+  await page.locator("#go").click();
+  await expect(page.locator("#result")).toContainText("<img id=");
+  await expect(page.locator("#snapshot-injection")).toHaveCount(0);
+  expect(await page.evaluate(() => window.__snapshotInjected)).toBeUndefined();
+});
+
 test("recovery falls back by endpoint and isolates one failed pool", async ({page}) => {
   const codeIds = new Map();
   for (const pool of registry.pools) {
