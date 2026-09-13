@@ -30,6 +30,7 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
+    'wynd-recovery.js?v=20260913-2', 'wynd-recovery.css?v=20260913-2',
 ]:
     assert required in html, required
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
@@ -38,4 +39,5 @@ assert 'recoveryLink.href="wynd-recovery.html"' in app
 assert '<a class="active" href="wynd-recovery.html">WYND RECOVERY</a>' in html
 assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
+assert js.count('{cache:"no-store"}') == 4
 print("WYND recovery frontend safety tests passed")

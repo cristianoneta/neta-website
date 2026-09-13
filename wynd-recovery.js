@@ -326,10 +326,10 @@ function startGhost(){
 async function init(){
   startGhost();
   const [registryResponse,statsResponse,marketResponse,leaderboardResponse,blockResponse]=await Promise.all([
-    fetch("data/recovery/wynd-pools.json"),
-    fetch("data/recovery/recovery-stats.json"),
-    fetch("data/recovery/wynd-market.json"),
-    fetch("data/recovery/wynd-leaderboard.json"),
+    fetch("data/recovery/wynd-pools.json",{cache:"no-store"}),
+    fetch("data/recovery/recovery-stats.json",{cache:"no-store"}),
+    fetch("data/recovery/wynd-market.json",{cache:"no-store"}),
+    fetch("data/recovery/wynd-leaderboard.json",{cache:"no-store"}),
     fetch(`${LCD}/cosmos/base/tendermint/v1beta1/blocks/latest`),
   ]);
   if(!registryResponse.ok)throw new Error("TOP-8 REGISTRY UNAVAILABLE");
