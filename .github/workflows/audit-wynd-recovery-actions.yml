@@ -1,0 +1,35 @@
+name: Audit WYND recovery action schemas
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 4 * * 0"
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/audit_wynd_recovery_actions.py"
+      - "scripts/test_wynd_recovery_action_audit.py"
+      - "data/recovery/wynd-pools.json"
+      - ".github/workflows/audit-wynd-recovery-actions.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: PYTHONPATH=scripts python scripts/test_wynd_recovery_action_audit.py
+      - name: Query all eight allowlisted pools without broadcasting
+        run: PYTHONPATH=scripts python scripts/audit_wynd_recovery_actions.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wynd-recovery-action-audit
+          path: docs/diagnostics/wynd_recovery_action_audit.json
+          retention-days: 30
