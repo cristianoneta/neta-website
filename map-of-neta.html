@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Map of NETA</title>
-  <link rel="stylesheet" href="styles.css?v=20260912-4">
+  <link rel="stylesheet" href="styles.css?v=20260913-5">
   <link rel="stylesheet" href="map-of-neta.css?v=6">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
@@ -23,7 +23,11 @@
     <a href="wynd-recovery.html">WYND RECOVERY</a>
     <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>
   </nav>
-  <div class="motto">PEOPLE / POWER / PROTOCOL</div>
+  <div class="wallet-shell">
+    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">
+      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>
+    </button>
+  </div>
 </header>
 <!-- site-header:end -->
 <main class="map-page">
@@ -88,5 +92,6 @@
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
 <script src="map-of-neta.js?v=3"></script>
+  <script src="wallet-header.js?v=1" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body></html>

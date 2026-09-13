@@ -8,14 +8,13 @@ js=(root/"wynd-recovery.js").read_text()
 html=(root/"wynd-recovery.html").read_text()
 app=(root/"app.js").read_text()
 signing_config=(root/"recovery-signing-config.js").read_text()
+wallet_header=(root/"wallet-header.js").read_text()
 
 assert registry["status"]=="VALIDATED_FOR_READ_ONLY_FRONTEND"
 assert len(registry["pools"])==8
 assert len({p["pair"]["address"] for p in registry["pools"]})==8
 assert all(p["status"]=="VALIDATED" for p in registry["pools"])
 for required in [
-    "window.keplr", 'enable(CHAIN_ID)', 'getOfflineSigner(CHAIN_ID)',
-    'keplr_keystorechange', 'ADDRESS_PATTERN.test(accounts[0].address)',
     'Number(target.code_id)===Number(live[index].code_id)',
     'available:active-locked', 'if(locked>active)',
     'BigInt(release.at_height)<=BigInt(chainHeight)',
@@ -37,11 +36,14 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
+    'wallet-header.js?v=1', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=1',
     'wynd-recovery.js?v=20260913-8',
     'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
 ]:
     assert required in html, required
+for required in ['window.keplr', 'keplr_keystorechange', 'enable(CHAIN_ID)', 'getOfflineSigner(CHAIN_ID)', 'ADDRESS_PATTERN.test(address)']:
+    assert required in wallet_header, required
 for required in [
     'enabled:false', 'chainId:"juno-1"', 'gasPrice:"0.075ujuno"',
     'gasAdjustment:1.4', 'unbond:500000', 'claim:500000', 'withdraw:700000',

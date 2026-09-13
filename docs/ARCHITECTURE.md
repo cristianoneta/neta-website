@@ -24,6 +24,11 @@
 - Exactly eight validated WYND pools are exposed.
 - Pair, LP-token and stake contracts are allowlisted by address and code ID.
 - Wallet inspection does not require a connected wallet.
+- The shared sticky header offers one Keplr-only Juno connection on every page.
+  After connection it displays the same `total_neta` economic position used by
+  the ranking, including matched Osmosis, DAO and LP attribution. Juno and
+  Osmosis addresses are matched by their identical Bech32 payload; no signature
+  is requested for this display.
 - Wallet inspection evaluates at most three pools concurrently. Each LCD attempt
   times out after eight seconds and falls back to the next configured endpoint.
 - A failed pool produces a partial total and can be retried independently; it

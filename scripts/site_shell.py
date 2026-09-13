@@ -46,7 +46,11 @@ def render_header(active_page: str) -> str:
         '  <nav aria-label="Primary navigation">',
         *links,
         "  </nav>",
-        '  <div class="motto">PEOPLE / POWER / PROTOCOL</div>',
+        '  <div class="wallet-shell">',
+        '    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">',
+        '      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>',
+        '    </button>',
+        '  </div>',
         "</header>",
         "<!-- site-header:end -->",
     ))

@@ -684,3 +684,20 @@ Immediate next-chat instruction:
   signature request or broadcast.
 - Enabling remains a separate reviewed change and still requires consenting
   tiny-position Unbond, Claim and Withdraw tests with event and state validation.
+
+## Shared Keplr wallet header — 2026-09-13
+
+- The shared site header is sticky and remains visible while scrolling on every
+  public page.
+- A Keplr-branded control appears at the top right on Ranking, Map of NETA,
+  What Is NETA, NETA DAO and WYND Recovery. The lower duplicate Recovery connect
+  button was removed.
+- Connecting requests read-only access to `juno-1`. The header then shows the
+  shortened Juno address and the current snapshot's full economic `total_neta`:
+  direct Juno, matching Osmosis, DAO stake/unbonding/claims and attributed LP.
+- Juno-to-Osmosis matching derives the equivalent Bech32 prefix from the same
+  wallet payload, including wallets represented only by an Osmosis snapshot row.
+- The large address index is loaded on demand on subpages only after connection;
+  a session flag restores the connected display across navigation.
+- This shared connection dispatches the wallet state to WYND Recovery, while its
+  signing feature flag remains hard-disabled.
