@@ -1,0 +1,15 @@
+{
+  "status": "VALIDATED",
+  "checked_at_utc": "2026-09-13T21:08:47Z",
+  "unsigned": true,
+  "broadcast": false,
+  "lcd": "https://juno-api.kleomedes.network",
+  "sender": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+  "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+  "juno_raw": 1000000,
+  "neta_raw": 10124,
+  "block_height": 41731281,
+  "gas_wanted": 100000000,
+  "gas_used": 387047,
+  "notes": "Two-message atomic simulation: CW20 increase_allowance followed by provide_liquidity. No signature was created and no transaction was broadcast. The production feature remains disabled."
+}

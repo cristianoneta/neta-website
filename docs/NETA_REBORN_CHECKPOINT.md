@@ -760,3 +760,23 @@ live tests and cancellation/rejection paths pass.
 - Primary regression workflow: `.github/workflows/ci.yml` (`Test website`).
 - Continue from this section and current `main`, not from the older instruction
   to inspect `diagnostic/wynd-recovery-discovery`.
+
+## Wallet-scoped JUNO/NETA liquidity pilot — SIMULATED 2026-09-13
+
+- A temporary, fail-closed pilot was prepared for the exact wallet
+  `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57` and the allowlisted WYND
+  JUNO/NETA pair. Production remains `enabled:false`.
+- The proposed deposit is exactly 1,000,000 `ujuno` plus the live proportional
+  NETA amount, capped at 10,200 raw NETA. At block 41,731,281 the ratio produced
+  10,124 raw NETA (1 JUNO + 0.010124 NETA).
+- Kleomedes accepted the complete atomic unsigned simulation: CW20
+  `increase_allowance` followed by pair `provide_liquidity`. Gas used was
+  387,047. No signature was created and no transaction was broadcast.
+- Reproduction: `PYTHONPATH=scripts python scripts/simulate_wynd_liquidity_pilot.py`.
+  Static non-broadcast safeguards are checked by
+  `scripts/test_wynd_liquidity_pilot_simulation.py`; recorded evidence is in
+  `docs/diagnostics/wynd_liquidity_pilot_simulation.json`.
+- This result closes only the unsigned simulation gate. Enabling the button,
+  adding the browser signing bundle and requesting Keplr approval must remain a
+  separate reviewed change. The user must explicitly approve the displayed
+  amounts and fee immediately before signing.
