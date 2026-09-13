@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Non-custodial recovery interface for legacy WYND DEX liquidity positions.">
   <title>WYND Recovery Mission — NETA Reborn</title>
-  <link rel="stylesheet" href="styles.css?v=20260913-4">
+  <link rel="stylesheet" href="styles.css?v=20260913-5">
   <link rel="stylesheet" href="wynd-recovery.css?v=20260913-4">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
@@ -24,7 +24,11 @@
     <a class="active" aria-current="page" href="wynd-recovery.html">WYND RECOVERY</a>
     <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>
   </nav>
-  <div class="motto">PEOPLE / POWER / PROTOCOL</div>
+  <div class="wallet-shell">
+    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">
+      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>
+    </button>
+  </div>
 </header>
 <!-- site-header:end -->
 <main class="about-page recovery-page">
@@ -47,7 +51,7 @@
           <input id="wallet-address" name="wallet-address" type="text" autocomplete="off" spellcheck="false" placeholder="Enter any Juno address ..." aria-describedby="wallet-status">
           <button type="submit">SEARCH</button>
         </form>
-        <div class="recovery-tools"><div class="hint">No wallet connection required.</div><button id="connect-wallet" class="ghost-button" type="button">CONNECT KEPLR</button></div>
+        <div class="recovery-tools"><div class="hint">No wallet connection required. Connect Keplr in the header to unlock previews for your own address.</div></div>
         <div id="wallet-status" class="wallet-status" aria-live="polite">ENTER AN ADDRESS OR CONNECT KEPLR</div>
       </div>
     </section>
@@ -105,6 +109,7 @@
   <script src="cosmos-client.js?v=2" defer></script>
   <script src="recovery-signing-config.js?v=1" defer></script>
   <script src="wynd-recovery.js?v=20260913-8" defer></script>
+  <script src="wallet-header.js?v=1" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
 </html>

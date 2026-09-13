@@ -51,6 +51,8 @@ for page in PAGES:
     assert parser.active_links == [page], f"{page}: incorrect active navigation link"
     assert source.count("<!-- site-header:start -->") == 1
     assert source.count("<!-- site-footer:start -->") == 1
+    assert 'id="keplr-connect"' in source
+    assert 'src="wallet-header.js?v=1"' in source
     for asset in parser.assets:
         parsed = urlsplit(asset)
         if parsed.scheme or parsed.netloc or asset.startswith("#"):
@@ -59,6 +61,14 @@ for page in PAGES:
         assert (ROOT / local_path).is_file(), f"{page}: missing asset {local_path}"
 
 recovery = (ROOT / "wynd-recovery.js").read_text(encoding="utf-8")
+wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
+styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+assert 'position:sticky;top:0' in styles
+assert 'window.keplr.enable(CHAIN_ID)' in wallet_header
+assert 'position?.total_neta' in wallet_header
+assert 'index[osmosisAddress]' in wallet_header
+assert 'neta:wallet-connected' in wallet_header
+assert 'acceptHeaderWallet' in recovery
 assert "setInterval(flash,9000)" in recovery
 assert "SIGNING_CONFIG?.enabled===true" in recovery
 assert "signing_enabled:enabled" in recovery

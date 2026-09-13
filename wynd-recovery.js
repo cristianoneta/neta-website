@@ -436,26 +436,6 @@ async function refreshPositions(address){
   updatePositionSummary(address,generation);
 }
 
-async function connect(){
-  if(!window.keplr){
-    $("#wallet-status").innerHTML='KEPLR NOT FOUND // <a href="https://www.keplr.app/download" target="_blank" rel="noopener">INSTALL KEPLR</a>';
-    return;
-  }
-  dispatchEvent(new Event("neta:blackout-pause"));
-  $("#wallet-status").textContent="WAITING FOR KEPLR…";
-  try{
-    await window.keplr.enable(CHAIN_ID);
-    const signer=window.keplr.getOfflineSigner(CHAIN_ID);
-    const accounts=await signer.getAccounts();
-    if(!accounts[0]||!ADDRESS_PATTERN.test(accounts[0].address))throw new Error("NO VALID JUNO ACCOUNT RETURNED");
-    wallet={address:accounts[0].address,provider:window.keplr,signer};
-    $("#connect-wallet").textContent="REFRESH CONNECTED WALLET";
-    await refreshPositions(wallet.address);
-  }finally{
-    dispatchEvent(new Event("neta:blackout-resume"));
-  }
-}
-
 function startGhost(){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const ghost=$("#wynd-offline-ghost");
@@ -499,21 +479,23 @@ async function init(){
     }
     refreshPositions(address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
   });
-  $("#connect-wallet").onclick=()=>connect().catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
   $("#preview-dialog").addEventListener("close",()=>{
     pendingAction=null;
     document.body.classList.remove("modal-open");
     dispatchEvent(new Event("neta:blackout-resume"));
   });
   $("#execute-action").onclick=()=>executePendingAction().catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
-  window.addEventListener("keplr_keystorechange",()=>{
-    wallet=null;
-    contractChecks.clear();
-    $("#connect-wallet").textContent="RECONNECT KEPLR";
-    $("#wallet-status").textContent="KEPLR ACCOUNT CHANGED — RECONNECT TO ENABLE ACTIONS";
-    if(viewedAddress)refreshPositions(viewedAddress).catch(()=>{});
-  });
+  if(window.NETA_WALLET_STATE)acceptHeaderWallet(window.NETA_WALLET_STATE);
 }
+
+function acceptHeaderWallet(detail){
+  if(!detail?.address||!ADDRESS_PATTERN.test(detail.address))return;
+  wallet={address:detail.address,provider:detail.provider,signer:detail.signer};
+  contractChecks.clear();
+  if(registry)refreshPositions(wallet.address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
+}
+
+window.addEventListener("neta:wallet-connected",event=>acceptHeaderWallet(event.detail));
 
 init().catch(error=>{
   $("#pool-grid").textContent=`RECOVERY DATA UNAVAILABLE: ${error.message}`;
