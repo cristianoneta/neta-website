@@ -1,0 +1,548 @@
+{
+  "broadcast": false,
+  "generated_at": "2026-09-13T16:34:25.941721Z",
+  "network": "juno-1",
+  "pool_count": 8,
+  "pools": [
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "ujuno / ATOM",
+      "rank": 1,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "ujuno / USDC",
+      "rank": 2,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "ujuno / OSMO",
+      "rank": 3,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "WYND / USDC",
+      "rank": 4,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "ujuno / NETA",
+      "rank": 5,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1stg339rrg9guqsuv205yayq2ttzwz4583luc9pznvexe7rtrtrksdxstg3",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "WYND / ujuno",
+      "rank": 6,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1k5vhzkssgh35zlv9hqaasetslgqyal6jane86umrqvrjav9eg3hq3pxa0l",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "WYND / ATOM",
+      "rank": 7,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    },
+    {
+      "action_probes": {
+        "claim": {
+          "contract": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
+          "message": {
+            "claim": {}
+          }
+        },
+        "unbond": {
+          "contract": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
+          "message": {
+            "unbond": {
+              "tokens": "1",
+              "unbonding_period": 604800
+            }
+          }
+        }
+      },
+      "broadcast": false,
+      "checks": {
+        "code_ids_live": true,
+        "cw2_versions_live": true,
+        "pair_assets_exact": true,
+        "pair_routes_to_allowlisted_lp_and_stake": true,
+        "registry_action_schemas_exact": true,
+        "unbonding_periods_exact": true
+      },
+      "contracts": {
+        "lp_token": {
+          "address": "juno1dx6djxrsr4f4mqjn3vsp6v0yrg78stv3d8qyp66k209qmzn7r3eqne7mwf",
+          "code_id": 1699,
+          "cw2": {
+            "contract": "crates.io:cw20-base",
+            "version": "1.0.1"
+          }
+        },
+        "pair": {
+          "address": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
+          "code_id": 2289,
+          "cw2": {
+            "contract": "wyndex-pair",
+            "version": "1.0.0"
+          }
+        },
+        "stake": {
+          "address": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
+          "code_id": 2291,
+          "cw2": {
+            "contract": "crates.io:wyndex_stake",
+            "version": "2.0.0"
+          }
+        }
+      },
+      "lcd_endpoints": [
+        "https://juno-api.polkachu.com"
+      ],
+      "name": "WYND / OSMO",
+      "rank": 8,
+      "status": "VALIDATED",
+      "unbonding_periods_seconds": [
+        604800,
+        1209600,
+        2419200,
+        3628800
+      ],
+      "unsigned": true
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Read-only live schema and routing audit for Unbond and Claim across all eight allowlisted pools.",
+  "status": "VALIDATED",
+  "unsigned": true
+}

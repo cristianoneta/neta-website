@@ -635,6 +635,15 @@ Immediate next-chat instruction:
 - Each pool position is valued as its share of the matching daily pool USD snapshot in `data/recovery/wynd-market.json`; values are summed across pools and the ten largest wallets are stored in `data/recovery/wynd-leaderboard.json`.
 - The frontend shows total USD and a per-pool USD breakdown. Selecting a ranked address runs the existing public read-only Top-8 position lookup.
 - The daily market workflow refreshes the market snapshot first and the leaderboard second, then persists both files and requests a Pages rebuild.
+
+## WYND Recovery action-schema audit — 2026-09-13
+
+- A read-only live audit now covers Unbond and Claim across all eight allowlisted pools rather than relying on one representative contract set.
+- It verifies current code IDs and CW2 versions, Pair-to-LP/Stake routing, both pool assets, all four unbonding periods and the exact message templates.
+- Result: `8/8 VALIDATED`; pair code ID `2289`, LP code ID `1699`, stake code ID `2291`; no signing or broadcasting was performed.
+- Reproducible command: `PYTHONPATH=scripts python scripts/audit_wynd_recovery_actions.py`.
+- Evidence: `docs/diagnostics/wynd_recovery_action_audit.json`.
+- A weekly and manually runnable GitHub workflow repeats the audit and retains its JSON artifact for 30 days.
 ## Global Matrix blackout effect — DEPLOYED 2026-09-13
 
 - Shared assets: `matrix-blackout.css` and `matrix-blackout.js`.

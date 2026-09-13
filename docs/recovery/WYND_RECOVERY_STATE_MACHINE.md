@@ -25,3 +25,8 @@ Status: **VALIDATED FOR READ-ONLY FRONTEND**. Signing remains disabled.
 ## Signing gate still open
 
 Before signing can be enabled, simulate and then test with tiny controlled positions for every distinct action shape. Validate fees, gas, transaction events, proportional withdrawal results, rejection paths, and post-transaction refresh. The read-only frontend may be built before this gate closes.
+
+Before simulation, `scripts/audit_wynd_recovery_actions.py` must pass for all
+eight allowlisted pools. It performs read-only live checks of code IDs, CW2
+versions, Pair-to-LP/Stake routing, asset identities, unbonding periods and the
+exact Unbond/Claim message templates. It never signs or broadcasts.
