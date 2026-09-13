@@ -217,6 +217,18 @@ function signingEnabled(){
     &&SIGNING_CONFIG.rpcEndpoints.length>0;
 }
 
+function pilotAuthorized(pool,action,request){
+  const pilot=SIGNING_CONFIG?.pilot;
+  if(!signingEnabled()||!pilot||!wallet)return false;
+  if(!ADDRESS_PATTERN.test(pilot.wallet||"")||pilot.wallet!==wallet.address||wallet.address!==viewedAddress)return false;
+  if(pilot.pair!==pool.pair.address||pilot.action!==action)return false;
+  if(!["unbond","claim","withdraw"].includes(action))return false;
+  try{
+    const limit=BigInt(pilot.maxAmountRaw);
+    return limit>0n&&request.raw>0n&&request.raw<=limit;
+  }catch(_){return false;}
+}
+
 function loadSigningClient(){
   if(window.NetaRecoverySigning)return Promise.resolve(window.NetaRecoverySigning);
   if(signingClientPromise)return signingClientPromise;
@@ -273,7 +285,7 @@ async function showPreview(pool,action,request){
   try{
     const prepared=await prepareAction(pool,action,request);
     pendingAction={pool,action,request,prepared};
-    const enabled=signingEnabled();
+    const enabled=pilotAuthorized(pool,action,request);
     $("#preview-title").textContent=`${action.toUpperCase()} // ${pool.name.replaceAll("ujuno","JUNO")}`;
     $("#preview-message").textContent=JSON.stringify({
       network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract:prepared.contract,message:prepared.message,
@@ -291,7 +303,7 @@ async function showPreview(pool,action,request){
 }
 
 async function executePendingAction(){
-  if(!signingEnabled()||!pendingAction)throw new Error("SIGNING FEATURE FLAG IS OFF");
+  if(!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request))throw new Error("SIGNING PILOT IS NOT AUTHORIZED");
   const button=$("#execute-action");
   button.disabled=true;
   $("#transaction-status").textContent="FINAL CONTRACT + POSITION REVALIDATION…";
@@ -320,7 +332,7 @@ async function executePendingAction(){
     $("#transaction-status").textContent=`BLOCKED // ${error.message}`;
     throw error;
   }finally{
-    button.disabled=!signingEnabled();
+    button.disabled=!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);
   }
 }
 

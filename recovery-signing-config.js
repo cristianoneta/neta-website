@@ -7,6 +7,7 @@ Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
     gasAdjustment:1.4,
     gasCaps:Object.freeze({unbond:500000,claim:500000,withdraw:700000}),
     memo:"netareborn.com/wynd-recovery:v1",
+    pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"}),
   }),
   writable:false,
   configurable:false,

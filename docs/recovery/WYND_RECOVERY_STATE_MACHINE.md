@@ -59,3 +59,29 @@ If a later, separately reviewed change enables the flag, every action must still
 5. use the public recovery memo and refresh chain state after confirmation.
 
 This dormant code does not satisfy the controlled tiny-position broadcast gate.
+
+## Controlled pilot gate
+
+A future pilot must be enabled in a dedicated, separately reviewed pull request.
+Turning on the global flag is deliberately insufficient: `pilot` must also name
+one exact Juno wallet, one allowlisted pair, one action and a positive maximum
+raw LP amount. The frontend checks this scope both before showing the signing
+control and immediately before execution. Empty, malformed, mismatched or
+over-limit scopes fail closed.
+
+Run the pilot sequentially, never as a batch:
+
+1. Fund the consenting test wallet with only the required tiny LP position and
+   enough JUNO for fees; keep unrelated assets out of the wallet.
+2. Open a dedicated PR that adds the reviewed browser bundle and authorizes
+   exactly one action in `pilot`; keep all other pools and actions locked.
+3. Confirm the preview sender, contract, message, memo, estimated assets, gas
+   and fee in Keplr. The operator must reject any mismatch.
+4. Broadcast only after a fresh successful simulation, then record the hash,
+   emitted events, gas used and before/after on-chain balances.
+5. Disable the pilot again before preparing the next action. Claim can only be
+   tested after its unbonding period has matured; Withdraw can only be tested
+   after LP is held directly by the same wallet.
+6. Do not enable general signing until Unbond, Claim and Withdraw each pass,
+   rejection/cancellation paths are verified, and post-confirmation refresh
+   reconciles with chain state.
