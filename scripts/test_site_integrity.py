@@ -60,6 +60,7 @@ for page in PAGES:
 
 recovery = (ROOT / "wynd-recovery.js").read_text(encoding="utf-8")
 assert "setInterval(flash,9000)" in recovery
-assert "signing_enabled:false" in recovery
+assert "SIGNING_CONFIG?.enabled===true" in recovery
+assert "signing_enabled:enabled" in recovery
 assert "signAndBroadcast" not in recovery
 print(f"Site integrity tests passed for {len(PAGES)} pages")

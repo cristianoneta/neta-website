@@ -35,6 +35,8 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   await expect(page.locator("#pool-total-usd")).toContainText("$");
   await expect(page.locator("#wallet-address")).toBeVisible();
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
+  await expect(page.locator("#execute-action")).toBeHidden();
+  await expect(page.locator("#execute-action")).toBeDisabled();
   expect(pageErrors).toEqual([]);
 });
 

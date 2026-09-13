@@ -2,10 +2,14 @@
   "name": "neta-reborn-site",
   "private": true,
   "scripts": {
+    "build:recovery-signing": "esbuild src/recovery-signing-client.js --bundle --minify --format=iife --global-name=NetaRecoverySigning --outfile=assets/recovery-signing-client.js",
     "test:browser": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "1.55.0"
+    "@playwright/test": "1.55.0",
+    "esbuild": "0.28.2"
+  },
+  "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "0.38.1"
   }
 }
-

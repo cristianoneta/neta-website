@@ -90,6 +90,8 @@
       <h2 id="preview-title">ACTION LOCKED</h2>
       <pre id="preview-message"></pre>
       <p>Signing is disabled in this draft. The live interface will re-query the wallet and contract versions immediately before approval.</p>
+      <p id="transaction-status" class="transaction-status" aria-live="polite"></p>
+      <button id="execute-action" class="terminal-button execute-action" type="button" hidden disabled>RE-VALIDATE + SIGN WITH KEPLR</button>
       <button class="terminal-button" value="close">CLOSE</button>
     </form>
   </dialog>
@@ -101,7 +103,8 @@
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
   <script src="cosmos-client.js?v=2" defer></script>
-  <script src="wynd-recovery.js?v=20260913-7" defer></script>
+  <script src="recovery-signing-config.js?v=1" defer></script>
+  <script src="wynd-recovery.js?v=20260913-8" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
 </html>

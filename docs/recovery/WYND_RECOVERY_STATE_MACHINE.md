@@ -1,6 +1,7 @@
 # WYND Recovery State Machine
 
-Status: **VALIDATED FOR READ-ONLY FRONTEND**. Signing remains disabled.
+Status: **VALIDATED FOR READ-ONLY FRONTEND**. The guarded signing client source
+is buildable in CI, but its immutable production feature flag remains disabled.
 
 | Observed wallet state | UI state | Permitted next action |
 |---|---|---|
@@ -37,3 +38,24 @@ Before simulation, `scripts/audit_wynd_recovery_actions.py` must pass for all
 eight allowlisted pools. It performs read-only live checks of code IDs, CW2
 versions, Pair-to-LP/Stake routing, asset identities, unbonding periods and the
 exact Unbond/Claim message templates. It never signs or broadcasts.
+
+## Dormant signing implementation
+
+The repository contains a prospective Keplr/CosmJS execution path so it can be
+reviewed before a controlled test. The disabled release deliberately omits the
+large generated browser bundle. A later enabling change must build, review and
+add it explicitly. `recovery-signing-config.js` defines the
+non-writable, non-configurable flag `enabled:false`; the confirmation control is
+also rendered hidden and disabled. CI fails if either safeguard is removed.
+
+If a later, separately reviewed change enables the flag, every action must still:
+
+1. match the connected Keplr account to the inspected Juno address;
+2. re-check all allowlisted contract code IDs and reload the wallet position;
+3. reconstruct the message from registry and chain state, then compare it with
+   the approved preview;
+4. simulate through the pinned CosmJS adapter and reject invalid or
+   action-specific over-cap gas estimates; and
+5. use the public recovery memo and refresh chain state after confirmation.
+
+This dormant code does not satisfy the controlled tiny-position broadcast gate.

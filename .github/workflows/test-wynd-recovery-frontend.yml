@@ -2,6 +2,8 @@ name: Test WYND recovery frontend
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     paths:
@@ -10,6 +12,10 @@ on:
       - "wynd-recovery.html"
       - "wynd-recovery.css"
       - "wynd-recovery.js"
+      - "recovery-signing-config.js"
+      - "src/recovery-signing-client.js"
+      - "package.json"
+      - "package-lock.json"
       - "data/recovery/wynd-pools.json"
 
 permissions:
@@ -30,5 +36,11 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
+          npm ci
+          npm run build:recovery-signing
+          test -s assets/recovery-signing-client.js
+          rm assets/recovery-signing-client.js
           node --check wynd-recovery.js
+          node --check recovery-signing-config.js
           python scripts/test_wynd_recovery_frontend.py
+          python scripts/test_recovery_signing_gate.py

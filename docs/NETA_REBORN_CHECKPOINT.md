@@ -666,3 +666,21 @@ Immediate next-chat instruction:
 - The effect defers while the tab is hidden or an open dialog/ARIA modal is present.
 - Other application code can pause/resume it with `neta:blackout-pause` and `neta:blackout-resume` window events; recovery wallet approval and transaction flows must use these hooks.
 - `prefers-reduced-motion: reduce` disables the effect and its control completely.
+
+## Guarded Keplr signing path — DORMANT 2026-09-13
+
+- A pinned CosmJS dependency and buildable adapter source now contain the
+  prospective Keplr simulation and execution path without a runtime CDN. The
+  disabled release deliberately omits the large generated browser bundle; a
+  later enabling PR must build, review and add it explicitly.
+- Production configuration remains hard-disabled with a frozen, non-writable,
+  non-configurable `enabled:false` flag. The execution control is hidden and
+  disabled while that flag is off.
+- Immediately before any future signature request, the frontend revalidates the
+  exact Keplr account, Juno chain, contract code IDs, live position, allowlisted
+  action/message, preview equality and action-specific simulated-gas cap.
+- CI proves that the adapter bundles successfully, deletes the temporary build,
+  then verifies the disabled gate and browser UI. This preparation performs no
+  signature request or broadcast.
+- Enabling remains a separate reviewed change and still requires consenting
+  tiny-position Unbond, Claim and Withdraw tests with event and state validation.
