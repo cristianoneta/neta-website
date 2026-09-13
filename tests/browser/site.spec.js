@@ -80,6 +80,15 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   expect(pageErrors).toEqual([]);
 });
 
+test("Map of NETA links Osmosis movers safely to Mintscan", async ({page}) => {
+  await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+  const link = page.locator("#buyers a.mover-wallet").first();
+  await expect(link).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(link).toHaveAttribute("title", /^osmo1[0-9a-z]{38}$/);
+});
+
 test("mobile navigation and recovery lookup remain usable", async ({page}) => {
   await page.setViewportSize({width: 390, height: 844});
   await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
