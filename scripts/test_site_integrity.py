@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -11,6 +12,8 @@ from site_shell import NAVIGATION, PAGES
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ACTION_REF = re.compile(r"uses:\s+[^\s@]+@([^\s#]+)")
+FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
 class PageParser(HTMLParser):
@@ -40,6 +43,10 @@ subprocess.run(
     ["python3", str(ROOT / "scripts/site_shell.py"), "--root", str(ROOT), "--check"],
     check=True,
 )
+
+for workflow in (ROOT / ".github" / "workflows").glob("*.yml"):
+    for reference in ACTION_REF.findall(workflow.read_text(encoding="utf-8")):
+        assert FULL_SHA.fullmatch(reference), f"{workflow.name}: action is not pinned to a full commit SHA: {reference}"
 
 expected_nav = {href for href, _ in NAVIGATION}
 for page in PAGES:

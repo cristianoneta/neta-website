@@ -224,6 +224,7 @@ test("a late wallet lookup cannot contaminate a newer recovery total", async ({p
   await page.waitForTimeout(20);
   await page.locator("#wallet-address").fill(secondAddress);
   await page.locator("#address-form button[type=submit]").click();
+  await page.evaluate(() => { window.__recoveryTotals = []; });
 
   await expect(page.locator("#wallet-status")).toContainText("READ-ONLY CHECK 8/8 COMPLETE");
   await expect(page.locator("#position-address")).toHaveText(secondAddress);
