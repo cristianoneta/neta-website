@@ -25,6 +25,9 @@ PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_leaderboard.py
 .venv/bin/python scripts/test_wynd_recovery_frontend.py
 .venv/bin/python scripts/test_map_chain_detection.py
 node --check wynd-recovery.js
+npm ci
+npx playwright install chromium
+npm run test:browser
 ```
 
 The public header and footer are generated from one definition. After changing

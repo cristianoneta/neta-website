@@ -12,6 +12,10 @@ on:
       - "assets/**"
       - "scripts/site_shell.py"
       - "scripts/test_site_integrity.py"
+      - "tests/browser/**"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.js"
       - ".github/workflows/test-site-integrity.yml"
   workflow_dispatch:
 
@@ -37,4 +41,9 @@ jobs:
           for file in *.js; do
             node --check "$file"
           done
-
+      - name: Install browser test dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser integration tests
+        run: npm run test:browser
