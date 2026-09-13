@@ -10,6 +10,43 @@ const pages = [
   ["/wynd-recovery.html", "WYND RECOVERY"],
 ];
 
+function recoveryCodeIds() {
+  const codeIds = new Map();
+  for (const pool of registry.pools) {
+    for (const contract of [pool.pair, pool.lp_token, pool.stake]) codeIds.set(contract.address, contract.code_id);
+  }
+  return codeIds;
+}
+
+async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () => 0} = {}) {
+  const codeIds = recoveryCodeIds();
+  await page.route(/^https:\/\/juno-api\./, async route => {
+    const url = new URL(route.request().url());
+    const headers = {"access-control-allow-origin": "*", "content-type": "application/json"};
+    if (url.pathname.endsWith("/blocks/latest")) {
+      await route.fulfill({headers, body: JSON.stringify({block: {header: {height: "12345678"}}})});
+      return;
+    }
+    const contract = url.pathname.match(/\/contract\/([^/]+)/)?.[1];
+    if (!url.pathname.includes("/smart/")) {
+      await route.fulfill({headers, body: JSON.stringify({contract_info: {code_id: String(codeIds.get(contract))}})});
+      return;
+    }
+    const encoded = decodeURIComponent(url.pathname.split("/smart/")[1]);
+    const query = JSON.parse(Buffer.from(encoded, "base64").toString("utf8"));
+    const address = query.balance?.address || query.all_staked?.address || query.claims?.address || null;
+    const delay = delayFor(address, query, contract);
+    if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+    let data;
+    if (query.balance) data = {balance: balanceFor(address, contract)};
+    else if (query.all_staked) data = {stakes: []};
+    else if (query.claims) data = {claims: []};
+    else if (query.share) data = registry.pools.find(pool => pool.pair.address === contract).assets.map(() => ({amount: "1000000"}));
+    else data = {};
+    await route.fulfill({headers, body: JSON.stringify({data})});
+  });
+}
+
 for (const [path, activeLabel] of pages) {
   test(`${activeLabel} loads with the shared shell`, async ({page}) => {
     const pageErrors = [];
@@ -166,4 +203,57 @@ test("recovery falls back by endpoint and isolates one failed pool", async ({pag
   await expect(page.locator("#wallet-status")).toContainText("READ-ONLY CHECK 8/8 COMPLETE");
   await expect(page.getByRole("button", {name: "RETRY THIS POOL"})).toHaveCount(0);
   expect(requestsByContract.get(unaffectedPair)).toBe(unaffectedRequests);
+});
+
+test("a late wallet lookup cannot contaminate a newer recovery total", async ({page}) => {
+  const firstAddress = leaderboard.top_wallets[0].address;
+  const secondAddress = leaderboard.top_wallets[1].address;
+  await mockRecoveryChain(page, {
+    balanceFor: address => address === firstAddress ? "10000000000" : "0",
+    delayFor: address => address === firstAddress ? 80 : address === secondAddress ? 240 : 0,
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(() => {
+    window.__recoveryTotals = [];
+    new MutationObserver(() => window.__recoveryTotals.push(document.querySelector("#position-total-usd").textContent))
+      .observe(document.querySelector("#position-total-usd"), {childList: true, subtree: true, characterData: true});
+  });
+
+  await page.locator("#wallet-address").fill(firstAddress);
+  await page.locator("#address-form button[type=submit]").click();
+  await page.waitForTimeout(20);
+  await page.locator("#wallet-address").fill(secondAddress);
+  await page.locator("#address-form button[type=submit]").click();
+
+  await expect(page.locator("#wallet-status")).toContainText("READ-ONLY CHECK 8/8 COMPLETE");
+  await expect(page.locator("#position-address")).toHaveText(secondAddress);
+  await expect(page.locator("#position-total-usd")).toHaveText("$0.00");
+  const observed = await page.evaluate(() => window.__recoveryTotals);
+  const settledTotals = observed.filter(value => value !== "CALCULATING…");
+  expect(settledTotals.length).toBeGreaterThan(0);
+  expect(new Set(settledTotals)).toEqual(new Set(["$0.00"]));
+});
+
+test("disconnect removes recovery action authority but keeps read-only results", async ({page}) => {
+  const address = leaderboard.top_wallets[0].address;
+  await mockRecoveryChain(page, {balanceFor: () => "1000000"});
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await expect(page.locator(".actions button:not([disabled])")).toHaveCount(8);
+  await page.locator("#keplr-connect").click();
+  await page.locator('[data-wallet-action="disconnect"]').click();
+
+  await expect(page.locator("#wallet-status")).toContainText("READ-ONLY CHECK 8/8 COMPLETE");
+  await expect(page.locator("#position-address")).toHaveText(address);
+  await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
+  await expect(page.locator(".actions").first()).toContainText("PREVIEW WITHDRAW");
+  await expect(page.locator(".actions button").first()).toBeDisabled();
 });
