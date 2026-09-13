@@ -24,6 +24,8 @@ for required in [
     'positionUsd', 'expectedAssets(pool,totalEconomic)',
     'data/recovery/wynd-market.json', 'data/recovery/wynd-leaderboard.json', 'POOL RESERVES',
     'chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")',
+    'POOL_QUERY_CONCURRENCY=3', 'runWithConcurrency(registry.pools,POOL_QUERY_CONCURRENCY',
+    'PARTIAL VALUE', 'RETRY THIS POOL', 'generation!==queryGeneration',
     'flash();', 'setInterval(flash,9000)', 'neta-matrix-active', 'neta:blackout-pause', 'neta:blackout-resume',
 ]:
     assert required in js, required
@@ -31,7 +33,7 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'cosmos-client.js?v=1', 'wynd-recovery.js?v=20260913-5', 'wynd-recovery.css?v=20260913-2',
+    'cosmos-client.js?v=2', 'wynd-recovery.js?v=20260913-6', 'wynd-recovery.css?v=20260913-3',
 ]:
     assert required in html, required
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
