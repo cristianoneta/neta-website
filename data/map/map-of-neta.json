@@ -25,20 +25,20 @@
       }
     ],
     "juno_to_osmosis_neta": 0.0,
-    "net_to_osmosis_neta": -4.0,
-    "osmosis_to_juno_neta": 4.0,
+    "net_to_osmosis_neta": -3.0,
+    "osmosis_to_juno_neta": 3.0,
     "routes": [
       {
         "from_chain": "osmosis",
-        "neta": 4.0,
+        "neta": 3.0,
         "to_chain": "juno",
-        "transfers": 2
+        "transfers": 1
       }
     ],
-    "transfers": 2,
-    "volume_neta": 4.0
+    "transfers": 1,
+    "volume_neta": 3.0
   },
-  "generated_at": "2026-09-13T19:59:29.245854Z",
+  "generated_at": "2026-09-13T20:10:00.809804Z",
   "market": {
     "power_buyers": [
       {
@@ -49,15 +49,8 @@
         "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn"
       }
     ],
-    "swaps": 6,
+    "swaps": 5,
     "top_sellers": [
-      {
-        "bought_neta": 0.0,
-        "net_neta": -0.998,
-        "sold_neta": 0.998,
-        "swaps": 1,
-        "wallet": "osmo15agzfrclmqnq72asjssh80723c9fvkq28a8ym0"
-      },
       {
         "bought_neta": 0.0,
         "net_neta": -0.095842,
