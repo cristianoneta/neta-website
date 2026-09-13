@@ -25,7 +25,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: map-of-neta-data
+  group: neta-repository-writer-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:

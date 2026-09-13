@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import base64
-import datetime as dt
 import json
 import re
 from decimal import Decimal
@@ -12,12 +10,20 @@ from pathlib import Path
 
 import requests
 
-LCDS = ["https://juno-api.polkachu.com"]
+from neta_core import CosmosClient, fetch_coingecko_prices, iso_now, load_json, write_json
+
+LCDS = ["https://juno-api.polkachu.com", "https://juno-api.lavenderfive.com"]
 MEMO = "netareborn.com/wynd-recovery:v1"
 FINALITY = 5
 TIMEOUT = 45
 S = requests.Session()
 S.headers.update({"User-Agent": "NETA-Reborn-WYND-Recovery/1.0"})
+CLIENT = CosmosClient(
+    LCDS,
+    user_agent="NETA-Reborn-WYND-Recovery/1.0",
+    timeout=TIMEOUT,
+    session=S,
+)
 PRICE_ASSETS = {
     "native:ujuno": (6, "juno-network"),
     "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9": (6, "cosmos"),
@@ -26,30 +32,17 @@ PRICE_ASSETS = {
 }
 
 
-def iso_now():
-    return dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
-
-
 def load(path, default):
-    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
+    return load_json(path, default)
 
 
 def get(path, params=None):
-    errors = []
-    for base in LCDS:
-        try:
-            r = S.get(base + path, params=params, timeout=TIMEOUT)
-            r.raise_for_status()
-            return r.json(), base
-        except Exception as exc:
-            errors.append(f"{base}: {exc}")
-    raise RuntimeError("; ".join(errors))
+    return CLIENT.get(path, params)
 
 
 def smart(contract, msg):
-    raw = base64.b64encode(json.dumps(msg, separators=(",", ":")).encode()).decode()
-    data, _ = get(f"/cosmwasm/wasm/v1/contract/{contract}/smart/{raw}")
-    return data.get("data", data)
+    data, _ = CLIENT.smart(contract, msg)
+    return data
 
 
 def latest_height():
@@ -120,11 +113,11 @@ def parse_tagged_actions(pool, rows):
 
 
 def fetch_prices():
-    ids = sorted({x[1] for x in PRICE_ASSETS.values()})
-    r = S.get("https://api.coingecko.com/api/v3/simple/price", params={"ids": ",".join(ids), "vs_currencies": "usd"}, timeout=TIMEOUT)
-    r.raise_for_status()
-    data = r.json()
-    return {key: Decimal(str(data[key]["usd"])) for key in ids}, "CoinGecko simple/price", iso_now()
+    return fetch_coingecko_prices(
+        (entry[1] for entry in PRICE_ASSETS.values()),
+        session=S,
+        timeout=TIMEOUT,
+    )
 
 
 def value_lp(pool, raw_lp, prices):
@@ -223,8 +216,8 @@ def main():
         raise RuntimeError("duplicate recovery event IDs")
     output = aggregate(registry, events, state, source, price_time)
     output["juno_endpoint"] = endpoint
-    events_path.write_text(json.dumps({"schema_version": 1, "events": events}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    stats_path.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    write_json(events_path, {"schema_version": 1, "events": events})
+    write_json(stats_path, output)
     print(json.dumps({"status": output["status"], "last_height": latest, "new_tagged_events": len(new_unique), "total_events": len(events)}, indent=2))
 
 
