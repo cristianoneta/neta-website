@@ -38,7 +38,7 @@
     "transfers": 1,
     "volume_neta": 1.0
   },
-  "generated_at": "2026-09-13T07:24:53.158305Z",
+  "generated_at": "2026-09-13T13:09:32.835584Z",
   "market": {
     "power_buyers": [],
     "swaps": 1,
@@ -55,7 +55,7 @@
   "periods": {
     "24h": {
       "available": false,
-      "coverage_percent": 55.52
+      "coverage_percent": 79.45
     },
     "30d": {
       "available": false
