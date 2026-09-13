@@ -320,12 +320,12 @@ function startGhost(){
 
 async function init(){
   startGhost();
-  const [registryResponse,statsResponse,marketResponse,leaderboardResponse,blockResponse]=await Promise.all([
+  const [registryResponse,statsResponse,marketResponse,leaderboardResponse,blockResult]=await Promise.all([
     fetch("data/recovery/wynd-pools.json",{cache:"no-store"}),
     fetch("data/recovery/recovery-stats.json",{cache:"no-store"}),
     fetch("data/recovery/wynd-market.json",{cache:"no-store"}),
     fetch("data/recovery/wynd-leaderboard.json",{cache:"no-store"}),
-    fetch(`${LCD}/cosmos/base/tendermint/v1beta1/blocks/latest`),
+    chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest").catch(()=>({data:null})),
   ]);
   if(!registryResponse.ok)throw new Error("TOP-8 REGISTRY UNAVAILABLE");
   registry=await registryResponse.json();
@@ -333,7 +333,7 @@ async function init(){
   market=marketResponse.ok?await marketResponse.json():{pools:{}};
   leaderboard=leaderboardResponse.ok?await leaderboardResponse.json():{top_wallets:[]};
   if(registry.status!=="VALIDATED_FOR_READ_ONLY_FRONTEND"||registry.pools.length!==8)throw new Error("REGISTRY VALIDATION FAILED");
-  if(blockResponse.ok)chainHeight=Number((await blockResponse.json()).block.header.height);
+  if(blockResult.data)chainHeight=Number(blockResult.data.block.header.height);
   $("#market-updated").textContent=market?.updated_at
     ?`POOL RESERVES + USD UPDATED ${new Date(market.updated_at).toLocaleString()}`
     :"DAILY MARKET SNAPSHOT PENDING";
