@@ -3,13 +3,13 @@
     {
       "id": "juno-1",
       "name": "Juno",
-      "neta": 21402.18846,
+      "neta": 21405.18846,
       "role": "origin"
     },
     {
       "id": "osmosis-1",
       "name": "Osmosis",
-      "neta": 10484.41154,
+      "neta": 10481.41154,
       "role": "ibc"
     }
   ],
@@ -38,7 +38,7 @@
     "transfers": 2,
     "volume_neta": 4.0
   },
-  "generated_at": "2026-09-13T14:46:14.613426Z",
+  "generated_at": "2026-09-13T15:44:51.592152Z",
   "market": {
     "power_buyers": [
       {
@@ -63,7 +63,7 @@
   "periods": {
     "24h": {
       "available": false,
-      "coverage_percent": 86.17
+      "coverage_percent": 90.24
     },
     "30d": {
       "available": false
