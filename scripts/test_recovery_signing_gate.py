@@ -11,10 +11,15 @@ client = (root / "src/recovery-signing-client.js").read_text()
 assert config.count("enabled:false") == 1
 assert "enabled:true" not in config
 assert "writable:false" in config and "configurable:false" in config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
 assert '<button id="execute-action"' in html
 assert 'hidden disabled' in html
-assert 'if(!signingEnabled()||!pendingAction)' in frontend
+assert 'if(!pendingAction||!pilotAuthorized(' in frontend
 assert 'SIGNING_CONFIG?.enabled===true' in frontend
+assert "pilotAuthorized(pool,action,request)" in frontend
+assert "pilot.wallet!==wallet.address" in frontend
+assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
+assert "request.raw<=limit" in frontend
 
 # Every prospective transaction is reconstructed and checked immediately before use.
 for required in [
