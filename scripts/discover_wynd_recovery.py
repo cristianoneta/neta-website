@@ -2,15 +2,15 @@
 """Read-only discovery of live WYND DEX pairs for the recovery project."""
 from __future__ import annotations
 
-import base64
 import json
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
-import requests
+from neta_core import CosmosClient, fetch_coingecko_prices
 
 LCDS = ["https://juno-api.polkachu.com", "https://juno-api.lavenderfive.com"]
+CLIENT = CosmosClient(LCDS, user_agent="NETA-Reborn-WYND-Discovery/1.0")
 REFERENCE_PAIR = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OUT = Path("docs/diagnostics/wynd_recovery_discovery.json")
 
@@ -28,27 +28,16 @@ PRICE_ASSETS = {
 
 
 def get(path, params=None):
-    errors = []
-    for base in LCDS:
-        try:
-            r = requests.get(base + path, params=params, timeout=45)
-            r.raise_for_status()
-            return r.json(), base
-        except Exception as exc:
-            errors.append(f"{base}: {exc}")
-    raise RuntimeError("; ".join(errors))
+    return CLIENT.get(path, params)
 
 
 def smart(contract, msg):
-    raw = json.dumps(msg, separators=(",", ":")).encode()
-    query = base64.b64encode(raw).decode()
-    data, base = get(f"/cosmwasm/wasm/v1/contract/{contract}/smart/{query}")
-    return data.get("data", data), base
+    return CLIENT.smart(contract, msg)
 
 
 def contract_info(contract):
-    data, _ = get(f"/cosmwasm/wasm/v1/contract/{contract}")
-    return data.get("contract_info", data)
+    data, _ = CLIENT.contract_info(contract)
+    return data
 
 
 def token_info(contract):
@@ -72,26 +61,7 @@ def native_meta(denom):
 
 
 def fetch_prices():
-    ids = sorted({coin_id for _, coin_id in PRICE_ASSETS.values()})
-    errors = []
-    try:
-        r = requests.get("https://api.coingecko.com/api/v3/simple/price", params={"ids": ",".join(ids), "vs_currencies": "usd"}, timeout=45)
-        r.raise_for_status()
-        data = r.json()
-        prices = {coin_id: Decimal(str(data[coin_id]["usd"])) for coin_id in ids}
-        return prices, "CoinGecko simple/price", datetime.now(timezone.utc).isoformat()
-    except Exception as exc:
-        errors.append(f"CoinGecko: {exc}")
-    try:
-        coins = ",".join("coingecko:" + coin_id for coin_id in ids)
-        r = requests.get("https://coins.llama.fi/prices/current/" + coins, timeout=45)
-        r.raise_for_status()
-        data = r.json()["coins"]
-        prices = {coin_id: Decimal(str(data["coingecko:" + coin_id]["price"])) for coin_id in ids}
-        return prices, "DefiLlama price API (CoinGecko identifiers)", datetime.now(timezone.utc).isoformat()
-    except Exception as exc:
-        errors.append(f"DefiLlama: {exc}")
-    raise RuntimeError("price lookup failed: " + "; ".join(errors))
+    return fetch_coingecko_prices(coin_id for _, coin_id in PRICE_ASSETS.values())
 
 
 def asset_key(info):
