@@ -418,3 +418,16 @@ Read this checkpoint first. Then:
 4. update this checkpoint with the evidence;
 5. create and show the user a frontend draft **before** changing production;
 6. do not publish until the user explicitly approves the draft.
+
+
+## Global Matrix blackout effect — DEPLOYED 2026-09-13
+
+- Shared assets: `matrix-blackout.css` and `matrix-blackout.js`.
+- Enabled on every current public HTML page: `index.html`, `map-of-neta.html`, `neta-dao.html` and `what-is-neta.html`.
+- Effect sequence: four seconds of dense green Matrix rain using binary digits and NETA/Juno ecosystem letters, followed by exactly two seconds of complete black screen.
+- Automatic starts are globally rate-limited to at least 60 seconds apart using a persisted timestamp, including across page navigation.
+- The fixed ON/OFF control persists the user's choice across subpages.
+- The overlay is layout-neutral and does not replace DOM content, change scroll position, reset forms or interrupt page state.
+- The effect defers while the tab is hidden or an open dialog/ARIA modal is present.
+- Other application code can pause/resume it with `neta:blackout-pause` and `neta:blackout-resume` window events; recovery wallet approval and transaction flows must use these hooks.
+- `prefers-reduced-motion: reduce` disables the effect and its control completely.
