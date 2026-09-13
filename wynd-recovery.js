@@ -189,7 +189,6 @@ async function loadPosition(pool,address){
     locked:byPeriod.reduce((sum,row)=>sum+row.locked,0n),
     claimable:claims.claimable,unbonding:claims.unbonding,byPeriod,
   };
-  positions.set(pool.pair.address,result);
   return result;
 }
 
@@ -381,7 +380,8 @@ async function retryPool(pool,address,generation){
   updatePositionSummary(address,generation);
   try{
     const [check,position]=await Promise.all([verifyContracts(pool,true),loadPosition(pool,address)]);
-    if(generation!==queryGeneration)return;
+    if(generation!==queryGeneration||address!==viewedAddress)return;
+    positions.set(pool.pair.address,position);
     card.dataset.queryState="success";
     badge.textContent=check.valid?"LIVE CODE OK":"CODE MISMATCH";
     badge.classList.toggle("invalid",!check.valid);
@@ -414,7 +414,8 @@ async function refreshPositions(address){
     card.querySelector('[data-field="query-error"]').innerHTML="";
     try{
       const [check,position]=await Promise.all([verifyContracts(pool),loadPosition(pool,address)]);
-      if(generation!==queryGeneration)return;
+      if(generation!==queryGeneration||address!==viewedAddress)return;
+      positions.set(pool.pair.address,position);
       badge.textContent=check.valid?"LIVE CODE OK":"CODE MISMATCH";
       badge.classList.toggle("invalid",!check.valid);
       card.dataset.queryState="success";

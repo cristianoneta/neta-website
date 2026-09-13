@@ -38,7 +38,7 @@ for required in [
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=1',
-    'wynd-recovery.js?v=20260913-9',
+    'wynd-recovery.js?v=20260913-10',
     'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
 ]:
     assert required in html, required
