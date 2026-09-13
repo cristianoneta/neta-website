@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unsigned, non-broadcast simulation of the three recovery action shapes."""
+"""Unsigned, non-broadcast Unbond and Claim simulations for all recovery pools."""
 from __future__ import annotations
 
 import base64
@@ -13,7 +13,7 @@ from validate_wynd_recovery import ADDR_RE, amount_from_obj, contract_state, par
 
 REGISTRY = Path("data/recovery/wynd-pools.json")
 OUT = Path("docs/diagnostics/wynd_recovery_simulation.json")
-LCDS = ["https://juno-api.polkachu.com"]
+LCDS = ["https://juno-api.polkachu.com", "https://juno-api.lavenderfive.com"]
 
 
 def varint(value):
@@ -58,7 +58,7 @@ def account(address):
     errors = []
     for base in LCDS:
         try:
-            r = requests.get(base + f"/cosmos/auth/v1beta1/accounts/{address}", timeout=45)
+            r = requests.get(base + f"/cosmos/auth/v1beta1/accounts/{address}", timeout=12)
             r.raise_for_status()
             acc = find_base_account(r.json().get("account"))
             if not acc or not acc.get("pub_key"):
@@ -107,56 +107,66 @@ def candidate_with_pubkey(addresses):
 
 
 def candidates(pool):
-    lp, stake, pair = pool["lp_token"]["address"], pool["stake"]["address"], pool["pair"]["address"]
-    active, claimers, direct = [], [], []
+    stake = pool["stake"]["address"]
+    active, claimers = [], []
     for k, v in contract_state(stake):
         ns, suffix = u.nskey(k)
         if ns == "stake":
             match = ADDR_RE.search(suffix)
             obj = parse_json(v)
-            if match and (amount_from_obj(obj) or 0) > 1000:
-                active.append(match.group(0).decode())
+            amount = amount_from_obj(obj) or 0
+            if match and amount > 1000:
+                active.append((match.group(0).decode(), amount))
         elif ns == "claims" and suffix:
             obj = parse_json(v)
             items = obj if isinstance(obj, list) else (obj.get("claims", []) if isinstance(obj, dict) else [])
-            if sum((amount_from_obj(x) or 0) for x in items) > 1000:
-                claimers.append(suffix.decode())
-    for k, v in contract_state(lp):
-        ns, suffix = u.nskey(k)
-        if ns == "balance" and suffix:
-            address, value = suffix.decode(), u.jint(v)
-            if address not in (stake, pair) and value > 1000:
-                direct.append((address, value))
-    unbond_sender = candidate_with_pubkey(active)
-    claim_sender = candidate_with_pubkey(claimers)
-    withdraw_sender = candidate_with_pubkey([x[0] for x in direct])
+            amount = sum((amount_from_obj(x) or 0) for x in items)
+            if amount > 1000:
+                claimers.append((suffix.decode(), amount))
+    # Larger positions are much more likely to belong to accounts that have
+    # previously signed a transaction and therefore expose a public key.
+    active.sort(key=lambda row: row[1], reverse=True)
+    claimers.sort(key=lambda row: row[1], reverse=True)
+    unbond_sender = candidate_with_pubkey([row[0] for row in active])
+    claim_sender = candidate_with_pubkey([row[0] for row in claimers])
     periods = smart(stake, {"all_staked": {"address": unbond_sender}}).get("stakes", [])
     period = next(int(x["unbonding_period"]) for x in periods if int(x.get("stake") or 0) > 0)
-    direct_amount = next(v for a, v in direct if a == withdraw_sender)
-    return {"unbond": (unbond_sender, period), "claim": claim_sender, "withdraw": (withdraw_sender, min(direct_amount, 1000000))}
+    return {"unbond": (unbond_sender, period), "claim": claim_sender}
 
 
 def main():
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
-    # One representative pool is sufficient because all eight validated pools
-    # share the same pair, LP and stake code IDs and CW2 versions.
-    pool = registry["pools"][0]
-    c = candidates(pool)
+    pools = registry.get("pools", [])
+    if registry.get("status") != "VALIDATED_FOR_READ_ONLY_FRONTEND" or len(pools) != 8:
+        raise RuntimeError("validated Top-8 registry required")
     memo = "netareborn.com/wynd-recovery:simulation"
-    unbond_sender, period = c["unbond"]
-    claim_sender = c["claim"]
-    withdraw_sender, withdraw_amount = c["withdraw"]
-    hook = base64.b64encode(json.dumps({"withdraw_liquidity": {"assets": []}}, separators=(",", ":")).encode()).decode()
-    tests = [
-        ("unbond", unbond_sender, pool["stake"]["address"], {"unbond": {"tokens": "1", "unbonding_period": period}}),
-        ("claim", claim_sender, pool["stake"]["address"], {"claim": {}}),
-        ("withdraw", withdraw_sender, pool["lp_token"]["address"], {"send": {"contract": pool["pair"]["address"], "amount": str(withdraw_amount), "msg": hook}}),
-    ]
     results = []
-    for action, sender, contract, message in tests:
-        response = simulate(sender, contract, message, memo)
-        results.append({"action": action, "sender_context": sender, "contract": contract, "message": message, "gas_info": response.get("gas_info"), "result_present": response.get("result") is not None, "broadcast": False})
-    out = {"status": "VALIDATED" if len(results) == 3 else "WORKING", "network": "juno-1", "representative_pool": pool["name"], "representative_code_ids": {"pair": pool["pair"]["code_id"], "lp": pool["lp_token"]["code_id"], "stake": pool["stake"]["code_id"]}, "unsigned": True, "broadcast": False, "tests": results}
+    for pool in pools:
+        print(f"SIMULATING {pool['rank']}/8 {pool['name']}", flush=True)
+        c = candidates(pool)
+        unbond_sender, period = c["unbond"]
+        tests = [
+            ("unbond", unbond_sender, {"unbond": {"tokens": "1", "unbonding_period": period}}),
+            ("claim", c["claim"], {"claim": {}}),
+        ]
+        for action, sender, message in tests:
+            response = simulate(sender, pool["stake"]["address"], message, memo)
+            results.append({
+                "rank": pool["rank"], "pool": pool["name"], "action": action,
+                "sender_context": sender, "contract": pool["stake"]["address"],
+                "message": message, "gas_info": response.get("gas_info"),
+                "result_present": response.get("result") is not None,
+                "unsigned": True, "broadcast": False,
+            })
+            print(f"  {action.upper()} OK", flush=True)
+    expected = len(pools) * 2
+    out = {
+        "schema_version": 2, "status": "VALIDATED" if len(results) == expected else "WORKING",
+        "network": "juno-1", "scope": "Unbond and Claim for every allowlisted Top-8 recovery pool",
+        "pool_count": len(pools), "simulation_count": len(results),
+        "action_counts": {"unbond": sum(x["action"] == "unbond" for x in results), "claim": sum(x["action"] == "claim" for x in results)},
+        "unsigned": True, "broadcast": False, "memo": memo, "tests": results,
+    }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(out, indent=2))

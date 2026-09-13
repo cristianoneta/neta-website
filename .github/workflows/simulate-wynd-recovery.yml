@@ -2,19 +2,21 @@ name: Simulate WYND recovery actions
 
 on:
   workflow_dispatch:
-  push:
-    branches: [diagnostic/wynd-recovery-discovery]
+  pull_request:
+    branches: [main]
     paths:
       - ".github/workflows/simulate-wynd-recovery.yml"
       - "scripts/simulate_wynd_recovery.py"
+      - "scripts/test_wynd_recovery_simulation.py"
+      - "data/recovery/wynd-pools.json"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   simulate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -28,17 +30,16 @@ jobs:
         run: |
           mkdir -p docs/diagnostics
           set -o pipefail
-          python scripts/simulate_wynd_recovery.py 2>&1 | tee docs/diagnostics/latest_wynd_recovery_simulation.log
-      - name: Persist evidence
+          PYTHONPATH=scripts python scripts/test_wynd_recovery_simulation.py
+          PYTHONPATH=scripts python scripts/simulate_wynd_recovery.py 2>&1 | tee docs/diagnostics/latest_wynd_recovery_simulation.log
+      - uses: actions/upload-artifact@v4
         if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/diagnostics/latest_wynd_recovery_simulation.log
-          if [ -f docs/diagnostics/wynd_recovery_simulation.json ]; then git add docs/diagnostics/wynd_recovery_simulation.json; fi
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Record unsigned recovery simulations"
-          git push
+        with:
+          name: wynd-recovery-all-pool-simulation
+          path: |
+            docs/diagnostics/latest_wynd_recovery_simulation.log
+            docs/diagnostics/wynd_recovery_simulation.json
+          retention-days: 30
       - name: Fail if simulation failed
         if: always() && steps.simulation.outcome != 'success'
         run: exit 1

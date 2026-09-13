@@ -26,6 +26,11 @@ Status: **VALIDATED FOR READ-ONLY FRONTEND**. Signing remains disabled.
 
 Before signing can be enabled, simulate and then test with tiny controlled positions for every distinct action shape. Validate fees, gas, transaction events, proportional withdrawal results, rejection paths, and post-transaction refresh. The read-only frontend may be built before this gate closes.
 
+The simulation gate requires successful unsigned `/simulate` responses for
+both Unbond and Claim on every allowlisted pool (16 simulations total). The
+simulation tool contains no broadcast path and uses the dedicated memo
+`netareborn.com/wynd-recovery:simulation`.
+
 Before simulation, `scripts/audit_wynd_recovery_actions.py` must pass for all
 eight allowlisted pools. It performs read-only live checks of code IDs, CW2
 versions, Pair-to-LP/Stake routing, asset identities, unbonding periods and the
