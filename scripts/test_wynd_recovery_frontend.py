@@ -37,8 +37,8 @@ for required in [
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
-    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=1',
-    'wynd-recovery.js?v=20260913-11',
+    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=2',
+    'wynd-recovery.js?v=20260913-12',
     'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
 ]:
     assert required in html, required
@@ -48,6 +48,7 @@ for required in [
     'enabled:false', 'chainId:"juno-1"', 'gasPrice:"0.075ujuno"',
     'gasAdjustment:1.4', 'unbond:500000', 'claim:500000', 'withdraw:700000',
     'memo:"netareborn.com/wynd-recovery:v1"', 'writable:false', 'configurable:false',
+    'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:"1000000",maxNetaRaw:"10200"',
 ]:
     assert required in signing_config, required
 assert 'src="assets/recovery-signing-client.js' not in html
