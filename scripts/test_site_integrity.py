@@ -48,6 +48,12 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.yml"):
     for reference in ACTION_REF.findall(workflow.read_text(encoding="utf-8")):
         assert FULL_SHA.fullmatch(reference), f"{workflow.name}: action is not pinned to a full commit SHA: {reference}"
 
+assert (ROOT / ".github/workflows/ci.yml").is_file()
+assert not (ROOT / ".github/workflows/test-site-integrity.yml").exists()
+assert not (ROOT / ".github/workflows/test-wynd-recovery-frontend.yml").exists()
+onchain_workflow = (ROOT / ".github/workflows/update-neta-data.yml").read_text(encoding="utf-8")
+assert 'pull_request:\n    branches: [main]\n    paths:' in onchain_workflow
+
 expected_nav = {href for href, _ in NAVIGATION}
 for page in PAGES:
     parser = PageParser()
