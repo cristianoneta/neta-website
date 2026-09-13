@@ -48,6 +48,33 @@
   production configuration. CI proves that the adapter builds, but the disabled
   release omits the large generated bundle entirely. Adding that artifact and
   enabling the flag therefore require a later explicit review.
+- The compact address index stores each economic wallet row once and maps both
+  Juno and Osmosis aliases to that canonical object. Browser tests enforce alias
+  identity and a two-megabyte size ceiling.
+- Signing also requires a frozen single-action pilot scope: exact Juno wallet,
+  allowlisted pair, action and positive raw-amount cap. The empty production
+  scope fails closed even if the global feature flag were changed accidentally.
+
+## Browser security boundary
+
+- Snapshot and chain data is rendered with DOM creation plus `textContent`; the
+  browser code must not use `innerHTML` or `insertAdjacentHTML`.
+- Every page ships the same Content Security Policy. Scripts are restricted to
+  same-origin assets, network access is limited to the declared Juno endpoints,
+  and objects, framing bases and arbitrary form targets are disabled.
+- Inline styles remain temporarily allowed because the shared Matrix canvas
+  updates dimensions at runtime. Removing that exception is the next CSP
+  tightening opportunity.
+
+## Pull-request and workflow model
+
+- `main` is protected by a repository ruleset against force-push and deletion.
+- Pull requests use one consolidated `Test website` workflow for integrity,
+  recovery safety, signing-gate, syntax, build and Playwright coverage.
+- Superseded runs for the same PR/ref are cancelled. Data workflows only run for
+  their owning files and keep scheduled/manual production writes serialized.
+- Third-party Actions are pinned to full commit SHAs. Dependabot updates are
+  reviewed and merged through the same protected-branch flow.
 
 ## Refactor rules
 

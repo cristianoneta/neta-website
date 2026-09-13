@@ -707,3 +707,56 @@ Immediate next-chat instruction:
   rank and total NETA, View My Rank, Copy Address and Disconnect This Site.
   Disconnect clears local state and connected authority everywhere; permanent
   site-permission revocation remains a separate action inside Keplr.
+
+## Security and maintainability pass — COMPLETED 2026-09-13
+
+The seven-item hardening sequence was executed through reviewed pull requests:
+
+1. Recovery refreshes use generation ownership so an older, slower address
+   query cannot overwrite a newer wallet or manual-address result (PR #15).
+2. Browser coverage now exercises rapid address changes and disconnect during
+   recovery lookup; disconnect removes action authority while preserving valid
+   read-only results (PR #16).
+3. GitHub Actions permissions and third-party Action pins were hardened, and a
+   repository ruleset protects `main` from deletion and force-push (PR #17).
+4. The address index uses one canonical row per wallet with Juno/Osmosis alias
+   maps. Its size fell from about 6.44 MB to about 1.47 MB; CI enforces a 2 MB
+   ceiling and alias identity (PR #25).
+5. Data-dependent `innerHTML` was removed from browser code. All pages now share
+   a CSP; malicious snapshot labels are tested as inert text (PR #26).
+6. Website checks were consolidated into one PR workflow with cancellation of
+   superseded runs and narrower data-workflow triggers (PR #27). Current pinned
+   Action runtimes were integrated in PR #28; Playwright and Requests updates
+   landed through PRs #22 and #29. Superseded Dependabot PRs #18–#21 and #23
+   were closed with explanations.
+7. The controlled live-test path now has a second fail-closed gate requiring one
+   exact test wallet, allowlisted pair, action and positive raw LP limit. It is
+   checked before exposing execution and immediately before execution (PR #30).
+
+Current verification: site integrity, recovery frontend safety, signing-gate
+tests, JavaScript syntax and all 15 Playwright scenarios pass. The public
+configuration still has `enabled:false`, an empty pilot scope, and no generated
+signing bundle. Therefore no signature or broadcast is reachable in production.
+
+### Remaining live-test gate
+
+Unsigned action-schema audits and 24/24 all-pool simulations are complete. A
+real broadcast cannot be performed without a consenting Juno wallet holding a
+tiny direct/staked LP position plus enough JUNO for fees. When such a position
+exists, follow `docs/recovery/WYND_RECOVERY_STATE_MACHINE.md` one action at a
+time: authorize only that wallet/pool/action/amount, review the dedicated PR,
+verify Keplr's preview, record transaction hash/events/gas and reconcile the
+before/after chain state. Disable the pilot again between Unbond, matured Claim
+and Withdraw tests. General user signing remains out of scope until all three
+live tests and cancellation/rejection paths pass.
+
+### Current source of truth
+
+- Production branch: `main`; historical draft-branch instructions above are
+  retained as chronology and are no longer the continuation point.
+- Component boundaries and invariants: `docs/ARCHITECTURE.md`.
+- Recovery transitions and pilot procedure:
+  `docs/recovery/WYND_RECOVERY_STATE_MACHINE.md`.
+- Primary regression workflow: `.github/workflows/ci.yml` (`Test website`).
+- Continue from this section and current `main`, not from the older instruction
+  to inspect `diagnostic/wynd-recovery-discovery`.
