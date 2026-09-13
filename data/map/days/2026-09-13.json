@@ -1,0 +1,60 @@
+{
+  "date": "2026-09-13",
+  "events": [
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 70497083,
+      "id": "osmosis:5134E17E2EFBBC712D8AB42C7192340F1666EB43B93DF6FAE8A748966655D2EC:pool631:33",
+      "market": "pool-631",
+      "neta_raw": 1238287,
+      "timestamp": "2026-09-13T14:10:29Z",
+      "txhash": "5134E17E2EFBBC712D8AB42C7192340F1666EB43B93DF6FAE8A748966655D2EC",
+      "type": "swap",
+      "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+      "wallet_id": "4f80c2053dce69ab6e8309fece92a97c3a029a75"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 70497120,
+      "id": "osmosis:A2B5838631C50815E7E1CDBD1A286980CCCA8B8B18D3C229906E8210F8D8E47E:pool631:33",
+      "market": "pool-631",
+      "neta_raw": 1364407,
+      "timestamp": "2026-09-13T14:11:15Z",
+      "txhash": "A2B5838631C50815E7E1CDBD1A286980CCCA8B8B18D3C229906E8210F8D8E47E",
+      "type": "swap",
+      "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+      "wallet_id": "4f80c2053dce69ab6e8309fece92a97c3a029a75"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 70497150,
+      "id": "osmosis:E41336D924435D4AE6F5B75238C826F63B55A8BCCF2121DA111F80C4ACB37CAB:pool631:20",
+      "market": "pool-631",
+      "neta_raw": 280743,
+      "timestamp": "2026-09-13T14:11:52Z",
+      "txhash": "E41336D924435D4AE6F5B75238C826F63B55A8BCCF2121DA111F80C4ACB37CAB",
+      "type": "swap",
+      "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+      "wallet_id": "4f80c2053dce69ab6e8309fece92a97c3a029a75"
+    },
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "osmosis",
+      "height": 41722388,
+      "id": "juno:40D7CB95D4B07F8AFF83779BC10E57724ECD0EC2FC38624D791287232D030E27:ibc:13",
+      "neta_raw": 3000000,
+      "receiver": "juno1f7qvypfaee56km5rp8lvay4f0saq9xn49t6mja",
+      "remote_chain": "osmosis",
+      "sender": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+      "timestamp": "2026-09-13T14:12:51Z",
+      "to_chain": "juno",
+      "txhash": "40D7CB95D4B07F8AFF83779BC10E57724ECD0EC2FC38624D791287232D030E27",
+      "type": "ibc"
+    }
+  ]
+}

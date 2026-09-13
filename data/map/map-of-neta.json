@@ -17,7 +17,7 @@
   "flows": {
     "discovered_chains": [
       {
-        "events": 1,
+        "events": 2,
         "id": "osmosis",
         "movement_verified": true,
         "name": "Osmosis",
@@ -25,23 +25,31 @@
       }
     ],
     "juno_to_osmosis_neta": 0.0,
-    "net_to_osmosis_neta": -1.0,
-    "osmosis_to_juno_neta": 1.0,
+    "net_to_osmosis_neta": -4.0,
+    "osmosis_to_juno_neta": 4.0,
     "routes": [
       {
         "from_chain": "osmosis",
-        "neta": 1.0,
+        "neta": 4.0,
         "to_chain": "juno",
-        "transfers": 1
+        "transfers": 2
       }
     ],
-    "transfers": 1,
-    "volume_neta": 1.0
+    "transfers": 2,
+    "volume_neta": 4.0
   },
-  "generated_at": "2026-09-13T13:27:42.728673Z",
+  "generated_at": "2026-09-13T14:46:14.613426Z",
   "market": {
-    "power_buyers": [],
-    "swaps": 1,
+    "power_buyers": [
+      {
+        "bought_neta": 2.883437,
+        "net_neta": 2.883437,
+        "sold_neta": 0.0,
+        "swaps": 3,
+        "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn"
+      }
+    ],
+    "swaps": 4,
     "top_sellers": [
       {
         "bought_neta": 0.0,
@@ -55,7 +63,7 @@
   "periods": {
     "24h": {
       "available": false,
-      "coverage_percent": 80.71
+      "coverage_percent": 86.17
     },
     "30d": {
       "available": false
