@@ -32,7 +32,7 @@ jobs:
           set -o pipefail
           PYTHONPATH=scripts python scripts/test_wynd_recovery_simulation.py
           PYTHONPATH=scripts python scripts/simulate_wynd_recovery.py 2>&1 | tee docs/diagnostics/latest_wynd_recovery_simulation.log
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: wynd-recovery-all-pool-simulation
