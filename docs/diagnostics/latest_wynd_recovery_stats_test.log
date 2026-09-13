@@ -1,2 +1,7 @@
 WYND recovery stats parser tests passed
-{"status": "VALID", "pool_count": 8, "memo": "netareborn.com/wynd-recovery:v1"}
+{
+  "status": "COLLECTING",
+  "last_height": 41723155,
+  "new_tagged_events": 0,
+  "total_events": 0
+}

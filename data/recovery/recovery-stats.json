@@ -1,10 +1,75 @@
 {
-  "schema_version": 1,
-  "status": "NOT_STARTED_DRAFT",
-  "memo_tag": "netareborn.com/wynd-recovery:v1",
-  "collection_started_at": null,
-  "updated_at": null,
-  "valuation_policy": "LP share of live pool reserves valued at the first successful collector run after confirmation; source and timestamp retained per event.",
+  "collection_started_at": "2026-09-13T14:48:31.781583Z",
   "double_count_notice": "Unstaked and Claimed are separate milestones and must not be added as unique recovered value.",
-  "pools": {}
+  "juno_endpoint": "https://juno-api.polkachu.com",
+  "juno_last_height": 41723155,
+  "memo_tag": "netareborn.com/wynd-recovery:v1",
+  "pools": {
+    "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "WYND / ATOM",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "ujuno / ATOM",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "WYND / USDC",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "WYND / ujuno",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "ujuno / USDC",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "ujuno / NETA",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "WYND / OSMO",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    },
+    "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt": {
+      "claim_transactions": 0,
+      "claimed_usd": 0,
+      "name": "ujuno / OSMO",
+      "unbond_transactions": 0,
+      "unstaked_usd": 0
+    }
+  },
+  "price_source": null,
+  "price_timestamp": null,
+  "schema_version": 1,
+  "status": "COLLECTING",
+  "updated_at": "2026-09-13T14:48:31.781647Z",
+  "validation": {
+    "allowlisted_pairs_only": true,
+    "event_ids_unique": true
+  },
+  "valuation_policy": "LP share of live pool reserves valued at the first successful collector run after confirmation; source and timestamp retained per event."
 }
