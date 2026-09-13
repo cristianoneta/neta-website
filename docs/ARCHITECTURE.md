@@ -5,7 +5,7 @@
 | Layer | Responsibility | Must not do |
 | --- | --- | --- |
 | Browser pages | Render committed snapshots and perform read-only wallet queries | Reconstruct canonical historical valuations |
-| Page scripts | Page-specific interaction and rendering | Copy shared canvas or network infrastructure |
+| Page scripts | Page-specific interaction and rendering | Copy shared shell, canvas or network infrastructure |
 | `scripts/neta_core/` | LCD failover, CosmWasm queries, price lookup and deterministic JSON I/O | Contain NETA/WYND business rules |
 | Collectors | Fetch chain state and build validated snapshots | Publish partially validated output |
 | GitHub Actions | Schedule, test and serialize generated-data commits | Commit routine test logs to `main` |
@@ -36,7 +36,8 @@
 - Add chain transport and external-price behavior to `scripts/neta_core/`; keep
   domain parsers in their collector modules.
 - Prefer one shared browser module for site-wide visual behavior.
+- Generate the static header and footer with `scripts/site_shell.py`; never edit
+  one page's shell in isolation.
 - Generated snapshots are build artifacts with an explicit owning workflow.
 - Every production change must pass syntax checks and the relevant deterministic
   tests before it is merged.
-

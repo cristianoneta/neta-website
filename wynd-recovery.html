@@ -11,20 +11,23 @@
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <header>
-    <a class="logo" href="index.html"><img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span></a>
-    <nav aria-label="Primary navigation">
-      <a href="index.html">RANKING</a>
-      <a href="map-of-neta.html">MAP OF NETA</a>
-      <a href="what-is-neta.html">WHAT IS NETA</a>
-      <a href="neta-dao.html">NETA DAO</a>
-      <a class="active" href="wynd-recovery.html">WYND RECOVERY</a>
-      <a href="#" title="Coming next">VALUE CALCULATOR</a>
-    </nav>
-    <div class="motto">PEOPLE / POWER / PROTOCOL</div>
-  </header>
-
-  <main class="about-page recovery-page">
+<!-- site-header:start -->
+<header>
+  <a class="logo" href="index.html" aria-label="NETA Reborn home">
+    <img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span>
+  </a>
+  <nav aria-label="Primary navigation">
+    <a href="index.html">RANKING</a>
+    <a href="map-of-neta.html">MAP OF NETA</a>
+    <a href="what-is-neta.html">WHAT IS NETA</a>
+    <a href="neta-dao.html">NETA DAO</a>
+    <a class="active" aria-current="page" href="wynd-recovery.html">WYND RECOVERY</a>
+    <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>
+  </nav>
+  <div class="motto">PEOPLE / POWER / PROTOCOL</div>
+</header>
+<!-- site-header:end -->
+<main class="about-page recovery-page">
     <section class="about-hero recovery-hero">
       <div class="about-copy">
         <div class="kicker">NON-CUSTODIAL / JUNO-1 / LEGACY WYND</div>
@@ -90,10 +93,15 @@
       <button class="terminal-button" value="close">CLOSE</button>
     </form>
   </dialog>
-
-  <footer><div>[ NETA ] &nbsp; RECOVER, VERIFY, NEVER TRUST BLINDLY.</div><div>BUILT ON JUNO</div></footer>
-  <script src="matrix-background.js?v=1"></script>
-  <script src="wynd-recovery.js?v=20260913-3" defer></script>
+<!-- site-footer:start -->
+<footer>
+  <div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div>
+  <div>BUILT ON JUNO &amp; OSMOSIS</div>
+</footer>
+<!-- site-footer:end -->
+<script src="matrix-background.js?v=1"></script>
+  <script src="cosmos-client.js?v=1" defer></script>
+  <script src="wynd-recovery.js?v=20260913-4" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
 </html>

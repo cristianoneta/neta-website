@@ -27,6 +27,14 @@ PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_leaderboard.py
 node --check wynd-recovery.js
 ```
 
+The public header and footer are generated from one definition. After changing
+their navigation or wording, render and verify every page with:
+
+```bash
+python scripts/site_shell.py --root .
+python scripts/test_site_integrity.py
+```
+
 ## Data ownership
 
 - `holders.json`, `address_index.json` and their JavaScript mirrors are generated
@@ -50,4 +58,3 @@ and tiny-position tests documented in `docs/recovery/` have passed.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
 the refactor rules.
-
