@@ -111,7 +111,15 @@ function renderLeaderboard(){
     refreshPositions(button.dataset.address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
     $("#address-form").scrollIntoView({behavior:"smooth",block:"center"});
   });
-  $("#leaderboard-updated").textContent=leaderboard?.updated_at?`UPDATED ${new Date(leaderboard.updated_at).toLocaleString()}`:"DAILY SNAPSHOT UNAVAILABLE";
+  setSnapshotTimestamp($("#leaderboard-updated"),leaderboard?.updated_at,"DAILY SNAPSHOT");
+}
+
+function setSnapshotTimestamp(element,value,label){
+  if(!value){element.textContent=`${label} UNAVAILABLE`;element.classList.add("stale");return;}
+  const updated=new Date(value);
+  const stale=Number.isNaN(updated.getTime())||Date.now()-updated.getTime()>36*60*60*1000;
+  element.textContent=`${stale?"STALE · ":""}${label} UPDATED ${updated.toLocaleString()}`;
+  element.classList.toggle("stale",stale);
 }
 
 function classifyClaims(claims){
@@ -404,9 +412,7 @@ async function init(){
   leaderboard=leaderboardResponse.ok?await leaderboardResponse.json():{top_wallets:[]};
   if(registry.status!=="VALIDATED_FOR_READ_ONLY_FRONTEND"||registry.pools.length!==8)throw new Error("REGISTRY VALIDATION FAILED");
   if(blockResult.data)chainHeight=Number(blockResult.data.block.header.height);
-  $("#market-updated").textContent=market?.updated_at
-    ?`POOL RESERVES + USD UPDATED ${new Date(market.updated_at).toLocaleString()}`
-    :"DAILY MARKET SNAPSHOT PENDING";
+  setSnapshotTimestamp($("#market-updated"),market?.updated_at,"POOL RESERVES + USD");
   renderImpact();
   renderPools();
   renderLeaderboard();

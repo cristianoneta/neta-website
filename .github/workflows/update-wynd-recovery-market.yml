@@ -9,6 +9,11 @@ on:
     paths:
       - ".github/workflows/update-wynd-recovery-market.yml"
       - "scripts/update_wynd_recovery_market.py"
+      - "scripts/update_wynd_recovery_leaderboard.py"
+      - "scripts/validate_wynd_recovery_snapshots.py"
+      - "scripts/test_wynd_recovery_market.py"
+      - "scripts/test_wynd_recovery_leaderboard.py"
+      - "scripts/test_wynd_recovery_snapshots.py"
       - "data/recovery/wynd-pools.json"
 
 permissions:
@@ -31,8 +36,11 @@ jobs:
       - run: PYTHONPATH=scripts python scripts/test_neta_core.py
       - run: PYTHONPATH=scripts python scripts/test_wynd_recovery_market.py
       - run: PYTHONPATH=scripts python scripts/test_wynd_recovery_leaderboard.py
+      - run: PYTHONPATH=scripts python scripts/test_wynd_recovery_snapshots.py
       - run: python scripts/update_wynd_recovery_market.py --root .
       - run: PYTHONPATH=scripts python scripts/update_wynd_recovery_leaderboard.py --root .
+      - name: Validate atomic daily snapshot
+        run: PYTHONPATH=scripts python scripts/validate_wynd_recovery_snapshots.py --root .
       - name: Persist daily market snapshot
         run: |
           git config user.name "github-actions[bot]"

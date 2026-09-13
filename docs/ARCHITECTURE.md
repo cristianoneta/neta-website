@@ -43,5 +43,10 @@
 - Generate the static header and footer with `scripts/site_shell.py`; never edit
   one page's shell in isolation.
 - Generated snapshots are build artifacts with an explicit owning workflow.
+- The WYND market and economic-owner leaderboard are published as one daily
+  snapshot unit. Publication fails unless both cover the exact registry Top 8,
+  share the same market timestamp, pass LP-supply conservation checks and the
+  market data is no more than 36 hours old. The frontend labels older retained
+  snapshots as stale instead of silently presenting them as current.
 - Every production change must pass syntax checks and the relevant deterministic
   tests before it is merged.
