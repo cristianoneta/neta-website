@@ -23,6 +23,8 @@ PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_stats.py
 PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_market.py
 PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_leaderboard.py
 .venv/bin/python scripts/test_wynd_recovery_frontend.py
+.venv/bin/python scripts/test_recovery_signing_gate.py
+.venv/bin/python scripts/test_site_integrity.py
 .venv/bin/python scripts/test_map_chain_detection.py
 node --check wynd-recovery.js
 npm ci
@@ -58,6 +60,10 @@ test logs back to `main`.
 The recovery UI is intentionally fail-closed and read-only. Transaction signing
 must remain disabled until the controlled simulations, ownership reconciliation
 and tiny-position tests documented in `docs/recovery/` have passed.
+
+The dormant execution path additionally requires one exact pilot wallet, pool,
+action and raw-amount limit. General signing cannot be enabled by changing a
+single boolean. No private key or seed phrase is ever requested by the site.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
 the refactor rules.
