@@ -1,15 +1,99 @@
 {
   "action_counts": {
     "claim": 8,
-    "unbond": 8
+    "unbond": 8,
+    "withdraw": 8
   },
   "broadcast": false,
   "memo": "netareborn.com/wynd-recovery:simulation",
   "network": "juno-1",
   "pool_count": 8,
-  "schema_version": 2,
-  "scope": "Unbond and Claim for every allowlisted Top-8 recovery pool",
-  "simulation_count": 16,
+  "rejection_count": 5,
+  "rejections": [
+    {
+      "broadcast": false,
+      "case": "unbond_invalid_period",
+      "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "error": {
+        "code": 2,
+        "message": "failed to execute message; message index: 0: No unbonding period found: 1: execute wasm contract failed [CosmWasm/wasmd@v0.61.11/x/wasm/keeper/keeper.go:452] with gas used: '131698'"
+      },
+      "message": {
+        "unbond": {
+          "tokens": "1",
+          "unbonding_period": 1
+        }
+      },
+      "rejected": true,
+      "unsigned": true
+    },
+    {
+      "broadcast": false,
+      "case": "unbond_exceeds_position",
+      "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "error": {
+        "code": 2,
+        "message": "failed to execute message; message index: 0: Overflow: Cannot Sub with 9386979509 and 9386979510: execute wasm contract failed [CosmWasm/wasmd@v0.61.11/x/wasm/keeper/keeper.go:452] with gas used: '147178'"
+      },
+      "message": {
+        "unbond": {
+          "tokens": "9386979510",
+          "unbonding_period": 1209600
+        }
+      },
+      "rejected": true,
+      "unsigned": true
+    },
+    {
+      "broadcast": false,
+      "case": "claim_without_position",
+      "contract": "juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg",
+      "error": {
+        "code": 2,
+        "message": "failed to execute message; message index: 0: No claims that can be released currently: execute wasm contract failed [CosmWasm/wasmd@v0.61.11/x/wasm/keeper/keeper.go:452] with gas used: '134938'"
+      },
+      "message": {
+        "claim": {}
+      },
+      "rejected": true,
+      "unsigned": true
+    },
+    {
+      "broadcast": false,
+      "case": "withdraw_exceeds_balance",
+      "contract": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "error": {
+        "code": 2,
+        "message": "failed to execute message; message index: 0: Overflow: Cannot Sub with 1001000000 and 1001000001: execute wasm contract failed [CosmWasm/wasmd@v0.61.11/x/wasm/keeper/keeper.go:452] with gas used: '132039'"
+      },
+      "message": {
+        "send": {
+          "amount": "1001000001",
+          "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "rejected": true,
+      "unsigned": true
+    },
+    {
+      "broadcast": false,
+      "case": "claim_wrong_contract",
+      "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+      "error": {
+        "code": 2,
+        "message": "failed to execute message; message index: 0: Error parsing into type wyndex::pair::ExecuteMsg: unknown variant `claim`, expected one of `receive`, `provide_liquidity`, `swap`, `update_config`, `update_fees`, `propose_new_owner`, `drop_ownership_proposal`, `claim_ownership`, `freeze`: execute wasm contract failed [CosmWasm/wasmd@v0.61.11/x/wasm/keeper/keeper.go:452] with gas used: '129413'"
+      },
+      "message": {
+        "claim": {}
+      },
+      "rejected": true,
+      "unsigned": true
+    }
+  ],
+  "schema_version": 3,
+  "scope": "Unbond, Claim and Withdraw for every allowlisted Top-8 recovery pool plus representative rejection paths",
+  "simulation_count": 24,
   "status": "VALIDATED",
   "tests": [
     {
@@ -50,11 +134,32 @@
       "unsigned": true
     },
     {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",
+      "gas_info": {
+        "gas_used": "321200",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "ujuno / ATOM",
+      "rank": 1,
+      "result_present": true,
+      "sender_context": "juno14xgdfdnpjtulj6p7rkc75ekxqjq8hc5cg5evx3",
+      "unsigned": true
+    },
+    {
       "action": "unbond",
       "broadcast": false,
       "contract": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
       "gas_info": {
-        "gas_used": "236006",
+        "gas_used": "235928",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -74,7 +179,7 @@
       "broadcast": false,
       "contract": "juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk",
       "gas_info": {
-        "gas_used": "221645",
+        "gas_used": "221567",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -87,11 +192,32 @@
       "unsigned": true
     },
     {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",
+      "gas_info": {
+        "gas_used": "321061",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "ujuno / USDC",
+      "rank": 2,
+      "result_present": true,
+      "sender_context": "juno1wenyhfu7e3yt2ku9mxzcuyvta3fgfardacp87x",
+      "unsigned": true
+    },
+    {
       "action": "unbond",
       "broadcast": false,
       "contract": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
       "gas_info": {
-        "gas_used": "234245",
+        "gas_used": "234273",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -103,7 +229,7 @@
       "pool": "ujuno / OSMO",
       "rank": 3,
       "result_present": true,
-      "sender_context": "juno1853wyy4v2y776850hevqgyu5c8md72z4se5mey",
+      "sender_context": "juno1la4t7jee73a4zqg9ccs2acjt462qjs5xqdnw5z",
       "unsigned": true
     },
     {
@@ -111,7 +237,7 @@
       "broadcast": false,
       "contract": "juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2",
       "gas_info": {
-        "gas_used": "221779",
+        "gas_used": "221701",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -124,11 +250,32 @@
       "unsigned": true
     },
     {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",
+      "gas_info": {
+        "gas_used": "321228",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "ujuno / OSMO",
+      "rank": 3,
+      "result_present": true,
+      "sender_context": "juno175q6smvgnuec5e62rs4chnu5cs8d98q2xgf4rx",
+      "unsigned": true
+    },
+    {
       "action": "unbond",
       "broadcast": false,
       "contract": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
       "gas_info": {
-        "gas_used": "235412",
+        "gas_used": "235256",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -148,7 +295,7 @@
       "broadcast": false,
       "contract": "juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8",
       "gas_info": {
-        "gas_used": "222170",
+        "gas_used": "222092",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -161,11 +308,32 @@
       "unsigned": true
     },
     {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",
+      "gas_info": {
+        "gas_used": "391809",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "WYND / USDC",
+      "rank": 4,
+      "result_present": true,
+      "sender_context": "juno19cs7du6lsxe5awgp0zjx52rjkw5qrzkhdhthj9",
+      "unsigned": true
+    },
+    {
       "action": "unbond",
       "broadcast": false,
       "contract": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
       "gas_info": {
-        "gas_used": "234141",
+        "gas_used": "234297",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -185,7 +353,7 @@
       "broadcast": false,
       "contract": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
       "gas_info": {
-        "gas_used": "221428",
+        "gas_used": "221663",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -194,7 +362,28 @@
       "pool": "ujuno / NETA",
       "rank": 5,
       "result_present": true,
-      "sender_context": "juno1xvr2seyuzcxqhxjftgvanvuvs2r0mvjtvyp09y",
+      "sender_context": "juno1vjrx0lks65yefnsz4xk92vugda2z25esjfhlxa",
+      "unsigned": true
+    },
+    {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",
+      "gas_info": {
+        "gas_used": "376745",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "ujuno / NETA",
+      "rank": 5,
+      "result_present": true,
+      "sender_context": "juno14xgdfdnpjtulj6p7rkc75ekxqjq8hc5cg5evx3",
       "unsigned": true
     },
     {
@@ -202,7 +391,7 @@
       "broadcast": false,
       "contract": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
       "gas_info": {
-        "gas_used": "237840",
+        "gas_used": "237762",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -222,7 +411,7 @@
       "broadcast": false,
       "contract": "juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf",
       "gas_info": {
-        "gas_used": "221867",
+        "gas_used": "221711",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -235,11 +424,32 @@
       "unsigned": true
     },
     {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1stg339rrg9guqsuv205yayq2ttzwz4583luc9pznvexe7rtrtrksdxstg3",
+      "gas_info": {
+        "gas_used": "380951",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "WYND / ujuno",
+      "rank": 6,
+      "result_present": true,
+      "sender_context": "juno18uj6ddsmcen60nclskmvz33gw82jtyd42s4646",
+      "unsigned": true
+    },
+    {
       "action": "unbond",
       "broadcast": false,
       "contract": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
       "gas_info": {
-        "gas_used": "234615",
+        "gas_used": "234381",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -259,7 +469,7 @@
       "broadcast": false,
       "contract": "juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p",
       "gas_info": {
-        "gas_used": "221804",
+        "gas_used": "221525",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -268,7 +478,28 @@
       "pool": "WYND / ATOM",
       "rank": 7,
       "result_present": true,
-      "sender_context": "juno1tl9g9r7feqjvwe4y8ejeqqnw4hrr2h9lqelz3u",
+      "sender_context": "juno1r45qzlt8gy3w404xa47t7fkfafgkqd7ue9ma52",
+      "unsigned": true
+    },
+    {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1k5vhzkssgh35zlv9hqaasetslgqyal6jane86umrqvrjav9eg3hq3pxa0l",
+      "gas_info": {
+        "gas_used": "391511",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "WYND / ATOM",
+      "rank": 7,
+      "result_present": true,
+      "sender_context": "juno16a24tysqtre4234lafk75ptawyr4yqwp0cjv56",
       "unsigned": true
     },
     {
@@ -276,7 +507,7 @@
       "broadcast": false,
       "contract": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
       "gas_info": {
-        "gas_used": "235108",
+        "gas_used": "235186",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -296,7 +527,7 @@
       "broadcast": false,
       "contract": "juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy",
       "gas_info": {
-        "gas_used": "221624",
+        "gas_used": "221780",
         "gas_wanted": "100000000"
       },
       "message": {
@@ -306,6 +537,27 @@
       "rank": 8,
       "result_present": true,
       "sender_context": "juno17gdg8l8llr53nykezlxv6hpds3nhgr6eqd7myz",
+      "unsigned": true
+    },
+    {
+      "action": "withdraw",
+      "broadcast": false,
+      "contract": "juno1dx6djxrsr4f4mqjn3vsp6v0yrg78stv3d8qyp66k209qmzn7r3eqne7mwf",
+      "gas_info": {
+        "gas_used": "391671",
+        "gas_wanted": "100000000"
+      },
+      "message": {
+        "send": {
+          "amount": "1000000",
+          "contract": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
+          "msg": "eyJ3aXRoZHJhd19saXF1aWRpdHkiOnsiYXNzZXRzIjpbXX19"
+        }
+      },
+      "pool": "WYND / OSMO",
+      "rank": 8,
+      "result_present": true,
+      "sender_context": "juno127pdm2umuvppet63lezvjv5flrvfyjrqwqdztc",
       "unsigned": true
     }
   ],

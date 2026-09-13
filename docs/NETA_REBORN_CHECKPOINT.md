@@ -647,10 +647,11 @@ Immediate next-chat instruction:
 
 ## WYND Recovery all-pool unsigned simulation — 2026-09-13
 
-- The simulation gate was expanded from one representative pool to all eight allowlisted pools.
-- Result: `16/16 VALIDATED` — one live-state Unbond and one live-state Claim simulation for every pool.
+- The simulation gate covers all three action shapes across all eight allowlisted pools.
+- Result: `24/24 VALIDATED` — one live-state Unbond, Claim and Withdraw simulation for every pool.
+- Five representative unsafe cases were also rejected as required: invalid unbonding period, Unbond above the available stake, Claim without a releasable claim, Withdraw above the direct LP balance and Claim sent to the Pair instead of the Stake contract.
 - All requests used Juno's `/cosmos/tx/v1beta1/simulate` endpoint with an empty dummy signature; no private key, Keplr approval or broadcast was involved.
-- Observed gas used was approximately `221k–238k` across the 16 successful simulations.
+- Observed gas used was approximately `221k–238k` for Unbond/Claim and `321k–392k` for Withdraw.
 - The dedicated memo remains `netareborn.com/wynd-recovery:simulation` so simulations cannot be counted by the public recovery collector.
 - Evidence: `docs/diagnostics/wynd_recovery_simulation.json`.
 - Signing remains disabled. The next gate is a controlled tiny-position broadcast test, including rejection paths and post-transaction state refresh.
