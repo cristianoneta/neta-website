@@ -54,6 +54,11 @@
 - Signing also requires a frozen single-action pilot scope: exact Juno wallet,
   allowlisted pair, action and positive raw-amount cap. The empty production
   scope fails closed even if the global feature flag were changed accidentally.
+- The temporary JUNO/NETA liquidity pilot is separately wallet-scoped and
+  hard-disabled. Its two messages are simulated atomically: a capped CW20
+  allowance followed by `provide_liquidity` carrying exactly 1 JUNO. The live
+  reserve ratio, balances, contract identities and gas are rechecked before any
+  future Keplr prompt.
 
 ## Browser security boundary
 
