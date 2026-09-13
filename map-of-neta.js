@@ -1,6 +1,17 @@
 const $=s=>document.querySelector(s),fmt=(n,d=0)=>new Intl.NumberFormat("en-US",{maximumFractionDigits:d}).format(Number(n||0));
 function short(a){return a&&a.length>18?a.slice(0,9)+"…"+a.slice(-5):a||"—"}
-function renderMovers(id,rows,positive){const el=$(id);el.innerHTML=rows.length?rows.map((r,i)=>`<li><span>${i+1}</span><span title="${r.wallet||""}">${short(r.wallet)}</span><span class="mover-value">${positive?"+":""}${fmt(r.net_neta,6)} NETA</span></li>`).join(""):`<li class="empty-mover">No verified activity collected yet.</li>`}
+function moverWallet(address){
+  const value=typeof address==="string"?address:"";
+  if(!/^osmo1[0-9a-z]{38}$/.test(value)){
+    const label=document.createElement("span");label.className="mover-wallet";label.textContent=short(value);return label;
+  }
+  const link=document.createElement("a");link.className="mover-wallet";link.href=`https://www.mintscan.io/osmosis/address/${encodeURIComponent(value)}`;link.target="_blank";link.rel="noopener noreferrer";link.title=value;link.setAttribute("aria-label",`Open ${value} on Mintscan`);link.textContent=short(value);return link;
+}
+function renderMovers(id,rows,positive){
+  const el=$(id);el.replaceChildren();
+  if(!rows.length){const empty=document.createElement("li");empty.className="empty-mover";empty.textContent="No verified activity collected yet.";el.append(empty);return}
+  rows.forEach((r,i)=>{const item=document.createElement("li"),rank=document.createElement("span"),value=document.createElement("span");rank.textContent=i+1;value.className="mover-value";value.textContent=`${positive?"+":""}${fmt(r.net_neta,6)} NETA`;item.append(rank,moverWallet(r.wallet),value);el.append(item)});
+}
 async function load(){
  try{
   const r=await fetch("data/map/map-of-neta.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();

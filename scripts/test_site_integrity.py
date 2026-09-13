@@ -69,6 +69,7 @@ for page in PAGES:
         assert (ROOT / local_path).is_file(), f"{page}: missing asset {local_path}"
 
 recovery = (ROOT / "wynd-recovery.js").read_text(encoding="utf-8")
+map_script = (ROOT / "map-of-neta.js").read_text(encoding="utf-8")
 wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
 styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 assert 'position:sticky;top:0' in styles
@@ -84,4 +85,6 @@ assert "setInterval(flash,9000)" in recovery
 assert "SIGNING_CONFIG?.enabled===true" in recovery
 assert "signing_enabled:enabled" in recovery
 assert "signAndBroadcast" not in recovery
+assert "https://www.mintscan.io/osmosis/address/" in map_script
+assert 'link.rel="noopener noreferrer"' in map_script
 print(f"Site integrity tests passed for {len(PAGES)} pages")
