@@ -83,6 +83,14 @@ for (const [path, activeLabel] of pages) {
   });
 }
 
+test("NETA Socials starts with an honest empty state", async ({page}) => {
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator(".thread-item")).toHaveCount(0);
+  await expect(page.locator(".comment")).toHaveCount(0);
+  await expect(page.locator(".thread-empty")).toContainText("THE BOARD IS EMPTY.");
+  await expect(page.locator(".conversation-empty-body")).toContainText("NO MESSAGES TO DISPLAY");
+});
+
 test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
   await page.addInitScript(() => {
     window.__suggestedChain = null;
