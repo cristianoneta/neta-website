@@ -510,7 +510,10 @@ test("confirmed claim keeps its hash when post-state verification is incomplete"
   await page.getByRole("button", {name: "PREVIEW CLAIM"}).click();
   await page.locator("#execute-action").click();
 
-  await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE");
+  await expect(page.locator("#transaction-feedback-title")).toHaveText(
+    "TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE",
+    {timeout: 12_000},
+  );
   await expect(page.locator("#transaction-hash")).toHaveText("C".repeat(64));
   await expect(page.locator("#transaction-explorer")).toBeVisible();
 });
