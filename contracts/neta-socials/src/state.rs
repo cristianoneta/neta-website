@@ -4,7 +4,9 @@ use cw_storage_plus::{Item, Map};
 
 pub const POST_COOLDOWN_SECONDS: u64 = 30;
 
-fn default_post_cooldown_seconds() -> u64 { POST_COOLDOWN_SECONDS }
+fn default_post_cooldown_seconds() -> u64 {
+    POST_COOLDOWN_SECONDS
+}
 
 #[cw_serde]
 pub struct Config {
