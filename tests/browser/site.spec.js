@@ -349,13 +349,15 @@ test("IBC transfer panel remains contained on desktop and mobile", async ({page}
 
 test("capture IBC branch preview", async ({page}) => {
   fs.mkdirSync("artifacts/ibc-preview", {recursive: true});
-  await page.addInitScript(() => localStorage.setItem("neta:blackout-enabled", "false"));
+  await page.emulateMedia({reducedMotion: "reduce"});
+  await page.addInitScript(() => localStorage.setItem("neta-matrix-effect-enabled", "false"));
   for (const [name, viewport] of [
     ["desktop", {width: 1440, height: 900}],
     ["mobile", {width: 390, height: 844}],
   ]) {
     await page.setViewportSize(viewport);
     await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+    await page.locator("header").evaluate(element => { element.style.display = "none"; });
     const section = page.locator(".ibc-section");
     await section.scrollIntoViewIfNeeded();
     await section.screenshot({path: `artifacts/ibc-preview/${name}.png`});
