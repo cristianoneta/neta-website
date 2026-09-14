@@ -83,6 +83,22 @@ for (const [path, activeLabel] of pages) {
   });
 }
 
+test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
+  await page.addInitScript(() => {
+    window.__suggestedChain = null;
+    window.keplr = {experimentalSuggestChain: async chain => { window.__suggestedChain = chain; }};
+  });
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  const button = page.locator("#add-juno-testnet");
+  await expect(button).toHaveText("· UNI-7");
+  await button.click();
+  await expect(button).toHaveText("· UNI-7 ADDED");
+  const chain = await page.evaluate(() => window.__suggestedChain);
+  expect(chain.chainId).toBe("uni-7");
+  expect(chain.feeCurrencies[0].coinMinimalDenom).toBe("ujunox");
+  expect(chain.bech32Config.bech32PrefixAccAddr).toBe("juno");
+});
+
 test("recovery renders validated snapshots and stays fail-closed", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.message));
