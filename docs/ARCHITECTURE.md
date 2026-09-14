@@ -65,7 +65,8 @@
   failure leaves the verified wallet connected and labels only ranking data as
   unavailable.
 - Signing requires the connected Juno wallet to match the inspected address and
-  the Pool, LP and Stake contracts to match independent immutable allowlists.
+  each Pair address to match its exact immutable LP-token and Stake-contract
+  tuple. Contracts from different allowlisted pools cannot be mixed.
   Unbond amounts and periods, claimable totals and direct LP balances are loaded
   again before execution. Claims abort if the live claimable amount differs from
   the reviewed preview. Confirmed transactions are followed by an action-specific
