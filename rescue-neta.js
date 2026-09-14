@@ -9,13 +9,13 @@
   const QUOTE_REFRESH_MS=12000;
   const SIGNING=window.NETA_SWAP_SIGNING;
   const assets={
-    JUNO:{symbol:"JUNO",mark:"J",info:{native:"ujuno"}},
-    NETA:{symbol:"NETA",mark:"N",info:{token:NETA}},
+    JUNO:{symbol:"JUNO",logo:"assets/juno-chain.png",info:{native:"ujuno"}},
+    NETA:{symbol:"NETA",logo:"assets/neta-token.png",info:{token:NETA}},
   };
   const dom={
     amount:document.querySelector("#offer-amount"),receive:document.querySelector("#receive-amount"),
     offerSymbol:document.querySelector("#offer-symbol"),receiveSymbol:document.querySelector("#receive-symbol"),
-    offerMark:document.querySelector("#offer-mark"),receiveMark:document.querySelector("#receive-mark"),
+    offerLogo:document.querySelector("#offer-logo"),receiveLogo:document.querySelector("#receive-logo"),
     offerUsd:document.querySelector("#offer-usd"),receiveUsd:document.querySelector("#receive-usd"),
     offerBalance:document.querySelector("#offer-balance"),max:document.querySelector("#max-button"),
     reverse:document.querySelector("#reverse-swap"),message:document.querySelector("#quote-error"),
@@ -78,7 +78,7 @@
   function renderDirection(){
     const receive=other(offer);
     dom.offerSymbol.textContent=offer;dom.receiveSymbol.textContent=receive;
-    dom.offerMark.textContent=assets[offer].mark;dom.receiveMark.textContent=assets[receive].mark;
+    dom.offerLogo.src=assets[offer].logo;dom.receiveLogo.src=assets[receive].logo;
     dom.offerUsd.textContent="EST. $0.00";dom.receiveUsd.textContent="EST. $0.00";
     updateBalance();
     renderAction();
