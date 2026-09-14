@@ -1,4 +1,6 @@
-use crate::state::{BanRecord, Comment, Config, Thread};
+use crate::state::BanRecord;
+#[cfg(not(target_arch = "wasm32"))]
+use crate::state::{Comment, Config, Thread};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::Uint128;
 

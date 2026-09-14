@@ -36,7 +36,7 @@ jobs:
       - name: Run contract tests
         run: cargo +1.85.0 test
       - name: Build release WASM
-        run: cargo +1.85.0 build --release --target wasm32-unknown-unknown
+        run: RUSTFLAGS="-D warnings" cargo +1.85.0 build --release --target wasm32-unknown-unknown
       - name: Record WASM checksum
         run: sha256sum target/wasm32-unknown-unknown/release/neta_socials.wasm > neta_socials.wasm.sha256
       - name: Upload contract verification artifacts
