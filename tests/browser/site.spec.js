@@ -130,11 +130,103 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await expect(page.locator("#pool-fee")).toContainText("0.30%");
   await expect(page.locator("#minimum-received")).toHaveText("0.009589 NETA");
   await expect(page.locator(".swap-action")).toBeDisabled();
-  await expect(page.locator(".prototype-note")).toContainText("cannot construct, sign or broadcast");
+  await expect(page.locator(".prototype-note")).toContainText("approved test wallet");
 
   await page.locator("#reverse-swap").click();
   await expect(page.locator("#offer-symbol")).toHaveText("NETA");
   await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
+});
+
+test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
+  const pair = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra";
+  const neta = "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr";
+  const pilot = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  await page.route("**/assets/swap-signing-client.js*", route => route.fulfill({
+    contentType: "application/javascript",
+    body: `window.NetaSwapSigning={
+      connect:async()=>({client:{},endpoint:"https://rpc.test"}),
+      simulate:async()=>150000,
+      execute:async()=>{if(window.__swapReject)throw new Error("USER REJECTED");return window.__swapResult}
+    };`,
+  }));
+  await page.route(/^https:\/\/juno-api\./, async route => {
+    const url = new URL(route.request().url());
+    const headers = {"access-control-allow-origin": "*", "content-type": "application/json"};
+    if (url.pathname.includes("/balances/") && url.pathname.endsWith("/by_denom")) {
+      await route.fulfill({headers, body: JSON.stringify({balance: {denom: "ujuno", amount: "100000000"}})});
+      return;
+    }
+    if (!url.pathname.includes("/smart/")) {
+      await route.fulfill({headers, body: JSON.stringify({contract_info: {code_id: "2289"}})});
+      return;
+    }
+    const query = JSON.parse(Buffer.from(decodeURIComponent(url.pathname.split("/smart/")[1]), "base64").toString("utf8"));
+    let data;
+    if (query.pair) data = {contract_addr: pair, asset_infos: [{native: "ujuno"}, {token: neta}], fee_config: {total_fee_bps: 30, protocol_fee_bps: 3333}};
+    else if (query.pool) data = {assets: [{info: {native: "ujuno"}, amount: "94756644466"}, {info: {token: neta}, amount: "959346155"}], total_share: "8961183403"};
+    else if (query.balance) data = {balance: "1000000"};
+    else if (query.simulation?.offer_asset?.info?.token) data = {return_amount: "983732", spread_amount: "1028", commission_amount: "2960", referral_amount: "0"};
+    else if (query.simulation) data = {return_amount: "10094", spread_amount: "0", commission_amount: "30", referral_amount: "0"};
+    else data = {};
+    await route.fulfill({headers, body: JSON.stringify({data})});
+  });
+
+  await page.goto("/rescue-neta.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator("#contract-state")).toHaveText("LIVE CODE OK");
+  await page.evaluate(address => {
+    window.NETA_WALLET_STATE = {address, signer: {}};
+    dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: window.NETA_WALLET_STATE}));
+  }, pilot);
+  await page.locator("#offer-amount").fill("1");
+  await expect(page.locator("#swap-action")).toBeEnabled();
+  await page.locator("#swap-action").click();
+  let preview = JSON.parse(await page.locator("#swap-preview").textContent());
+  expect(preview.contract).toBe(pair);
+  expect(preview.funds).toEqual([{denom: "ujuno", amount: "1000000"}]);
+  expect(preview.message.swap.offer_asset).toEqual({info: {native: "ujuno"}, amount: "1000000"});
+  expect(preview.message.swap.max_spread).toBe("0.05");
+  expect(preview.message.swap.referral_address).toBeNull();
+
+  await page.evaluate(({neta, pilot}) => {
+    window.__swapResult = {transactionHash: "A".repeat(64), events: [{type: "wasm", attributes: [
+      {key: "_contract_address", value: neta}, {key: "action", value: "transfer"},
+      {key: "to", value: pilot}, {key: "amount", value: "10094"},
+    ]}]};
+  }, {neta, pilot});
+  await page.locator("#confirm-swap").click();
+  await expect(page.locator("#swap-modal-state")).toContainText("TRANSACTION CONFIRMED");
+  await expect(page.locator("#swap-result-hash")).toHaveText("A".repeat(64));
+  await expect(page.locator("#swap-explorer")).toHaveAttribute("href", `https://atomscan.com/juno/transactions/${"A".repeat(64)}`);
+  await page.locator("#close-swap").click();
+
+  await page.locator("#reverse-swap").click();
+  await page.locator("#offer-amount").fill("0.01");
+  await expect(page.locator("#swap-action")).toBeEnabled();
+  await page.locator("#swap-action").click();
+  preview = JSON.parse(await page.locator("#swap-preview").textContent());
+  expect(preview.contract).toBe(neta);
+  expect(preview.funds).toEqual([]);
+  expect(preview.message.send.contract).toBe(pair);
+  expect(preview.message.send.amount).toBe("10000");
+  const hook = JSON.parse(Buffer.from(preview.message.send.msg, "base64").toString("utf8"));
+  expect(hook.swap.ask_asset_info).toEqual({native: "ujuno"});
+  expect(hook.swap.max_spread).toBe("0.05");
+  expect(hook.swap.referral_address).toBeNull();
+  await page.evaluate(pilotAddress => {
+    window.__swapResult = {transactionHash: "B".repeat(64), events: [{type: "transfer", attributes: [
+      {key: "recipient", value: pilotAddress}, {key: "amount", value: "983732ujuno"},
+    ]}]};
+  }, pilot);
+  await page.locator("#confirm-swap").click();
+  await expect(page.locator("#swap-modal-state")).toContainText("TRANSACTION CONFIRMED");
+  await page.locator("#close-swap").click();
+
+  await page.locator("#swap-action").click();
+  await page.evaluate(() => { window.__swapReject = true; });
+  await page.locator("#confirm-swap").click();
+  await expect(page.locator("#swap-modal-state")).toHaveText("TRANSACTION NOT CONFIRMED");
+  await expect(page.locator("#swap-modal-message")).toHaveText("USER REJECTED");
+  await expect(page.locator("#swap-result")).toBeHidden();
 });
 
 test("public signing policy allows only the exact Top-8 recovery contract tuples", async ({page}) => {
