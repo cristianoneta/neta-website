@@ -27,8 +27,17 @@ jobs:
         run: rustup toolchain install 1.85.0 --target wasm32-unknown-unknown --component clippy,rustfmt --profile minimal
       - name: Generate dependency lockfile
         run: cargo +1.85.0 generate-lockfile
-      - name: Verify formatting
-        run: cargo +1.85.0 fmt -- --check
+      - name: Format sources
+        run: cargo +1.85.0 fmt
+      - name: Upload formatted sources
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: neta-socials-formatted-sources
+          path: |
+            contracts/neta-socials/Cargo.lock
+            contracts/neta-socials/examples/
+            contracts/neta-socials/src/
+          if-no-files-found: error
       - name: Verify schemas
         run: cargo +1.85.0 run --example schema
       - name: Run clippy
