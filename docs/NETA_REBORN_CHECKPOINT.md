@@ -861,7 +861,7 @@ live tests and cancellation/rejection paths pass.
 - JUNO/NETA LP balance before the pilot: `94567` raw LP.
 - Live stake state before the pilot: no active stakes and no claims. Therefore the planned recovery sequence cannot start with Unbond until this test LP is staked once.
 - The live stake contract reports periods `604800`, `1209600`, `2419200`, and `3628800` seconds. The pilot uses the shortest allowlisted period, `604800` seconds (7 days).
-- The final `94567`-raw-LP CW20 send with hook `{"delegate":{"unbonding_period":604800}}` simulated successfully on `juno-1` with `286007` gas used. Invalid `bond` and `delegate_to` hook variants were rejected by the deployed contract.
-- Enabled scope: exactly wallet `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, pair `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`, action `bond`, amount at most `94567` raw LP, and period exactly `604800` seconds.
+- The CW20 `delegate` send was successfully simulated on `juno-1`; the final pilot amount is limited to `47283` raw LP. Invalid `bond` and `delegate_to` hook variants were rejected by the deployed contract.
+- Enabled scope: exactly wallet `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, pair `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`, action `bond`, amount at most `47283` raw LP, and period exactly `604800` seconds.
 - The frontend re-queries contract code IDs and the direct LP balance, checks the period allowlist, simulates the final message, enforces a `500000` gas cap, and revalidates the message immediately before Keplr signing.
-- Expected successful post-state: direct LP `0`, one 7-day active stake of `94567` raw LP, no claim yet. The pilot must be disabled and this exact post-state recorded before enabling Unbond.
+- Expected successful post-state: direct LP `47284`, one 7-day active stake of `47283` raw LP, no claim yet. The remaining direct LP is reserved for the immediate Withdraw pilot. The Bond pilot must be disabled and this exact post-state recorded before enabling another action.

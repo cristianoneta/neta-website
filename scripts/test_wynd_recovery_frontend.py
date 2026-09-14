@@ -40,8 +40,8 @@ for required in [
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
-    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=3',
-    'wynd-recovery.js?v=20260914-15',
+    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=4',
+    'wynd-recovery.js?v=20260914-16',
     'wynd-recovery.css?v=20260914-5', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
@@ -55,7 +55,7 @@ for required in [
     'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:"1000000",maxNetaRaw:"10200"',
 ]:
     assert required in signing_config, required
-assert 'action:"bond",maxAmountRaw:"94567",unbondingPeriod:604800' in signing_config
+assert 'action:"bond",maxAmountRaw:"47283",unbondingPeriod:604800' in signing_config
 assert (root/"assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
