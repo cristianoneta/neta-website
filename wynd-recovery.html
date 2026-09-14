@@ -47,10 +47,23 @@
         <div class="kicker">NON-CUSTODIAL / JUNO-1 / LEGACY WYND</div>
         <h1>RECOVER YOUR <b>LP.</b></h1>
         <p class="lead">Find liquidity that still belongs to you.</p>
-        <p>Check any public Juno address across the eight validated WYND pools. See the LP position, its underlying tokens and its current USD value before connecting a wallet.</p>
+        <p>Enter any public Juno address to check the eight validated WYND pools — no wallet connection or signature is required. If a position is found, connect that same account with Keplr and the recovery actions currently available for it will appear.</p>
         <div class="terminal-line">&gt; READ-ONLY DISCOVERY IS LIVE_</div>
       </div>
       <div id="wynd-offline-ghost" class="recovery-mascot" aria-hidden="true"><img src="assets/wynd-offline-mascot.png" alt=""></div>
+    </section>
+
+    <section class="recovery-guide" aria-labelledby="recovery-guide-title">
+      <div class="recovery-guide-heading">
+        <div class="kicker">FROM DISCOVERY TO RECOVERY</div>
+        <h2 id="recovery-guide-title">CHECK FIRST. CONNECT ONLY TO ACT.</h2>
+      </div>
+      <div class="recovery-steps">
+        <article><span>01 / UNBOND</span><strong>START THE WAITING PERIOD</strong><p>Move staked LP out of the staking contract. It becomes claimable only after the selected unbonding period ends.</p></article>
+        <article><span>02 / CLAIM</span><strong>RELEASE YOUR LP</strong><p>After unbonding is complete, claim the released LP tokens back into your connected wallet.</p></article>
+        <article><span>03 / WITHDRAW</span><strong>RECOVER THE ASSETS</strong><p>Use direct LP tokens in your wallet to withdraw your share of the pool's underlying assets.</p></article>
+      </div>
+      <p class="recovery-guide-note">Only actions supported by the position found for the connected wallet are shown. A pool with no direct LP, active stake or claimable LP displays <b>NO ACTION AVAILABLE</b>.</p>
     </section>
 
     <section class="recovery-lookup panel">
