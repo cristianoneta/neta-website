@@ -186,12 +186,16 @@ def aggregate(root,all_events,state,metadata,registry):
         x["swaps"]+=1
     for x in movers.values():
         x["net_raw"]=x["bought_raw"]-x["sold_raw"]
+    by_chain={}
+    for e in swaps:
+        by_chain[e["chain"]]=by_chain.get(e["chain"],0)+1
     buyers=sorted((x for x in movers.values() if x["net_raw"]>0),key=lambda x:-x["net_raw"])[:3]
     sellers=sorted((x for x in movers.values() if x["net_raw"]<0),key=lambda x:x["net_raw"])[:3]
     def public(x): return {"wallet":x["wallet"],"net_neta":round(x["net_raw"]/1e6,6),"bought_neta":round(x["bought_raw"]/1e6,6),"sold_neta":round(x["sold_raw"]/1e6,6),"swaps":x["swaps"]}
     supply=float(metadata["total_supply_neta"]); osmo=float(metadata["excluded_bridge_escrow_neta"])
     started=parse_time(state["collection_started_at"]); coverage=min(1,(t-started).total_seconds()/86400)
-    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":True,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True,"unknown_routes_not_misclassified":all(not (e.get("chain_resolution")=="unresolved" and e.get("remote_chain")=="osmosis") for e in flows)},"periods":{"24h":{"available":coverage>=1,"coverage_percent":round(coverage*100,2)},"7d":{"available":False},"30d":{"available":False},"90d":{"available":False}},"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows),"routes":routes,"discovered_chains":sorted(discovered.values(),key=lambda x:x["id"])},"market":{"swaps":len(swaps),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
+    chain_totals_match=sum(by_chain.values())==len(swaps)
+    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":chain_totals_match,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True,"unknown_routes_not_misclassified":all(not (e.get("chain_resolution")=="unresolved" and e.get("remote_chain")=="osmosis") for e in flows),"swap_chain_totals_match":chain_totals_match},"periods":{"24h":{"available":coverage>=1,"coverage_percent":round(coverage*100,2)},"7d":{"available":False},"30d":{"available":False},"90d":{"available":False}},"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows),"routes":routes,"discovered_chains":sorted(discovered.values(),key=lambda x:x["id"])},"market":{"swaps":len(swaps),"by_chain":dict(sorted(by_chain.items())),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--root",default="."); a=ap.parse_args(); root=Path(a.root)

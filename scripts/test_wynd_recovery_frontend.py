@@ -59,7 +59,7 @@ for required in ['unbondingTranches:claims.tranches', 'unbondingDisplay(position
     assert required in js, required
 assert (root/"assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
-for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
+for page in ["map-of-neta.html", "neta-dao.html", "wynd-recovery.html"]:
     assert 'href="wynd-recovery.html"' in (root/page).read_text(), page
 assert 'recoveryLink.href="wynd-recovery.html"' not in app
 assert '`${LCD}/' not in js

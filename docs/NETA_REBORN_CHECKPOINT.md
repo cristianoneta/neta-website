@@ -1,8 +1,29 @@
 # NETA Reborn — Technical Checkpoint
 
-Last updated: 2026-09-12
+Last updated: 2026-09-14
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
+
+## Current production state — 2026-09-14
+
+- Public pages are Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue
+  NETA. `What is NETA` is intentionally offline pending a substantive rewrite.
+- The economic holder model includes direct Juno and Osmosis NETA, DAO stake and
+  claims, plus validated economic-owner LP attribution.
+- WYND Recovery exposes only Unbond, Claim and Withdraw for the exact eight
+  frozen Pair/LP/Stake tuples. Bond and Provide Liquidity are excluded.
+- Rescue NETA exposes JUNO↔NETA swaps only on the frozen WYND pair, with a $25
+  estimated-value limit per transaction and configurable 0.1–10% slippage.
+- Map of NETA aggregates verified swap events from the Juno WYND pair and
+  Osmosis pool 631 while retaining a visible per-chain split and update time.
+- Confirmed live JUNO/NETA evidence includes Withdraw
+  `CF2EABAF5E9F31898450033F35B35278F126C45DE2B03B923B43D1EC38C80FEB`,
+  Unbond `3F134F9C0759851A2602C63B1B58D91AD874A74071FCBE6C10AA03CC4AA8A249`,
+  JUNO→NETA swap `217B5B1FFBB1F0AC32E7299907EEF334A7EDE167F34AD16C9831119D80B4FB0D`
+  and NETA→JUNO swap `7039CE5A59700E01971ACB04FC8257FDAAAE7EA0EB431B857C72F5F5AA869460`.
+- The remaining controlled live recovery test is Claim of `47283` raw LP after
+  `2026-09-21T07:58:06.734070343Z`. Claim is already covered by all-pool
+  simulations and browser tests; the broadcast is additional production evidence.
 
 ## Status legend
 - **VALIDATED**: reconciled exactly on-chain / by diagnostic.
@@ -17,7 +38,8 @@ Production workflow: `.github/workflows/update-neta-data.yml` (`Update NETA on-c
 
 Normal production cadence is 4x/day at approximately 03:00, 09:00, 15:00 and 21:00 Europe/Berlin, implemented with an hourly cron plus Berlin-local-hour gate. Editing normal Python indexer files does not itself trigger production; the push trigger is scoped to the workflow file. Avoid unnecessary manual production runs.
 
-Current production holder model includes direct Juno NETA, direct Osmosis NETA, DAO staked NETA and DAO claims/unstaking. LP NETA is not yet integrated into production.
+Current production holder totals include direct Juno NETA, direct Osmosis NETA,
+DAO stake and claims, and reconciled economic-owner LP NETA attribution.
 
 ## LP attribution design goal
 Holder totals should ultimately represent economic ownership rather than custody addresses:
@@ -658,7 +680,9 @@ Immediate next-chat instruction:
 ## Global Matrix blackout effect — DEPLOYED 2026-09-13
 
 - Shared assets: `matrix-blackout.css` and `matrix-blackout.js`.
-- Enabled on every current public HTML page: `index.html`, `map-of-neta.html`, `neta-dao.html` and `what-is-neta.html`.
+- At deployment it was enabled on every public HTML page. The current page set
+  is `index.html`, `map-of-neta.html`, `neta-dao.html`, `wynd-recovery.html` and
+  `rescue-neta.html`; `what-is-neta.html` is intentionally offline.
 - Effect sequence: four seconds of dense green Matrix rain using binary digits and NETA/Juno ecosystem letters, followed by exactly two seconds of complete black screen.
 - Automatic starts are globally rate-limited to at least 60 seconds apart using a persisted timestamp, including across page navigation.
 - The fixed ON/OFF control persists the user's choice across subpages.
@@ -907,9 +931,10 @@ live tests and cancellation/rejection paths pass.
 - The recovery UI now retains the earliest pending claim release and displays it behind the unbonding amount as `READY <local date/time>`; height-based claims display their release block.
 - Unbond authorization is closed. All recovery signing pilots are disabled until the Claim is mature and separately revalidated.
 
-## Post-pilot reliability hardening — 2026-09-14
+## Post-pilot reliability hardening — historical pre-public checkpoint, 2026-09-14
 
-- Production signing remains disabled; no wallet, pool or action pilot is active.
+- At this checkpoint production signing was disabled; the later public recovery
+  scope below supersedes that temporary state.
 - The dormant signing adapter now fails over across the Polkachu, Kleomedes and
   Lavender.Five Juno RPC endpoints published by the Cosmos Chain Registry.
   Every connection attempt has an eight-second deadline, and late connections
@@ -969,13 +994,13 @@ live tests and cancellation/rejection paths pass.
   eight unsigned simulations and browser success/rejection/index-delay tests.
 - Keplr hot-wallet execution has been validated live. Ledger follows the same
   Keplr offline-signer interface but remains explicitly not live-tested.
-# Rescue NETA swap interface
+# Rescue NETA swap interface — historical rollout notes
 
-Phase 1 adds `rescue-neta.html`, a read-only quote interface for the exact legacy WYND JUNO/NETA pair. It verifies pair code ID 2289, the fixed JUNO/NETA asset tuple and the on-chain 0.30% fee before requesting simulations. The UI shows price impact, minimum received, estimated USD value, adjustable 0.1–10% slippage (5% default), and enforces a $25 estimated per-swap frontend ceiling. It cannot construct, sign or broadcast transactions.
+Phase 1 added `rescue-neta.html` as a read-only quote interface for the exact legacy WYND JUNO/NETA pair. It verified pair code ID 2289, the fixed JUNO/NETA asset tuple and the on-chain 0.30% fee before requesting simulations. The UI showed price impact, minimum received, estimated USD value, adjustable 0.1–10% slippage (5% default), and enforced a $25 estimated per-swap frontend ceiling. At that historical phase it could not construct, sign or broadcast transactions.
 
-Signing remains a separate future phase: revalidate and simulate immediately before Keplr, encode `belief_price` plus `max_spread`, support the native-JUNO and CW20-NETA execution paths independently, then verify both directions with tiny live transactions before public enablement.
+The then-planned signing phase required revalidation and simulation immediately before Keplr, `belief_price` plus `max_spread`, independent native-JUNO and CW20-NETA execution paths, and tiny live verification in both directions. That phase is now complete, as recorded below.
 
-Phase 2 pilot implementation is isolated in `src/swap-signing-client.js`, `rescue-neta-signing-config.js` and the swap page controller. Its initial authority is restricted to `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57` with a $1 estimated signing ceiling. Before Keplr opens it reloads the USD snapshot, verifies pair code/identity/assets/fee, re-queries the offer balance and simulation, constructs `belief_price` plus the selected `max_spread`, simulates gas below a 500,000 cap, and only then broadcasts. JUNO uses native funds against the pair; NETA uses the CW20 `send` hook. Success requires a valid transaction hash and an increased receiving-asset wallet balance. Public access and the $25 signing ceiling remain blocked until both tiny directions are confirmed live.
+Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `rescue-neta-signing-config.js` and the swap page controller. Its initial authority was restricted to `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57` with a $1 estimated signing ceiling. Before Keplr it reloaded the USD snapshot, verified pair code/identity/assets/fee, re-queried the offer balance and simulation, constructed `belief_price` plus the selected `max_spread`, simulated gas below a 500,000 cap, and only then broadcast. JUNO used native funds against the pair; NETA used the CW20 `send` hook. The public enablement below supersedes those temporary pilot restrictions.
 
 ### Rescue NETA live pilots and public enablement — 2026-09-14
 

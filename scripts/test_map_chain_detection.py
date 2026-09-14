@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import importlib.util, pathlib
+import datetime as dt, importlib.util, pathlib
 P=pathlib.Path(__file__).with_name("update_map_of_neta.py")
 S=importlib.util.spec_from_file_location("mapmod",P); M=importlib.util.module_from_spec(S); S.loader.exec_module(M)
 R={"chains":{"juno":{"movement_verified":True},"osmosis":{"movement_verified":True},"terra":{"movement_verified":False},"cosmoshub":{"movement_verified":False}},"prefixes":{"osmo":"osmosis","terra":"terra","cosmos":"cosmoshub"},"juno_channels":{}}
@@ -37,4 +37,10 @@ assert [(event["chain"],event["market"],event["direction"],event["neta_raw"],eve
     ("juno","wynd","sell",10000,wallet),
 ]
 assert len({event["id"] for event in parsed})==2
+osmosis_event={"id":"osmosis:C:pool631:0","timestamp":"2026-09-14T12:45:00Z","height":200,"type":"swap","chain":"osmosis","market":"pool-631","wallet":"osmo1example","wallet_id":"example","direction":"buy","neta_raw":500000,"txhash":"C"*64}
+M.now=lambda:dt.datetime(2026,9,14,13,0,tzinfo=dt.timezone.utc)
+summary=M.aggregate(pathlib.Path("."),parsed+[osmosis_event],{"collection_started_at":"2026-09-12T00:00:00Z"},{"total_supply_neta":31886.6,"excluded_bridge_escrow_neta":10480.4},R)
+assert summary["market"]["swaps"]==3
+assert summary["market"]["by_chain"]=={"juno":2,"osmosis":1}
+assert summary["validation"]["swap_chain_totals_match"] is True
 print("multichain route and WYND swap classification: OK")

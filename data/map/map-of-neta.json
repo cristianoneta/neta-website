@@ -38,8 +38,12 @@
     "transfers": 2,
     "volume_neta": 4.0
   },
-  "generated_at": "2026-09-14T13:30:05.032882Z",
+  "generated_at": "2026-09-14T13:36:33.657392Z",
   "market": {
+    "by_chain": {
+      "juno": 2,
+      "osmosis": 8
+    },
     "power_buyers": [
       {
         "bought_neta": 2.883437,
@@ -63,7 +67,7 @@
         "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
       }
     ],
-    "swaps": 9,
+    "swaps": 10,
     "top_sellers": [
       {
         "bought_neta": 0.0,
@@ -74,17 +78,17 @@
       },
       {
         "bought_neta": 0.0,
+        "net_neta": -0.110583,
+        "sold_neta": 0.110583,
+        "swaps": 2,
+        "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
+      },
+      {
+        "bought_neta": 0.0,
         "net_neta": -0.095842,
         "sold_neta": 0.095842,
         "swaps": 1,
         "wallet": "osmo1xhu0ug9spdzqqqjx50klxumhjjmjrm64m3kua8"
-      },
-      {
-        "bought_neta": 0.0,
-        "net_neta": -0.085329,
-        "sold_neta": 0.085329,
-        "swaps": 1,
-        "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
       }
     ]
   },
@@ -108,6 +112,7 @@
     "cursors_monotonic": true,
     "event_ids_unique": true,
     "passed": true,
+    "swap_chain_totals_match": true,
     "unknown_routes_not_misclassified": true
   }
 }
