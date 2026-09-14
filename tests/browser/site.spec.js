@@ -289,8 +289,8 @@ test("disconnect removes recovery action authority but keeps read-only results",
 
   await page.locator("#keplr-connect").click();
   await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
-  await expect(page.locator(".actions button:not([disabled])")).toHaveCount(9);
-  await expect(page.getByRole("button", {name: "PREVIEW STAKE 7D"})).toHaveCount(1);
+  await expect(page.locator(".actions button:not([disabled])")).toHaveCount(8);
+  await expect(page.getByRole("button", {name: "PREVIEW STAKE 7D"})).toHaveCount(0);
   await page.locator("#keplr-connect").click();
   await page.locator('[data-wallet-action="disconnect"]').click();
 

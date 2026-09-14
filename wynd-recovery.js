@@ -309,7 +309,7 @@ async function executeLiquidityPilot(){
     if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING_CONFIG.gasCaps.liquidity)throw new Error("LIQUIDITY GAS EXCEEDS SAFETY CAP");
     setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
     const result=await signingClient.executeMultiple(connection.client,wallet.address,fresh.instructions,SIGNING_CONFIG.gasAdjustment,fresh.memo);
-    if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
     pendingLiquidity=null;
     setTransactionFeedback("success","TRANSACTION CONFIRMED","LIQUIDITY WAS ADDED AND LP TOKENS WERE SENT TO YOUR WALLET.",result.transactionHash);
     await refreshPositions(wallet.address);
@@ -420,7 +420,7 @@ async function executePendingAction(){
     if(!Number.isSafeInteger(gas)||gas<=0||gas>cap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${cap}`);
     setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
     const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
-    if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
     pendingAction=null;
     setTransactionFeedback("success","TRANSACTION CONFIRMED","THE RECOVERY ACTION WAS CONFIRMED ON JUNO.",result.transactionHash);
     await refreshPositions(wallet.address);

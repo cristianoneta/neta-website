@@ -7,11 +7,11 @@ frontend = (root / "wynd-recovery.js").read_text()
 html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
 
-# Only the exact-wallet, exact-pool 47,283 raw LP / 7-day bond pilot is enabled.
+# The completed bond pilot is closed; only the remaining 47,284 raw LP Withdraw is enabled.
 assert config.count("enabled:false") == 1
 assert config.count("enabled:true") == 1
 assert "writable:false" in config and "configurable:false" in config
-assert 'action:"bond",maxAmountRaw:"47283",unbondingPeriod:604800' in config
+assert 'action:"withdraw",maxAmountRaw:"47284"' in config
 assert 'liquidityPilot:Object.freeze({enabled:false' in config
 assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
 assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
@@ -25,6 +25,7 @@ assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
 assert "request.raw<=limit" in frontend
 assert 'action==="bond"&&Number(pilot.unbondingPeriod)!==request.period' in frontend
 assert 'position.direct<pilotAmount?position.direct:pilotAmount' in frontend
+assert frontend.count('result.code!==undefined&&Number(result.code)!==0') == 2
 for required in [
     "liquidityPilotAuthorized()",
     'pool.name!=="ujuno / NETA"',
@@ -63,4 +64,4 @@ assert "broadcastTx" not in client
 assert (root / "assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 
-print("Exact-wallet 7-day bond pilot is enabled; all other signing is gated off")
+print("Exact-wallet Withdraw pilot is enabled; completed Bond and all other signing are gated off")
