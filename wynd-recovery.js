@@ -241,7 +241,8 @@ function pilotAuthorized(pool,action,request){
   if(!signingEnabled()||!pilot||!wallet)return false;
   if(!ADDRESS_PATTERN.test(pilot.wallet||"")||pilot.wallet!==wallet.address||wallet.address!==viewedAddress)return false;
   if(pilot.pair!==pool.pair.address||pilot.action!==action)return false;
-  if(!["unbond","claim","withdraw"].includes(action))return false;
+  if(!["bond","unbond","claim","withdraw"].includes(action))return false;
+  if(action==="bond"&&Number(pilot.unbondingPeriod)!==request.period)return false;
   try{
     const limit=BigInt(pilot.maxAmountRaw);
     return limit>0n&&request.raw>0n&&request.raw<=limit;
@@ -341,7 +342,13 @@ async function prepareAction(pool,action,request){
   let contract;
   let message;
   let expected=null;
-  if(action==="unbond"){
+  if(action==="bond"){
+    if(position.direct<request.raw)throw new Error("DIRECT LP BALANCE CHANGED");
+    if(!pool.unbonding_periods_seconds.includes(request.period))throw new Error("UNALLOWLISTED BONDING PERIOD");
+    contract=pool.lp_token.address;
+    const hook={delegate:{unbonding_period:request.period}};
+    message={send:{contract:pool.stake.address,amount:request.raw.toString(),msg:encode(hook)}};
+  }else if(action==="unbond"){
     const row=position.byPeriod.find(item=>item.period===request.period);
     if(!row||row.available<request.raw)throw new Error("AVAILABLE STAKE CHANGED");
     if(!pool.unbonding_periods_seconds.includes(request.period))throw new Error("UNALLOWLISTED UNBONDING PERIOD");
@@ -449,6 +456,10 @@ function renderPosition(pool,position,valid){
   };
   for(const row of position.byPeriod.filter(item=>item.available>0n))add(`PREVIEW UNBOND ${row.period/86400}D`,"unbond",{raw:row.available,period:row.period});
   if(position.claimable>0n)add("PREVIEW CLAIM","claim",{raw:position.claimable});
+  const pilot=SIGNING_CONFIG?.pilot;
+  if(position.direct>0n&&pilot?.action==="bond"&&pilot.pair===pool.pair.address){
+    add(`PREVIEW STAKE ${Number(pilot.unbondingPeriod)/86400}D`,"bond",{raw:position.direct,period:Number(pilot.unbondingPeriod)});
+  }
   if(position.direct>0n)add("PREVIEW WITHDRAW","withdraw",{raw:position.direct});
   if(!actions.children.length){
     actions.append(disabledAction(position.totalEconomic>0n&&!ownsAddress?"CONNECT THIS WALLET FOR ACTIONS":"NO ACTION AVAILABLE"));

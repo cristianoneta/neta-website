@@ -7,11 +7,11 @@ frontend = (root / "wynd-recovery.js").read_text()
 html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
 
-# General recovery signing and the completed liquidity pilot are disabled.
-assert config.count("enabled:false") == 2
-assert "enabled:true" not in config
+# Only the exact-wallet, exact-pool 94,567 raw LP / 7-day bond pilot is enabled.
+assert config.count("enabled:false") == 1
+assert config.count("enabled:true") == 1
 assert "writable:false" in config and "configurable:false" in config
-assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
+assert 'action:"bond",maxAmountRaw:"94567",unbondingPeriod:604800' in config
 assert 'liquidityPilot:Object.freeze({enabled:false' in config
 assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
 assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
@@ -23,6 +23,7 @@ assert "pilotAuthorized(pool,action,request)" in frontend
 assert "pilot.wallet!==wallet.address" in frontend
 assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
 assert "request.raw<=limit" in frontend
+assert 'action==="bond"&&Number(pilot.unbondingPeriod)!==request.period' in frontend
 for required in [
     "liquidityPilotAuthorized()",
     'pool.name!=="ujuno / NETA"',
@@ -31,6 +32,8 @@ for required in [
     "provide_liquidity",
     "simulateMultiple",
     "executeMultiple",
+    'hook={delegate:{unbonding_period:request.period}}',
+    'position.direct<request.raw',
 ]:
     assert required in frontend, required
 
@@ -59,4 +62,4 @@ assert "broadcastTx" not in client
 assert (root / "assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 
-print("Recovery signing and the completed liquidity pilot are disabled")
+print("Exact-wallet 7-day bond pilot is enabled; all other signing is gated off")
