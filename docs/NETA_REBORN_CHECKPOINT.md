@@ -875,3 +875,14 @@ live tests and cancellation/rejection paths pass.
 - Verified post-state: direct LP `47284`; active 7-day stake `47283`; locked `0`; claims empty.
 - UI defect found: CosmJS `execute()` returns a successful `ExecuteResult` without a `code` property, while failed deliveries throw. The frontend incorrectly treated the absent success code as failure. Both single- and multi-message success checks now accept an absent code and still reject any explicit non-zero code.
 - Bond authorization is closed. The next pilot authorizes only Withdraw of at most the remaining `47284` raw LP for the same wallet and pair.
+
+### Controlled Withdraw live result
+
+- Transaction: `CF2EABAF5E9F31898450033F35B35278F126C45DE2B03B923B43D1EC38C80FEB`
+- Height/time: `41745065` / `2026-09-14T07:46:18Z`; chain result `code 0`.
+- Gas used/wanted: `424841` / `529377`; fee `47644 ujuno`.
+- Events confirm CW20 `send` and burn of `47284` raw LP, pair action `withdraw_liquidity`, and exact refunds `499986 ujuno` plus `5062` raw NETA to the pilot wallet.
+- Verified post-state: direct LP `0`; active 7-day stake unchanged at `47283`; locked `0`; claims empty.
+- Post-Withdraw pool state: `94756644466 ujuno`, `959346155` raw NETA, total share `8961183403`.
+- The corrected success UI displayed the full transaction hash and Atomscan link as intended.
+- Withdraw authorization is closed. Global recovery signing, the action pilot, and the completed liquidity pilot are disabled.
