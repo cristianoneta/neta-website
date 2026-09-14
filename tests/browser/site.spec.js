@@ -48,7 +48,7 @@ async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () =>
 }
 
 async function installSigningPilot(page, {wallet, pool, action = "withdraw", maxAmountRaw = "1000000", executeBody}) {
-  await page.route("**/recovery-signing-config.js", route => route.fulfill({
+  await page.route("**/recovery-signing-config.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{value:Object.freeze({
       enabled:true,chainId:"juno-1",rpcEndpoints:Object.freeze(["https://rpc.test"]),
