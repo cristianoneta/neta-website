@@ -46,7 +46,7 @@
   const signingConfigValid=Boolean(SIGNING&&SIGNING.chainId==="juno-1"&&SIGNING.pair===PAIR&&SIGNING.neta===NETA&&SIGNING.pairCodeId===PAIR_CODE_ID&&SIGNING.publicMaxUsd===LIMIT_USD);
 
   function parseAmount(value){
-    const clean=value.trim();
+    const clean=value.trim().replace(",",".");
     if(!/^(?:\d+)(?:\.\d{0,6})?$/.test(clean))throw new Error("ENTER A VALID AMOUNT WITH UP TO 6 DECIMALS");
     const [whole,fraction=""]=clean.split(".");
     const raw=BigInt(whole)*1000000n+BigInt((fraction+"000000").slice(0,6));
@@ -70,7 +70,7 @@
 
   function clearQuote(message="ENTER AN AMOUNT TO REQUEST A LIVE QUOTE",state=""){
     quote=null;dom.receive.textContent="0.0";dom.receiveUsd.textContent="EST. $0.00";dom.age.textContent="ENTER AN AMOUNT";
-    dom.rate.textContent="—";dom.impact.textContent="—";dom.minimum.textContent="—";
+    dom.rate.textContent="—";dom.impact.textContent="—";delete dom.impact.dataset.alert;dom.fee.textContent="0.30%";dom.minimum.textContent="—";
     setMessage(message,state);
     renderAction();
   }
