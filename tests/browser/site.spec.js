@@ -299,7 +299,7 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
     `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
   );
   await expect(page.locator("#marketUpdated")).not.toHaveText("—");\n  await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
-  await expect(page.locator(".terra-node .chain-logo")).toHaveAttribute("src", "assets/terra-luna-official.svg");
+  await expect(page.locator(".terra-node .chain-logo")).toHaveAttribute("src", "assets/terra-matrix-official.svg");
   await expect(page.locator(".terra-link")).toHaveCount(2);
   const centers = await page.locator(".flow-stage").evaluate(stage => {
     const center = selector => {
