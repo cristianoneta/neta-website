@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-13T20:26:59.837620Z",
+  "generated_at": "2026-09-14T01:24:49.718023Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -13,7 +13,7 @@
   },
   "total_supply_neta": 31886.6,
   "total_supply_source": "cw20_token_info",
-  "juno_custody_addresses": 12279,
+  "juno_custody_addresses": 12280,
   "osmosis_primary_state_addresses": 3720,
   "dao_active_stakers": 2090,
   "dao_active_staking_neta": 4180.135927,
@@ -23,28 +23,28 @@
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 5312,
   "lp_neta": 1858.795262,
-  "economic_master_entries": 13972,
+  "economic_master_entries": 13973,
   "cross_chain_matches": 2027,
   "wallet_attributed_neta": 31886.39,
   "dao_residual_neta": 0.21,
-  "excluded_bridge_escrow_neta": 10481.41154,
-  "gini": 0.877821,
+  "excluded_bridge_escrow_neta": 10480.41154,
+  "gini": 0.877822,
   "concentration_neta": {
-    "top_1": 1612.335373,
-    "top_5": 4732.721975,
-    "top_10": 6214.725124,
-    "top_25": 8886.92208,
-    "top_50": 11098.680733,
-    "top_100": 13601.290656,
-    "top_1_percent": 14740.190113,
+    "top_1": 1612.135373,
+    "top_5": 4732.521975,
+    "top_10": 6214.525124,
+    "top_25": 8886.72208,
+    "top_50": 11098.480733,
+    "top_100": 13601.090656,
+    "top_1_percent": 14739.990113,
     "top_1_percent_wallets": 140
   },
   "osmosis": {
-    "height": 70514567,
+    "height": 70528459,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 70514567,
+      "height": 70528459,
       "rpc": "https://rpc.osmosis.zone",
       "pool_neta_raw": 899454169,
       "lp_supply_raw": 225004459685449894124978,
@@ -71,8 +71,8 @@
     }
   },
   "dao": {
-    "height": 41730372,
-    "block_time": "2026-09-13T20:24:02.253935+00:00",
+    "height": 41736763,
+    "block_time": "2026-09-14T01:22:03.464457+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 291,
     "method": "CosmWasm AllContractState; claims classified by release_at at snapshot"
