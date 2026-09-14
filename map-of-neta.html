@@ -56,8 +56,8 @@
           <defs>
             <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z"/></marker>
-            <path id="outPath" d="M425 255 C560 165 720 165 820 250"/>
-            <path id="inPath" d="M820 310 C685 390 540 390 425 310"/>
+            <path id="outPath" d="M580 245 C665 180 755 185 820 250"/>
+            <path id="inPath" d="M820 315 C745 380 650 380 580 315"/>
           </defs>
           <g class="future">
             <circle cx="160" cy="130" r="48"/><circle cx="210" cy="455" r="48"/><circle cx="500" cy="75" r="48"/><circle cx="655" cy="485" r="48"/>
@@ -66,15 +66,15 @@
           <path class="terra-link terra-out" d="M420 245 C340 180 270 185 215 245" marker-end="url(#arrow)"/>
           <path class="terra-link terra-in" d="M215 315 C285 380 355 380 420 315" marker-end="url(#arrow)"/>
           <text class="terra-link-label" x="270" y="173">FUTURE ROUTE</text>
-          <path class="flow-line out" d="M425 255 C560 165 720 165 820 250" marker-end="url(#arrow)"/>
-          <path class="flow-line incoming" d="M820 310 C685 390 540 390 425 310" marker-end="url(#arrow)"/>
+          <path class="flow-line out" d="M580 245 C665 180 755 185 820 250" marker-end="url(#arrow)"/>
+          <path class="flow-line incoming" d="M820 315 C745 380 650 380 580 315" marker-end="url(#arrow)"/>
           <g class="particles" filter="url(#glow)">
             <circle r="4"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#outPath"/></animateMotion></circle>
             <circle r="3"><animateMotion dur="2.8s" begin=".9s" repeatCount="indefinite"><mpath href="#outPath"/></animateMotion></circle>
             <circle r="4"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#inPath"/></animateMotion></circle>
           </g>
-          <text id="flowOut" class="flow-label" x="610" y="185">0 NETA OUT</text>
-          <text id="flowIn" class="flow-label" x="610" y="390">0 NETA IN</text>
+          <text id="flowOut" class="flow-label" x="670" y="175">0 NETA OUT</text>
+          <text id="flowIn" class="flow-label" x="670" y="395">0 NETA IN</text>
         </svg>
         <button class="chain-node juno-node" data-chain="Juno" aria-label="Juno, NETA origin chain">
           <span class="node-code-rain" aria-hidden="true"><i>01011010101</i><i>10100101101</i><i>00110100110</i><i>11001011010</i><i>01101001011</i><i>10010110100</i></span><span class="chain-logo-shell" aria-hidden="true"><img class="chain-logo" src="assets/juno-matrix-official.png" alt=""></span><span class="node-scan-beam" aria-hidden="true"></span>
