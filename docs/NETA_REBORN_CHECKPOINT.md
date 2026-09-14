@@ -4,6 +4,73 @@ Last updated: 2026-09-14
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
 
+## NEW-CHAT HANDOFF — NETA SOCIALS UNI-7 TEST (2026-09-14)
+
+Start the next chat by reading this entire file. Continue with PR #80 and do
+not ask the user to deploy again until that PR is green, merged and visibly
+deployed.
+
+### Current state
+
+- PR #79 was squash-merged to main as
+  c43f5691a802c5661083f753e44fa5f88fa4e174.
+- It added the uni-7-only staking mock, its locked Rust CI, refreshed
+  Polkachu testnet endpoints and the hidden deployment console at
+  https://netareborn.com/neta-socials-testnet.html.
+- The mock rejects every chain except uni-7, rejects attached funds, emits
+  no outbound messages and exposes the DAO DAO-compatible
+  staked_balance_at_height query.
+- The deployment console accepts only
+  juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57, verifies both WASM
+  checksums before upload, deploys Socials paused and requires a separate
+  final unpause transaction.
+- Mock optimized WASM SHA-256:
+  c4920d17c0c44fd8dfe72f01d9c3d0faa8b1fafc1d70f511684f3426a4c30f81.
+- Socials optimized WASM SHA-256:
+  49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869.
+- No testnet transaction has been signed or broadcast yet.
+
+### Silent Connect Keplr diagnosis
+
+- The user reported that CONNECT KEPLR did nothing.
+- This was a frontend delivery defect, not a JUNOX balance, Keplr permission
+  or contract failure.
+- The large generated assets/socials-testnet-client.js bundle was truncated
+  while it was transferred through the GitHub connector. The deployed browser
+  consequently raised Invalid or unexpected token; the page controller then
+  failed before registering its click handlers.
+- The local complete bundle Git blob is
+  838736525b7e10147cfc5f607df4455120a6f9fe. The replacement GitHub blob was
+  uploaded in chunks and verified to have exactly the same hash.
+- The WASM Git blobs already matched their local files; only the JavaScript
+  bundle was affected.
+
+### Open fix
+
+- PR #80: https://github.com/cristianoneta/neta-website/pull/80
+- Current repaired branch head:
+  824a09e2f3f74790788fbe492a0c1f971f1e6e7c.
+- The PR additionally moves live status above the first card, adds visible
+  Keplr/RPC phases, supports both signer APIs and applies 12-second timeouts.
+- GitHub Actions run 34900891482 was running when this checkpoint was
+  written. Do not merge without checking its final result.
+
+### Exact next steps
+
+1. Check GitHub Actions run 34900891482.
+2. If it is green, verify PR #80 remains mergeable and squash-merge it.
+3. Wait for the tested main revision to deploy to GitHub Pages.
+4. Ask the user to hard-refresh
+   https://netareborn.com/neta-socials-testnet.html and click
+   CONNECT KEPLR once.
+5. Read the now-visible status above step 01. Do not proceed if the connected
+   address differs from the allowlisted hotwallet or the RPC check fails.
+6. Only then deploy the stake mock, deploy Socials, verify configuration and
+   unpause. Each transaction requires explicit Keplr approval.
+7. Record code IDs, contract addresses and every transaction hash here. Then
+   exercise thread/comment/moderation/cooldown behavior without attaching
+   funds.
+
 ## NEW-CHAT HANDOFF — CONTROLLED IBC TRANSFERS (2026-09-14)
 
 Start the next chat by reading this entire file, then continue from this
@@ -1206,4 +1273,3 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
   - LUNA Terra→Juno: source channel `channel-2`, destination `channel-86`, sequence `1461`, 200,000 uluna; destination receipt was still false before timeout.
 - Do not restore Juno↔Terra in the frontend until packet delivery and timeout/refund handling are verified.
 - Terra is now displayed on Map of NETA as a future zone with exactly `0 NETA`. The data generator preserves the Terra row so scheduled map refreshes cannot remove it.
-
