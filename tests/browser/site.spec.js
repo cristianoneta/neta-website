@@ -41,7 +41,7 @@ async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () =>
     if (query.balance) data = {balance: balanceFor(address, contract)};
     else if (query.all_staked) data = {stakes: []};
     else if (query.claims) data = {claims: []};
-    else if (query.share) data = registry.pools.find(pool => pool.pair.address === contract).assets.map(() => ({amount: "1000000"}));
+    else if (query.share) data = registry.pools.find(pool => pool.pair.address === contract).assets.map(asset => ({info: asset.info, amount: "1000000"}));
     else data = {};
     await route.fulfill({headers, body: JSON.stringify({data})});
   });

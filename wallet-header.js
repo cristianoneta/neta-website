@@ -51,7 +51,7 @@
     if(indexPromise)return indexPromise;
     indexPromise=new Promise((resolve,reject)=>{
       const script=document.createElement("script");
-      script.src=`address-index.js?t=${Date.now()}`;
+      script.src="address-index.js";
       script.onload=()=>window.NETA_ADDRESS_INDEX?resolve(window.NETA_ADDRESS_INDEX):reject(new Error("NETA SNAPSHOT UNAVAILABLE"));
       script.onerror=()=>reject(new Error("NETA SNAPSHOT UNAVAILABLE"));
       document.head.append(script);

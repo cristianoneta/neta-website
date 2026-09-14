@@ -1,8 +1,8 @@
 # NETA Reborn
 
 Static, data-driven community website for the NETA ecosystem on Juno and
-Osmosis. It includes the holder ranking, Map of NETA and the read-only WYND
-Recovery dashboard.
+Osmosis. It includes the holder ranking, Map of NETA and the fail-closed WYND
+Recovery dashboard with read-only discovery plus disabled, explicitly scoped signing code.
 
 ## Local development
 
@@ -57,13 +57,17 @@ test logs back to `main`.
 
 ## Recovery safety boundary
 
-The recovery UI is intentionally fail-closed and read-only. Transaction signing
-must remain disabled until the controlled simulations, ownership reconciliation
-and tiny-position tests documented in `docs/recovery/` have passed.
+The recovery UI is intentionally fail-closed. Read-only discovery is public;
+transaction signing remains disabled between separately reviewed pilots. The local
+CosmJS adapter is shipped lazily so an approved pilot can support both Keplr hot
+wallets and Ledger-backed Keplr accounts without fetching signing code during
+ordinary read-only use.
 
-The dormant execution path additionally requires one exact pilot wallet, pool,
-action and raw-amount limit. General signing cannot be enabled by changing a
-single boolean. No private key or seed phrase is ever requested by the site.
+The dormant execution path requires one exact pilot wallet, pool, action,
+raw-amount limit and, for bond/unbond, unbonding period. It revalidates contract
+code IDs and wallet state before Keplr opens, then verifies the expected on-chain
+position change after confirmation. General signing cannot be enabled by changing
+a single boolean. No private key or seed phrase is ever requested by the site.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
 the refactor rules.

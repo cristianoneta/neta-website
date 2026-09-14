@@ -11,7 +11,7 @@ client = (root / "src/recovery-signing-client.js").read_text()
 assert config.count("enabled:false") == 2
 assert "enabled:true" not in config
 assert "writable:false" in config and "configurable:false" in config
-assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0",unbondingPeriod:null})' in config
 assert 'liquidityPilot:Object.freeze({enabled:false' in config
 assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
 assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
@@ -23,9 +23,11 @@ assert "pilotAuthorized(pool,action,request)" in frontend
 assert "pilot.wallet!==wallet.address" in frontend
 assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
 assert "request.raw<=limit" in frontend
-assert 'action==="bond"&&Number(pilot.unbondingPeriod)!==request.period' in frontend
+assert '(action==="bond"||action==="unbond")&&Number(pilot.unbondingPeriod)!==request.period' in frontend
 assert 'position.direct<pilotAmount?position.direct:pilotAmount' in frontend
 assert frontend.count('result.code!==undefined&&Number(result.code)!==0') == 2
+assert 'position.claimable!==request.raw' in frontend
+assert 'verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before)' in frontend
 for required in [
     "liquidityPilotAuthorized()",
     'pool.name!=="ujuno / NETA"',

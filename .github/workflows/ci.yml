@@ -10,10 +10,8 @@ on:
       - "*.css"
       - "assets/**"
       - "src/**"
-      - "scripts/site_shell.py"
-      - "scripts/test_site_integrity.py"
-      - "scripts/test_wynd_recovery_frontend.py"
-      - "scripts/test_recovery_signing_gate.py"
+      - "scripts/**"
+      - ".github/workflows/**"
       - "tests/browser/**"
       - "data/recovery/wynd-pools.json"
       - "package.json"
@@ -28,10 +26,8 @@ on:
       - "*.css"
       - "assets/**"
       - "src/**"
-      - "scripts/site_shell.py"
-      - "scripts/test_site_integrity.py"
-      - "scripts/test_wynd_recovery_frontend.py"
-      - "scripts/test_recovery_signing_gate.py"
+      - "scripts/**"
+      - ".github/workflows/**"
       - "tests/browser/**"
       - "data/recovery/wynd-pools.json"
       - "package.json"
@@ -71,6 +67,10 @@ jobs:
           for file in *.js; do node --check "$file"; done
           npm run build:recovery-signing
           test -s assets/recovery-signing-client.js
+      - name: Audit production and development dependencies
+        run: npm audit --audit-level=high
+      - name: Verify committed signing bundle is reproducible
+        run: git diff --exit-code -- assets/recovery-signing-client.js
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run browser integration tests

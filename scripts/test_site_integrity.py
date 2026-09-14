@@ -69,7 +69,7 @@ for page in PAGES:
     assert source.count('http-equiv="Content-Security-Policy"') == 1
     assert "script-src 'self'" in source
     assert "object-src 'none'" in source
-    assert 'src="wallet-header.js?v=2"' in source
+    assert 'src="wallet-header.js?v=3"' in source
     for asset in parser.assets:
         parsed = urlsplit(asset)
         if parsed.scheme or parsed.netloc or asset.startswith("#"):

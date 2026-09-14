@@ -43,17 +43,23 @@
   with `valuation_locked: true` are never repriced.
 - Stake-contract custody is excluded from the economic-owner leaderboard to
   avoid double counting.
-- Signing remains disabled until the documented safety gates pass. Its dormant
-  Keplr path uses a pinned CosmJS dependency and an immutable `enabled:false`
-  production configuration. CI proves that the adapter builds, but the disabled
-  release omits the large generated bundle entirely. Adding that artifact and
-  enabling the flag therefore require a later explicit review.
-- The compact address index stores each economic wallet row once and maps both
+- Signing remains disabled between explicitly reviewed pilots. Its dormant Keplr
+  path uses pinned CosmJS dependencies and an immutable `enabled:false`
+  production configuration. The generated adapter is shipped locally but loaded
+  only after every pilot and live-state gate passes; CI rebuilds it and rejects
+  any difference from the committed artifact.
+- The compact address index is loaded without a per-navigation timestamp cache
+  buster so browser/CDN revalidation can work. It stores each economic wallet row once and maps both
   Juno and Osmosis aliases to that canonical object. Browser tests enforce alias
   identity and a two-megabyte size ceiling.
 - Signing also requires a frozen single-action pilot scope: exact Juno wallet,
-  allowlisted pair, action and positive raw-amount cap. The empty production
-  scope fails closed even if the global feature flag were changed accidentally.
+  allowlisted pair, action, positive raw-amount cap and, for bond/unbond, exact
+  unbonding period. Claims abort if the live claimable amount differs from the
+  reviewed preview. Confirmed transactions are followed by an action-specific
+  position check before the UI reports the result as verified.
+- WYND's legacy pair schema contains an `assets` field for withdrawal hooks, but
+  the deployed pair implementation ignores it. The frontend therefore labels
+  withdrawal assets as estimates and never presents them as enforced minimums.
 - The temporary JUNO/NETA liquidity pilot is separately wallet-scoped and
   hard-disabled. Its two messages are simulated atomically: a capped CW20
   allowance followed by `provide_liquidity` carrying exactly 1 JUNO. The live
