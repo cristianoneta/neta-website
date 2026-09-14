@@ -298,7 +298,7 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   await expect(page.locator("#swapBreakdown")).toHaveText(
     `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
   );
-  await expect(page.locator("#marketUpdated")).not.toHaveText("—");
+  await expect(page.locator("#marketUpdated")).not.toHaveText("—");\n  await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
   const osmosis = page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first();
   const juno = page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first();
   await expect(osmosis).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
@@ -309,13 +309,11 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   }
 });
 
-test("IBC transfer panel exposes only origin and return assets for every route", async ({page}) => {
+test("IBC transfer panel exposes only active public routes and return assets", async ({page}) => {
   await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
   const routes = [
     ["juno", "osmosis", ["JUNO", "OSMO", "NETA"], "channel-0 · JUNO"],
     ["osmosis", "juno", ["JUNO", "OSMO", "NETA"], "channel-42 · JUNO"],
-    ["juno", "terra", ["JUNO", "LUNA", "NETA"], "channel-86 · JUNO"],
-    ["terra", "juno", ["JUNO", "LUNA", "NETA"], "channel-2 · JUNO"],
     ["osmosis", "terra", ["OSMO", "LUNA"], "channel-251 · OSMO"],
     ["terra", "osmosis", ["OSMO", "LUNA"], "channel-1 · OSMO"],
   ];
@@ -326,11 +324,13 @@ test("IBC transfer panel exposes only origin and return assets for every route",
     await expect(page.locator("#ibc-channel")).toHaveText(channel);
   }
   await page.locator("#ibc-from").selectOption("juno");
-  await page.locator("#ibc-to").selectOption("terra");
+  await expect(page.locator("#ibc-to option")).toHaveText(["OSMOSIS"]);
   await page.locator("#ibc-asset").selectOption("NETA");
-  await expect(page.locator("#ibc-channel")).toHaveText("channel-154 · NETA");
+  await expect(page.locator("#ibc-channel")).toHaveText("channel-47 · NETA");
   await page.locator("#ibc-reverse").click();
-  await expect(page.locator("#ibc-channel")).toHaveText("channel-33 · NETA");
+  await expect(page.locator("#ibc-channel")).toHaveText("channel-169 · NETA");
+  await page.locator("#ibc-from").selectOption("terra");
+  await expect(page.locator("#ibc-to option")).toHaveText(["OSMOSIS"]);
 });
 
 test("IBC transfer panel remains contained on desktop and mobile", async ({page}) => {
@@ -349,7 +349,7 @@ test("IBC transfer panel remains contained on desktop and mobile", async ({page}
 
 test("IBC transfer accepts comma and point decimal separators", async ({page}) => {
   const accounts = {
-    "juno-1": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+    "juno-1": "juno1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp4h6h",
     "osmosis-1": "osmo1z3xcalwan92yqxu9d406tlft9yy94jy8wafq9s",
     "phoenix-1": "terra1z3xcalwan92yqxu9d406tlft9yy94jy8qzqs3z",
   };
