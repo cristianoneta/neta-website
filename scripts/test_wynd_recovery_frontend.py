@@ -69,6 +69,6 @@ assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
 assert js.count('{cache:"no-store"}') == 4
 assert 'JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions)' not in js
-for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+normalizedHash', '/^[0-9A-F]{64}$/', 'String(txhash||"").toUpperCase()']:
+for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+normalizedHash', '/^[0-9A-F]{64}$/', 'String(txhash||"").toUpperCase()', 'ESTIMATE ONLY: THIS LEGACY WYND CONTRACT DOES NOT ENFORCE MINIMUM WITHDRAWAL OUTPUTS', 'TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE']:
     assert required in js, required
 print("WYND recovery frontend safety tests passed")

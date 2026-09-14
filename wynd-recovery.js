@@ -439,7 +439,9 @@ async function showPreview(pool,action,request){
     $("#preview-title").textContent=`${action.toUpperCase()} // ${pool.name.replaceAll("ujuno","JUNO")}`;
     $("#preview-message").textContent=JSON.stringify({
       network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract:prepared.contract,message:prepared.message,
-      expected_assets:prepared.expected,signing_enabled:enabled,
+      expected_assets:prepared.expected,
+      output_protection:action==="withdraw"?"ESTIMATE ONLY: THIS LEGACY WYND CONTRACT DOES NOT ENFORCE MINIMUM WITHDRAWAL OUTPUTS":null,
+      signing_enabled:enabled,
     },null,2);
     $("#execute-action").hidden=!enabled;
     $("#execute-action").disabled=!enabled;
