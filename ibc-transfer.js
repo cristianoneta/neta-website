@@ -33,7 +33,7 @@
       let amount;
       if(from==="juno"&&symbol==="NETA"){
         const query=btoa(JSON.stringify({balance:{address}})).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-        amount=(await getJson(`${lcd}/cosmwasm/wasm/v1/contract/${NETA}/smart/${query}`)).data.amount;
+        amount=(await getJson(`${lcd}/cosmwasm/wasm/v1/contract/${NETA}/smart/${query}`)).data.balance;
       }else amount=(await getJson(`${lcd}/cosmos/bank/v1beta1/balances/${address}/by_denom?denom=${encodeURIComponent(denom)}`)).balance?.amount||"0";
       if(request!==balanceRequest)return;balanceRaw=BigInt(amount);$("#ibc-balance").textContent=`BALANCE ${display(balanceRaw)} ${symbol}`;return;
     }catch(error){continue}}
