@@ -1,9 +1,6 @@
 Object.defineProperty(window,"NETA_SWAP_SIGNING",{
   value:Object.freeze({
     enabled:true,
-    pilotOnly:true,
-    pilotWallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
-    pilotMaxUsd:1,
     publicMaxUsd:25,
     chainId:"juno-1",
     pair:"juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
@@ -12,7 +9,7 @@ Object.defineProperty(window,"NETA_SWAP_SIGNING",{
     gasPrice:"0.075ujuno",
     gasAdjustment:1.4,
     gasCap:500000,
-    memo:"netareborn.com/rescue-neta:swap-pilot:v1",
+    memo:"netareborn.com/rescue-neta:swap:v1",
     rpcEndpoints:Object.freeze([
       "https://juno-rpc.polkachu.com:443",
       "https://juno-rpc.kleomedes.network",

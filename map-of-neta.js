@@ -2,10 +2,13 @@ const $=s=>document.querySelector(s),fmt=(n,d=0)=>new Intl.NumberFormat("en-US",
 function short(a){return a&&a.length>18?a.slice(0,9)+"…"+a.slice(-5):a||"—"}
 function moverWallet(address){
   const value=typeof address==="string"?address:"";
-  if(!/^osmo1[0-9a-z]{38}$/.test(value)){
+  let href=null,explorer=null;
+  if(/^osmo1[0-9a-z]{38}$/.test(value)){href=`https://www.mintscan.io/osmosis/address/${encodeURIComponent(value)}`;explorer="Mintscan"}
+  else if(/^juno1[0-9a-z]{38}$/.test(value)){href=`https://atomscan.com/juno/accounts/${encodeURIComponent(value)}`;explorer="ATOMScan"}
+  if(!href){
     const label=document.createElement("span");label.className="mover-wallet";label.textContent=short(value);return label;
   }
-  const link=document.createElement("a");link.className="mover-wallet";link.href=`https://www.mintscan.io/osmosis/address/${encodeURIComponent(value)}`;link.target="_blank";link.rel="noopener noreferrer";link.title=value;link.setAttribute("aria-label",`Open ${value} on Mintscan`);link.textContent=short(value);return link;
+  const link=document.createElement("a");link.className="mover-wallet";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.title=value;link.setAttribute("aria-label",`Open ${value} on ${explorer}`);link.textContent=short(value);return link;
 }
 function renderMovers(id,rows,positive){
   const el=$(id);el.replaceChildren();

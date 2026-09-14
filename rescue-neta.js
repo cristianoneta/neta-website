@@ -87,11 +87,10 @@
   function signingAuthority(){
     const address=window.NETA_WALLET_STATE?.address;
     if(!SIGNING?.enabled||!signingConfigValid)return{ok:false,label:"SWAP SIGNING IS DISABLED"};
-    if(!address)return{ok:false,label:"CONNECT PILOT WALLET TO TEST"};
-    if(SIGNING.pilotOnly&&address!==SIGNING.pilotWallet)return{ok:false,label:"PILOT WALLET ONLY"};
+    if(!address)return{ok:false,label:"CONNECT KEPLR TO SWAP"};
     if(!quote)return{ok:false,label:"ENTER AN AMOUNT FOR A LIVE QUOTE"};
     if(balanceRaw!==null&&quote.raw>balanceRaw)return{ok:false,label:`INSUFFICIENT ${offer} BALANCE`};
-    return{ok:true,label:"REVIEW PILOT SWAP"};
+    return{ok:true,label:"REVIEW SWAP"};
   }
 
   function renderAction(){
@@ -154,7 +153,7 @@
       dom.impact.textContent=`${impact.toFixed(2)}%`;dom.impact.dataset.alert=String(impact>=2);
       dom.fee.textContent=`0.30% · ${amountText(fee)} ${quote.receive}`;
       dom.minimum.textContent=`${amountText(min)} ${quote.receive}`;
-      setMessage(SIGNING?.pilotOnly?"LIVE QUOTE RECEIVED — PILOT WALLET MAY REVIEW":"LIVE QUOTE RECEIVED","ok");
+      setMessage("LIVE QUOTE RECEIVED — READY TO REVIEW","ok");
       renderAction();
       renderAge();refreshTimer=setTimeout(requestQuote,QUOTE_REFRESH_MS);
     }catch(error){if(id===requestId)clearQuote(`QUOTE FAILED: ${(error.message||String(error)).toUpperCase()}`,"error")}
@@ -205,10 +204,9 @@
 
   async function freshQuoteForSigning(){
     const address=window.NETA_WALLET_STATE?.address;
-    if(!address||!SIGNING?.enabled||!signingConfigValid)throw new Error("PILOT SIGNING IS NOT AVAILABLE");
-    if(SIGNING.pilotOnly&&address!==SIGNING.pilotWallet)throw new Error("CONNECTED ACCOUNT IS NOT THE PILOT WALLET");
+    if(!address||!SIGNING?.enabled||!signingConfigValid)throw new Error("SWAP SIGNING IS NOT AVAILABLE");
     await Promise.all([loadMarket(),validateContract()]);
-    const raw=parseAmount(dom.amount.value),usd=quoteUsd(raw,offer),cap=SIGNING.pilotOnly?SIGNING.pilotMaxUsd:SIGNING.publicMaxUsd;
+    const raw=parseAmount(dom.amount.value),usd=quoteUsd(raw,offer),cap=SIGNING.publicMaxUsd;
     if(usd===null||usd>cap+0.000001)throw new Error(`SWAP EXCEEDS THE $${cap} SIGNING LIMIT`);
     const available=await assetBalance(offer,address);if(raw>available)throw new Error(`INSUFFICIENT ${offer} BALANCE`);
     const response=await client.smart(PAIR,{simulation:{offer_asset:{info:assets[offer].info,amount:String(raw)},ask_asset_info:null,referral:false,referral_commission:null}});
@@ -218,7 +216,7 @@
   }
 
   function transactionPreview(liveQuote,tx,address,gasWanted=null){
-    return{network:SIGNING.chainId,sender:address,direction:`${liveQuote.offer} -> ${liveQuote.receive}`,estimated_usd:liveQuote.usd.toFixed(4),max_slippage:`${slippage.toFixed(2)}%`,minimum_received:`${amountText(liveQuote.min)} ${liveQuote.receive}`,memo:SIGNING.memo,contract:tx.contract,message:tx.message,funds:tx.funds,gas_wanted:gasWanted,signing_enabled:true,pilot_only:SIGNING.pilotOnly};
+    return{network:SIGNING.chainId,sender:address,direction:`${liveQuote.offer} -> ${liveQuote.receive}`,estimated_usd:liveQuote.usd.toFixed(4),per_swap_limit_usd:SIGNING.publicMaxUsd,max_slippage:`${slippage.toFixed(2)}%`,minimum_received:`${amountText(liveQuote.min)} ${liveQuote.receive}`,memo:SIGNING.memo,contract:tx.contract,message:tx.message,funds:tx.funds,gas_wanted:gasWanted,signing_enabled:true};
   }
 
   function openPreview(){
@@ -226,7 +224,7 @@
     const address=window.NETA_WALLET_STATE.address,tx=buildTransaction(quote,address);
     dom.preview.textContent=JSON.stringify(transactionPreview(quote,tx,address),null,2);
     dom.modalState.textContent="READY FOR FINAL LIVE REVALIDATION";delete dom.modalState.dataset.state;
-    dom.modalMessage.textContent="The quote, wallet balance, pair identity and $1 pilot limit will be checked again before Keplr opens.";
+    dom.modalMessage.textContent="The quote, wallet balance, pair identity and $25 per-swap limit will be checked again before Keplr opens.";
     dom.result.hidden=true;dom.confirm.hidden=false;dom.confirm.disabled=false;dom.modal.hidden=false;dom.confirm.focus();
   }
 

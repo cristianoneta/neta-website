@@ -13,4 +13,28 @@ assert M.resolve_remote_chain(a(receiver="cosmos1abc"),R,True)==("cosmoshub","ad
 assert M.resolve_remote_chain(a(receiver="stars1abc",channel="channel-77"),R,True)==("unknown:channel-77","unresolved")
 assert M.resolve_remote_chain(a(sender="terra1abc"),R,False)==("terra","address_prefix")
 assert M.resolve_remote_chain(a(sender="stars1abc"),R,False)==("unknown","unresolved")
-print("multichain route classification: OK")
+
+wallet="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
+def wynd_item(txhash,height,timestamp,attributes):
+    return {
+        "messages":[{"sender":wallet}],
+        "response":{"txhash":txhash,"height":str(height),"timestamp":timestamp,"code":0,"events":[
+            {"type":"wasm","attributes":[{"key":key,"value":value} for key,value in attributes.items()]},
+        ]},
+    }
+
+buy=wynd_item("A"*64,100,"2026-09-14T12:04:57Z",{
+    "_contract_address":M.WYND_PAIR,"action":"swap","offer_asset":"ujuno",
+    "ask_asset":M.NETA,"offer_amount":"1000000","return_amount":"10094",
+})
+sell=wynd_item("B"*64,101,"2026-09-14T12:37:27Z",{
+    "_contract_address":M.WYND_PAIR,"action":"swap","offer_asset":M.NETA,
+    "ask_asset":"ujuno","offer_amount":"10000","return_amount":"984768",
+})
+parsed=M.parse_wynd([buy,sell])
+assert [(event["chain"],event["market"],event["direction"],event["neta_raw"],event["wallet"]) for event in parsed]==[
+    ("juno","wynd","buy",10094,wallet),
+    ("juno","wynd","sell",10000,wallet),
+]
+assert len({event["id"] for event in parsed})==2
+print("multichain route and WYND swap classification: OK")
