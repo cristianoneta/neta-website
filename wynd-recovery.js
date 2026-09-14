@@ -1,6 +1,7 @@
 const LCD_ENDPOINTS=["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"];
 const CHAIN_ID="juno-1";
 const TX_MEMO="netareborn.com/wynd-recovery:v1";
+const ATOMSCAN_TX_BASE="https://atomscan.com/juno/transactions/";
 const SIGNING_CONFIG=window.NETA_RECOVERY_SIGNING;
 const ADDRESS_PATTERN=/^juno1[0-9a-z]{38}$/;
 const $=selector=>document.querySelector(selector);
@@ -43,6 +44,23 @@ function labelValue(className,label,value,strongTag="strong"){
 
 function disabledAction(label){
   const button=node("button","",label);button.disabled=true;return button;
+}
+
+function setTransactionFeedback(state,title,detail,txhash=""){
+  const feedback=$("#transaction-feedback");
+  feedback.dataset.state=state;
+  $("#transaction-feedback-title").textContent=title;
+  $("#transaction-status").textContent=detail;
+  const hash=$("#transaction-hash"),explorer=$("#transaction-explorer");
+  const validHash=/^[0-9A-F]{64}$/.test(txhash);
+  hash.hidden=!validHash;hash.textContent=validHash?txhash:"";
+  explorer.hidden=!validHash;explorer.href=validHash?ATOMSCAN_TX_BASE+txhash:"#";
+  const ready=state==="ready";
+  $("#preview-message").hidden=!ready;
+  $("#preview-note").hidden=!ready;
+  if(!ready){$("#execute-action").hidden=true;$("#execute-action").disabled=true;}
+  const dialog=$("#preview-dialog");
+  if(dialog.open)dialog.scrollTop=0;
 }
 
 function renderRetry(errorBox,error,retry){
@@ -266,28 +284,38 @@ async function showLiquidityPreview(){
     const prepared=await prepareLiquidityPilot();pendingLiquidity=prepared;pendingAction=null;
     $("#preview-title").textContent="CREATE TINY JUNO / NETA LP";
     $("#preview-message").textContent=JSON.stringify({network:CHAIN_ID,sender:wallet.address,juno:"1.000000",neta:(Number(prepared.netaRaw)/1e6).toFixed(6),messages:prepared.instructions,memo:prepared.memo},null,2);
-    $("#transaction-status").textContent="READY FOR FINAL BALANCE, CONTRACT + RATIO REVALIDATION";
     $("#execute-action").hidden=false;$("#execute-action").disabled=false;$("#preview-dialog").showModal();
+    setTransactionFeedback("ready","READY TO SIGN","FINAL BALANCE, CONTRACT + RATIO REVALIDATION WILL RUN BEFORE KEPLR OPENS");
   }catch(error){document.body.classList.remove("modal-open");dispatchEvent(new Event("neta:blackout-resume"));$("#wallet-status").textContent=error.message;}
 }
 
 async function executeLiquidityPilot(){
   if(!pendingLiquidity||!liquidityPilotAuthorized())throw new Error("LIQUIDITY PILOT IS NOT AUTHORIZED");
-  const fresh=await prepareLiquidityPilot();
-  const sameIntent=fresh.pool.pair.address===pendingLiquidity.pool.pair.address
-    &&fresh.junoRaw===pendingLiquidity.junoRaw
-    &&fresh.netaRaw===pendingLiquidity.netaRaw
-    &&fresh.memo===pendingLiquidity.memo;
-  if(!sameIntent)throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");
-  const signingClient=await loadSigningClient();await window.keplr.enable(CHAIN_ID);
-  const signer=window.keplr.getOfflineSigner(CHAIN_ID),accounts=await signer.getAccounts();if(accounts[0]?.address!==wallet.address)throw new Error("KEPLR ACCOUNT CHANGED");
-  const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
-  const gas=await signingClient.simulateMultiple(connection.client,wallet.address,fresh.instructions,fresh.memo);
-  if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING_CONFIG.gasCaps.liquidity)throw new Error("LIQUIDITY GAS EXCEEDS SAFETY CAP");
-  $("#transaction-status").textContent=`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR SIGNATURE…`;
-  const result=await signingClient.executeMultiple(connection.client,wallet.address,fresh.instructions,SIGNING_CONFIG.gasAdjustment,fresh.memo);
-  if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
-  $("#transaction-status").textContent=`CONFIRMED // ${result.transactionHash}`;pendingLiquidity=null;await refreshPositions(wallet.address);
+  setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING WALLET, CONTRACTS, BALANCES AND CURRENT POOL RATIO…");
+  try{
+    const fresh=await prepareLiquidityPilot();
+    const sameIntent=fresh.pool.pair.address===pendingLiquidity.pool.pair.address
+      &&fresh.junoRaw===pendingLiquidity.junoRaw
+      &&fresh.netaRaw===pendingLiquidity.netaRaw
+      &&fresh.memo===pendingLiquidity.memo;
+    if(!sameIntent)throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");
+    const signingClient=await loadSigningClient();
+    setTransactionFeedback("pending","WAITING FOR KEPLR","REVIEW AND APPROVE THE TWO-MESSAGE TRANSACTION IN YOUR WALLET…");
+    await window.keplr.enable(CHAIN_ID);
+    const signer=window.keplr.getOfflineSigner(CHAIN_ID),accounts=await signer.getAccounts();if(accounts[0]?.address!==wallet.address)throw new Error("KEPLR ACCOUNT CHANGED");
+    const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
+    const gas=await signingClient.simulateMultiple(connection.client,wallet.address,fresh.instructions,fresh.memo);
+    if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING_CONFIG.gasCaps.liquidity)throw new Error("LIQUIDITY GAS EXCEEDS SAFETY CAP");
+    setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
+    const result=await signingClient.executeMultiple(connection.client,wallet.address,fresh.instructions,SIGNING_CONFIG.gasAdjustment,fresh.memo);
+    if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    pendingLiquidity=null;
+    setTransactionFeedback("success","TRANSACTION CONFIRMED","LIQUIDITY WAS ADDED AND LP TOKENS WERE SENT TO YOUR WALLET.",result.transactionHash);
+    await refreshPositions(wallet.address);
+  }catch(error){
+    setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());
+    throw error;
+  }
 }
 
 function loadSigningClient(){
@@ -352,10 +380,10 @@ async function showPreview(pool,action,request){
       network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract:prepared.contract,message:prepared.message,
       expected_assets:prepared.expected,signing_enabled:enabled,
     },null,2);
-    $("#transaction-status").textContent=enabled?"READY FOR FINAL LIVE REVALIDATION":"SIGNING FEATURE FLAG: OFF";
     $("#execute-action").hidden=!enabled;
     $("#execute-action").disabled=!enabled;
     $("#preview-dialog").showModal();
+    setTransactionFeedback("ready",enabled?"READY TO SIGN":"SIGNING UNAVAILABLE",enabled?"FINAL LIVE REVALIDATION WILL RUN BEFORE KEPLR OPENS":"SIGNING FEATURE FLAG: OFF");
   }catch(error){
     document.body.classList.remove("modal-open");
     dispatchEvent(new Event("neta:blackout-resume"));
@@ -367,7 +395,7 @@ async function executePendingAction(){
   if(!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request))throw new Error("SIGNING PILOT IS NOT AUTHORIZED");
   const button=$("#execute-action");
   button.disabled=true;
-  $("#transaction-status").textContent="FINAL CONTRACT + POSITION REVALIDATION…";
+  setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING CONTRACTS AND CURRENT POSITION…");
   try{
     const signingClient=await loadSigningClient();
     await window.keplr.enable(CHAIN_ID);
@@ -378,19 +406,19 @@ async function executePendingAction(){
     if(JSON.stringify(fresh.message)!==JSON.stringify(pendingAction.prepared.message)||fresh.contract!==pendingAction.prepared.contract){
       throw new Error("RECOVERY ACTION CHANGED DURING APPROVAL");
     }
-    $("#transaction-status").textContent="CONNECTING SIGNING RPC…";
+    setTransactionFeedback("pending","CONNECTING SIGNING RPC","PREPARING FINAL SIMULATION…");
     const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
     const gas=await signingClient.simulate(connection.client,wallet.address,fresh.contract,fresh.message,TX_MEMO);
     const cap=SIGNING_CONFIG.gasCaps[pendingAction.action];
     if(!Number.isSafeInteger(gas)||gas<=0||gas>cap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${cap}`);
-    $("#transaction-status").textContent=`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR SIGNATURE…`;
+    setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
     const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
     if(Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
-    $("#transaction-status").textContent=`CONFIRMED // ${result.transactionHash}`;
     pendingAction=null;
+    setTransactionFeedback("success","TRANSACTION CONFIRMED","THE RECOVERY ACTION WAS CONFIRMED ON JUNO.",result.transactionHash);
     await refreshPositions(wallet.address);
   }catch(error){
-    $("#transaction-status").textContent=`BLOCKED // ${error.message}`;
+    setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());
     throw error;
   }finally{
     button.disabled=!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);

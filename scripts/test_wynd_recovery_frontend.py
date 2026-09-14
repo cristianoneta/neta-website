@@ -41,8 +41,9 @@ for required in [
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=2',
-    'wynd-recovery.js?v=20260914-13',
-    'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
+    'wynd-recovery.js?v=20260914-14',
+    'wynd-recovery.css?v=20260914-5', 'id="execute-action"', 'hidden disabled',
+    'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
     assert required in html, required
 for required in ['window.keplr', 'keplr_keystorechange', 'enable(CHAIN_ID)', 'getOfflineSigner(CHAIN_ID)', 'ADDRESS_PATTERN.test(address)']:
@@ -65,4 +66,6 @@ assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
 assert js.count('{cache:"no-store"}') == 4
 assert 'JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions)' not in js
+for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+txhash', '/^[0-9A-F]{64}$/']:
+    assert required in js, required
 print("WYND recovery frontend safety tests passed")

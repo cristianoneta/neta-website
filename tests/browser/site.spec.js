@@ -77,6 +77,8 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
   await expect(page.locator("#execute-action")).toBeHidden();
   await expect(page.locator("#execute-action")).toBeDisabled();
+  await expect(page.locator("#transaction-explorer")).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(page.locator("#transaction-explorer")).toHaveAttribute("target", "_blank");
   expect(pageErrors).toEqual([]);
 });
 
