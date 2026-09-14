@@ -130,6 +130,26 @@ Juno CW20-ICS20 contract:
    channel fails the round trip, remove that NETA route without removing the
    standard Juno/Terra and Osmosis/Terra routes.
 
+### Draft PR verification update — 2026-09-14
+
+- Draft PR #58 is open from `codex/ibc-transfer-ui` to `main`; GitHub reports
+  it mergeable without a branch conflict. It remains deliberately unmerged.
+- GitHub Actions run `34858193374` completed successfully with Chromium. The
+  browser suite now includes two IBC-specific scenarios in addition to the
+  existing site coverage.
+- The route-matrix scenario exercises all six directed chain pairs and asserts
+  that only origin-native assets and wrapped returns are exposed. It separately
+  verifies NETA `channel-154` Juno→Terra and `channel-33` Terra→Juno.
+- Responsive browser assertions passed at `1440×900` and `390×844`: the IBC
+  section remains inside the viewport and the disabled pre-wallet review
+  control remains visible.
+- The normal Pages deployment step was correctly skipped because the tested
+  commit is not on `main`. A user-visible hosted branch preview is therefore
+  still OPEN; do not substitute the production URL or merge merely to preview.
+- Next gate: obtain/review the visible branch preview, then proceed to tiny
+  standard-route tests with the allowlisted hotwallet. No IBC transaction has
+  been signed or broadcast in this verification step.
+
 ## Current production state — 2026-09-14
 
 - Public pages are Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue
