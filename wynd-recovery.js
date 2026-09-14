@@ -457,6 +457,7 @@ async function executePendingAction(){
   const button=$("#execute-action");
   button.disabled=true;
   setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING CONTRACTS AND CURRENT POSITION…");
+  let confirmedHash="";
   try{
     const signingClient=await loadSigningClient();
     await window.keplr.enable(CHAIN_ID);
@@ -475,13 +476,18 @@ async function executePendingAction(){
     setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
     const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
     if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    confirmedHash=String(result.transactionHash||"").toUpperCase();
     const completed=pendingAction;
     await verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before);
     pendingAction=null;
-    setTransactionFeedback("success","TRANSACTION + RESULT VERIFIED","THE RECOVERY ACTION AND EXPECTED POSITION CHANGE WERE VERIFIED ON JUNO.",result.transactionHash);
+    setTransactionFeedback("success","TRANSACTION + RESULT VERIFIED","THE RECOVERY ACTION AND EXPECTED POSITION CHANGE WERE VERIFIED ON JUNO.",confirmedHash);
     await refreshPositions(wallet.address);
   }catch(error){
-    setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());
+    if(confirmedHash){
+      setTransactionFeedback("error","TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE",error.message.toUpperCase(),confirmedHash);
+    }else{
+      setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());
+    }
     throw error;
   }finally{
     button.disabled=!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);
