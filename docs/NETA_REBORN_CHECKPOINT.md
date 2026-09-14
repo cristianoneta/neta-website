@@ -845,3 +845,13 @@ live tests and cancellation/rejection paths pass.
 - The signing adapter uses Keplr's standard offline-signer interface and does not intentionally exclude Ledger-backed accounts.
 - Ledger compatibility is not yet live-tested and must not be described as validated until a separate consenting Ledger test succeeds.
 - Hot-wallet success validates the current liquidity transaction path only; it does not by itself prove Ledger behavior.
+
+## Controlled JUNO/NETA liquidity live test — VALIDATED 2026-09-14
+
+- Hot-wallet transaction: `8A1527A4905A34F2446F31A68D3E25B36C44AF5383FFD0AF8480B93A075BC6AE` at Juno height `41743729`; code `0`.
+- Exact input: `1,000,000 ujuno` plus `10,124 raw NETA`; fee `48,976 ujuno`; gas used `438,004` of `544,173`.
+- The pair minted exactly `94,567 raw LP` to `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`; a post-transaction CW20 query confirmed that exact wallet balance.
+- Pool reserves increased exactly by the two intended inputs, and the temporary NETA allowance was fully consumed with `0` remaining.
+- The first provided Atomscan URL contained one extra trailing character; the 64-character hash above is canonical.
+- The test exposed a frontend-only status visibility problem: confirmation text was below the long JSON preview. PR #37 added visible pending/success/error states, a full transaction hash and a safe Atomscan link.
+- After successful validation, the temporary liquidity-creation flag was disabled again. The minted LP remains available for the separately scoped Withdraw test.
