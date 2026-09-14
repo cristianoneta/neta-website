@@ -27,6 +27,9 @@ for required in [
     'positionUsd', 'expectedAssets(pool,totalEconomic)',
     'data/recovery/wynd-market.json', 'data/recovery/wynd-leaderboard.json', 'POOL RESERVES',
     'chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")',
+    'fresh.pool.pair.address===pendingLiquidity.pool.pair.address',
+    'fresh.junoRaw===pendingLiquidity.junoRaw', 'fresh.netaRaw===pendingLiquidity.netaRaw',
+    'fresh.memo===pendingLiquidity.memo',
     'POOL_QUERY_CONCURRENCY=3', 'runWithConcurrency(registry.pools,POOL_QUERY_CONCURRENCY',
     'PARTIAL VALUE', 'RETRY THIS POOL', 'generation!==queryGeneration',
     'flash();', 'setInterval(flash,9000)', 'neta-matrix-active', 'neta:blackout-pause', 'neta:blackout-resume',
@@ -38,7 +41,7 @@ for required in [
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=2',
-    'wynd-recovery.js?v=20260913-12',
+    'wynd-recovery.js?v=20260914-13',
     'wynd-recovery.css?v=20260913-4', 'id="execute-action"', 'hidden disabled',
 ]:
     assert required in html, required
@@ -61,4 +64,5 @@ assert '<a class="active" aria-current="page" href="wynd-recovery.html">WYND REC
 assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
 assert js.count('{cache:"no-store"}') == 4
+assert 'JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions)' not in js
 print("WYND recovery frontend safety tests passed")
