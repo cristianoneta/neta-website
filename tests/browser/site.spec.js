@@ -1,4 +1,5 @@
 const {test, expect} = require("@playwright/test");
+const fs = require("node:fs");
 const registry = require("../../data/recovery/wynd-pools.json");
 const leaderboard = require("../../data/recovery/wynd-leaderboard.json");
 
@@ -343,6 +344,21 @@ test("IBC transfer panel remains contained on desktop and mobile", async ({page}
     expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
     await expect(page.locator("#ibc-review")).toBeVisible();
     await expect(page.locator("#ibc-review")).toBeDisabled();
+  }
+});
+
+test("capture IBC branch preview", async ({page}) => {
+  fs.mkdirSync("artifacts/ibc-preview", {recursive: true});
+  await page.addInitScript(() => localStorage.setItem("neta:blackout-enabled", "false"));
+  for (const [name, viewport] of [
+    ["desktop", {width: 1440, height: 900}],
+    ["mobile", {width: 390, height: 844}],
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+    const section = page.locator(".ibc-section");
+    await section.scrollIntoViewIfNeeded();
+    await section.screenshot({path: `artifacts/ibc-preview/${name}.png`});
   }
 });
 
