@@ -37,8 +37,15 @@ jobs:
         run: cargo +1.85.0 test
       - name: Build release WASM
         run: RUSTFLAGS="-D warnings" cargo +1.85.0 build --release --target wasm32-unknown-unknown
-      - name: Record WASM checksum
-        run: sha256sum target/wasm32-unknown-unknown/release/neta_socials.wasm > neta_socials.wasm.sha256
+      - name: Build optimized production WASM
+        run: |
+          docker run --rm \
+            -v "$PWD:/code" \
+            --mount type=volume,source=neta_socials_cache,target=/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+            cosmwasm/optimizer:0.17.0
+      - name: Verify optimized WASM checksum
+        run: cd artifacts && sha256sum -c checksums.txt
       - name: Upload contract verification artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -46,6 +53,6 @@ jobs:
           path: |
             contracts/neta-socials/Cargo.lock
             contracts/neta-socials/schema/
-            contracts/neta-socials/target/wasm32-unknown-unknown/release/neta_socials.wasm
-            contracts/neta-socials/neta_socials.wasm.sha256
+            contracts/neta-socials/artifacts/neta_socials.wasm
+            contracts/neta-socials/artifacts/checksums.txt
           if-no-files-found: error

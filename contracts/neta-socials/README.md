@@ -13,6 +13,7 @@ CosmWasm contract for the on-chain NETA community board.
 - The owner appoints and revokes moderators. Moderators may mark threads and comments hidden or visible with an auditable on-chain record.
 - Hidden content is not deleted or altered; clients decide whether to display it.
 - The owner may pause new posts without disabling reads or moderation.
+- A new deployment starts paused and must be deliberately opened by the owner after live verification.
 - The owner may immediately replace the staking contract only after a compatible live query succeeds.
 - Ownership transfers require proposal by the current owner and acceptance by the proposed owner.
 - Threads and comments cannot be edited or deleted.
@@ -58,5 +59,8 @@ cargo test --manifest-path contracts/neta-socials/Cargo.toml
 cargo run --manifest-path contracts/neta-socials/Cargo.toml --example schema
 rustup target add wasm32-unknown-unknown
 cargo build --release --target wasm32-unknown-unknown --manifest-path contracts/neta-socials/Cargo.toml
-sha256sum contracts/neta-socials/target/wasm32-unknown-unknown/release/neta_socials.wasm
+docker run --rm -v "$(pwd)/contracts/neta-socials:/code" cosmwasm/optimizer:0.17.0
+(cd contracts/neta-socials/artifacts && sha256sum -c checksums.txt)
 ```
+
+Only the optimized `artifacts/neta_socials.wasm` file and its recorded checksum are intended for deployment.
