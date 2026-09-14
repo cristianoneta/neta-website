@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <title>Rescue NETA — NETA Reborn</title>
+  <meta name="description" content="Read-only live JUNO and NETA swap quotes from the legacy WYND pool.">
+  <link rel="stylesheet" href="styles.css?v=20260914-7">
+  <link rel="stylesheet" href="rescue-neta.css?v=20260914-1">
+  <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<!-- site-header:start -->
+<header>
+  <a class="logo" href="index.html" aria-label="NETA Reborn home">
+    <img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span>
+  </a>
+  <nav aria-label="Primary navigation">
+    <a href="index.html">RANKING</a>
+    <a href="map-of-neta.html">MAP OF NETA</a>
+    <a href="what-is-neta.html">WHAT IS NETA</a>
+    <a href="neta-dao.html">NETA DAO</a>
+    <a href="wynd-recovery.html">WYND RECOVERY</a>
+    <a class="active" aria-current="page" href="rescue-neta.html">RESCUE NETA</a>
+    <span class="nav-disabled" title="Coming next" aria-disabled="true">VALUE CALCULATOR</span>
+  </nav>
+  <div class="wallet-shell">
+    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">
+      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance aria-live="polite">READ-ONLY</small></span>
+    </button>
+    <div id="wallet-menu" class="wallet-menu" role="menu" aria-label="Keplr account actions" hidden>
+      <div class="wallet-menu-head"><span>CONNECTED WITH KEPLR</span><b data-wallet-menu-rank>UNRANKED</b></div>
+      <div class="wallet-menu-address" data-wallet-menu-address></div>
+      <div class="wallet-menu-total"><span>TOTAL ECONOMIC NETA</span><strong data-wallet-menu-total>0 NETA</strong><small>CURRENT RANKING SNAPSHOT</small></div>
+      <a class="wallet-menu-action" role="menuitem" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>
+      <button class="wallet-menu-action" role="menuitem" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>
+      <button class="wallet-menu-action wallet-menu-disconnect" role="menuitem" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>
+      <p>Disconnect clears this website session. Revoke the site permission separately in Keplr.</p>
+    </div>
+  </div>
+</header>
+<!-- site-header:end -->
+
+<main class="rescue-page">
+  <section class="rescue-intro">
+    <div>
+      <div class="kicker">DIRECT CONTRACT ACCESS / JUNO-1</div>
+      <h1>RESCUE <b>NETA.</b></h1>
+      <p>Preview a direct swap between JUNO and NETA in the existing legacy WYND pool. Quotes are read directly from the on-chain contract.</p>
+    </div>
+    <div class="phase-badge"><span>PHASE 01</span><b>READ-ONLY LIVE QUOTES</b><small>NO SIGNING / NO BROADCAST</small></div>
+  </section>
+
+  <section class="rescue-layout">
+    <aside class="risk-column" aria-label="Important swap information">
+      <article class="risk-panel">
+        <span class="risk-tag">LEGACY POOL</span>
+        <h2>INDEPENDENT ACCESS.</h2>
+        <p>This community interface interacts directly with the existing WYND JUNO/NETA smart contract. The original WYND frontend is no longer available. Review every transaction before signing.</p>
+      </article>
+      <article class="risk-panel warning">
+        <span class="risk-tag">LOW LIQUIDITY</span>
+        <h2>$25 PER SWAP.</h2>
+        <p>Individual swaps through this interface are restricted to an estimated value of $25. The number of separate swaps is not limited.</p>
+      </article>
+      <article class="pool-status">
+        <div><span>POOL</span><b>JUNO / NETA</b></div>
+        <div><span>CONTRACT</span><b id="contract-state">VERIFYING…</b></div>
+        <div><span>QUOTE SOURCE</span><b id="quote-source">JUNO LCD</b></div>
+      </article>
+    </aside>
+
+    <section class="swap-shell" aria-labelledby="swap-title">
+      <div class="swap-head">
+        <div><div class="kicker">LIVE CONTRACT QUOTE</div><h2 id="swap-title">SWAP JUNO / NETA</h2></div>
+        <button id="settings-toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="slippage-settings" aria-label="Open slippage settings">⚙</button>
+      </div>
+
+      <div id="slippage-settings" class="slippage-settings" hidden>
+        <div><b>MAX SLIPPAGE</b><small>The quote will fail if execution moves beyond this tolerance.</small></div>
+        <div class="slippage-options" role="group" aria-label="Maximum slippage">
+          <button type="button" data-slippage="1">1%</button>
+          <button type="button" data-slippage="3">3%</button>
+          <button type="button" data-slippage="5" class="selected">5%</button>
+          <label><span class="sr-only">Custom slippage percentage</span><input id="custom-slippage" inputmode="decimal" placeholder="CUSTOM" aria-label="Custom slippage percentage"><i>%</i></label>
+        </div>
+        <p>5% is the default for this low-liquidity legacy pool. Maximum allowed here: 10%.</p>
+      </div>
+
+      <div class="token-box offer-box">
+        <div class="token-line"><label for="offer-amount">YOU PAY</label><span id="offer-balance">BALANCE —</span></div>
+        <div class="amount-line">
+          <input id="offer-amount" inputmode="decimal" autocomplete="off" placeholder="0.0" aria-describedby="offer-usd quote-error">
+          <div class="token-pill"><i id="offer-mark">J</i><b id="offer-symbol">JUNO</b></div>
+        </div>
+        <div class="value-line"><span id="offer-usd">EST. $0.00</span><button id="max-button" type="button" disabled>MAX</button></div>
+      </div>
+
+      <button id="reverse-swap" class="reverse-button" type="button" aria-label="Reverse JUNO and NETA">↓</button>
+
+      <div class="token-box receive-box">
+        <div class="token-line"><span>YOU RECEIVE</span><span>ON JUNO</span></div>
+        <div class="amount-line">
+          <output id="receive-amount">0.0</output>
+          <div class="token-pill"><i id="receive-mark">N</i><b id="receive-symbol">NETA</b></div>
+        </div>
+        <div class="value-line"><span id="receive-usd">EST. $0.00</span><span id="quote-age">ENTER AN AMOUNT</span></div>
+      </div>
+
+      <div id="quote-error" class="quote-message" role="status" aria-live="polite">LIVE CONTRACT VALIDATION IN PROGRESS…</div>
+
+      <dl class="quote-details">
+        <div><dt>RATE</dt><dd id="quote-rate">—</dd></div>
+        <div><dt>PRICE IMPACT</dt><dd id="price-impact">—</dd></div>
+        <div><dt>POOL FEE</dt><dd id="pool-fee">0.30%</dd></div>
+        <div><dt>MINIMUM RECEIVED</dt><dd id="minimum-received">—</dd></div>
+        <div><dt>MAX SLIPPAGE</dt><dd id="slippage-summary">5.00%</dd></div>
+      </dl>
+
+      <button class="swap-action" type="button" disabled>SWAP SIGNING OPENS AFTER LIVE TESTS</button>
+      <p class="prototype-note">This phase can only request and display quotes. It cannot construct, sign or broadcast a transaction.</p>
+    </section>
+  </section>
+</main>
+
+<!-- site-footer:start -->
+<footer>
+  <div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div>
+  <div>BUILT ON JUNO &amp; OSMOSIS</div>
+</footer>
+<!-- site-footer:end -->
+<script src="matrix-background.js?v=1"></script>
+<script src="cosmos-client.js?v=1" defer></script>
+<script src="rescue-neta.js?v=20260914-1" defer></script>
+<script src="wallet-header.js?v=4" defer></script>
+<script src="matrix-blackout.js?v=20260913-1" defer></script>
+</body>
+</html>
