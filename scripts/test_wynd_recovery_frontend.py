@@ -40,8 +40,8 @@ for required in [
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=2', 'id="keplr-connect"',
-    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=7',
-    'wynd-recovery.js?v=20260914-17',
+    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=8',
+    'wynd-recovery.js?v=20260914-18',
     'wynd-recovery.css?v=20260914-5', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
@@ -49,13 +49,15 @@ for required in [
 for required in ['window.keplr', 'keplr_keystorechange', 'enable(CHAIN_ID)', 'getOfflineSigner(CHAIN_ID)', 'ADDRESS_PATTERN.test(address)']:
     assert required in wallet_header, required
 for required in [
-    'enabled:true', 'chainId:"juno-1"', 'gasPrice:"0.075ujuno"',
+    'enabled:false', 'chainId:"juno-1"', 'gasPrice:"0.075ujuno"',
     'gasAdjustment:1.4', 'bond:500000', 'unbond:500000', 'claim:500000', 'withdraw:700000',
     'memo:"netareborn.com/wynd-recovery:v1"', 'writable:false', 'configurable:false',
     'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:"1000000",maxNetaRaw:"10200"',
 ]:
     assert required in signing_config, required
-assert 'action:"unbond",maxAmountRaw:"47283"' in signing_config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in signing_config
+for required in ['nextReleaseAt', 'nextReleaseHeight', 'unbondingDisplay(position,decimals)', 'READY AT BLOCK']:
+    assert required in js, required
 assert (root/"assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:

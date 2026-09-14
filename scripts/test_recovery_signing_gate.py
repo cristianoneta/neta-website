@@ -7,11 +7,11 @@ frontend = (root / "wynd-recovery.js").read_text()
 html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
 
-# Only the exact-wallet, exact-pool 47,283 raw LP Unbond pilot is enabled.
-assert config.count("enabled:false") == 1
-assert config.count("enabled:true") == 1
+# The completed Unbond pilot and all other signing are disabled.
+assert config.count("enabled:false") == 2
+assert "enabled:true" not in config
 assert "writable:false" in config and "configurable:false" in config
-assert 'action:"unbond",maxAmountRaw:"47283"' in config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
 assert 'liquidityPilot:Object.freeze({enabled:false' in config
 assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
 assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
@@ -64,4 +64,4 @@ assert "broadcastTx" not in client
 assert (root / "assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 
-print("Exact-wallet Unbond pilot is enabled; all other signing is gated off")
+print("Completed Unbond pilot is disabled; all signing is gated off")

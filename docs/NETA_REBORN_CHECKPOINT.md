@@ -895,3 +895,14 @@ live tests and cancellation/rejection paths pass.
 - The exact message simulated successfully against the live wallet state on `juno-1` with `215338` gas used; nothing was broadcast by the simulation.
 - Expected post-state: active stake `0`, one unmatured claim of `47283` raw LP with a release time approximately seven days after confirmation, and direct LP `0` until Claim.
 - Bond, Withdraw, Claim, liquidity creation, other wallets, other pools, other amounts, and other periods remain unauthorized.
+
+### Controlled Unbond live result
+
+- Transaction: `3F134F9C0759851A2602C63B1B58D91AD874A74071FCBE6C10AA03CC4AA8A249`
+- Height/time: `41745318` / `2026-09-14T07:58:06Z`; chain result `code 0`.
+- Gas used/wanted: `263760` / `303999`.
+- Event confirms action `unbond`, sender pilot wallet, and amount `47283` raw LP.
+- Verified post-state: active 7-day stake `0`; direct LP `0`; one unmatured claim for `47283` raw LP.
+- Exact on-chain release timestamp: `1789977486734070343` nanoseconds, corresponding to `2026-09-21T07:58:06.734070343Z` (approximately `21.09.2026 09:58:06` in Germany/CEST).
+- The recovery UI now retains the earliest pending claim release and displays it behind the unbonding amount as `READY <local date/time>`; height-based claims display their release block.
+- Unbond authorization is closed. All recovery signing pilots are disabled until the Claim is mature and separately revalidated.
