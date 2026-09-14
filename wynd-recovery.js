@@ -666,6 +666,7 @@ async function init(){
   renderImpact();
   renderPools();
   renderLeaderboard();
+  $("#address-form button[type=submit]").disabled=false;
   $("#address-form").addEventListener("submit",event=>{
     event.preventDefault();
     const address=$("#wallet-address").value.trim().toLowerCase();
