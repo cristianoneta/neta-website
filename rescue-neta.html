@@ -8,7 +8,7 @@
   <title>Rescue NETA — NETA Reborn</title>
   <meta name="description" content="Read-only live JUNO and NETA swap quotes from the legacy WYND pool.">
   <link rel="stylesheet" href="styles.css?v=20260914-7">
-  <link rel="stylesheet" href="rescue-neta.css?v=20260914-3">
+  <link rel="stylesheet" href="rescue-neta.css?v=20260914-4">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
 <body>
@@ -117,7 +117,7 @@
         <div><dt>PRICE IMPACT</dt><dd id="price-impact">—</dd></div>
         <div><dt>POOL FEE</dt><dd id="pool-fee">0.30%</dd></div>
         <div><dt>MINIMUM RECEIVED</dt><dd id="minimum-received">—</dd></div>
-        <div><dt>MAX SLIPPAGE</dt><dd id="slippage-summary">5.00%</dd></div>
+        <div><dt>MAX SLIPPAGE</dt><dd><button id="slippage-summary-button" class="slippage-edit" type="button" aria-controls="slippage-settings"><span id="slippage-summary">5.00%</span><i>EDIT</i></button></dd></div>
       </dl>
 
       <button id="swap-action" class="swap-action" type="button" disabled>CONNECT PILOT WALLET TO TEST</button>
@@ -154,7 +154,7 @@
 <script src="cosmos-client.js?v=1" defer></script>
 <script src="rescue-neta-signing-config.js?v=20260914-1" defer></script>
 <script src="assets/swap-signing-client.js?v=20260914-1" defer></script>
-<script src="rescue-neta.js?v=20260914-2" defer></script>
+<script src="rescue-neta.js?v=20260914-3" defer></script>
 <script src="wallet-header.js?v=4" defer></script>
 <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
