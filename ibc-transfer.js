@@ -6,7 +6,7 @@
   const CHAINS={
     juno:{id:"juno-1",name:"JUNO",prefix:"juno",gas:"0.075ujuno",rpc:["https://juno-rpc.kleomedes.network","https://juno-rpc.polkachu.com"],lcd:["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"]},
     osmosis:{id:"osmosis-1",name:"OSMOSIS",prefix:"osmo",gas:"0.025uosmo",rpc:["https://osmosis-rpc.polkachu.com"],lcd:["https://osmosis-api.polkachu.com"]},
-    terra:{id:"phoenix-1",name:"TERRA",prefix:"terra",gas:"0.15uluna",rpc:["https://terra-rpc.polkachu.com"],lcd:["https://terra-api.polkachu.com"]},
+    terra:{id:"phoenix-1",name:"TERRA",prefix:"terra",gas:"0.15uluna",rpc:["https://terra-rpc.polkachu.com"],lcd:["https://terra-rest.publicnode.com","https://terra-api.polkachu.com"]},
   };
   const DENOMS={
     juno:{JUNO:"ujuno",OSMO:"ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",LUNA:"ibc/107D152BB3176FAEBF4C2A84C5FFDEEA7C7CB4FE1BBDAB710F1FD25BCD055CBF",NETA:NETA},
@@ -28,7 +28,7 @@
   async function readBalance(){
     const request=++balanceRequest,from=$("#ibc-from").value,symbol=$("#ibc-asset").value,address=accounts[from];balanceRaw=0n;
     if(!address){$("#ibc-balance").textContent="BALANCE —";return}
-    const cfg=CHAINS[from],denom=DENOMS[from][symbol];
+    const cfg=CHAINS[from],denom=DENOMS[from][symbol];$("#ibc-balance").textContent=`BALANCE LOADING… ${symbol}`;
     for(const lcd of cfg.lcd){try{
       let amount;
       if(from==="juno"&&symbol==="NETA"){
@@ -37,7 +37,7 @@
       }else amount=(await getJson(`${lcd}/cosmos/bank/v1beta1/balances/${address}/by_denom?denom=${encodeURIComponent(denom)}`)).balance?.amount||"0";
       if(request!==balanceRequest)return;balanceRaw=BigInt(amount);$("#ibc-balance").textContent=`BALANCE ${display(balanceRaw)} ${symbol}`;return;
     }catch(error){continue}}
-    throw new Error("BALANCE QUERY FAILED");
+    $("#ibc-balance").textContent=`BALANCE UNAVAILABLE · ${symbol}`;throw new Error("BALANCE QUERY FAILED");
   }
   function render(){
     let from=$("#ibc-from").value,to=$("#ibc-to").value;if(from===to){to=Object.keys(CHAINS).find(chain=>chain!==from);$("#ibc-to").value=to}
