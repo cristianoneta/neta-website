@@ -70,7 +70,7 @@ for (const [path, activeLabel] of pages) {
     page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(path, {waitUntil: "domcontentloaded"});
 
-    await expect(page.locator("header nav a")).toHaveCount(5);
+    await expect(page.locator("header nav a")).toHaveCount(6);
     await expect(page.locator("header nav .nav-disabled")).toHaveAttribute("aria-disabled", "true");
     await expect(page.locator("header nav a.active")).toHaveText(activeLabel);
     await expect(page.locator("#keplr-connect")).toContainText("CONNECT KEPLR");
@@ -298,7 +298,8 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   await expect(page.locator("#swapBreakdown")).toHaveText(
     `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
   );
-  await expect(page.locator("#marketUpdated")).not.toHaveText("—");\n  await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
+  await expect(page.locator("#marketUpdated")).not.toHaveText("—");
+  await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
   await expect(page.locator(".terra-node .chain-logo")).toHaveAttribute("src", "assets/terra-matrix-official.svg");
   await expect(page.locator(".terra-link")).toHaveCount(2);
   const centers = await page.locator(".flow-stage").evaluate(stage => {

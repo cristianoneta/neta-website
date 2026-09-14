@@ -19,6 +19,7 @@ NAVIGATION = (
     ("map-of-neta.html", "MAP OF NETA"),
     ("wynd-recovery.html", "WYND RECOVERY"),
     ("rescue-neta.html", "RESCUE NETA"),
+    ("neta-socials.html", "NETA SOCIALS"),
     ("neta-dao.html", "NETA DAO"),
 )
 HEADER_RE = re.compile(
@@ -74,29 +75,33 @@ def render_header(active_page: str) -> str:
     ))
 
 
-def render_footer() -> str:
+def render_footer(page: str) -> str:
+    chains = "BUILT ACROSS JUNO, OSMOSIS &amp; TERRA" if page == "map-of-neta.html" else "BUILT ON JUNO &amp; OSMOSIS"
     return "\n".join((
         "<!-- site-footer:start -->",
         "<footer>",
         "  <div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div>",
-        "  <div>BUILT ON JUNO &amp; OSMOSIS</div>",
+        f"  <div>{chains}</div>",
         "</footer>",
         "<!-- site-footer:end -->",
     ))
 
 
 def expected_page(source: str, page: str) -> str:
+    csp_meta = CSP_META
+    if page == "map-of-neta.html":
+        csp_meta = csp_meta.replace("https://terra-api.polkachu.com", "https://terra-rest.publicnode.com https://terra-api.polkachu.com")
     if CSP_RE.search(source):
-        source = CSP_RE.sub(CSP_META, source, count=1)
+        source = CSP_RE.sub(csp_meta, source, count=1)
     else:
         viewport = '<meta name="viewport" content="width=device-width,initial-scale=1">'
         if viewport not in source:
             raise RuntimeError(f"{page}: viewport marker missing")
-        source = source.replace(viewport, viewport + CSP_META, 1)
+        source = source.replace(viewport, viewport + csp_meta, 1)
     for asset, version in ASSET_VERSIONS.get(page, {}).items():
         source = re.sub(rf"{re.escape(asset)}\?v=[^\"']+", f"{asset}?v={version}", source)
     source, header_count = HEADER_RE.subn(render_header(page), source, count=1)
-    source, footer_count = FOOTER_RE.subn(render_footer(), source, count=1)
+    source, footer_count = FOOTER_RE.subn(render_footer(page), source, count=1)
     if header_count != 1 or footer_count != 1:
         raise RuntimeError(f"{page}: expected exactly one header and footer")
     return source
