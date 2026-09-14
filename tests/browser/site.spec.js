@@ -109,6 +109,19 @@ test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
   expect(chain.bech32Config.bech32PrefixAccAddr).toBe("juno");
 });
 
+test("NETA Socials testnet console is inert until explicitly connected", async ({page}) => {
+  await page.addInitScript(() => {
+    window.__keplrCalls = 0;
+    window.keplr = {experimentalSuggestChain: async () => { window.__keplrCalls += 1; }};
+  });
+  await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator("#test-status")).toHaveText("NOT CONNECTED");
+  await expect(page.locator("#test-mock")).toBeDisabled();
+  await expect(page.locator("#test-socials")).toBeDisabled();
+  await expect(page.locator("#test-verify")).toBeDisabled();
+  expect(await page.evaluate(() => window.__keplrCalls)).toBe(0);
+});
+
 test("recovery renders validated snapshots and stays fail-closed", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.message));
