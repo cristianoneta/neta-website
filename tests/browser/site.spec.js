@@ -70,7 +70,7 @@ for (const [path, activeLabel] of pages) {
     page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(path, {waitUntil: "domcontentloaded"});
 
-    await expect(page.locator("header nav a")).toHaveCount(5);
+    await expect(page.locator("header nav a")).toHaveCount(6);
     await expect(page.locator("header nav .nav-disabled")).toHaveAttribute("aria-disabled", "true");
     await expect(page.locator("header nav a.active")).toHaveText(activeLabel);
     await expect(page.locator("#keplr-connect")).toContainText("CONNECT KEPLR");
