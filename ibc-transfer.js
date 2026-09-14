@@ -1,7 +1,6 @@
 (()=>{
   const $=selector=>document.querySelector(selector);
   if(!$("#ibc-review"))return;
-  const HOT_JUNO="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
   const NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",ICS20="juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn";
   const CHAINS={
     juno:{id:"juno-1",name:"JUNO",prefix:"juno",gas:"0.075ujuno",rpc:["https://juno-rpc.kleomedes.network","https://juno-rpc.polkachu.com"],lcd:["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"]},
@@ -14,16 +13,16 @@
     terra:{JUNO:"ibc/4CD525F166D32B0132C095F353F4C6F033B0FF5C49141470D1EFDA1D63303D04",OSMO:"ibc/0471F1C4E7AFD3F07702BEF6DC365268D64570F7C1FDC98EA6098DD6DE59817B",LUNA:"uluna",NETA:"ibc/24EDDB84AD007CD83BD8D2DCCFF5FB71F93912AB143411AD870F2FE7DBE658FB"},
   };
   const ORIGIN={JUNO:"juno",OSMO:"osmosis",LUNA:"terra",NETA:"juno"};
-  const CHANNEL={"juno:osmosis":"channel-0","osmosis:juno":"channel-42","juno:terra":"channel-86","terra:juno":"channel-2","osmosis:terra":"channel-251","terra:osmosis":"channel-1"};
-  const NETA_CHANNEL={"juno:osmosis":"channel-47","osmosis:juno":"channel-169","juno:terra":"channel-154","terra:juno":"channel-33"};
+  const CHANNEL={"juno:osmosis":"channel-0","osmosis:juno":"channel-42","osmosis:terra":"channel-251","terra:osmosis":"channel-1"};
+  const NETA_CHANNEL={"juno:osmosis":"channel-47","osmosis:juno":"channel-169"};
   const MEMO="netareborn.com/map-of-neta:ibc:v1";
   let accounts={},balanceRaw=0n,prepared=null,busy=false,balanceRequest=0;
-  function assetOptions(from,to){return Object.keys(ORIGIN).filter(symbol=>ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
+  function routeOptions(from){return Object.keys(CHAINS).filter(to=>to!==from&&Boolean(CHANNEL[`${from}:${to}`]))}\n  function assetOptions(from,to){return Object.keys(ORIGIN).filter(symbol=>ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
   function rawAmount(value){const normalized=value.trim().replace(",", ".");if(!/^(?:0|[1-9]\d*)(?:\.\d{0,6})?$/.test(normalized))return null;const [whole,fraction=""]=normalized.split(".");return BigInt(whole)*1000000n+BigInt((fraction+"000000").slice(0,6))}
   function display(raw){const whole=raw/1000000n,fraction=String(raw%1000000n).padStart(6,"0").replace(/0+$/,"");return fraction?`${whole}.${fraction}`:String(whole)}
   function isAllowedRoute(from,to,symbol){return from!==to&&(ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
   function setStatus(text,error=false){const node=$("#ibc-status");node.textContent=text;node.classList.toggle("error",error)}
-  function connectedAndAllowed(){return accounts.juno===HOT_JUNO&&Object.keys(CHAINS).every(chain=>Boolean(accounts[chain]))}
+  function connectedAndAllowed(){return Object.keys(CHAINS).every(chain=>Boolean(accounts[chain]))}
   async function getJson(url){const response=await fetch(url,{cache:"no-store"});if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
   async function readBalance(){
     const request=++balanceRequest,from=$("#ibc-from").value,symbol=$("#ibc-asset").value,address=accounts[from];balanceRaw=0n;
@@ -40,13 +39,13 @@
     $("#ibc-balance").textContent=`BALANCE UNAVAILABLE · ${symbol}`;throw new Error("BALANCE QUERY FAILED");
   }
   function render(){
-    let from=$("#ibc-from").value,to=$("#ibc-to").value;if(from===to){to=Object.keys(CHAINS).find(chain=>chain!==from);$("#ibc-to").value=to}
+    const from=$("#ibc-from").value,previousTo=$("#ibc-to").value,targets=routeOptions(from);$("#ibc-to").replaceChildren(...targets.map(chain=>{const option=document.createElement("option");option.value=chain;option.textContent=CHAINS[chain].name;return option}));const to=targets.includes(previousTo)?previousTo:targets[0];$("#ibc-to").value=to
     const allowed=assetOptions(from,to),previous=$("#ibc-asset").value;$("#ibc-asset").replaceChildren(...allowed.map(symbol=>{const option=document.createElement("option");option.value=symbol;option.textContent=symbol;return option}));if(allowed.includes(previous))$("#ibc-asset").value=previous;
     const symbol=$("#ibc-asset").value,channel=symbol==="NETA"?NETA_CHANNEL[`${from}:${to}`]:CHANNEL[`${from}:${to}`];
     $("#ibc-symbol").textContent=symbol;$("#ibc-route-label").textContent=`${CHAINS[from].name} → ${CHAINS[to].name}`;$("#ibc-channel").textContent=`${channel||"NO DIRECT"} · ${symbol}`;$("#ibc-destination").textContent=accounts[to]||"CONNECT KEPLR";
-    const access=$("#ibc-access"),ok=connectedAndAllowed();access.textContent=ok?"HOTWALLET ALLOWED":Object.keys(accounts).length?"NOT ALLOWLISTED":"CONNECT WALLET";access.className=`ibc-access ${ok?"allowed":Object.keys(accounts).length?"denied":""}`;
+    const access=$("#ibc-access"),ok=connectedAndAllowed();access.textContent=ok?"WALLET READY":"CONNECT WALLET";access.className=`ibc-access ${ok?"allowed":""}`;
     const amount=rawAmount($("#ibc-amount").value),valid=ok&&amount!==null&&amount>0n&&amount<=balanceRaw&&Boolean(channel)&&isAllowedRoute(from,to,symbol);$("#ibc-review").disabled=!valid;
-    if(!ok)setStatus(Object.keys(accounts).length?"THIS ACCOUNT IS NOT ENABLED FOR THE CONTROLLED IBC PILOT.":"CONNECT THE ALLOWLISTED WALLET TO CONTINUE.",Boolean(Object.keys(accounts).length));
+    if(!ok)setStatus("CONNECT YOUR KEPLR WALLET TO CONTINUE.");
     else if(!amount||amount<=0n)setStatus("ENTER AN AMOUNT TO BUILD THE TRANSFER.");else if(amount>balanceRaw)setStatus("AMOUNT EXCEEDS THE LIVE WALLET BALANCE.",true);else setStatus("ROUTE AND BALANCE READY FOR REVIEW.");
     readBalance().then(renderValidity).catch(error=>setStatus(error.message,true));
   }
@@ -60,14 +59,14 @@
   function preview(){
     const from=$("#ibc-from").value,to=$("#ibc-to").value,symbol=$("#ibc-asset").value,amount=rawAmount($("#ibc-amount").value),channel=symbol==="NETA"?NETA_CHANNEL[`${from}:${to}`]:CHANNEL[`${from}:${to}`];
     prepared={from,to,symbol,amount,channel,sender:accounts[from],receiver:accounts[to],denom:DENOMS[from][symbol]};
-    const data={network:CHAINS[from].id,sender:prepared.sender,receiver:prepared.receiver,direction:`${CHAINS[from].name} -> ${CHAINS[to].name}`,asset:symbol,amount:display(amount),source_channel:channel,source_denom:prepared.denom,memo:MEMO,signing_enabled:true,allowlisted_wallet:true};
+    const data={network:CHAINS[from].id,sender:prepared.sender,receiver:prepared.receiver,direction:`${CHAINS[from].name} -> ${CHAINS[to].name}`,asset:symbol,amount:display(amount),source_channel:channel,source_denom:prepared.denom,memo:MEMO,signing_enabled:true,public_access:true};
     $("#ibc-preview").textContent=JSON.stringify(data,null,2);$("#ibc-modal-state").textContent="READY FOR FINAL LIVE REVALIDATION";$("#ibc-modal-state").className="ibc-modal-state";$("#ibc-sign").hidden=false;$("#ibc-explorer").hidden=true;$("#ibc-modal-note").textContent="The route, wallet identity, balance and channel will be checked again before Keplr opens.";$("#ibc-modal").hidden=false;
   }
   async function sign(){
     if(busy)return;busy=true;$("#ibc-sign").disabled=true;$("#ibc-modal-state").textContent="REVALIDATING ROUTE + BALANCE…";
     let client;
     try{
-      await loadAccounts();if(!connectedAndAllowed())throw new Error("WALLET IS NOT ALLOWLISTED");await readBalance();
+      await loadAccounts();if(!connectedAndAllowed())throw new Error("WALLET CONNECTION INCOMPLETE");await readBalance();
       const current=rawAmount($("#ibc-amount").value),from=$("#ibc-from").value,to=$("#ibc-to").value,symbol=$("#ibc-asset").value,channel=symbol==="NETA"?NETA_CHANNEL[`${from}:${to}`]:CHANNEL[`${from}:${to}`];if(!prepared||current!==prepared.amount||from!==prepared.from||to!==prepared.to||symbol!==prepared.symbol||channel!==prepared.channel||prepared.sender!==accounts[from]||prepared.receiver!==accounts[to])throw new Error("TRANSFER PARAMETERS CHANGED — REVIEW AGAIN");if(current>balanceRaw)throw new Error("INSUFFICIENT LIVE BALANCE");
       const cfg=CHAINS[prepared.from],signer=window.keplr.getOfflineSigner(cfg.id),connection=await window.NetaIbcSigning.connect(cfg.rpc,signer,cfg.gas);client=connection.client;
       const timeout=BigInt(Date.now()+15*60*1000)*1000000n;let message;
