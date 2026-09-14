@@ -21,7 +21,7 @@
     reverse:document.querySelector("#reverse-swap"),message:document.querySelector("#quote-error"),
     age:document.querySelector("#quote-age"),rate:document.querySelector("#quote-rate"),
     impact:document.querySelector("#price-impact"),fee:document.querySelector("#pool-fee"),
-    minimum:document.querySelector("#minimum-received"),slippageSummary:document.querySelector("#slippage-summary"),
+    minimum:document.querySelector("#minimum-received"),slippageSummary:document.querySelector("#slippage-summary"),slippageSummaryButton:document.querySelector("#slippage-summary-button"),
     contractState:document.querySelector("#contract-state"),source:document.querySelector("#quote-source"),
     settings:document.querySelector("#slippage-settings"),settingsToggle:document.querySelector("#settings-toggle"),
     custom:document.querySelector("#custom-slippage"),slippageButtons:[...document.querySelectorAll("[data-slippage]")],
@@ -286,6 +286,12 @@
     if(quote)scheduleQuote();return true;
   }
 
+  function toggleSlippageSettings(forceOpen){
+    const open=forceOpen===undefined?dom.settings.hidden:Boolean(forceOpen);
+    dom.settings.hidden=!open;dom.settingsToggle.setAttribute("aria-expanded",String(open));
+    if(open&&forceOpen)dom.custom.focus();
+  }
+
   dom.amount.addEventListener("input",scheduleQuote);
   dom.reverse.addEventListener("click",()=>{
     const previous=quote?.returned;offer=other(offer);renderDirection();
@@ -296,10 +302,13 @@
     const limitRaw=BigInt(Math.floor(LIMIT_USD/price*1e6));const chosen=balanceRaw<limitRaw?balanceRaw:limitRaw;
     dom.amount.value=amountText(chosen);scheduleQuote();
   });
-  dom.settingsToggle.addEventListener("click",()=>{
-    const open=dom.settings.hidden;dom.settings.hidden=!open;dom.settingsToggle.setAttribute("aria-expanded",String(open));
-  });
+  dom.settingsToggle.addEventListener("click",()=>toggleSlippageSettings());
+  dom.slippageSummaryButton?.addEventListener("click",()=>toggleSlippageSettings(true));
   dom.slippageButtons.forEach(button=>button.addEventListener("click",()=>{dom.custom.value="";selectSlippage(Number(button.dataset.slippage))}));
+  dom.custom.addEventListener("input",()=>{
+    const value=Number(dom.custom.value.replace(",","."));
+    if(dom.custom.value&&Number.isFinite(value)&&value>=0.1&&value<=10)selectSlippage(value);
+  });
   dom.custom.addEventListener("change",()=>selectSlippage(Number(dom.custom.value.replace(",","."))));
   addEventListener("neta:wallet-connected",updateBalance);addEventListener("neta:wallet-disconnected",()=>{updateBalance();if(!signing)dom.modal.hidden=true});
   dom.action?.addEventListener("click",openPreview);dom.confirm?.addEventListener("click",signSwap);
