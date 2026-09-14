@@ -5,6 +5,11 @@ on:
     paths:
       - "contracts/neta-socials/**"
       - ".github/workflows/neta-socials-contract.yml"
+  push:
+    branches: [main]
+    paths:
+      - "contracts/neta-socials/**"
+      - ".github/workflows/neta-socials-contract.yml"
   workflow_dispatch:
 
 permissions:
@@ -19,7 +24,28 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Install pinned Rust toolchain
-        run: rustup toolchain install 1.85.0 --target wasm32-unknown-unknown --component clippy --profile minimal
-      - run: cargo +1.85.0 clippy --all-targets -- -D warnings
-      - run: cargo +1.85.0 test
-      - run: cargo +1.85.0 build --release --target wasm32-unknown-unknown
+        run: rustup toolchain install 1.85.0 --target wasm32-unknown-unknown --component clippy,rustfmt --profile minimal
+      - name: Generate dependency lockfile
+        run: cargo +1.85.0 generate-lockfile
+      - name: Verify formatting
+        run: cargo +1.85.0 fmt -- --check
+      - name: Verify schemas
+        run: cargo +1.85.0 run --example schema
+      - name: Run clippy
+        run: cargo +1.85.0 clippy --all-targets -- -D warnings
+      - name: Run contract tests
+        run: cargo +1.85.0 test
+      - name: Build release WASM
+        run: RUSTFLAGS="-D warnings" cargo +1.85.0 build --release --target wasm32-unknown-unknown
+      - name: Record WASM checksum
+        run: sha256sum target/wasm32-unknown-unknown/release/neta_socials.wasm > neta_socials.wasm.sha256
+      - name: Upload contract verification artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: neta-socials-contract
+          path: |
+            contracts/neta-socials/Cargo.lock
+            contracts/neta-socials/schema/
+            contracts/neta-socials/target/wasm32-unknown-unknown/release/neta_socials.wasm
+            contracts/neta-socials/neta_socials.wasm.sha256
+          if-no-files-found: error
