@@ -906,3 +906,23 @@ live tests and cancellation/rejection paths pass.
 - Exact on-chain release timestamp: `1789977486734070343` nanoseconds, corresponding to `2026-09-21T07:58:06.734070343Z` (approximately `21.09.2026 09:58:06` in Germany/CEST).
 - The recovery UI now retains the earliest pending claim release and displays it behind the unbonding amount as `READY <local date/time>`; height-based claims display their release block.
 - Unbond authorization is closed. All recovery signing pilots are disabled until the Claim is mature and separately revalidated.
+
+## Post-pilot reliability hardening — 2026-09-14
+
+- Production signing remains disabled; no wallet, pool or action pilot is active.
+- The dormant signing adapter now fails over across the Polkachu, Kleomedes and
+  Lavender.Five Juno RPC endpoints published by the Cosmos Chain Registry.
+  Every connection attempt has an eight-second deadline, and late connections
+  are explicitly disconnected.
+- Connecting Keplr no longer waits for the full ranking address index. The
+  validated wallet event reaches WYND Recovery immediately; rank and total NETA
+  load in the background and can fail independently without revoking wallet
+  state.
+- Playwright coverage now includes a fully mocked Withdraw lifecycle: live
+  revalidation, simulation, confirmation hash, post-state verification and
+  Atomscan URL. A separate rejection test proves that a refused Keplr request
+  never displays a hash or confirmed status.
+- The full address index remains necessary for arbitrary address search on the
+  Ranking page. It is cacheable and no longer blocks Keplr/Recovery, so creating
+  dozens of duplicate static shards would add deployment complexity without
+  improving the main search path.

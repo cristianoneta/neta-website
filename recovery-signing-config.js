@@ -2,7 +2,11 @@ Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
   value:Object.freeze({
     enabled:false,
     chainId:"juno-1",
-    rpcEndpoints:Object.freeze(["https://juno-rpc.polkachu.com:443"]),
+    rpcEndpoints:Object.freeze([
+      "https://juno-rpc.polkachu.com:443",
+      "https://juno-rpc.kleomedes.network",
+      "https://rpc.lavenderfive.com:443/juno",
+    ]),
     gasPrice:"0.075ujuno",
     gasAdjustment:1.4,
     gasCaps:Object.freeze({bond:500000,unbond:500000,claim:500000,withdraw:700000,liquidity:900000}),
