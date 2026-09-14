@@ -48,9 +48,10 @@ for required in [
     'enabled:false', 'chainId:"juno-1"', 'gasPrice:"0.075ujuno"',
     'gasAdjustment:1.4', 'unbond:500000', 'claim:500000', 'withdraw:700000',
     'memo:"netareborn.com/wynd-recovery:v1"', 'writable:false', 'configurable:false',
-    'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:"1000000",maxNetaRaw:"10200"',
+    'liquidityPilot:Object.freeze({enabled:true', 'junoRaw:"1000000",maxNetaRaw:"10200"',
 ]:
     assert required in signing_config, required
+assert (root/"assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 for page in ["map-of-neta.html", "what-is-neta.html", "neta-dao.html", "wynd-recovery.html"]:
     assert 'href="wynd-recovery.html"' in (root/page).read_text(), page
