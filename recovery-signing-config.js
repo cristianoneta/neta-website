@@ -1,13 +1,13 @@
 Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
   value:Object.freeze({
-    enabled:false,
+    enabled:true,
     chainId:"juno-1",
     rpcEndpoints:Object.freeze(["https://juno-rpc.polkachu.com:443"]),
     gasPrice:"0.075ujuno",
     gasAdjustment:1.4,
     gasCaps:Object.freeze({bond:500000,unbond:500000,claim:500000,withdraw:700000,liquidity:900000}),
     memo:"netareborn.com/wynd-recovery:v1",
-    pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"}),
+    pilot:Object.freeze({wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",pair:"juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",action:"unbond",maxAmountRaw:"47283"}),
     liquidityPilot:Object.freeze({enabled:false,wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",pair:"juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",netaToken:"juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",junoRaw:"1000000",maxNetaRaw:"10200",slippageTolerance:"0.01",allowanceBlocks:100,memo:"netareborn.com/wynd-recovery:liquidity-pilot:v1"}),
   }),
   writable:false,
