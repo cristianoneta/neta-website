@@ -25,6 +25,27 @@ This file is the durable technical knowledge base for the NETA Reborn holder/ind
   `2026-09-21T07:58:06.734070343Z`. Claim is already covered by all-pool
   simulations and browser tests; the broadcast is additional production evidence.
 
+### Controlled IBC transfer work — development branch
+
+- Map of NETA contains an IBC panel for Juno, Osmosis and Terra. The only
+  assets are JUNO, OSMO, LUNA and NETA.
+- Standard routes use Juno/Osmosis `channel-0`/`channel-42`, Juno/Terra
+  `channel-86`/`channel-2`, and Osmosis/Terra
+  `channel-251`/`channel-1`.
+- NETA uses Juno CW20-ICS20 `channel-47` ↔ Osmosis `channel-169` and Juno
+  `channel-154` ↔ Terra `channel-33`.
+- Route generation forbids forwarding a wrapped asset. It appears only when
+  the selected destination is that asset's origin chain.
+- Signing currently requires the connected Juno account to be
+  `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`. Immediately before signing,
+  source and destination accounts, route, channel, amount, balance and gas are
+  revalidated. This browser allowlist is a rollout control, not protocol-level
+  authorization; transactions remain self-custodial and require Keplr approval.
+- The open Juno/Terra CW20 channel has resolved 61 historical packets (35
+  Juno→Terra and 26 Terra→Juno), but no NETA transfer. Public access therefore
+  still requires a tiny outbound NETA test, acknowledgement and Terra-denom
+  verification, followed by a return transfer.
+
 ## Status legend
 - **VALIDATED**: reconciled exactly on-chain / by diagnostic.
 - **WORKING**: implementation exists but final reconciliation is not yet green.

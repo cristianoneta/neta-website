@@ -89,6 +89,7 @@ map_script = (ROOT / "map-of-neta.js").read_text(encoding="utf-8")
 address_index = (ROOT / "address-index.js").read_text(encoding="utf-8")
 wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
 rescue = (ROOT / "rescue-neta.js").read_text(encoding="utf-8")
+ibc = (ROOT / "ibc-transfer.js").read_text(encoding="utf-8")
 styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 assert 'position:sticky;top:0' in styles
 assert 'window.keplr.enable(CHAIN_ID)' in wallet_header
@@ -113,6 +114,16 @@ assert 'per_swap_limit_usd:SIGNING.publicMaxUsd' in rescue
 assert 'SIGNING.publicMaxUsd===LIMIT_USD' in rescue
 assert 'gas>SIGNING.gasCap' in rescue
 assert 'receivedFromEvents(result.events,liveQuote.receive,address)' in rescue
+assert 'const HOT_JUNO="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in ibc
+assert 'accounts.juno===HOT_JUNO' in ibc
+assert 'ORIGIN[symbol]===from||ORIGIN[symbol]===to' in ibc
+assert '"juno:terra":"channel-154"' in ibc
+assert '"terra:juno":"channel-33"' in ibc
+assert '"osmosis:terra":"channel-251"' in ibc
+assert '"terra:osmosis":"channel-1"' in ibc
+assert 'amount>balanceRaw' in ibc
+assert 'gas>900000' in ibc
+assert 'assets/ibc-signing-client.js' in (ROOT / "map-of-neta.html").read_text(encoding="utf-8")
 assert 'TRANSACTION INCLUDED · VERIFICATION INCOMPLETE' in rescue
 assert 'belief_price:belief' in rescue
 assert 'referral_address:null' in rescue

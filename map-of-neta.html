@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
   <title>Map of NETA</title>
   <link rel="stylesheet" href="styles.css?v=20260914-7">
   <link rel="stylesheet" href="map-of-neta.css?v=6">
   <link rel="stylesheet" href="map-of-neta-links.css?v=1">
+  <link rel="stylesheet" href="ibc-transfer.css?v=1">
+  <style>.ibc-explorer{display:inline-block;border:1px solid var(--g);padding:11px 14px;color:var(--g);font:700 11px monospace}.ibc-explorer[hidden]{display:none}</style>
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
 <body>
@@ -20,9 +22,9 @@
   <nav aria-label="Primary navigation">
     <a href="index.html">RANKING</a>
     <a class="active" aria-current="page" href="map-of-neta.html">MAP OF NETA</a>
-    <a href="neta-dao.html">NETA DAO</a>
     <a href="wynd-recovery.html">WYND RECOVERY</a>
     <a href="rescue-neta.html">RESCUE NETA</a>
+    <a href="neta-dao.html">NETA DAO</a>
     <span class="nav-disabled" title="Coming next" aria-disabled="true">VALUE CALCULATOR</span>
   </nav>
   <div class="wallet-shell">
@@ -94,6 +96,28 @@
       <p class="collection-note" id="collectionNote">Only verified forward-collected data is shown. Longer periods unlock as history accumulates.</p>
     </aside>
   </div>
+  <section class="ibc-section" aria-labelledby="ibc-title">
+    <div class="ibc-intro">
+      <div class="kicker">CONTROLLED INTERCHAIN ROUTES</div>
+      <h2 id="ibc-title">MOVE ASSETS <b>ACROSS IBC.</b></h2>
+      <p>Transfer native gas assets and NETA between Juno, Osmosis and Terra. Wrapped assets can only return to their origin chain.</p>
+      <div class="ibc-rules"><span>01 // SELECT ROUTE</span><span>02 // REVIEW LIVE BALANCE</span><span>03 // SIGN IN KEPLR</span></div>
+    </div>
+    <div class="ibc-card">
+      <div class="ibc-card-head"><div><span>IBC TRANSFER</span><strong id="ibc-route-label">JUNO → OSMOSIS</strong></div><span id="ibc-access" class="ibc-access">CONNECT WALLET</span></div>
+      <div class="ibc-grid">
+        <label><span>FROM</span><select id="ibc-from"><option value="juno">JUNO</option><option value="osmosis">OSMOSIS</option><option value="terra">TERRA</option></select></label>
+        <button id="ibc-reverse" class="ibc-reverse" type="button" aria-label="Reverse IBC route">⇄</button>
+        <label><span>TO</span><select id="ibc-to"><option value="osmosis">OSMOSIS</option><option value="juno">JUNO</option><option value="terra">TERRA</option></select></label>
+      </div>
+      <label class="ibc-asset"><span>ASSET</span><select id="ibc-asset"></select></label>
+      <label class="ibc-amount"><span>YOU SEND</span><small id="ibc-balance">BALANCE —</small><input id="ibc-amount" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="ibc-max" type="button">MAX</button><b id="ibc-symbol">JUNO</b></label>
+      <div class="ibc-receive"><span>DESTINATION</span><strong id="ibc-destination">CONNECT KEPLR</strong><small id="ibc-channel">CHANNEL —</small></div>
+      <div id="ibc-status" class="ibc-status" role="status">CONNECT THE ALLOWLISTED WALLET TO CONTINUE.</div>
+      <button id="ibc-review" class="ibc-review" type="button" disabled>REVIEW IBC TRANSFER</button>
+    </div>
+  </section>
+  <div id="ibc-modal" class="ibc-modal" hidden><div class="ibc-modal-card" role="dialog" aria-modal="true" aria-labelledby="ibc-modal-title"><div class="kicker">TRANSACTION PREVIEW</div><h2 id="ibc-modal-title">IBC TRANSFER</h2><div id="ibc-modal-state" class="ibc-modal-state">READY FOR FINAL LIVE REVALIDATION</div><pre id="ibc-preview"></pre><a id="ibc-explorer" class="ibc-explorer" target="_blank" rel="noopener noreferrer" hidden>VIEW SOURCE TRANSACTION ↗</a><p id="ibc-modal-note">The route, wallet identity, balance and channel will be checked again before Keplr opens.</p><div class="ibc-modal-actions"><button id="ibc-sign" type="button">RE-VALIDATE + SIGN WITH KEPLR</button><button id="ibc-close" type="button">CLOSE</button></div></div></div>
 <section class="community-strip"><div class="telegram-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="img"><path d="M21.6 3.2 18.4 19c-.24 1.12-.88 1.39-1.78.86l-4.88-3.6-2.35 2.27c-.26.26-.48.48-.98.48l.35-4.97 9.05-8.18c.39-.35-.09-.55-.61-.2L6.02 12.7l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.28 2.37c.87-.32 1.64.2 1.32.83Z"/></svg></div><div class="community-copy"><div class="kicker">NETA REBORN</div><h2>JOIN THE COMMUNITY.</h2><p>Connect with NETA holders, builders and community members on Telegram.</p></div><a class="telegram-button" href="https://t.me/+mfsF41Zra7I2ZDYy" target="_blank" rel="noopener noreferrer">JOIN TELEGRAM <span>↗</span></a></section></main>
 <!-- site-footer:start -->
 <footer>
@@ -103,6 +127,8 @@
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
 <script src="map-of-neta.js?v=6"></script>
+  <script src="assets/ibc-signing-client.js?v=1"></script>
+  <script src="ibc-transfer.js?v=1"></script>
   <script src="wallet-header.js?v=4" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body></html>
