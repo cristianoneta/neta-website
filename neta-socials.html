@@ -8,7 +8,7 @@
   <title>NETA Socials — Community Board</title>
   <meta name="description" content="A token-gated community board for NETA stakers on Juno.">
   <link rel="stylesheet" href="styles.css?v=20260914-7">
-  <link rel="stylesheet" href="neta-socials.css?v=1">
+  <link rel="stylesheet" href="neta-socials.css?v=2">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
   <style>.testnet-link{border:0;background:transparent;color:#315f4d;font:inherit;letter-spacing:inherit;padding:0;cursor:pointer}.testnet-link:hover,.testnet-link:focus-visible{color:var(--g);outline:0}</style>
 </head>
@@ -46,25 +46,19 @@
     <aside class="thread-rail">
       <div class="rail-head"><div><span>COMMUNITY BOARD</span><strong>THREADS</strong></div><button id="new-thread" type="button" disabled>+ NEW</button></div>
       <div class="thread-filters"><button class="active" type="button">LATEST</button><button type="button">ACTIVE</button><button type="button">CLOSED</button></div>
-      <div class="thread-list" role="list">
-        <button class="thread-item active" type="button" data-thread="0"><span class="thread-state">OPEN · FEATURED</span><strong>What should NETA build next?</strong><small>3 COMMENTS · 18 MIN AGO</small></button>
-        <button class="thread-item" type="button" data-thread="1"><span class="thread-state">OPEN</span><strong>Restoring the Terra relayer path</strong><small>2 COMMENTS · 1 H AGO</small></button>
-        <button class="thread-item" type="button" data-thread="2"><span class="thread-state closed">CLOSED</span><strong>Community liquidity priorities</strong><small>4 COMMENTS · 1 D AGO</small></button>
+      <div class="thread-list thread-list-empty" role="status">
+        <div class="thread-empty"><span>NO THREADS YET</span><strong>THE BOARD IS EMPTY.</strong><small>The first on-chain conversation will appear here after launch.</small></div>
       </div>
       <div class="rail-foot"><span>ON-CHAIN AT LAUNCH</span><small>Threads and comments will be permanent Juno transactions.</small></div>
     </aside>
 
-    <article class="conversation-panel">
-      <header class="conversation-head"><div><span id="thread-state">THREAD #001 · OPEN</span><h2 id="thread-title">What should NETA build next?</h2></div><button type="button" disabled>•••</button></header>
-      <div class="thread-author"><span class="address-orb">N</span><div><strong id="thread-author">juno1z3x…s5et57</strong><small>THREAD AUTHOR · 18 MIN AGO</small></div><span class="owner-badge">OWNER</span></div>
-      <div class="thread-body" id="thread-body">NETA Reborn now has recovery tools, live market data and controlled IBC routes. Which utility should receive priority next—and what would make it genuinely useful for long-term NETA holders?</div>
-      <div class="conversation-divider"><span>3 COMMENTS</span></div>
-      <div id="comment-list" class="comment-list">
-        <article class="comment"><div class="comment-meta"><span class="address-orb">01</span><div><strong>juno15agz…e5h02p</strong><small>300 NETA STAKED · 12 MIN AGO</small></div><b>#001</b></div><p>A small coordination layer feels more valuable than another dashboard. Keep the first version narrow: threads, comments and transparent token-gated access.</p></article>
-        <article class="comment"><div class="comment-meta"><span class="address-orb">02</span><div><strong>juno1zz6v…9sa3qs7</strong><small>319 NETA STAKED · 8 MIN AGO</small></div><b>#002</b></div><p>Names can come later. Starting with wallet addresses makes authorship verifiable and avoids building an identity system before the discussion layer works.</p></article>
-        <article class="comment"><div class="comment-meta"><span class="address-orb">03</span><div><strong>juno1lujh…yz9s64</strong><small>10 NETA STAKED · 3 MIN AGO</small></div><b>#003</b></div><p>My vote is to finish reliable IBC monitoring first, then use this board to coordinate the next integrations.</p></article>
+    <article class="conversation-panel conversation-empty">
+      <header class="conversation-head"><div><span>NETA SOCIALS</span><h2>No conversation selected.</h2></div></header>
+      <div class="conversation-empty-body">
+        <span class="empty-orb">∅</span>
+        <strong>NO MESSAGES TO DISPLAY</strong>
+        <p>This space is intentionally empty. Real threads and comments will be loaded from the NETA Socials contract after deployment.</p>
       </div>
-      <form id="comment-form" class="comment-composer"><label for="comment-text">JOIN THE THREAD</label><textarea id="comment-text" maxlength="1000" placeholder="Connect an eligible wallet to comment…" disabled></textarea><div><span id="comment-count">0 / 1000</span><button id="comment-submit" type="submit" disabled>CONNECT WALLET</button></div></form>
     </article>
   </section>
 </main>
@@ -72,6 +66,6 @@
 <div id="draft-modal" class="draft-modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="draft-title"><span>NETA SOCIALS</span><h2 id="draft-title">FRONTEND DRAFT ONLY</h2><p>The final interaction will open Keplr and write to the NETA Socials contract. No transaction or content was submitted.</p><button id="draft-close" type="button">CLOSE</button></div></div>
 <footer><div>NETA SOCIALS · JUNO <button id="add-juno-testnet" class="testnet-link" type="button" title="Add the Juno Uni-7 testnet to Keplr">· UNI-7</button></div><div>10 NETA ACTIVE STAKE REQUIRED</div></footer>
 <button id="matrix-toggle" type="button" aria-pressed="true">MATRIX EFFECT: ON</button>
-<script src="data.js"></script><script src="wallet-header.js?v=20260914-4"></script><script src="neta-socials.js?v=1"></script><script src="matrix-blackout.js?v=20260913-1"></script>
+<script src="data.js"></script><script src="wallet-header.js?v=20260914-4"></script><script src="neta-socials.js?v=2"></script><script src="matrix-blackout.js?v=20260913-1"></script>
 </body>
 </html>
