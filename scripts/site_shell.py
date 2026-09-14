@@ -31,7 +31,7 @@ FOOTER_RE = re.compile(
     re.DOTALL,
 )
 CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">')
-CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-rest.publicnode.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
+CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
 ASSET_VERSIONS = {
     "index.html": {"app.js": "20260913-5", "styles.css": "20260914-7"},
     "map-of-neta.html": {"styles.css": "20260914-7"},
@@ -87,13 +87,16 @@ def render_footer() -> str:
 
 
 def expected_page(source: str, page: str) -> str:
+    csp_meta = CSP_META
+    if page == "map-of-neta.html":
+        csp_meta = csp_meta.replace("https://terra-api.polkachu.com", "https://terra-rest.publicnode.com https://terra-api.polkachu.com")
     if CSP_RE.search(source):
-        source = CSP_RE.sub(CSP_META, source, count=1)
+        source = CSP_RE.sub(csp_meta, source, count=1)
     else:
         viewport = '<meta name="viewport" content="width=device-width,initial-scale=1">'
         if viewport not in source:
             raise RuntimeError(f"{page}: viewport marker missing")
-        source = source.replace(viewport, viewport + CSP_META, 1)
+        source = source.replace(viewport, viewport + csp_meta, 1)
     for asset, version in ASSET_VERSIONS.get(page, {}).items():
         source = re.sub(rf"{re.escape(asset)}\?v=[^\"']+", f"{asset}?v={version}", source)
     source, header_count = HEADER_RE.subn(render_header(page), source, count=1)
