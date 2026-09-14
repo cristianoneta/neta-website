@@ -187,6 +187,18 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.swap.max_spread).toBe("0.05");
   expect(preview.message.swap.referral_address).toBeNull();
 
+  await page.locator("#close-swap").click();
+  await page.locator("#slippage-summary-button").click();
+  await expect(page.locator("#slippage-settings")).toBeVisible();
+  await page.locator("#custom-slippage").fill("2.5");
+  await expect(page.locator("#slippage-summary")).toHaveText("2.50%");
+  await expect(page.locator("#minimum-received")).toHaveText("0.009841 NETA");
+  await page.locator("#swap-action").click();
+  preview = JSON.parse(await page.locator("#swap-preview").textContent());
+  expect(preview.max_slippage).toBe("2.50%");
+  expect(preview.message.swap.max_spread).toBe("0.025");
+  expect(preview.minimum_received).toBe("0.009841 NETA");
+
   await page.evaluate(({neta, pilot}) => {
     window.__swapResult = {transactionHash: "A".repeat(64), events: [{type: "wasm", attributes: [
       {key: "_contract_address", value: neta}, {key: "action", value: "transfer"},
