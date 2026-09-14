@@ -47,6 +47,28 @@ async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () =>
   });
 }
 
+async function installSigningPilot(page, {wallet, pool, action = "withdraw", maxAmountRaw = "1000000", executeBody}) {
+  await page.route("**/recovery-signing-config.js*", route => route.fulfill({
+    contentType: "application/javascript",
+    body: `Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{value:Object.freeze({
+      enabled:true,chainId:"juno-1",rpcEndpoints:Object.freeze(["https://rpc.test"]),
+      gasPrice:"0.075ujuno",gasAdjustment:1.4,
+      gasCaps:Object.freeze({bond:500000,unbond:500000,claim:500000,withdraw:700000,liquidity:900000}),
+      memo:"netareborn.com/wynd-recovery:v1",
+      pilot:Object.freeze({wallet:"${wallet}",pair:"${pool.pair.address}",action:"${action}",maxAmountRaw:"${maxAmountRaw}",unbondingPeriod:null}),
+      liquidityPilot:Object.freeze({enabled:false})
+    }),writable:false,configurable:false});`,
+  }));
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
+    contentType: "application/javascript",
+    body: `window.NetaRecoverySigning={
+      connect:async()=>({client:{},endpoint:"https://rpc.test"}),
+      simulate:async()=>123456,
+      execute:async()=>{${executeBody}}
+    };`,
+  }));
+}
+
 for (const [path, activeLabel] of pages) {
   test(`${activeLabel} loads with the shared shell`, async ({page}) => {
     const pageErrors = [];
@@ -301,6 +323,70 @@ test("disconnect removes recovery action authority but keeps read-only results",
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
   await expect(page.locator(".actions").first()).toContainText("PREVIEW WITHDRAW");
   await expect(page.locator(".actions button").first()).toBeDisabled();
+});
+
+test("confirmed withdraw verifies its result and exposes the transaction hash", async ({page}) => {
+  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
+  const address = leaderboard.top_wallets[0].address;
+  let directRaw = "1000000";
+  await page.exposeFunction("__confirmTestWithdrawal", () => { directRaw = "0"; });
+  await installSigningPilot(page, {
+    wallet: address,
+    pool,
+    executeBody: 'await window.__confirmTestWithdrawal();return{code:0,transactionHash:"a".repeat(64)};',
+  });
+  await mockRecoveryChain(page, {
+    balanceFor: (_wallet, contract) => contract === pool.lp_token.address ? directRaw : "0",
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await page.getByRole("button", {name: "PREVIEW WITHDRAW"}).click();
+  await page.locator("#execute-action").click();
+
+  await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION + RESULT VERIFIED");
+  await expect(page.locator("#transaction-hash")).toHaveText("A".repeat(64));
+  await expect(page.locator("#transaction-explorer")).toHaveAttribute(
+    "href",
+    `https://atomscan.com/juno/transactions/${"A".repeat(64)}`,
+  );
+});
+
+test("rejected signing never presents a transaction as confirmed", async ({page}) => {
+  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
+  const address = leaderboard.top_wallets[0].address;
+  await installSigningPilot(page, {
+    wallet: address,
+    pool,
+    executeBody: 'throw new Error("Request rejected by user");',
+  });
+  await mockRecoveryChain(page, {
+    balanceFor: (_wallet, contract) => contract === pool.lp_token.address ? "1000000" : "0",
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await page.getByRole("button", {name: "PREVIEW WITHDRAW"}).click();
+  await page.locator("#execute-action").click();
+
+  await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION NOT CONFIRMED");
+  await expect(page.locator("#transaction-status")).toContainText("REQUEST REJECTED BY USER");
+  await expect(page.locator("#transaction-hash")).toBeHidden();
+  await expect(page.locator("#transaction-explorer")).toBeHidden();
 });
 
 test("wallet address conversion rejects an invalid Bech32 checksum", async ({page}) => {

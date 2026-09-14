@@ -9,13 +9,36 @@ function executeMessage(sender,contract,message,funds=[]){
   };
 }
 
-export async function connect(rpcEndpoints,signer,gasPrice){
+function connectWithTimeout(endpoint,signer,gasPrice,timeoutMs){
+  let settled=false;
+  let timer;
+  const attempt=SigningCosmWasmClient.connectWithSigner(endpoint,signer,{gasPrice:GasPrice.fromString(gasPrice)});
+  return new Promise((resolve,reject)=>{
+    timer=setTimeout(()=>{
+      settled=true;
+      reject(new Error(`CONNECTION TIMED OUT AFTER ${timeoutMs}MS`));
+    },timeoutMs);
+    attempt.then(client=>{
+      if(settled){try{client.disconnect();}catch(_){}return;}
+      settled=true;
+      clearTimeout(timer);
+      resolve(client);
+    },error=>{
+      if(settled)return;
+      settled=true;
+      clearTimeout(timer);
+      reject(error);
+    });
+  });
+}
+
+export async function connect(rpcEndpoints,signer,gasPrice,timeoutMs=8000){
   const errors=[];
   for(const endpoint of rpcEndpoints){
     try{
-      const client=await SigningCosmWasmClient.connectWithSigner(endpoint,signer,{gasPrice:GasPrice.fromString(gasPrice)});
+      const client=await connectWithTimeout(endpoint,signer,gasPrice,timeoutMs);
       return{client,endpoint};
-    }catch(error){errors.push(`${endpoint}: ${error.message}`);}
+    }catch(error){errors.push(`${endpoint}: ${error instanceof Error?error.message:String(error)}`);}
   }
   throw new Error(`NO SIGNING RPC AVAILABLE // ${errors.join(" // ")}`);
 }

@@ -51,10 +51,19 @@
   production configuration. The generated adapter is shipped locally but loaded
   only after every pilot and live-state gate passes; CI rebuilds it and rejects
   any difference from the committed artifact.
+- Signing RPC connection attempts use the independent Polkachu, Kleomedes and
+  Lavender.Five endpoints listed by the Cosmos Chain Registry. Each attempt has
+  an eight-second deadline before the adapter fails over, and a client that
+  connects after its deadline is disconnected.
 - The compact address index is loaded without a per-navigation timestamp cache
   buster so browser/CDN revalidation can work. It stores each economic wallet row once and maps both
   Juno and Osmosis aliases to that canonical object. Browser tests enforce alias
   identity and a two-megabyte size ceiling.
+- Keplr connection and the resulting recovery authority do not wait for the
+  large ranking snapshot. The wallet event is dispatched after chain/account and
+  Bech32 validation; rank and total NETA then fill in asynchronously. A snapshot
+  failure leaves the verified wallet connected and labels only ranking data as
+  unavailable.
 - Signing also requires a frozen single-action pilot scope: exact Juno wallet,
   allowlisted pair, action, positive raw-amount cap and, for bond/unbond, exact
   unbonding period. Claims abort if the live claimable amount differs from the
@@ -84,7 +93,9 @@
 
 - `main` is protected by a repository ruleset against force-push and deletion.
 - Pull requests use one consolidated `Test website` workflow for integrity,
-  recovery safety, signing-gate, syntax, build and Playwright coverage.
+  recovery safety, signing-gate, syntax, build and Playwright coverage. Browser
+  tests exercise both a mocked confirmed-and-post-verified transaction and a
+  rejected Keplr request while production signing remains disabled.
 - Superseded runs for the same PR/ref are cancelled. Data workflows only run for
   their owning files and keep scheduled/manual production writes serialized.
 - Third-party Actions are pinned to full commit SHAs. Dependabot updates are

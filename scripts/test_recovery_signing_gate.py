@@ -61,6 +61,10 @@ assert "client.simulate" in client
 assert "client.execute" in client
 assert "client.executeMultiple" in client
 assert "broadcastTx" not in client
+assert config.count("https://juno-rpc.") >= 2
+assert "https://rpc.lavenderfive.com:443/juno" in config
+assert "timeoutMs=8000" in client
+assert "CONNECTION TIMED OUT" in client
 # The pilot release ships the pinned local bundle loaded only after the
 # wallet, pair, amount and live-state gates have passed.
 assert (root / "assets/recovery-signing-client.js").exists()

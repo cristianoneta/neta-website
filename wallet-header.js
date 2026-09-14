@@ -67,6 +67,22 @@
     balance.textContent=message;
   }
 
+  function renderConnected(address,position){
+    const total=Number(position?.total_neta||0);
+    button.dataset.state="connected";
+    label.textContent=short(address);
+    balance.textContent=position?`${format(total)} NETA`:"LOADING SNAPSHOT…";
+    button.setAttribute("aria-label",`Open Keplr account menu for ${short(address)}`);
+    button.setAttribute("aria-haspopup","menu");
+    button.setAttribute("aria-expanded","false");
+    if(menuAddress)menuAddress.textContent=address;
+    if(menuTotal)menuTotal.textContent=position?`${format(total)} NETA`:"LOADING SNAPSHOT…";
+    if(menuRank)menuRank.textContent=position?.rank?`RANK #${position.rank}`:position?"UNRANKED":"RANK LOADING…";
+    button.title=position
+      ?`Total NETA: ${format(total)} · Juno ${format(position.juno_neta)} · Osmosis ${format(position.osmosis_neta)} · DAO ${format(Number(position.neta_dao_staking||0)+Number(position.neta_dao_unstaking||0)+Number(position.neta_dao_claimable||0))} · LP ${format(position.lp_neta)}`
+      :"Keplr connected; ranking snapshot is loading";
+  }
+
   function menuItems(){
     return menu?[...menu.querySelectorAll("a[href],button:not([disabled])")]:[];
   }
@@ -114,28 +130,28 @@
       const accounts=await signer.getAccounts();
       const address=accounts[0]?.address;
       if(!address||!ADDRESS_PATTERN.test(address))throw new Error("INVALID JUNO ACCOUNT");
-      const index=await loadAddressIndex();
       const osmosisAddress=toPrefix(address.toLowerCase(),"osmo");
-      const position=index[address.toLowerCase()]||index[osmosisAddress]||null;
-      const total=Number(position?.total_neta||0);
-      window.NETA_WALLET_STATE={address,osmosisAddress,provider:window.keplr,signer,position};
+      window.NETA_WALLET_STATE={address,osmosisAddress,provider:window.keplr,signer,position:null};
       sessionStorage.setItem(SESSION_KEY,"1");
-      button.dataset.state="connected";
-      label.textContent=short(address);
-      balance.textContent=`${format(total)} NETA`;
-      button.setAttribute("aria-label",`Open Keplr account menu for ${short(address)}`);
-      button.setAttribute("aria-haspopup","menu");
-      button.setAttribute("aria-expanded","false");
-      if(menuAddress)menuAddress.textContent=address;
-      if(menuTotal)menuTotal.textContent=`${format(total)} NETA`;
-      if(menuRank)menuRank.textContent=position?.rank?`RANK #${position.rank}`:"UNRANKED";
-      button.title=position
-        ?`Total NETA: ${format(total)} · Juno ${format(position.juno_neta)} · Osmosis ${format(position.osmosis_neta)} · DAO ${format(Number(position.neta_dao_staking||0)+Number(position.neta_dao_unstaking||0)+Number(position.neta_dao_claimable||0))} · LP ${format(position.lp_neta)}`
-        :"No NETA position in the current ranking snapshot";
+      renderConnected(address,null);
       dispatchEvent(new CustomEvent("neta:wallet-connected",{detail:window.NETA_WALLET_STATE}));
+      try{
+        const index=await loadAddressIndex();
+        if(window.NETA_WALLET_STATE?.address!==address)return;
+        const position=index[address.toLowerCase()]||index[osmosisAddress]||null;
+        window.NETA_WALLET_STATE.position=position;
+        renderConnected(address,position||{});
+        dispatchEvent(new CustomEvent("neta:wallet-position-updated",{detail:window.NETA_WALLET_STATE}));
+      }catch{
+        if(window.NETA_WALLET_STATE?.address!==address)return;
+        balance.textContent="SNAPSHOT UNAVAILABLE";
+        if(menuTotal)menuTotal.textContent="SNAPSHOT UNAVAILABLE";
+        if(menuRank)menuRank.textContent="RANK UNAVAILABLE";
+        button.title="Keplr connected; ranking snapshot unavailable";
+      }
     }catch(error){
       sessionStorage.removeItem(SESSION_KEY);
-      showError(error.message.toUpperCase());
+      showError((error instanceof Error?error.message:String(error)).toUpperCase());
       if(!silent)throw error;
     }finally{
       connecting=false;
