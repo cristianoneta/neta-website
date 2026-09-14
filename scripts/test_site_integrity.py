@@ -84,6 +84,7 @@ recovery = (ROOT / "wynd-recovery.js").read_text(encoding="utf-8")
 map_script = (ROOT / "map-of-neta.js").read_text(encoding="utf-8")
 address_index = (ROOT / "address-index.js").read_text(encoding="utf-8")
 wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
+rescue = (ROOT / "rescue-neta.js").read_text(encoding="utf-8")
 styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 assert 'position:sticky;top:0' in styles
 assert 'window.keplr.enable(CHAIN_ID)' in wallet_header
@@ -94,6 +95,11 @@ assert 'position?.total_neta' in wallet_header
 assert 'index[osmosisAddress]' in wallet_header
 assert 'neta:wallet-connected' in wallet_header
 assert 'neta:wallet-disconnected' in wallet_header
+assert 'const LIMIT_USD=25' in rescue
+assert 'PAIR_CODE_ID="2289"' in rescue
+assert 'ask_asset_info:null' in rescue
+assert 'referral:false' in rescue
+assert 'NO SIGNING' in (ROOT / "rescue-neta.html").read_text(encoding="utf-8")
 assert 'data-wallet-action="disconnect"' in wallet_header
 assert 'acceptHeaderWallet' in recovery
 assert 'neta:wallet-disconnected' in recovery

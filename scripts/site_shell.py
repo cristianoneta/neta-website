@@ -13,6 +13,7 @@ PAGES = (
     "what-is-neta.html",
     "neta-dao.html",
     "wynd-recovery.html",
+    "rescue-neta.html",
 )
 NAVIGATION = (
     ("index.html", "RANKING"),
@@ -20,6 +21,7 @@ NAVIGATION = (
     ("what-is-neta.html", "WHAT IS NETA"),
     ("neta-dao.html", "NETA DAO"),
     ("wynd-recovery.html", "WYND RECOVERY"),
+    ("rescue-neta.html", "RESCUE NETA"),
 )
 HEADER_RE = re.compile(
     r"(?:<!-- site-header:start -->\n)?<header\b.*?</header>(?:\n<!-- site-header:end -->)?",
@@ -37,6 +39,7 @@ ASSET_VERSIONS = {
     "what-is-neta.html": {"styles.css": "20260914-7"},
     "neta-dao.html": {"styles.css": "20260914-7"},
     "wynd-recovery.html": {"wynd-recovery.js": "20260914-22", "wynd-recovery.css": "20260914-7", "styles.css": "20260914-7"},
+    "rescue-neta.html": {"rescue-neta.js": "20260914-1", "rescue-neta.css": "20260914-2", "styles.css": "20260914-7"},
 }
 
 

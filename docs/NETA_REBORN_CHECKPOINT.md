@@ -969,3 +969,8 @@ live tests and cancellation/rejection paths pass.
   eight unsigned simulations and browser success/rejection/index-delay tests.
 - Keplr hot-wallet execution has been validated live. Ledger follows the same
   Keplr offline-signer interface but remains explicitly not live-tested.
+# Rescue NETA swap interface
+
+Phase 1 adds `rescue-neta.html`, a read-only quote interface for the exact legacy WYND JUNO/NETA pair. It verifies pair code ID 2289, the fixed JUNO/NETA asset tuple and the on-chain 0.30% fee before requesting simulations. The UI shows price impact, minimum received, estimated USD value, adjustable 0.1–10% slippage (5% default), and enforces a $25 estimated per-swap frontend ceiling. It cannot construct, sign or broadcast transactions.
+
+Signing remains a separate future phase: revalidate and simulate immediately before Keplr, encode `belief_price` plus `max_spread`, support the native-JUNO and CW20-NETA execution paths independently, then verify both directions with tiny live transactions before public enablement.

@@ -8,6 +8,7 @@ const pages = [
   ["/what-is-neta.html", "WHAT IS NETA"],
   ["/neta-dao.html", "NETA DAO"],
   ["/wynd-recovery.html", "WYND RECOVERY"],
+  ["/rescue-neta.html", "RESCUE NETA"],
 ];
 
 function recoveryCodeIds() {
@@ -69,7 +70,7 @@ for (const [path, activeLabel] of pages) {
     page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(path, {waitUntil: "domcontentloaded"});
 
-    await expect(page.locator("header nav a")).toHaveCount(5);
+    await expect(page.locator("header nav a")).toHaveCount(6);
     await expect(page.locator("header nav .nav-disabled")).toHaveAttribute("aria-disabled", "true");
     await expect(page.locator("header nav a.active")).toHaveText(activeLabel);
     await expect(page.locator("#keplr-connect")).toContainText("CONNECT KEPLR");
@@ -101,6 +102,39 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   await expect(page.locator("#transaction-explorer")).toHaveAttribute("rel", "noopener noreferrer");
   await expect(page.locator("#transaction-explorer")).toHaveAttribute("target", "_blank");
   expect(pageErrors).toEqual([]);
+});
+
+test("Rescue NETA validates the fixed pair and renders a read-only live quote", async ({page}) => {
+  const pair = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra";
+  const neta = "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr";
+  await page.route(/^https:\/\/juno-api\./, async route => {
+    const url = new URL(route.request().url());
+    const headers = {"access-control-allow-origin": "*", "content-type": "application/json"};
+    if (!url.pathname.includes("/smart/")) {
+      await route.fulfill({headers, body: JSON.stringify({contract_info: {code_id: "2289"}})});
+      return;
+    }
+    const query = JSON.parse(Buffer.from(decodeURIComponent(url.pathname.split("/smart/")[1]), "base64").toString("utf8"));
+    let data;
+    if (query.pair) data = {contract_addr: pair, asset_infos: [{native: "ujuno"}, {token: neta}], fee_config: {total_fee_bps: 30, protocol_fee_bps: 3333}};
+    else if (query.pool) data = {assets: [{info: {native: "ujuno"}, amount: "94756644466"}, {info: {token: neta}, amount: "959346155"}], total_share: "8961183403"};
+    else if (query.simulation) data = {return_amount: "10094", spread_amount: "0", commission_amount: "30", referral_amount: "0"};
+    else data = {};
+    await route.fulfill({headers, body: JSON.stringify({data})});
+  });
+  await page.goto("/rescue-neta.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator("#contract-state")).toHaveText("LIVE CODE OK");
+  await page.locator("#offer-amount").fill("1");
+  await expect(page.locator("#receive-amount")).toHaveText("0.010094");
+  await expect(page.locator("#price-impact")).toHaveText("0.00%");
+  await expect(page.locator("#pool-fee")).toContainText("0.30%");
+  await expect(page.locator("#minimum-received")).toHaveText("0.009589 NETA");
+  await expect(page.locator(".swap-action")).toBeDisabled();
+  await expect(page.locator(".prototype-note")).toContainText("cannot construct, sign or broadcast");
+
+  await page.locator("#reverse-swap").click();
+  await expect(page.locator("#offer-symbol")).toHaveText("NETA");
+  await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
 });
 
 test("public signing policy allows only the exact Top-8 recovery contract tuples", async ({page}) => {
