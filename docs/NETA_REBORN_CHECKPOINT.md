@@ -837,3 +837,11 @@ live tests and cancellation/rejection paths pass.
    explicitly approved and confirmed.
 8. Disable and remove the temporary pilot in a follow-up PR immediately after
    the controlled test.
+
+
+## Liquidity pilot wallet scope clarification — 2026-09-14
+
+- The first controlled live liquidity test uses the allowlisted Keplr hot wallet, not Ledger.
+- The signing adapter uses Keplr's standard offline-signer interface and does not intentionally exclude Ledger-backed accounts.
+- Ledger compatibility is not yet live-tested and must not be described as validated until a separate consenting Ledger test succeeds.
+- Hot-wallet success validates the current liquidity transaction path only; it does not by itself prove Ledger behavior.
