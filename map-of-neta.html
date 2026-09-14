@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-rest.publicnode.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
   <title>Map of NETA</title>
   <link rel="stylesheet" href="styles.css?v=20260914-7">
-  <link rel="stylesheet" href="map-of-neta.css?v=6">
+  <link rel="stylesheet" href="map-of-neta.css?v=7">
   <link rel="stylesheet" href="map-of-neta-links.css?v=1">
   <link rel="stylesheet" href="ibc-transfer.css?v=2">
   <style>.ibc-explorer{display:inline-block;border:1px solid var(--g);padding:11px 14px;color:var(--g);font:700 11px monospace}.ibc-explorer[hidden]{display:none}</style>
@@ -81,6 +81,10 @@
           <span class="node-code-rain" aria-hidden="true"><i>01011010101</i><i>10100101101</i><i>00110100110</i><i>11001011010</i><i>01101001011</i><i>10010110100</i></span><span class="chain-logo-shell" aria-hidden="true"><img class="chain-logo" src="assets/osmosis-matrix-official.png" alt=""></span><span class="node-scan-beam" aria-hidden="true"></span>
           <strong id="osmoAmount">— NETA</strong><span class="chain-tooltip">OSMOSIS</span>
         </button>
+        <button class="chain-node terra-node" data-chain="Terra" aria-label="Terra, future NETA zone">
+          <span class="node-code-rain" aria-hidden="true"><i>01011010101</i><i>10100101101</i><i>00110100110</i><i>11001011010</i></span><span class="chain-logo-shell terra-logo-shell" aria-hidden="true"><span class="terra-glyph">T</span></span><span class="node-scan-beam" aria-hidden="true"></span>
+          <strong id="terraAmount">0 NETA</strong><span class="chain-tooltip">TERRA · FUTURE ZONE</span>
+        </button>
       </div>
       <div class="flow-metrics">
         <div><span>TRANSFER VOLUME</span><strong id="volume">0 NETA</strong></div>
@@ -100,7 +104,7 @@
     <div class="ibc-intro">
       <div class="kicker">CONTROLLED INTERCHAIN ROUTES</div>
       <h2 id="ibc-title">MOVE ASSETS <b>ACROSS IBC.</b></h2>
-      <p>Transfer native gas assets and NETA between Juno, Osmosis and Terra. Wrapped assets can only return to their origin chain.</p>
+      <p>Transfer supported assets between Juno, Osmosis and Terra. Juno–Terra routes are temporarily suspended while relaying is restored. Wrapped assets can only return to their origin chain.</p>
       <div class="ibc-rules"><span>01 // SELECT ROUTE</span><span>02 // REVIEW LIVE BALANCE</span><span>03 // SIGN IN KEPLR</span></div>
     </div>
     <div class="ibc-card">
@@ -122,13 +126,13 @@
 <!-- site-footer:start -->
 <footer>
   <div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div>
-  <div>BUILT ON JUNO &amp; OSMOSIS</div>
+  <div>BUILT ACROSS JUNO, OSMOSIS &amp; TERRA</div>
 </footer>
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
 <script src="map-of-neta.js?v=6"></script>
   <script src="assets/ibc-signing-client.js?v=1"></script>
-  <script src="ibc-transfer.js?v=6"></script>
+  <script src="ibc-transfer.js?v=7"></script>
   <script src="wallet-header.js?v=4" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body></html>
