@@ -59,3 +59,13 @@
 .terra-node .node-scan-beam{animation-delay:-1.1s}
 @media(max-width:700px){.terra-node{width:88px;height:88px;left:64%;top:84%}.terra-node .chain-logo-shell{width:42px;height:42px}.terra-glyph{font-size:23px}}
 
+/* v8 — centered Juno hub with official Terra future zone */
+.juno-node{left:50%}
+.osmo-node{left:82%;top:50%}
+.terra-node{width:144px;height:144px;left:18%;top:50%;transform:translate(-50%,-50%);border-style:dashed;opacity:.9}
+.terra-node .chain-logo-shell{width:80px;height:80px}
+.terra-node .chain-logo{filter:brightness(0) saturate(100%) invert(88%) sepia(38%) saturate(1430%) hue-rotate(94deg) brightness(104%) contrast(104%) drop-shadow(0 0 5px rgba(0,255,157,.55))!important}
+.terra-link{fill:none;stroke:#20d99a;stroke-width:2;stroke-dasharray:9 9;opacity:.62}
+.terra-link-label{fill:#54b995;font:700 12px monospace;letter-spacing:2px}
+@media(max-width:700px){.juno-node{left:50%}.osmo-node{left:82%}.terra-node{width:112px;height:112px;left:18%;top:50%}.terra-node .chain-logo-shell{width:60px;height:60px}.terra-link-label{font-size:10px}}
+
