@@ -36,7 +36,7 @@ ASSET_VERSIONS = {
     "map-of-neta.html": {"styles.css": "20260914-7"},
     "what-is-neta.html": {"styles.css": "20260914-7"},
     "neta-dao.html": {"styles.css": "20260914-7"},
-    "wynd-recovery.html": {"wynd-recovery.js": "20260914-22", "wynd-recovery.css": "20260914-5", "styles.css": "20260914-7"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20260914-22", "wynd-recovery.css": "20260914-7", "styles.css": "20260914-7"},
 }
 
 

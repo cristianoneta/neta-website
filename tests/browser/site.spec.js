@@ -92,9 +92,9 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   await expect(page.locator("#pool-total-usd")).not.toHaveText("CALCULATING…");
   await expect(page.locator("#pool-total-usd")).toContainText("$");
   await expect(page.locator("#wallet-address")).toBeVisible();
-  await expect(page.locator("#recovery-guide-title")).toHaveText("CHECK FIRST. CONNECT ONLY TO ACT.");
-  await expect(page.locator(".recovery-steps article")).toHaveCount(3);
-  await expect(page.locator(".recovery-guide-note")).toContainText("NO ACTION AVAILABLE");
+  await expect(page.locator("#recovery-guide-title")).toHaveText("AVAILABLE RECOVERY ACTIONS");
+  await expect(page.locator(".hero-recovery-actions > div")).toHaveCount(3);
+  await expect(page.locator(".hero-recovery-guide")).toContainText("NO ACTION AVAILABLE");
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
   await expect(page.locator("#execute-action")).toBeHidden();
   await expect(page.locator("#execute-action")).toBeDisabled();
@@ -346,6 +346,9 @@ test("disconnect removes recovery action authority but keeps read-only results",
 
   await page.locator("#keplr-connect").click();
   await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await expect(page.locator(".pool-card.has-position")).toHaveCount(8);
+  await expect(page.locator(".pool-position-badge").first()).toContainText("YOUR POSITION");
+  await expect(page.locator(".pool-action-state").first()).toHaveText("WITHDRAW AVAILABLE");
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(8);
   await expect(page.getByRole("button", {name: "PREVIEW STAKE 7D"})).toHaveCount(0);
   await page.locator("#keplr-connect").click();
