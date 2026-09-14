@@ -9,19 +9,19 @@
   const QUOTE_REFRESH_MS=12000;
   const SIGNING=window.NETA_SWAP_SIGNING;
   const assets={
-    JUNO:{symbol:"JUNO",mark:"J",info:{native:"ujuno"}},
-    NETA:{symbol:"NETA",mark:"N",info:{token:NETA}},
+    JUNO:{symbol:"JUNO",logo:"assets/juno-chain.png",info:{native:"ujuno"}},
+    NETA:{symbol:"NETA",logo:"assets/neta-token.png",info:{token:NETA}},
   };
   const dom={
     amount:document.querySelector("#offer-amount"),receive:document.querySelector("#receive-amount"),
     offerSymbol:document.querySelector("#offer-symbol"),receiveSymbol:document.querySelector("#receive-symbol"),
-    offerMark:document.querySelector("#offer-mark"),receiveMark:document.querySelector("#receive-mark"),
+    offerLogo:document.querySelector("#offer-logo"),receiveLogo:document.querySelector("#receive-logo"),
     offerUsd:document.querySelector("#offer-usd"),receiveUsd:document.querySelector("#receive-usd"),
     offerBalance:document.querySelector("#offer-balance"),max:document.querySelector("#max-button"),
     reverse:document.querySelector("#reverse-swap"),message:document.querySelector("#quote-error"),
     age:document.querySelector("#quote-age"),rate:document.querySelector("#quote-rate"),
     impact:document.querySelector("#price-impact"),fee:document.querySelector("#pool-fee"),
-    minimum:document.querySelector("#minimum-received"),slippageSummary:document.querySelector("#slippage-summary"),
+    minimum:document.querySelector("#minimum-received"),slippageSummary:document.querySelector("#slippage-summary"),slippageSummaryButton:document.querySelector("#slippage-summary-button"),
     contractState:document.querySelector("#contract-state"),source:document.querySelector("#quote-source"),
     settings:document.querySelector("#slippage-settings"),settingsToggle:document.querySelector("#settings-toggle"),
     custom:document.querySelector("#custom-slippage"),slippageButtons:[...document.querySelectorAll("[data-slippage]")],
@@ -78,7 +78,7 @@
   function renderDirection(){
     const receive=other(offer);
     dom.offerSymbol.textContent=offer;dom.receiveSymbol.textContent=receive;
-    dom.offerMark.textContent=assets[offer].mark;dom.receiveMark.textContent=assets[receive].mark;
+    dom.offerLogo.src=assets[offer].logo;dom.receiveLogo.src=assets[receive].logo;
     dom.offerUsd.textContent="EST. $0.00";dom.receiveUsd.textContent="EST. $0.00";
     updateBalance();
     renderAction();
@@ -286,6 +286,12 @@
     if(quote)scheduleQuote();return true;
   }
 
+  function toggleSlippageSettings(forceOpen){
+    const open=forceOpen===undefined?dom.settings.hidden:Boolean(forceOpen);
+    dom.settings.hidden=!open;dom.settingsToggle.setAttribute("aria-expanded",String(open));
+    if(open&&forceOpen)dom.custom.focus();
+  }
+
   dom.amount.addEventListener("input",scheduleQuote);
   dom.reverse.addEventListener("click",()=>{
     const previous=quote?.returned;offer=other(offer);renderDirection();
@@ -296,10 +302,13 @@
     const limitRaw=BigInt(Math.floor(LIMIT_USD/price*1e6));const chosen=balanceRaw<limitRaw?balanceRaw:limitRaw;
     dom.amount.value=amountText(chosen);scheduleQuote();
   });
-  dom.settingsToggle.addEventListener("click",()=>{
-    const open=dom.settings.hidden;dom.settings.hidden=!open;dom.settingsToggle.setAttribute("aria-expanded",String(open));
-  });
+  dom.settingsToggle.addEventListener("click",()=>toggleSlippageSettings());
+  dom.slippageSummaryButton?.addEventListener("click",()=>toggleSlippageSettings(true));
   dom.slippageButtons.forEach(button=>button.addEventListener("click",()=>{dom.custom.value="";selectSlippage(Number(button.dataset.slippage))}));
+  dom.custom.addEventListener("input",()=>{
+    const value=Number(dom.custom.value.replace(",","."));
+    if(dom.custom.value&&Number.isFinite(value)&&value>=0.1&&value<=10)selectSlippage(value);
+  });
   dom.custom.addEventListener("change",()=>selectSlippage(Number(dom.custom.value.replace(",","."))));
   addEventListener("neta:wallet-connected",updateBalance);addEventListener("neta:wallet-disconnected",()=>{updateBalance();if(!signing)dom.modal.hidden=true});
   dom.action?.addEventListener("click",openPreview);dom.confirm?.addEventListener("click",signSwap);

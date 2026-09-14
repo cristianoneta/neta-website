@@ -135,6 +135,8 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await page.locator("#reverse-swap").click();
   await expect(page.locator("#offer-symbol")).toHaveText("NETA");
   await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
+  await expect(page.locator("#offer-logo")).toHaveAttribute("src", "assets/neta-token.png");
+  await expect(page.locator("#receive-logo")).toHaveAttribute("src", "assets/juno-chain.png");
 });
 
 test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
@@ -187,6 +189,18 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.swap.max_spread).toBe("0.05");
   expect(preview.message.swap.referral_address).toBeNull();
 
+  await page.locator("#close-swap").click();
+  await page.locator("#slippage-summary-button").click();
+  await expect(page.locator("#slippage-settings")).toBeVisible();
+  await page.locator("#custom-slippage").fill("2.5");
+  await expect(page.locator("#slippage-summary")).toHaveText("2.50%");
+  await expect(page.locator("#minimum-received")).toHaveText("0.009841 NETA");
+  await page.locator("#swap-action").click();
+  preview = JSON.parse(await page.locator("#swap-preview").textContent());
+  expect(preview.max_slippage).toBe("2.50%");
+  expect(preview.message.swap.max_spread).toBe("0.025");
+  expect(preview.minimum_received).toBe("0.009841 NETA");
+
   await page.evaluate(({neta, pilot}) => {
     window.__swapResult = {transactionHash: "A".repeat(64), events: [{type: "wasm", attributes: [
       {key: "_contract_address", value: neta}, {key: "action", value: "transfer"},
@@ -210,7 +224,7 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.send.amount).toBe("10000");
   const hook = JSON.parse(Buffer.from(preview.message.send.msg, "base64").toString("utf8"));
   expect(hook.swap.ask_asset_info).toEqual({native: "ujuno"});
-  expect(hook.swap.max_spread).toBe("0.05");
+  expect(hook.swap.max_spread).toBe("0.025");
   expect(hook.swap.referral_address).toBeNull();
   await page.evaluate(pilotAddress => {
     window.__swapResult = {transactionHash: "B".repeat(64), events: [{type: "transfer", attributes: [
