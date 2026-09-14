@@ -361,26 +361,6 @@ test("disconnect removes recovery action authority but keeps read-only results",
   await expect(page.locator(".actions button").first()).toBeDisabled();
 });
 
-test("capture recovery UI draft for visual review", async ({page}) => {
-  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
-  const address = leaderboard.top_wallets[0].address;
-  const futureRelease = String(BigInt(Date.now() + 7 * 24 * 60 * 60 * 1000) * 1000000n);
-  await mockRecoveryChain(page, {
-    claimsFor: (_wallet, contract) => contract === pool.stake.address
-      ? [{amount: "47283", release_at: {at_time: futureRelease}}]
-      : [],
-  });
-  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
-  await page.locator("#wallet-address").fill(address);
-  await page.locator("#address-form button[type=submit]").click();
-  await expect(page.locator("#wallet-status")).toContainText("READ-ONLY CHECK 8/8 COMPLETE");
-  await page.addStyleTag({content: ".recovery-mascot{opacity:.78!important;animation:none!important}"});
-
-  await page.screenshot({path: "test-results/recovery-ui-hero.png"});
-  await page.locator(`[data-pair="${pool.pair.address}"]`).scrollIntoViewIfNeeded();
-  await page.screenshot({path: "test-results/recovery-ui-position.png"});
-});
-
 test("confirmed withdraw verifies its result and exposes the transaction hash", async ({page}) => {
   const pool = registry.pools.find(item => item.name === "ujuno / NETA");
   const address = leaderboard.top_wallets[0].address;
