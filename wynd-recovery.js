@@ -458,7 +458,8 @@ function renderPosition(pool,position,valid){
   if(position.claimable>0n)add("PREVIEW CLAIM","claim",{raw:position.claimable});
   const pilot=SIGNING_CONFIG?.pilot;
   if(position.direct>0n&&pilot?.action==="bond"&&pilot.pair===pool.pair.address){
-    add(`PREVIEW STAKE ${Number(pilot.unbondingPeriod)/86400}D`,"bond",{raw:position.direct,period:Number(pilot.unbondingPeriod)});
+    const pilotAmount=BigInt(pilot.maxAmountRaw);
+    add(`PREVIEW STAKE ${Number(pilot.unbondingPeriod)/86400}D`,"bond",{raw:position.direct<pilotAmount?position.direct:pilotAmount,period:Number(pilot.unbondingPeriod)});
   }
   if(position.direct>0n)add("PREVIEW WITHDRAW","withdraw",{raw:position.direct});
   if(!actions.children.length){
