@@ -95,6 +95,8 @@ test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
   await expect(button).toHaveText("· UNI-7 ADDED");
   const chain = await page.evaluate(() => window.__suggestedChain);
   expect(chain.chainId).toBe("uni-7");
+  expect(chain.rpc).toBe("https://juno.rpc.t.stavr.tech");
+  expect(chain.rest).toBe("https://juno.api.t.stavr.tech");
   expect(chain.feeCurrencies[0].coinMinimalDenom).toBe("ujunox");
   expect(chain.bech32Config.bech32PrefixAccAddr).toBe("juno");
 });
