@@ -67,11 +67,13 @@ jobs:
           python scripts/test_recovery_signing_gate.py
           for file in *.js; do node --check "$file"; done
           npm run build:recovery-signing
+          npm run build:swap-signing
           test -s assets/recovery-signing-client.js
+          test -s assets/swap-signing-client.js
       - name: Audit production and development dependencies
         run: npm audit --audit-level=high
       - name: Verify committed signing bundle is reproducible
-        run: git diff --exit-code -- assets/recovery-signing-client.js
+        run: git diff --exit-code -- assets/recovery-signing-client.js assets/swap-signing-client.js
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run browser integration tests
