@@ -8,7 +8,7 @@
   <title>Rescue NETA — NETA Reborn</title>
   <meta name="description" content="Read-only live JUNO and NETA swap quotes from the legacy WYND pool.">
   <link rel="stylesheet" href="styles.css?v=20260914-7">
-  <link rel="stylesheet" href="rescue-neta.css?v=20260914-2">
+  <link rel="stylesheet" href="rescue-neta.css?v=20260914-3">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
 <body>
@@ -51,7 +51,7 @@
       <h1>RESCUE <b>NETA.</b></h1>
       <p>Preview a direct swap between JUNO and NETA in the existing legacy WYND pool. Quotes are read directly from the on-chain contract.</p>
     </div>
-    <div class="phase-badge"><span>PHASE 01</span><b>READ-ONLY LIVE QUOTES</b><small>NO SIGNING / NO BROADCAST</small></div>
+    <div class="phase-badge"><span>PHASE 02</span><b>HOT-WALLET PILOT</b><small>ONE ALLOWLISTED TEST WALLET</small></div>
   </section>
 
   <section class="rescue-layout">
@@ -75,7 +75,7 @@
 
     <section class="swap-shell" aria-labelledby="swap-title">
       <div class="swap-head">
-        <div><div class="kicker">LIVE CONTRACT QUOTE</div><h2 id="swap-title">SWAP JUNO / NETA</h2></div>
+        <div><div class="kicker">LIVE CONTRACT QUOTE / PILOT</div><h2 id="swap-title">SWAP JUNO / NETA</h2></div>
         <button id="settings-toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="slippage-settings" aria-label="Open slippage settings">⚙</button>
       </div>
 
@@ -120,11 +120,29 @@
         <div><dt>MAX SLIPPAGE</dt><dd id="slippage-summary">5.00%</dd></div>
       </dl>
 
-      <button class="swap-action" type="button" disabled>SWAP SIGNING OPENS AFTER LIVE TESTS</button>
-      <p class="prototype-note">This phase can only request and display quotes. It cannot construct, sign or broadcast a transaction.</p>
+      <button id="swap-action" class="swap-action" type="button" disabled>CONNECT PILOT WALLET TO TEST</button>
+      <p id="pilot-note" class="prototype-note">Pilot signing is restricted to the approved test wallet and a maximum estimated value of $1.</p>
     </section>
   </section>
 </main>
+
+<div id="swap-modal" class="swap-modal" hidden>
+  <div class="swap-modal-card" role="dialog" aria-modal="true" aria-labelledby="swap-modal-title">
+    <div class="kicker">TRANSACTION PREVIEW</div>
+    <h2 id="swap-modal-title">SWAP // JUNO / NETA</h2>
+    <div id="swap-modal-state" class="swap-modal-state">READY FOR FINAL LIVE REVALIDATION</div>
+    <pre id="swap-preview"></pre>
+    <p id="swap-modal-message">The quote, wallet balance, pair identity and $1 pilot limit will be checked again before Keplr opens.</p>
+    <div id="swap-result" class="swap-result" hidden>
+      <b id="swap-result-label">TRANSACTION CONFIRMED</b><span id="swap-result-hash"></span>
+      <a id="swap-explorer" target="_blank" rel="noopener noreferrer">VIEW ON ATOMSCAN ↗</a>
+    </div>
+    <div class="swap-modal-actions">
+      <button id="confirm-swap" type="button">RE-VALIDATE + SIGN WITH KEPLR</button>
+      <button id="close-swap" type="button">CLOSE</button>
+    </div>
+  </div>
+</div>
 
 <!-- site-footer:start -->
 <footer>
@@ -134,7 +152,9 @@
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
 <script src="cosmos-client.js?v=1" defer></script>
-<script src="rescue-neta.js?v=20260914-1" defer></script>
+<script src="rescue-neta-signing-config.js?v=20260914-1" defer></script>
+<script src="assets/swap-signing-client.js?v=20260914-1" defer></script>
+<script src="rescue-neta.js?v=20260914-2" defer></script>
 <script src="wallet-header.js?v=4" defer></script>
 <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
