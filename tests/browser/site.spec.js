@@ -224,7 +224,7 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.send.amount).toBe("10000");
   const hook = JSON.parse(Buffer.from(preview.message.send.msg, "base64").toString("utf8"));
   expect(hook.swap.ask_asset_info).toEqual({native: "ujuno"});
-  expect(hook.swap.max_spread).toBe("0.05");
+  expect(hook.swap.max_spread).toBe("0.025");
   expect(hook.swap.referral_address).toBeNull();
   await page.evaluate(pilotAddress => {
     window.__swapResult = {transactionHash: "B".repeat(64), events: [{type: "transfer", attributes: [
