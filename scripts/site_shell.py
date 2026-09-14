@@ -75,12 +75,13 @@ def render_header(active_page: str) -> str:
     ))
 
 
-def render_footer() -> str:
+def render_footer(page: str) -> str:
+    chains = "BUILT ACROSS JUNO, OSMOSIS &amp; TERRA" if page == "map-of-neta.html" else "BUILT ON JUNO &amp; OSMOSIS"
     return "\n".join((
         "<!-- site-footer:start -->",
         "<footer>",
         "  <div>[ NETA ] &nbsp; MORE THAN A TOKEN. A COMMUNITY.</div>",
-        "  <div>BUILT ON JUNO &amp; OSMOSIS</div>",
+        f"  <div>{chains}</div>",
         "</footer>",
         "<!-- site-footer:end -->",
     ))
@@ -100,7 +101,7 @@ def expected_page(source: str, page: str) -> str:
     for asset, version in ASSET_VERSIONS.get(page, {}).items():
         source = re.sub(rf"{re.escape(asset)}\?v=[^\"']+", f"{asset}?v={version}", source)
     source, header_count = HEADER_RE.subn(render_header(page), source, count=1)
-    source, footer_count = FOOTER_RE.subn(render_footer(), source, count=1)
+    source, footer_count = FOOTER_RE.subn(render_footer(page), source, count=1)
     if header_count != 1 or footer_count != 1:
         raise RuntimeError(f"{page}: expected exactly one header and footer")
     return source
