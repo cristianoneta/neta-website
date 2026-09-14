@@ -927,16 +927,17 @@ live tests and cancellation/rejection paths pass.
   dozens of duplicate static shards would add deployment complexity without
   improving the main search path.
 
-## Public recovery scope — prepared 2026-09-14
+## Public recovery scope — deployed 2026-09-14
 
 - Recovery signing is opened only for Unbond, Claim and Withdraw across the
   exact eight validated WYND Pair, LP-token and Stake contract sets.
 - Bond and Provide Liquidity were pilot-only setup actions and are removed from
   the production configuration, UI, frontend execution branches and signing
   adapter helpers.
-- Authorization requires three independent contract allowlists, the connected
-  wallet matching the inspected address, a positive live-derived amount, exact
-  claimable-amount checks and an allowlisted unbonding period.
+- Authorization requires each Pair to match its exact immutable LP-token and
+  Stake-contract tuple, the connected wallet to match the inspected address, a
+  positive live-derived amount, exact claimable-amount checks and an allowlisted
+  unbonding period. Contracts from different pools cannot be mixed.
 - The previously completed evidence remains applicable: 24/24 all-pool unsigned
   simulations, five rejected unsafe cases, controlled JUNO/NETA Withdraw and
   Unbond broadcasts, transaction-status handling and action-specific post-state
@@ -947,3 +948,24 @@ live tests and cancellation/rejection paths pass.
   yet visible.
 - The controlled JUNO/NETA Claim after maturity remains additional live
   production evidence, not the sole technical gate for public recovery.
+
+### Current handoff state
+
+- PR #48 was squash-merged as `ceb1e88bcb9271485cac32eea13e580e3171330a`.
+  Public recovery signing is live for Unbond, Claim and Withdraw on all eight
+  validated pools; Bond and Provide Liquidity remain excluded.
+- Required PR and post-merge checks passed: 8/8 live contract-schema audit,
+  24/24 unsigned on-chain action simulations and all 24 browser scenarios.
+- The Recovery page supports read-only lookup of any public Juno address without
+  Keplr. The matching wallet is connected only to act. Action controls appear
+  from live state: Unbond for available stake, Claim for matured claims and
+  Withdraw for direct LP. A pool with no applicable position displays
+  `NO ACTION AVAILABLE`.
+- PR #49 adds the above discovery-to-recovery explanation and short descriptions
+  of all three actions at the top of the Recovery page.
+- Remaining live validation: claim the controlled `47283` raw JUNO/NETA LP after
+  its on-chain release at `2026-09-21T07:58:06.734070343Z`, then record the hash,
+  gas/fee and verified direct-LP post-state here. Claim has already passed all
+  eight unsigned simulations and browser success/rejection/index-delay tests.
+- Keplr hot-wallet execution has been validated live. Ledger follows the same
+  Keplr offline-signer interface but remains explicitly not live-tested.
