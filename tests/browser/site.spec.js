@@ -299,6 +299,19 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
     `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
   );
   await expect(page.locator("#marketUpdated")).not.toHaveText("—");\n  await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
+  await expect(page.locator(".terra-node .chain-logo")).toHaveAttribute("src", "assets/terra-luna-official.svg");
+  await expect(page.locator(".terra-link")).toHaveCount(2);
+  const centers = await page.locator(".flow-stage").evaluate(stage => {
+    const center = selector => {
+      const box = stage.querySelector(selector).getBoundingClientRect();
+      return box.left + box.width / 2;
+    };
+    const stageBox = stage.getBoundingClientRect();
+    return {terra: center(".terra-node"), juno: center(".juno-node"), osmosis: center(".osmo-node"), stage: stageBox.left + stageBox.width / 2};
+  });
+  expect(centers.terra).toBeLessThan(centers.juno);
+  expect(centers.juno).toBeLessThan(centers.osmosis);
+  expect(Math.abs(centers.juno - centers.stage)).toBeLessThan(3);
   const osmosis = page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first();
   const juno = page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first();
   await expect(osmosis).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
