@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
   <title>What is NETA?</title>
   <meta name="description" content="What NETA is, why it exists and why transparent holder data matters.">
-  <link rel="stylesheet" href="styles.css?v=20260913-6">
+  <link rel="stylesheet" href="styles.css?v=20260914-7">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
 <body>
@@ -21,19 +22,19 @@
     <a class="active" aria-current="page" href="what-is-neta.html">WHAT IS NETA</a>
     <a href="neta-dao.html">NETA DAO</a>
     <a href="wynd-recovery.html">WYND RECOVERY</a>
-    <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>
+    <span class="nav-disabled" title="Coming next" aria-disabled="true">VALUE CALCULATOR</span>
   </nav>
   <div class="wallet-shell">
     <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">
-      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>
+      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance aria-live="polite">READ-ONLY</small></span>
     </button>
-    <div id="wallet-menu" class="wallet-menu" role="dialog" aria-label="Keplr account" hidden>
+    <div id="wallet-menu" class="wallet-menu" role="menu" aria-label="Keplr account actions" hidden>
       <div class="wallet-menu-head"><span>CONNECTED WITH KEPLR</span><b data-wallet-menu-rank>UNRANKED</b></div>
       <div class="wallet-menu-address" data-wallet-menu-address></div>
       <div class="wallet-menu-total"><span>TOTAL ECONOMIC NETA</span><strong data-wallet-menu-total>0 NETA</strong><small>CURRENT RANKING SNAPSHOT</small></div>
-      <a class="wallet-menu-action" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>
-      <button class="wallet-menu-action" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>
-      <button class="wallet-menu-action wallet-menu-disconnect" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>
+      <a class="wallet-menu-action" role="menuitem" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>
+      <button class="wallet-menu-action" role="menuitem" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>
+      <button class="wallet-menu-action wallet-menu-disconnect" role="menuitem" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>
       <p>Disconnect clears this website session. Revoke the site permission separately in Keplr.</p>
     </div>
   </div>
@@ -109,12 +110,12 @@
     <div class="facts panel">
       <div class="kicker">ON-CHAIN FACTS</div>
       <div class="fact-row"><span>NETWORK</span><strong>Juno + Osmosis</strong></div>
-      <div class="fact-row"><span>CURRENT SUPPLY</span><strong>31,886.600000 NETA</strong></div>
-      <div class="fact-row"><span>JUNO HOLDER ADDRESSES</span><strong>9,179</strong></div>
-      <div class="fact-row"><span>OSMOSIS HOLDER ADDRESSES</span><strong>2,165</strong></div>
-      <div class="fact-row"><span>CROSS-CHAIN MATCHES</span><strong>588</strong></div>
-      <div class="fact-row"><span>RANKING ENTRIES</span><strong>10,755</strong></div>
-      <div class="fact-note">Snapshot data: 11 Sep 2026.</div>
+      <div class="fact-row"><span>CURRENT SUPPLY</span><strong data-neta-fact="supply">LOADING…</strong></div>
+      <div class="fact-row"><span>JUNO CUSTODY ADDRESSES</span><strong data-neta-fact="juno">LOADING…</strong></div>
+      <div class="fact-row"><span>OSMOSIS STATE ADDRESSES</span><strong data-neta-fact="osmosis">LOADING…</strong></div>
+      <div class="fact-row"><span>CROSS-CHAIN MATCHES</span><strong data-neta-fact="matches">LOADING…</strong></div>
+      <div class="fact-row"><span>ECONOMIC RANKING ENTRIES</span><strong data-neta-fact="entries">LOADING…</strong></div>
+      <div class="fact-note" data-neta-fact="updated">Loading validated snapshot…</div>
     </div>
   </section>
 
@@ -143,9 +144,10 @@
         is excluded to prevent double counting.
       </p>
       <p>
-        <strong>Current limitation:</strong> NETA held inside staking contracts or liquidity pools
-        is not yet redistributed to the individual users who economically own those positions.
-        Those contract or pool addresses therefore appear as holders in the current ranking.
+        <strong>Economic ownership:</strong> validated NETA DAO staking, unstaking and claimable
+        positions are attributed to their individual wallets. Supported WYND and Osmosis liquidity
+        positions are also redistributed proportionally to their economic owners. Bridge escrow,
+        staking custody and pool custody are excluded to prevent double counting.
       </p>
     </div>
   </section>
@@ -190,7 +192,8 @@
 </footer>
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
-  <script src="wallet-header.js?v=3" defer></script>
+  <script src="what-is-neta.js?v=1" defer></script>
+  <script src="wallet-header.js?v=4" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
 </html>

@@ -53,9 +53,11 @@ for (const [path, activeLabel] of pages) {
     page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(path, {waitUntil: "domcontentloaded"});
 
-    await expect(page.locator("header nav a")).toHaveCount(6);
+    await expect(page.locator("header nav a")).toHaveCount(5);
+    await expect(page.locator("header nav .nav-disabled")).toHaveAttribute("aria-disabled", "true");
     await expect(page.locator("header nav a.active")).toHaveText(activeLabel);
     await expect(page.locator("#keplr-connect")).toContainText("CONNECT KEPLR");
+    await expect(page.locator('meta[name="referrer"]')).toHaveAttribute("content", "no-referrer");
     await expect(page.locator("#keplr-connect img")).toHaveAttribute("src", "assets/keplr-symbol.svg");
     expect(await page.locator("header").evaluate(element => getComputedStyle(element).position)).toBe("sticky");
     await expect(page.locator("#matrix")).toHaveAttribute("data-matrix-ready", "true");
@@ -299,4 +301,45 @@ test("disconnect removes recovery action authority but keeps read-only results",
   await expect(page.locator(".actions button:not([disabled])")).toHaveCount(0);
   await expect(page.locator(".actions").first()).toContainText("PREVIEW WITHDRAW");
   await expect(page.locator(".actions button").first()).toBeDisabled();
+});
+
+test("wallet address conversion rejects an invalid Bech32 checksum", async ({page}) => {
+  await page.goto("/index.html", {waitUntil: "domcontentloaded"});
+  expect(await page.evaluate(() => {
+    try {
+      window.NetaWalletHeader.toPrefix("juno1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp8h4x", "osmo");
+      return false;
+    } catch (error) {
+      return error.message === "INVALID BECH32 CHECKSUM";
+    }
+  })).toBe(true);
+});
+
+test("wallet action menu supports keyboard navigation and restores focus", async ({page}) => {
+  await page.goto("/index.html", {waitUntil: "domcontentloaded"});
+  const address = await page.evaluate(() => {
+    const row = window.NETA_ADDRESS_ROWS.find(item => item.juno_address);
+    window.keplr = {enable: async () => {}, getOfflineSigner: () => ({getAccounts: async () => [{address: row.juno_address}]})};
+    return row.juno_address;
+  });
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#q")).toHaveValue(address);
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator('[data-wallet-action="ranking"]')).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator('[data-wallet-action="copy"]')).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#keplr-connect")).toBeFocused();
+  await expect(page.locator("#wallet-menu")).toBeHidden();
+});
+
+test("What is NETA renders current validated metadata instead of stale hardcoded facts", async ({page}) => {
+  await page.goto("/what-is-neta.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator('[data-neta-fact="entries"]')).not.toHaveText("LOADING…");
+  const expected = new Intl.NumberFormat("en-US", {maximumFractionDigits: 0}).format(
+    require("../../metadata.json").economic_master_entries,
+  );
+  await expect(page.locator('[data-neta-fact="entries"]')).toHaveText(expected);
+  await expect(page.locator('[data-neta-fact="updated"]')).toContainText("Validated snapshot:");
+  await expect(page.locator("body")).not.toContainText("not yet redistributed");
 });

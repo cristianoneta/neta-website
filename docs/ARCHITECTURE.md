@@ -29,13 +29,16 @@
   the ranking, including matched Osmosis, DAO and LP attribution. Juno and
   Osmosis addresses are matched by their identical Bech32 payload; no signature
   is requested for this display.
-- Connected state exposes an accessible account menu with snapshot rank, total,
+- Connected state exposes a keyboard-operable account action menu with snapshot rank, total,
   copy-address and local-session disconnect. Disconnecting clears browser state
   and transaction authority but does not claim to revoke Keplr's extension-side
   site permission. The Ranking page consumes the shared wallet event to run the
   same lookup as a manually entered address.
-- Wallet inspection evaluates at most three pools concurrently. Each LCD attempt
-  times out after eight seconds and falls back to the next configured endpoint.
+- Wallet inspection evaluates at most three pools concurrently. LCD reads start
+  with the last healthy endpoint and hedge to the next endpoint after 350 ms.
+  Every individual attempt still has an eight-second timeout; successful reads
+  abort redundant requests. Height-based claims refresh chain height for every
+  new wallet lookup.
 - A failed pool produces a partial total and can be retried independently; it
   never enables transaction actions or removes successful pool results.
 - Live pool reserves and current USD totals may refresh daily.
@@ -102,3 +105,13 @@
   snapshots as stale instead of silently presenting them as current.
 - Every production change must pass syntax checks and the relevant deterministic
   tests before it is merged.
+
+## Accessibility and content freshness
+
+- Address inputs have programmatic labels; decorative images have empty alternative
+  text and changing wallet status is announced through a polite live region.
+- The account action menu receives focus when opened, supports arrow-key movement,
+  closes on Escape and restores focus to the wallet button.
+- Disabled future navigation is non-interactive rather than a focusable dummy link.
+- The What is NETA facts panel reads the validated generated metadata at runtime;
+  economic holder, cross-chain and supply figures are not duplicated as stale HTML.

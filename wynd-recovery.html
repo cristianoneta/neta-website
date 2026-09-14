@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
   <meta name="description" content="Non-custodial recovery interface for legacy WYND DEX liquidity positions.">
   <title>WYND Recovery Mission — NETA Reborn</title>
-  <link rel="stylesheet" href="styles.css?v=20260913-6">
+  <link rel="stylesheet" href="styles.css?v=20260914-7">
   <link rel="stylesheet" href="wynd-recovery.css?v=20260914-5">
   <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
 </head>
@@ -22,19 +23,19 @@
     <a href="what-is-neta.html">WHAT IS NETA</a>
     <a href="neta-dao.html">NETA DAO</a>
     <a class="active" aria-current="page" href="wynd-recovery.html">WYND RECOVERY</a>
-    <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>
+    <span class="nav-disabled" title="Coming next" aria-disabled="true">VALUE CALCULATOR</span>
   </nav>
   <div class="wallet-shell">
     <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">
-      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>
+      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance aria-live="polite">READ-ONLY</small></span>
     </button>
-    <div id="wallet-menu" class="wallet-menu" role="dialog" aria-label="Keplr account" hidden>
+    <div id="wallet-menu" class="wallet-menu" role="menu" aria-label="Keplr account actions" hidden>
       <div class="wallet-menu-head"><span>CONNECTED WITH KEPLR</span><b data-wallet-menu-rank>UNRANKED</b></div>
       <div class="wallet-menu-address" data-wallet-menu-address></div>
       <div class="wallet-menu-total"><span>TOTAL ECONOMIC NETA</span><strong data-wallet-menu-total>0 NETA</strong><small>CURRENT RANKING SNAPSHOT</small></div>
-      <a class="wallet-menu-action" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>
-      <button class="wallet-menu-action" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>
-      <button class="wallet-menu-action wallet-menu-disconnect" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>
+      <a class="wallet-menu-action" role="menuitem" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>
+      <button class="wallet-menu-action" role="menuitem" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>
+      <button class="wallet-menu-action wallet-menu-disconnect" role="menuitem" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>
       <p>Disconnect clears this website session. Revoke the site permission separately in Keplr.</p>
     </div>
   </div>
@@ -57,6 +58,7 @@
       <div class="lookup-controls">
         <form id="address-form" class="search recovery-search">
           <span aria-hidden="true">⌕</span>
+          <label class="sr-only" for="wallet-address">Juno wallet address</label>
           <input id="wallet-address" name="wallet-address" type="text" autocomplete="off" spellcheck="false" placeholder="Enter any Juno address ..." aria-describedby="wallet-status">
           <button type="submit">SEARCH</button>
         </form>
@@ -121,10 +123,10 @@
 </footer>
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
-  <script src="cosmos-client.js?v=2" defer></script>
+  <script src="cosmos-client.js?v=3" defer></script>
   <script src="recovery-signing-config.js?v=8" defer></script>
-  <script src="wynd-recovery.js?v=20260914-19" defer></script>
-  <script src="wallet-header.js?v=3" defer></script>
+  <script src="wynd-recovery.js?v=20260914-20" defer></script>
+  <script src="wallet-header.js?v=4" defer></script>
   <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>
 </html>
