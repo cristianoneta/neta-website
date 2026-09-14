@@ -33,7 +33,7 @@ CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*"
 CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
 ASSET_VERSIONS = {
     "index.html": {"app.js": "20260913-5"},
-    "wynd-recovery.html": {"wynd-recovery.js": "20260914-17", "wynd-recovery.css": "20260914-5"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20260914-18", "wynd-recovery.css": "20260914-5"},
 }
 
 

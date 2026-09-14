@@ -165,6 +165,8 @@ function classifyClaims(claims){
   const now=BigInt(Date.now())*1000000n;
   let claimable=0n;
   let unbonding=0n;
+  let nextReleaseAt=null;
+  let nextReleaseHeight=null;
   for(const claim of claims||[]){
     const value=BigInt(claim.amount||0);
     const release=claim.release_at||{};
@@ -172,9 +174,29 @@ function classifyClaims(claims){
       ?BigInt(release.at_time)<=now
       :release.at_height!==undefined&&BigInt(release.at_height)<=BigInt(chainHeight);
     if(mature)claimable+=value;
-    else unbonding+=value;
+    else{
+      unbonding+=value;
+      if(release.at_time!==undefined){
+        const at=BigInt(release.at_time);
+        if(nextReleaseAt===null||at<nextReleaseAt)nextReleaseAt=at;
+      }else if(release.at_height!==undefined){
+        const height=BigInt(release.at_height);
+        if(nextReleaseHeight===null||height<nextReleaseHeight)nextReleaseHeight=height;
+      }
+    }
   }
-  return{claimable,unbonding};
+  return{claimable,unbonding,nextReleaseAt,nextReleaseHeight};
+}
+
+function unbondingDisplay(position,decimals){
+  const value=amount(position.unbonding,decimals).toLocaleString(undefined,{maximumFractionDigits:6});
+  if(position.unbonding<=0n)return value;
+  if(position.nextReleaseAt!==null){
+    const ready=new Date(Number(position.nextReleaseAt/1000000n));
+    return `${value} (READY ${ready.toLocaleString()})`;
+  }
+  if(position.nextReleaseHeight!==null)return `${value} (READY AT BLOCK ${position.nextReleaseHeight})`;
+  return value;
 }
 
 async function verifyContracts(pool,force=false){
@@ -223,7 +245,8 @@ async function loadPosition(pool,address){
     direct,active,totalEconomic,positionUsd,underlying,
     available:byPeriod.reduce((sum,row)=>sum+row.available,0n),
     locked:byPeriod.reduce((sum,row)=>sum+row.locked,0n),
-    claimable:claims.claimable,unbonding:claims.unbonding,byPeriod,
+    claimable:claims.claimable,unbonding:claims.unbonding,
+    nextReleaseAt:claims.nextReleaseAt,nextReleaseHeight:claims.nextReleaseHeight,byPeriod,
   };
   return result;
 }
@@ -438,7 +461,9 @@ function renderPosition(pool,position,valid){
   const decimals=pool.lp_token.decimals||6;
   card.querySelector('[data-field="query-error"]').replaceChildren();
   for(const key of ["direct","active","available","locked","claimable","unbonding"]){
-    card.querySelector(`[data-field="${key}"]`).textContent=amount(position[key],decimals).toLocaleString(undefined,{maximumFractionDigits:6});
+    card.querySelector(`[data-field="${key}"]`).textContent=key==="unbonding"
+      ?unbondingDisplay(position,decimals)
+      :amount(position[key],decimals).toLocaleString(undefined,{maximumFractionDigits:6});
   }
   card.querySelector('[data-field="position-usd"]').textContent=money(position.positionUsd);
   card.querySelector('[data-field="underlying"] strong').textContent=position.underlying.length?position.underlying.map(asset=>`${asset.display} ${asset.symbol}`).join(" + "):"NO LP POSITION";
