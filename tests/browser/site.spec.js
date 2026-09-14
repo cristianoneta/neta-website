@@ -347,6 +347,31 @@ test("IBC transfer panel remains contained on desktop and mobile", async ({page}
   }
 });
 
+test("IBC transfer accepts comma and point decimal separators", async ({page}) => {
+  const accounts = {
+    "juno-1": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+    "osmosis-1": "osmo1z3xcalwan92yqxu9d406tlft9yy94jy8wafq9s",
+    "phoenix-1": "terra1z3xcalwan92yqxu9d406tlft9yy94jy8qzqs3z",
+  };
+  await page.route("**/cosmos/bank/v1beta1/balances/**", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({balance: {amount: "1000000000"}}),
+  }));
+  await page.addInitScript(accounts => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: chainId => ({getAccounts: async () => [{address: accounts[chainId]}]}),
+    };
+  }, accounts);
+  await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(() => dispatchEvent(new CustomEvent("neta:wallet-connected")));
+  await page.locator("#ibc-amount").fill("0,01");
+  await expect(page.locator("#ibc-status")).toHaveText("ROUTE AND BALANCE READY FOR REVIEW.");
+  await expect(page.locator("#ibc-review")).toBeEnabled();
+  await page.locator("#ibc-amount").fill("0.01");
+  await expect(page.locator("#ibc-review")).toBeEnabled();
+});
+
 test("capture IBC branch preview", async ({page}) => {
   fs.mkdirSync("artifacts/ibc-preview", {recursive: true});
   await page.emulateMedia({reducedMotion: "reduce"});
