@@ -886,3 +886,12 @@ live tests and cancellation/rejection paths pass.
 - Post-Withdraw pool state: `94756644466 ujuno`, `959346155` raw NETA, total share `8961183403`.
 - The corrected success UI displayed the full transaction hash and Atomscan link as intended.
 - Withdraw authorization is closed. Global recovery signing, the action pilot, and the completed liquidity pilot are disabled.
+
+### Controlled Unbond pilot prepared
+
+- Exact scope: wallet `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, pair `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`, action `unbond`, maximum `47283` raw LP.
+- Required live pre-state: one available stake of `47283` raw LP at `604800` seconds, no locked component, direct LP `0`, and no claims.
+- Transaction message: stake contract `juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7`, `{"unbond":{"tokens":"47283","unbonding_period":604800}}`.
+- The exact message simulated successfully against the live wallet state on `juno-1` with `215338` gas used; nothing was broadcast by the simulation.
+- Expected post-state: active stake `0`, one unmatured claim of `47283` raw LP with a release time approximately seven days after confirmation, and direct LP `0` until Claim.
+- Bond, Withdraw, Claim, liquidity creation, other wallets, other pools, other amounts, and other periods remain unauthorized.
