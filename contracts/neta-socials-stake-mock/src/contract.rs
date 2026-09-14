@@ -82,8 +82,8 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
 mod tests {
     use super::*;
     use crate::msg::StakeBalance;
-    use cosmwasm_std::{coin, from_json};
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::{coin, from_json};
 
     fn uni_env() -> Env {
         let mut env = mock_env();
