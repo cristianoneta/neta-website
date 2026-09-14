@@ -7,6 +7,7 @@
   const LIMIT_USD=25;
   const DECIMALS=6;
   const QUOTE_REFRESH_MS=12000;
+  const SIGNING=window.NETA_SWAP_SIGNING;
   const assets={
     JUNO:{symbol:"JUNO",mark:"J",info:{native:"ujuno"}},
     NETA:{symbol:"NETA",mark:"N",info:{token:NETA}},
@@ -24,11 +25,17 @@
     contractState:document.querySelector("#contract-state"),source:document.querySelector("#quote-source"),
     settings:document.querySelector("#slippage-settings"),settingsToggle:document.querySelector("#settings-toggle"),
     custom:document.querySelector("#custom-slippage"),slippageButtons:[...document.querySelectorAll("[data-slippage]")],
+    action:document.querySelector("#swap-action"),modal:document.querySelector("#swap-modal"),
+    modalState:document.querySelector("#swap-modal-state"),preview:document.querySelector("#swap-preview"),
+    modalMessage:document.querySelector("#swap-modal-message"),confirm:document.querySelector("#confirm-swap"),
+    close:document.querySelector("#close-swap"),result:document.querySelector("#swap-result"),
+    resultLabel:document.querySelector("#swap-result-label"),resultHash:document.querySelector("#swap-result-hash"),explorer:document.querySelector("#swap-explorer"),
   };
   if(!dom.amount||!window.NetaCosmosClient)return;
   const client=new window.NetaCosmosClient(LCD_ENDPOINTS);
   let offer="JUNO",slippage=5,junoUsd=null,pool=null,contractValid=false;
   let quote=null,requestId=0,debounceTimer=null,refreshTimer=null,ageTimer=null,balanceRaw=null;
+  let signing=false;
 
   const other=symbol=>symbol==="JUNO"?"NETA":"JUNO";
   const asNumber=raw=>Number(raw)/10**DECIMALS;
@@ -36,6 +43,7 @@
   const amountText=(raw,max=6)=>asNumber(raw).toLocaleString("en-US",{useGrouping:false,maximumFractionDigits:max});
   const queryInfo=asset=>{const info=asset.info||asset;return info.native?`native:${info.native}`:`token:${info.token}`};
   const expectedAssets=new Set(["native:ujuno",`token:${NETA}`]);
+  const signingConfigValid=Boolean(SIGNING&&SIGNING.chainId==="juno-1"&&SIGNING.pair===PAIR&&SIGNING.neta===NETA&&SIGNING.pairCodeId===PAIR_CODE_ID&&SIGNING.publicMaxUsd===LIMIT_USD);
 
   function parseAmount(value){
     const clean=value.trim();
@@ -64,6 +72,7 @@
     quote=null;dom.receive.textContent="0.0";dom.receiveUsd.textContent="EST. $0.00";dom.age.textContent="ENTER AN AMOUNT";
     dom.rate.textContent="—";dom.impact.textContent="—";dom.minimum.textContent="—";
     setMessage(message,state);
+    renderAction();
   }
 
   function renderDirection(){
@@ -72,6 +81,22 @@
     dom.offerMark.textContent=assets[offer].mark;dom.receiveMark.textContent=assets[receive].mark;
     dom.offerUsd.textContent="EST. $0.00";dom.receiveUsd.textContent="EST. $0.00";
     updateBalance();
+    renderAction();
+  }
+
+  function signingAuthority(){
+    const address=window.NETA_WALLET_STATE?.address;
+    if(!SIGNING?.enabled||!signingConfigValid)return{ok:false,label:"SWAP SIGNING IS DISABLED"};
+    if(!address)return{ok:false,label:"CONNECT PILOT WALLET TO TEST"};
+    if(SIGNING.pilotOnly&&address!==SIGNING.pilotWallet)return{ok:false,label:"PILOT WALLET ONLY"};
+    if(!quote)return{ok:false,label:"ENTER AN AMOUNT FOR A LIVE QUOTE"};
+    if(balanceRaw!==null&&quote.raw>balanceRaw)return{ok:false,label:`INSUFFICIENT ${offer} BALANCE`};
+    return{ok:true,label:"REVIEW PILOT SWAP"};
+  }
+
+  function renderAction(){
+    if(!dom.action)return;
+    const authority=signingAuthority();dom.action.disabled=!authority.ok||signing;dom.action.textContent=authority.label;
   }
 
   async function loadMarket(){
@@ -129,7 +154,8 @@
       dom.impact.textContent=`${impact.toFixed(2)}%`;dom.impact.dataset.alert=String(impact>=2);
       dom.fee.textContent=`0.30% · ${amountText(fee)} ${quote.receive}`;
       dom.minimum.textContent=`${amountText(min)} ${quote.receive}`;
-      setMessage("LIVE QUOTE RECEIVED — READ-ONLY PHASE, NOTHING WILL BE SIGNED","ok");
+      setMessage(SIGNING?.pilotOnly?"LIVE QUOTE RECEIVED — PILOT WALLET MAY REVIEW":"LIVE QUOTE RECEIVED","ok");
+      renderAction();
       renderAge();refreshTimer=setTimeout(requestQuote,QUOTE_REFRESH_MS);
     }catch(error){if(id===requestId)clearQuote(`QUOTE FAILED: ${(error.message||String(error)).toUpperCase()}`,"error")}
   }
@@ -150,7 +176,107 @@
         const result=await client.smart(NETA,{balance:{address}});balanceRaw=BigInt(result.balance||"0");
       }
       dom.offerBalance.textContent=`BALANCE ${amountText(balanceRaw)} ${offer}`;dom.max.disabled=balanceRaw<=0n;
-    }catch{dom.offerBalance.textContent="BALANCE UNAVAILABLE"}
+    }catch{dom.offerBalance.textContent="BALANCE UNAVAILABLE"}finally{renderAction()}
+  }
+
+  function beliefPrice(raw,returned){
+    const scale=10n**18n,value=raw*scale/returned,whole=value/scale,fraction=String(value%scale).padStart(18,"0").replace(/0+$/,"");
+    return fraction?`${whole}.${fraction}`:String(whole);
+  }
+
+  function buildTransaction(liveQuote,address){
+    const maxSpread=(slippage/100).toFixed(4).replace(/0+$/,"").replace(/\.$/,"");
+    const belief=beliefPrice(liveQuote.raw,liveQuote.returned);
+    if(liveQuote.offer==="JUNO")return{
+      contract:PAIR,
+      message:{swap:{offer_asset:{info:{native:"ujuno"},amount:String(liveQuote.raw)},ask_asset_info:{token:NETA},belief_price:belief,max_spread:maxSpread,to:address,referral_address:null,referral_commission:null}},
+      funds:[{denom:"ujuno",amount:String(liveQuote.raw)}],
+    };
+    const hook={swap:{ask_asset_info:{native:"ujuno"},belief_price:belief,max_spread:maxSpread,to:address,referral_address:null,referral_commission:null}};
+    return{contract:NETA,message:{send:{contract:PAIR,amount:String(liveQuote.raw),msg:btoa(JSON.stringify(hook))}},funds:[]};
+  }
+
+  async function assetBalance(symbol,address){
+    if(symbol==="JUNO"){
+      const {data}=await client.get(`/cosmos/bank/v1beta1/balances/${address}/by_denom?denom=ujuno`);return BigInt(data.balance?.amount||"0");
+    }
+    const result=await client.smart(NETA,{balance:{address}});return BigInt(result.balance||"0");
+  }
+
+  async function freshQuoteForSigning(){
+    const address=window.NETA_WALLET_STATE?.address;
+    if(!address||!SIGNING?.enabled||!signingConfigValid)throw new Error("PILOT SIGNING IS NOT AVAILABLE");
+    if(SIGNING.pilotOnly&&address!==SIGNING.pilotWallet)throw new Error("CONNECTED ACCOUNT IS NOT THE PILOT WALLET");
+    await Promise.all([loadMarket(),validateContract()]);
+    const raw=parseAmount(dom.amount.value),usd=quoteUsd(raw,offer),cap=SIGNING.pilotOnly?SIGNING.pilotMaxUsd:SIGNING.publicMaxUsd;
+    if(usd===null||usd>cap+0.000001)throw new Error(`SWAP EXCEEDS THE $${cap} SIGNING LIMIT`);
+    const available=await assetBalance(offer,address);if(raw>available)throw new Error(`INSUFFICIENT ${offer} BALANCE`);
+    const response=await client.smart(PAIR,{simulation:{offer_asset:{info:assets[offer].info,amount:String(raw)},ask_asset_info:null,referral:false,referral_commission:null}});
+    const returned=BigInt(response.return_amount),fee=BigInt(response.commission_amount),spread=BigInt(response.spread_amount);
+    if(returned<=0n)throw new Error("FRESH QUOTE IS EMPTY");
+    return{raw,returned,fee,spread,min:returned*BigInt(Math.round((100-slippage)*100))/10000n,offer,receive:other(offer),usd};
+  }
+
+  function transactionPreview(liveQuote,tx,address,gasWanted=null){
+    return{network:SIGNING.chainId,sender:address,direction:`${liveQuote.offer} -> ${liveQuote.receive}`,estimated_usd:liveQuote.usd.toFixed(4),max_slippage:`${slippage.toFixed(2)}%`,minimum_received:`${amountText(liveQuote.min)} ${liveQuote.receive}`,memo:SIGNING.memo,contract:tx.contract,message:tx.message,funds:tx.funds,gas_wanted:gasWanted,signing_enabled:true,pilot_only:SIGNING.pilotOnly};
+  }
+
+  function openPreview(){
+    if(!signingAuthority().ok)return;
+    const address=window.NETA_WALLET_STATE.address,tx=buildTransaction(quote,address);
+    dom.preview.textContent=JSON.stringify(transactionPreview(quote,tx,address),null,2);
+    dom.modalState.textContent="READY FOR FINAL LIVE REVALIDATION";delete dom.modalState.dataset.state;
+    dom.modalMessage.textContent="The quote, wallet balance, pair identity and $1 pilot limit will be checked again before Keplr opens.";
+    dom.result.hidden=true;dom.confirm.hidden=false;dom.confirm.disabled=false;dom.modal.hidden=false;dom.confirm.focus();
+  }
+
+  function errorText(error){
+    const raw=error instanceof Error?error.message:String(error||"UNKNOWN ERROR");
+    return raw.replace(/\s+/g," ").trim().toUpperCase()||"UNKNOWN ERROR";
+  }
+
+  function receivedFromEvents(events,symbol,address){
+    for(const event of events||[]){
+      const attrs=Object.fromEntries((event.attributes||[]).map(item=>[item.key,item.value]));
+      if(symbol==="NETA"&&event.type==="wasm"&&attrs._contract_address===NETA&&attrs.action==="transfer"&&attrs.to===address&&/^\d+$/.test(attrs.amount||""))return BigInt(attrs.amount);
+      if(symbol==="JUNO"&&event.type==="transfer"&&(event.attributes||[]).some(item=>item.key==="recipient"&&item.value===address)){
+        for(const item of event.attributes||[]){
+          if(item.key!=="amount")continue;
+          const match=String(item.value).match(/(?:^|,)(\d+)ujuno(?:,|$)/);if(match)return BigInt(match[1]);
+        }
+      }
+    }
+    return 0n;
+  }
+
+  async function signSwap(){
+    if(signing)return;signing=true;renderAction();dom.confirm.disabled=true;dom.close.disabled=true;
+    dom.modalState.dataset.state="loading";dom.modalState.textContent="REVALIDATING LIVE STATE…";dom.result.hidden=true;
+    let signingClient,broadcastHash="";
+    try{
+      const address=window.NETA_WALLET_STATE?.address,liveQuote=await freshQuoteForSigning(),tx=buildTransaction(liveQuote,address);
+      dom.modalState.textContent="CONNECTING TO SIGNING RPC…";
+      const connection=await window.NetaSwapSigning.connect(SIGNING.rpcEndpoints,window.NETA_WALLET_STATE.signer,SIGNING.gasPrice);
+      signingClient=connection.client;
+      const gas=await window.NetaSwapSigning.simulate(signingClient,address,tx.contract,tx.message,tx.funds,SIGNING.memo);
+      if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING.gasCap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${SIGNING.gasCap}`);
+      dom.preview.textContent=JSON.stringify(transactionPreview(liveQuote,tx,address,gas),null,2);
+      dom.modalState.textContent="CHECK KEPLR — REVIEW EVERY FIELD BEFORE APPROVING";
+      const result=await window.NetaSwapSigning.execute(signingClient,address,tx.contract,tx.message,tx.funds,SIGNING.gasAdjustment,SIGNING.memo);
+      broadcastHash=String(result?.transactionHash||"").toUpperCase();if(!/^[0-9A-F]{64}$/.test(broadcastHash))throw new Error("BROADCAST RETURNED NO VALID TRANSACTION HASH");
+      dom.resultLabel.textContent="TRANSACTION INCLUDED";dom.resultHash.textContent=broadcastHash;dom.explorer.href=`https://atomscan.com/juno/transactions/${broadcastHash}`;dom.result.hidden=false;dom.confirm.hidden=true;
+      dom.modalState.textContent="TRANSACTION INCLUDED — VERIFYING RECEIVED ASSET EVENT…";
+      const received=receivedFromEvents(result.events,liveQuote.receive,address);
+      if(received<liveQuote.min)throw new Error(`TRANSACTION WAS INCLUDED BUT THE RECEIVED ${liveQuote.receive} EVENT COULD NOT BE VERIFIED`);
+      dom.modalState.dataset.state="ok";dom.modalState.textContent=`TRANSACTION CONFIRMED · RECEIVED ${amountText(received)} ${liveQuote.receive}`;
+      dom.resultLabel.textContent="TRANSACTION CONFIRMED";
+      dom.modalMessage.textContent="The transaction was included on Juno and its receiving-asset event satisfies the displayed minimum.";
+      await updateBalance();scheduleQuote();
+    }catch(error){
+      dom.modalState.dataset.state="error";dom.modalState.textContent=broadcastHash?"TRANSACTION INCLUDED · VERIFICATION INCOMPLETE":"TRANSACTION NOT CONFIRMED";dom.modalMessage.textContent=errorText(error);
+      if(broadcastHash){dom.resultLabel.textContent="TRANSACTION INCLUDED";dom.resultHash.textContent=broadcastHash;dom.explorer.href=`https://atomscan.com/juno/transactions/${broadcastHash}`;dom.result.hidden=false;dom.confirm.hidden=true}
+    }
+    finally{try{signingClient?.disconnect()}catch{}signing=false;dom.close.disabled=false;if(!dom.confirm.hidden)dom.confirm.disabled=false;renderAction()}
   }
 
   function selectSlippage(value){
@@ -175,7 +301,9 @@
   });
   dom.slippageButtons.forEach(button=>button.addEventListener("click",()=>{dom.custom.value="";selectSlippage(Number(button.dataset.slippage))}));
   dom.custom.addEventListener("change",()=>selectSlippage(Number(dom.custom.value.replace(",","."))));
-  addEventListener("neta:wallet-connected",updateBalance);addEventListener("neta:wallet-disconnected",updateBalance);
+  addEventListener("neta:wallet-connected",updateBalance);addEventListener("neta:wallet-disconnected",()=>{updateBalance();if(!signing)dom.modal.hidden=true});
+  dom.action?.addEventListener("click",openPreview);dom.confirm?.addEventListener("click",signSwap);
+  dom.close?.addEventListener("click",()=>{if(!signing)dom.modal.hidden=true});
   ageTimer=setInterval(renderAge,1000);addEventListener("pagehide",()=>{clearInterval(ageTimer);clearTimeout(refreshTimer)});
 
   renderDirection();

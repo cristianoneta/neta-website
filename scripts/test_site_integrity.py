@@ -103,7 +103,16 @@ assert 'const LIMIT_USD=25' in rescue
 assert 'PAIR_CODE_ID="2289"' in rescue
 assert 'ask_asset_info:null' in rescue
 assert 'referral:false' in rescue
-assert 'NO SIGNING' in (ROOT / "rescue-neta.html").read_text(encoding="utf-8")
+assert 'pilotOnly:true' in (ROOT / "rescue-neta-signing-config.js").read_text(encoding="utf-8")
+assert 'pilotMaxUsd:1' in (ROOT / "rescue-neta-signing-config.js").read_text(encoding="utf-8")
+assert 'SIGNING.pilotOnly&&address!==SIGNING.pilotWallet' in rescue
+assert 'SIGNING.publicMaxUsd===LIMIT_USD' in rescue
+assert 'gas>SIGNING.gasCap' in rescue
+assert 'receivedFromEvents(result.events,liveQuote.receive,address)' in rescue
+assert 'TRANSACTION INCLUDED · VERIFICATION INCOMPLETE' in rescue
+assert 'belief_price:belief' in rescue
+assert 'referral_address:null' in rescue
+assert 'assets/swap-signing-client.js' in (ROOT / "rescue-neta.html").read_text(encoding="utf-8")
 assert 'data-wallet-action="disconnect"' in wallet_header
 assert 'acceptHeaderWallet' in recovery
 assert 'neta:wallet-disconnected' in recovery
