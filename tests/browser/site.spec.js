@@ -5,7 +5,6 @@ const leaderboard = require("../../data/recovery/wynd-leaderboard.json");
 const pages = [
   ["/index.html", "RANKING"],
   ["/map-of-neta.html", "MAP OF NETA"],
-  ["/what-is-neta.html", "WHAT IS NETA"],
   ["/neta-dao.html", "NETA DAO"],
   ["/wynd-recovery.html", "WYND RECOVERY"],
   ["/rescue-neta.html", "RESCUE NETA"],
@@ -70,7 +69,7 @@ for (const [path, activeLabel] of pages) {
     page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(path, {waitUntil: "domcontentloaded"});
 
-    await expect(page.locator("header nav a")).toHaveCount(6);
+    await expect(page.locator("header nav a")).toHaveCount(5);
     await expect(page.locator("header nav .nav-disabled")).toHaveAttribute("aria-disabled", "true");
     await expect(page.locator("header nav a.active")).toHaveText(activeLabel);
     await expect(page.locator("#keplr-connect")).toContainText("CONNECT KEPLR");
@@ -293,6 +292,12 @@ test("public signing policy allows only the exact Top-8 recovery contract tuples
 
 test("Map of NETA links Osmosis and Juno movers to their explorers", async ({page}) => {
   await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+  const mapData = require("../../data/map/map-of-neta.json");
+  await expect(page.locator("#swaps")).toHaveText(String(mapData.market.swaps));
+  await expect(page.locator("#swapBreakdown")).toHaveText(
+    `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
+  );
+  await expect(page.locator("#marketUpdated")).not.toHaveText("—");
   const osmosis = page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first();
   const juno = page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first();
   await expect(osmosis).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
@@ -707,15 +712,4 @@ test("wallet action menu supports keyboard navigation and restores focus", async
   await page.keyboard.press("Escape");
   await expect(page.locator("#keplr-connect")).toBeFocused();
   await expect(page.locator("#wallet-menu")).toBeHidden();
-});
-
-test("What is NETA renders current validated metadata instead of stale hardcoded facts", async ({page}) => {
-  await page.goto("/what-is-neta.html", {waitUntil: "domcontentloaded"});
-  await expect(page.locator('[data-neta-fact="entries"]')).not.toHaveText("LOADING…");
-  const expected = new Intl.NumberFormat("en-US", {maximumFractionDigits: 0}).format(
-    require("../../metadata.json").economic_master_entries,
-  );
-  await expect(page.locator('[data-neta-fact="entries"]')).toHaveText(expected);
-  await expect(page.locator('[data-neta-fact="updated"]')).toContainText("Validated snapshot:");
-  await expect(page.locator("body")).not.toContainText("not yet redistributed");
 });

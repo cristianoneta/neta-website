@@ -19,6 +19,12 @@
 5. All repository-writing workflows share the same per-branch concurrency group.
 6. GitHub Pages is rebuilt after a successful production data commit.
 
+Map of NETA stores Juno WYND-pair swaps and Osmosis pool-631 swaps as distinct
+events before aggregating them. Ordinary transfers are not counted as swaps.
+The public snapshot exposes both the total and the per-chain counts, plus its
+generation timestamp, so collector lag is visible rather than mistaken for
+missing market activity.
+
 ## Recovery invariants
 
 - Exactly eight validated WYND pools are exposed.
@@ -75,6 +81,19 @@
   the deployed pair implementation ignores it. The frontend therefore labels
   withdrawal assets as estimates and never presents them as enforced minimums.
 
+## Rescue NETA invariants
+
+- Only the frozen WYND JUNO/NETA pair and exact native-JUNO/CW20-NETA asset tuple
+  are accepted.
+- Each swap is capped at an estimated USD value of $25; transaction count is not
+  limited.
+- Slippage is user-selectable from 0.1% through 10%, with 5% as the default.
+- Pair identity, code ID, fee, wallet balance and a fresh contract quote are
+  revalidated immediately before Keplr opens.
+- JUNO offers execute directly on the pair; NETA offers use the CW20 send hook.
+- A transaction is confirmed only after inclusion and a receiving-asset event
+  satisfying the reviewed minimum output.
+
 ## Browser security boundary
 
 - Snapshot and chain data is rendered with DOM creation plus `textContent`; the
@@ -121,5 +140,5 @@
 - The account action menu receives focus when opened, supports arrow-key movement,
   closes on Escape and restores focus to the wallet button.
 - Disabled future navigation is non-interactive rather than a focusable dummy link.
-- The What is NETA facts panel reads the validated generated metadata at runtime;
-  economic holder, cross-chain and supply figures are not duplicated as stale HTML.
+- `What is NETA` is intentionally absent from the deployed page set pending a
+  substantive rewrite; its previous implementation remains recoverable in Git.

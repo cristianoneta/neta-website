@@ -1,8 +1,21 @@
 # NETA Reborn
 
 Static, data-driven community website for the NETA ecosystem on Juno and
-Osmosis. It includes the holder ranking, Map of NETA and the fail-closed WYND
-Recovery dashboard with read-only discovery plus disabled, explicitly scoped signing code.
+Osmosis. It includes the holder ranking, Map of NETA, public WYND liquidity
+recovery and the tightly scoped Rescue NETA swap interface.
+
+## Current production state
+
+- Public pages: Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue NETA.
+- `What is NETA` is intentionally offline until its content is rewritten.
+- Recovery permits only Unbond, Claim and Withdraw for eight frozen, validated
+  WYND pool contract sets. Bond and Provide Liquidity are not shipped.
+- Rescue NETA swaps only against the frozen WYND JUNO/NETA pair and enforces a
+  $25 estimated-value cap per transaction.
+- Map of NETA combines verified swaps from the Juno WYND pair and Osmosis pool
+  631 and displays their chain split and snapshot update time.
+- The controlled JUNO/NETA Claim after its on-chain maturity time remains the
+  final live recovery test; it is additional evidence rather than a public gate.
 
 ## Local development
 

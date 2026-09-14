@@ -10,7 +10,6 @@ from pathlib import Path
 PAGES = (
     "index.html",
     "map-of-neta.html",
-    "what-is-neta.html",
     "neta-dao.html",
     "wynd-recovery.html",
     "rescue-neta.html",
@@ -18,7 +17,6 @@ PAGES = (
 NAVIGATION = (
     ("index.html", "RANKING"),
     ("map-of-neta.html", "MAP OF NETA"),
-    ("what-is-neta.html", "WHAT IS NETA"),
     ("neta-dao.html", "NETA DAO"),
     ("wynd-recovery.html", "WYND RECOVERY"),
     ("rescue-neta.html", "RESCUE NETA"),
@@ -36,7 +34,6 @@ CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'se
 ASSET_VERSIONS = {
     "index.html": {"app.js": "20260913-5", "styles.css": "20260914-7"},
     "map-of-neta.html": {"styles.css": "20260914-7"},
-    "what-is-neta.html": {"styles.css": "20260914-7"},
     "neta-dao.html": {"styles.css": "20260914-7"},
     "wynd-recovery.html": {"wynd-recovery.js": "20260914-22", "wynd-recovery.css": "20260914-7", "styles.css": "20260914-7"},
     "rescue-neta.html": {"rescue-neta.js": "20260914-5", "rescue-neta.css": "20260914-4", "styles.css": "20260914-7"},
