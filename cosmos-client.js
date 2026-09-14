@@ -57,7 +57,7 @@ class NetaCosmosClient {
   }
 
   async smart(contract, message) {
-    if (!/^juno1[0-9a-z]{38}$/.test(contract)) throw new Error("INVALID JUNO CONTRACT");
+    if (!/^juno1[0-9a-z]{38,63}$/.test(contract)) throw new Error("INVALID JUNO CONTRACT");
     const bytes = new TextEncoder().encode(JSON.stringify(message));
     const raw = btoa(String.fromCharCode(...bytes));
     const {data} = await this.get(
@@ -67,7 +67,7 @@ class NetaCosmosClient {
   }
 
   async contractInfo(contract) {
-    if (!/^juno1[0-9a-z]{38}$/.test(contract)) throw new Error("INVALID JUNO CONTRACT");
+    if (!/^juno1[0-9a-z]{38,63}$/.test(contract)) throw new Error("INVALID JUNO CONTRACT");
     const {data} = await this.get(`/cosmwasm/wasm/v1/contract/${contract}`);
     return data.contract_info ?? data;
   }
