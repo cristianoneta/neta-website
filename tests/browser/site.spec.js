@@ -132,6 +132,12 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await expect(page.locator(".swap-action")).toBeDisabled();
   await expect(page.locator(".prototype-note")).toContainText("approved test wallet");
 
+  await page.locator("#offer-amount").fill("0,0100000");
+  await expect(page.locator("#quote-error")).toContainText("UP TO 6 DECIMALS");
+  await expect(page.locator("#pool-fee")).toHaveText("0.30%");
+  await page.locator("#offer-amount").fill("1");
+  await expect(page.locator("#receive-amount")).toHaveText("0.010094");
+
   await page.locator("#reverse-swap").click();
   await expect(page.locator("#offer-symbol")).toHaveText("NETA");
   await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
@@ -214,7 +220,7 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   await page.locator("#close-swap").click();
 
   await page.locator("#reverse-swap").click();
-  await page.locator("#offer-amount").fill("0.01");
+  await page.locator("#offer-amount").fill("0,010");
   await expect(page.locator("#swap-action")).toBeEnabled();
   await page.locator("#swap-action").click();
   preview = JSON.parse(await page.locator("#swap-preview").textContent());
