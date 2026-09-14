@@ -78,6 +78,13 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run browser integration tests
         run: npm run test:browser
+      - name: Upload IBC branch preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ibc-branch-preview
+          path: artifacts/ibc-preview/*.png
+          if-no-files-found: error
       - name: Deploy tested main revision to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
