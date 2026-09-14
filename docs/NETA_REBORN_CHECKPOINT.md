@@ -1181,3 +1181,17 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - The pilot-wallet allowlist and $1 pilot ceiling are removed. Public signing is available to any connected Juno wallet, while the fail-closed estimated limit remains $25 per individual swap.
 - Final live revalidation still checks chain, frozen Pair identity/code/assets/fee, current USD snapshot, offer balance, fresh quote, selected slippage and simulated gas before Keplr opens.
 - Map of NETA already had an incremental WYND Juno swap parser, but its last public collection preceded both live pilots. A regression fixture now locks both event shapes and directions, and the collector was backfilled after the pilots so Juno and Osmosis swaps are included in the same 24-hour market totals and wallet movers without treating ordinary CW20 transfers as swaps. Osmosis mover addresses link to Mintscan; Juno mover addresses link to ATOMScan.
+
+### IBC live validation — 2026-09-14
+
+- First controlled production transfer completed: **0.01 JUNO from Juno to Osmosis**.
+- Source transaction: `8AEE4997EDD9627B16346082282259396D8FB3C38BF68CF13BEE06B6010E6C57`
+- Juno height: `41754944`; transaction result: code `0`.
+- Route: `transfer/channel-0` → Osmosis `transfer/channel-42`; packet sequence: `1328492`.
+- Source packet data confirmed `10000 ujuno` for the allowlisted wallet's corresponding Osmosis address.
+- Juno acknowledgement commitment is present at height `41754966`.
+- Destination balance confirmed: `10000` of `ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED` on Osmosis.
+- The first attempt returned Cosmos SDK code `11` (out of gas) and did not execute the transfer. Final signing gas adjustment was raised from `1.35x` to `2.0x`; the following attempt succeeded with gas wanted `233280` and gas used `163750`.
+- Amount input now accepts both decimal separators (`0.01` and `0,01`).
+- Next controlled live validation: return the received `0.01 JUNO` from Osmosis to Juno via `channel-42`. The Osmosis address currently needs native OSMO for gas before this can be signed.
+
