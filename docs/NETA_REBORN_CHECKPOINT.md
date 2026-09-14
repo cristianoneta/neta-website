@@ -149,6 +149,10 @@ Juno CW20-ICS20 contract:
 - Next gate: obtain/review the visible branch preview, then proceed to tiny
   standard-route tests with the allowlisted hotwallet. No IBC transaction has
   been signed or broadcast in this verification step.
+- Desktop design feedback: the initial two-column IBC section was rejected.
+  The required layout remains embedded below Map of NETA and is vertically
+  stacked like the Rescue NETA swap flow: heading, explanation/steps, then the
+  centered IBC transfer card. It is not a separate subpage.
 
 ## Current production state — 2026-09-14
 
