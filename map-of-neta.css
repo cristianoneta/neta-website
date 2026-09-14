@@ -69,3 +69,6 @@
 .terra-link-label{fill:#54b995;font:700 12px monospace;letter-spacing:2px}
 @media(max-width:700px){.juno-node{left:50%}.osmo-node{left:82%}.terra-node{width:112px;height:112px;left:18%;top:50%}.terra-node .chain-logo-shell{width:60px;height:60px}.terra-link-label{font-size:10px}}
 
+/* v9 — visually balance the inactive Terra mark */
+.terra-node .chain-logo{opacity:.46;filter:brightness(0) saturate(100%) invert(82%) sepia(28%) saturate(950%) hue-rotate(94deg) brightness(78%) contrast(96%) drop-shadow(0 0 3px rgba(0,255,157,.38))!important}
+
