@@ -115,7 +115,11 @@ function renderPools(){
     const card=node("details","pool-card"),summary=node("summary","pool-head"),identity=node("div","pool-identity"),detail=node("div","pool-detail"),position=node("div","position");
     card.className="pool-card";
     card.dataset.pair=pool.pair.address;
-    identity.append(node("h3","",pool.name.replaceAll("ujuno","JUNO")),node("span","","LEGACY WYND POOL"));
+    const walletFlags=node("div","pool-wallet-flags");walletFlags.hidden=true;
+    const positionBadge=node("strong","pool-position-badge");positionBadge.dataset.field="position-badge";
+    const actionState=node("span","pool-action-state");actionState.dataset.field="position-state";
+    walletFlags.append(positionBadge,actionState);
+    identity.append(node("h3","",pool.name.replaceAll("ujuno","JUNO")),node("span","","LEGACY WYND POOL"),walletFlags);
     const status=node("span","validated","REGISTRY OK");status.dataset.field="contract-status";
     summary.append(node("span","pool-rank",String(pool.rank).padStart(2,"0")),identity,labelValue("pool-reserves","POOL RESERVES",reserves),labelValue("pool-value","DAILY VALUE",money(live.pool_value_usd)),status);
     const communityBox=node("div","pool-community");communityBox.append(labelValue("","UNSTAKED VIA SITE",money(community.unstaked_usd)),labelValue("","CLAIMED VIA SITE",money(community.claimed_usd)));
@@ -416,7 +420,22 @@ async function executePendingAction(){
 
 function renderPosition(pool,position,valid){
   const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
-  if(position.totalEconomic>0n)card.open=true;
+  const hasPosition=position.totalEconomic>0n;
+  card.classList.toggle("has-position",hasPosition);
+  card.open=hasPosition;
+  const walletFlags=card.querySelector(".pool-wallet-flags");
+  walletFlags.hidden=!hasPosition;
+  if(hasPosition){
+    const displayedValue=position.positionUsd>0&&position.positionUsd<0.005?"< $0.01":money(position.positionUsd);
+    const states=[];
+    if(position.available>0n)states.push("UNBOND AVAILABLE");
+    if(position.claimable>0n)states.push("CLAIM READY");
+    if(position.direct>0n)states.push("WITHDRAW AVAILABLE");
+    if(!states.length&&position.unbonding>0n)states.push("UNBONDING");
+    if(!states.length&&position.active>0n)states.push("LOCKED STAKE");
+    card.querySelector('[data-field="position-badge"]').textContent=`YOUR POSITION · ${displayedValue}`;
+    card.querySelector('[data-field="position-state"]').textContent=states.join(" · ");
+  }
   const decimals=pool.lp_token.decimals||6;
   card.querySelector('[data-field="query-error"]').replaceChildren();
   for(const key of ["direct","active","available","locked","claimable","unbonding"]){
@@ -513,7 +532,11 @@ async function refreshPositions(address){
   $("#position-summary").hidden=false;
   $("#position-address").textContent=address;
   $("#position-total-usd").textContent="CALCULATING…";
-  document.querySelectorAll(".pool-card").forEach(card=>card.dataset.queryState="pending");
+  document.querySelectorAll(".pool-card").forEach(card=>{
+    card.dataset.queryState="pending";
+    card.classList.remove("has-position");
+    card.querySelector(".pool-wallet-flags").hidden=true;
+  });
   await runWithConcurrency(registry.pools,POOL_QUERY_CONCURRENCY,async pool=>{
     if(generation!==queryGeneration)return;
     const card=document.querySelector(`[data-pair="${pool.pair.address}"]`);
