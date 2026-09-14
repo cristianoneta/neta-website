@@ -26,7 +26,7 @@ fn env_at(seconds: u64) -> Env {
     env
 }
 
-fn setup(stake: Uint128) -> TestDeps {
+fn deployed(stake: Uint128) -> TestDeps {
     let mut deps = mock_dependencies();
     deps.querier.update_wasm(move |query| match query {
         WasmQuery::Smart { contract_addr, msg }
@@ -55,6 +55,18 @@ fn setup(stake: Uint128) -> TestDeps {
     )
     .unwrap();
     deps
+}
+
+fn setup(stake: Uint128) -> TestDeps {
+    let mut deps = deployed(stake);
+    set_paused(deps.as_mut(), mock_info(OWNER, &[]), false).unwrap();
+    deps
+}
+
+#[test]
+fn instantiate_starts_paused() {
+    let deps = deployed(Uint128::new(10_000_000));
+    assert!(CONFIG.load(&deps.storage).unwrap().paused);
 }
 
 fn create(deps: DepsMut, env: Env, sender: &str) -> Result<Response, ContractError> {

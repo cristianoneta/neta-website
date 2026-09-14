@@ -189,7 +189,7 @@ pub fn instantiate(
             pending_owner: None,
             stake_contract: stake_contract.clone(),
             minimum_stake: msg.minimum_stake,
-            paused: false,
+            paused: true,
             post_cooldown_seconds: POST_COOLDOWN_SECONDS,
         },
     )?;
@@ -199,6 +199,7 @@ pub fn instantiate(
         .add_attribute("owner", owner)
         .add_attribute("stake_contract", stake_contract)
         .add_attribute("minimum_stake", msg.minimum_stake)
+        .add_attribute("paused", "true")
         .add_attribute("post_cooldown_seconds", POST_COOLDOWN_SECONDS.to_string()))
 }
 
