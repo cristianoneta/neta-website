@@ -9,10 +9,21 @@ const registry=new Registry([
   ["/cosmwasm.wasm.v1.MsgExecuteContract",MsgExecuteContract],
 ]);
 
-export async function connect(endpoints,signer,gasPrice){
+async function connectWithTimeout(endpoint,signer,gasPrice,timeoutMs){
+  let expired=false;
+  let timer;
+  const attempt=SigningStargateClient.connectWithSigner(endpoint,signer,{registry,gasPrice:GasPrice.fromString(gasPrice)}).then(client=>{
+    if(expired){try{client.disconnect()}catch{};throw new Error(`RPC TIMEOUT AFTER ${timeoutMs}MS`)}
+    return client;
+  });
+  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new Error(`RPC TIMEOUT AFTER ${timeoutMs}MS`))},timeoutMs)});
+  try{return await Promise.race([attempt,timeout])}finally{clearTimeout(timer)}
+}
+
+export async function connect(endpoints,signer,gasPrice,timeoutMs=8000){
   const errors=[];
   for(const endpoint of endpoints){
-    try{return{client:await SigningStargateClient.connectWithSigner(endpoint,signer,{registry,gasPrice:GasPrice.fromString(gasPrice)}),endpoint}}
+    try{return{client:await connectWithTimeout(endpoint,signer,gasPrice,timeoutMs),endpoint}}
     catch(error){errors.push(`${endpoint}: ${error instanceof Error?error.message:String(error)}`)}
   }
   throw new Error(`NO SIGNING RPC AVAILABLE // ${errors.join(" // ")}`);
