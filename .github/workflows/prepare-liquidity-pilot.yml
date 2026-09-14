@@ -1,0 +1,91 @@
+name: Prepare wallet-scoped liquidity pilot
+
+on:
+  push:
+    branches:
+      - pilot/enable-juno-neta-liquidity-v2
+    paths:
+      - .github/workflows/prepare-liquidity-pilot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: pilot/enable-juno-neta-liquidity-v2
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Apply documented activation delta
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          config = Path("recovery-signing-config.js")
+          text = config.read_text()
+          old = 'liquidityPilot:Object.freeze({enabled:false'
+          new = 'liquidityPilot:Object.freeze({enabled:true'
+          assert text.count(old) == 1
+          config.write_text(text.replace(old, new, 1))
+
+          gate = Path("scripts/test_recovery_signing_gate.py")
+          text = gate.read_text()
+          replacements = {
+              '# This release prepares the signing path but must not make it reachable.\nassert config.count("enabled:false") == 2\nassert "enabled:true" not in config':
+                  '# General recovery signing remains disabled. Only the exact wallet-scoped\n# JUNO/NETA liquidity pilot is reachable.\nassert config.count("enabled:false") == 1\nassert config.count("enabled:true") == 1',
+              "'liquidityPilot:Object.freeze({enabled:false'":
+                  "'liquidityPilot:Object.freeze({enabled:true'",
+              '# The disabled release deliberately does not ship the large signing bundle.\n# A later enabling PR must build, review and add it explicitly.\nassert not (root / "assets/recovery-signing-client.js").exists()':
+                  '# The pilot release ships the pinned local bundle loaded only after the\n# wallet, pair, amount and live-state gates have passed.\nassert (root / "assets/recovery-signing-client.js").exists()',
+              'print("Recovery signing gate remains hard-disabled and guarded")':
+                  'print("Recovery signing gate keeps general actions disabled and scopes the liquidity pilot")',
+          }
+          for old, new in replacements.items():
+              assert text.count(old) == 1, old
+              text = text.replace(old, new, 1)
+          gate.write_text(text)
+
+          frontend = Path("scripts/test_wynd_recovery_frontend.py")
+          text = frontend.read_text()
+          old = "'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:\"1000000\",maxNetaRaw:\"10200\"',"
+          new = "'liquidityPilot:Object.freeze({enabled:true', 'junoRaw:\"1000000\",maxNetaRaw:\"10200\"',"
+          assert text.count(old) == 1
+          text = text.replace(old, new, 1)
+          marker = "assert 'src=\"assets/recovery-signing-client.js' not in html"
+          assert text.count(marker) == 1
+          text = text.replace(marker, 'assert (root/"assets/recovery-signing-client.js").exists()\n' + marker, 1)
+          frontend.write_text(text)
+          PY
+      - name: Build pinned signing bundle
+        run: |
+          npm ci
+          npm run build:recovery-signing
+      - name: Verify safety gates
+        run: |
+          python scripts/test_site_integrity.py
+          python scripts/test_wynd_recovery_frontend.py
+          python scripts/test_recovery_signing_gate.py
+          for file in *.js; do node --check "$file"; done
+      - name: Run browser integration tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:browser
+      - name: Commit prepared pilot and remove bootstrap workflow
+        run: |
+          git config user.name "NETA Reborn Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/prepare-liquidity-pilot.yml
+          git add assets/recovery-signing-client.js recovery-signing-config.js scripts/test_recovery_signing_gate.py scripts/test_wynd_recovery_frontend.py
+          git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l)" -eq 4
+          git commit -m "Enable wallet-scoped JUNO/NETA liquidity pilot"
+          git push origin HEAD:pilot/enable-juno-neta-liquidity-v2
