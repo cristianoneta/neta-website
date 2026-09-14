@@ -4,6 +4,156 @@ Last updated: 2026-09-14
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
 
+## NEW-CHAT HANDOFF — CONTROLLED IBC TRANSFERS (2026-09-14)
+
+Start the next chat by reading this entire file, then continue from this
+section. Repository: `cristianoneta/neta-website`. Development branch:
+`codex/ibc-transfer-ui`.
+
+### User decision and rollout scope
+
+- Build the complete Juno/Osmosis/Terra transfer triangle now; do not omit
+  Terra and do not show a Terra warning banner.
+- Supported assets are exactly JUNO, OSMO, LUNA and NETA.
+- A native asset may leave its origin chain. A wrapped asset may only travel
+  back to its origin; wrapped forwarding is deliberately absent from the UI.
+- Signing is temporarily restricted to the pilot hotwallet whose Juno account
+  is `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`. This replaces the earlier
+  Ledger-first test approach. Keplr still provides the source and destination
+  accounts for each enabled chain.
+- The allowlist is intentionally a frontend rollout gate. It is not an
+  on-chain authorization mechanism and cannot prevent someone from copying
+  and modifying a public static frontend. Each transfer remains self-custodial
+  and requires the source account's Keplr signature.
+
+### Implemented files and behavior
+
+- `map-of-neta.html`: IBC panel below the activity map, preview modal and source
+  transaction link.
+- `ibc-transfer.css`: responsive NETA-styled layout.
+- `ibc-transfer.js`: route/asset matrix, live balances, Keplr account loading,
+  hotwallet gate, exact message creation, final revalidation, gas simulation,
+  broadcast and source-result state.
+- `src/ibc-signing-client.js` and built
+  `assets/ibc-signing-client.js`: CosmJS registry for standard
+  `MsgTransfer` and Juno CW20 `MsgExecuteContract` messages.
+- `scripts/test_ibc_transfer_frontend.py`: locks wallet, channel, denom,
+  anti-forwarding, revalidation and asynchronous-result invariants.
+- `scripts/site_shell.py`: navigation is now `RANKING`, `MAP OF NETA`,
+  `WYND RECOVERY`, `RESCUE NETA`, `NETA DAO`; CSP permits the selected Juno,
+  Osmosis and Terra LCD/RPC endpoints.
+- README and this checkpoint document the controlled rollout.
+- `MAX` retains a small gas reserve when sending the source chain's native gas
+  asset. Amounts allow no more than six decimals.
+- A successful source broadcast is labelled `SOURCE TRANSACTION CONFIRMED ·
+  PACKET SUBMITTED`, not fully delivered. Destination receipt stays explicitly
+  unverified until packet acknowledgement and destination balance are checked.
+
+### Frozen route and denom registry
+
+Standard channels:
+
+- Juno → Osmosis `channel-0`; Osmosis → Juno `channel-42`.
+- Juno → Terra `channel-86`; Terra → Juno `channel-2`.
+- Osmosis → Terra `channel-251`; Terra → Osmosis `channel-1`.
+
+NETA CW20-ICS20 channels:
+
+- Juno → Osmosis `channel-47`; Osmosis → Juno `channel-169`.
+- Juno → Terra `channel-154`; Terra → Juno `channel-33`.
+
+Destination-local IBC denoms used when returning wrapped assets:
+
+- JUNO on Osmosis:
+  `ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED`
+- JUNO on Terra:
+  `ibc/4CD525F166D32B0132C095F353F4C6F033B0FF5C49141470D1EFDA1D63303D04`
+- OSMO on Juno:
+  `ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518`
+- OSMO on Terra:
+  `ibc/0471F1C4E7AFD3F07702BEF6DC365268D64570F7C1FDC98EA6098DD6DE59817B`
+- LUNA on Juno:
+  `ibc/107D152BB3176FAEBF4C2A84C5FFDEEA7C7CB4FE1BBDAB710F1FD25BCD055CBF`
+- LUNA on Osmosis:
+  `ibc/785AFEC6B3741100D15E7AF01374E3C4C36F24888E96479B1C33F5C71F364EF9`
+- NETA on Osmosis:
+  `ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A`
+- Expected NETA on Terra after the first successful transfer:
+  `ibc/24EDDB84AD007CD83BD8D2DCCFF5FB71F93912AB143411AD870F2FE7DBE658FB`
+
+NETA contract:
+`juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr`.
+Juno CW20-ICS20 contract:
+`juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn`.
+
+### Terra-channel evidence
+
+- Juno CW20-ICS20 `channel-154` ↔ Terra transfer `channel-33` is OPEN on both
+  sides, unordered and version `ics20-1`.
+- It has handled 61 lifetime outbound packets: 35 Juno→Terra and 26
+  Terra→Juno. No packet commitments were pending when checked.
+- Historical token state exists for KLEO, EMPWR, YFD, RAW, ampJUNO, SEJUNO,
+  WYND, bJUNO, HOLE and HOPERS. NETA has never used this channel.
+- Public pruned RPC/LCD indexes no longer reveal the exact last token and
+  timestamp. An archive indexer would be needed to prove those two facts.
+
+### Verification and repository state
+
+- Local feature commit: `ac671ff` (`Add controlled Juno Osmosis Terra IBC
+  transfers`).
+- GitHub branch was written through the authenticated GitHub connector after
+  the plain HTTPS `git push` lacked a credential. The connector branch head
+  before this checkpoint update was
+  `004cf88a1dbb2159327bcdd3be2c1bf1d8a3d09b`; its final tree exactly matched
+  local feature commit `ac671ff` (`1be4a04db4db08bb1b3e6dac7a6f022d21f6952b`).
+- Passing: IBC frontend safety test, shared site-integrity test, WYND recovery
+  frontend safety test, JavaScript syntax checks, esbuild bundle and
+  `git diff --check`.
+- The Playwright suite did not execute because this executor lacks the required
+  Chromium binary. All 25 failures were launch failures, not page assertions.
+- Preserve the unrelated local modification
+  `docs/diagnostics/wynd_recovery_action_audit.json`; it was deliberately not
+  staged or included.
+
+### Exact next steps
+
+1. Open a draft PR from `codex/ibc-transfer-ui` to `main` and obtain a visible
+   preview before merging.
+2. Run the Playwright suite in GitHub Actions or another environment containing
+   the pinned Chromium build.
+3. Check the rendered desktop/mobile layout and all route/asset option sets.
+4. With the allowlisted hotwallet, start with tiny standard routes and verify
+   source transaction, packet sequence/acknowledgement and destination balance.
+5. Run the first tiny NETA Juno→Terra transfer. Verify the acknowledgement and
+   exact Terra denom/balance, then return part of it Terra→Juno.
+6. Only after those checks decide whether to merge. If the open Terra CW20
+   channel fails the round trip, remove that NETA route without removing the
+   standard Juno/Terra and Osmosis/Terra routes.
+
+### Draft PR verification update — 2026-09-14
+
+- Draft PR #58 is open from `codex/ibc-transfer-ui` to `main`; GitHub reports
+  it mergeable without a branch conflict. It remains deliberately unmerged.
+- GitHub Actions run `34858193374` completed successfully with Chromium. The
+  browser suite now includes two IBC-specific scenarios in addition to the
+  existing site coverage.
+- The route-matrix scenario exercises all six directed chain pairs and asserts
+  that only origin-native assets and wrapped returns are exposed. It separately
+  verifies NETA `channel-154` Juno→Terra and `channel-33` Terra→Juno.
+- Responsive browser assertions passed at `1440×900` and `390×844`: the IBC
+  section remains inside the viewport and the disabled pre-wallet review
+  control remains visible.
+- The normal Pages deployment step was correctly skipped because the tested
+  commit is not on `main`. A user-visible hosted branch preview is therefore
+  still OPEN; do not substitute the production URL or merge merely to preview.
+- Next gate: obtain/review the visible branch preview, then proceed to tiny
+  standard-route tests with the allowlisted hotwallet. No IBC transaction has
+  been signed or broadcast in this verification step.
+- Desktop design feedback: the initial two-column IBC section was rejected.
+  The required layout remains embedded below Map of NETA and is vertically
+  stacked like the Rescue NETA swap flow: heading, explanation/steps, then the
+  centered IBC transfer card. It is not a separate subpage.
+
 ## Current production state — 2026-09-14
 
 - Public pages are Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue
@@ -24,6 +174,27 @@ This file is the durable technical knowledge base for the NETA Reborn holder/ind
 - The remaining controlled live recovery test is Claim of `47283` raw LP after
   `2026-09-21T07:58:06.734070343Z`. Claim is already covered by all-pool
   simulations and browser tests; the broadcast is additional production evidence.
+
+### Controlled IBC transfer work — development branch
+
+- Map of NETA contains an IBC panel for Juno, Osmosis and Terra. The only
+  assets are JUNO, OSMO, LUNA and NETA.
+- Standard routes use Juno/Osmosis `channel-0`/`channel-42`, Juno/Terra
+  `channel-86`/`channel-2`, and Osmosis/Terra
+  `channel-251`/`channel-1`.
+- NETA uses Juno CW20-ICS20 `channel-47` ↔ Osmosis `channel-169` and Juno
+  `channel-154` ↔ Terra `channel-33`.
+- Route generation forbids forwarding a wrapped asset. It appears only when
+  the selected destination is that asset's origin chain.
+- Signing currently requires the connected Juno account to be
+  `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`. Immediately before signing,
+  source and destination accounts, route, channel, amount, balance and gas are
+  revalidated. This browser allowlist is a rollout control, not protocol-level
+  authorization; transactions remain self-custodial and require Keplr approval.
+- The open Juno/Terra CW20 channel has resolved 61 historical packets (35
+  Juno→Terra and 26 Terra→Juno), but no NETA transfer. Public access therefore
+  still requires a tiny outbound NETA test, acknowledgement and Terra-denom
+  verification, followed by a return transfer.
 
 ## Status legend
 - **VALIDATED**: reconciled exactly on-chain / by diagnostic.

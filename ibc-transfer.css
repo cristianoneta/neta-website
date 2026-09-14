@@ -1,0 +1,43 @@
+.ibc-section{max-width:760px;margin:46px auto 18px}
+.ibc-intro{margin-bottom:24px}
+.ibc-intro h2{font-size:42px;color:var(--g2);margin:8px 0 16px}
+.ibc-intro h2 b{color:var(--g)}
+.ibc-intro p{color:#9bb0a6;line-height:1.8;max-width:700px}
+.ibc-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px;color:var(--g);font:700 11px monospace;letter-spacing:1.5px}
+.ibc-card{border:1px solid #0d6a46;padding:24px;background:rgba(1,11,7,.96);box-shadow:0 20px 60px #0009,0 0 32px #00ff9d0a}
+.ibc-card-head{display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid #154d38;padding-bottom:16px;margin-bottom:18px}
+.ibc-card-head span,.ibc-card label>span,.ibc-receive span{display:block;color:#62917e;font:10px monospace;letter-spacing:2px}
+.ibc-card-head strong{display:block;color:var(--g2);font:22px monospace;margin-top:7px}
+.ibc-access{border:1px solid #0d6a46;padding:8px;color:#719488!important}
+.ibc-access.allowed{color:var(--g)!important;border-color:var(--g)}
+.ibc-access.denied{color:#ff8668!important;border-color:#9b3a28}
+.ibc-grid{display:grid;grid-template-columns:1fr 44px 1fr;align-items:end;gap:10px}
+.ibc-card select,.ibc-card input{width:100%;border:1px solid #176c4d;background:#020f0a;color:var(--g2);font:700 15px monospace;padding:15px;border-radius:0}
+.ibc-reverse{height:49px;border:1px solid var(--g);background:#03140d;color:var(--g);font-size:22px}
+.ibc-asset{display:block;margin-top:14px}
+.ibc-amount{display:grid!important;grid-template-columns:1fr auto auto;align-items:center;position:relative;margin-top:14px;border:1px solid #176c4d;padding:16px}
+.ibc-amount>span{grid-column:1}
+.ibc-amount small{grid-column:2/4;color:#719488;font:10px monospace;letter-spacing:1px}
+.ibc-amount input{grid-column:1/2;border:0!important;padding:14px 0!important;font-size:30px!important}
+.ibc-amount button{border:0;background:none;color:var(--g);font:700 11px monospace}
+.ibc-amount b{font:700 16px monospace;color:var(--g2);padding-left:13px}
+.ibc-receive{border:1px solid #123d2d;margin-top:14px;padding:14px}
+.ibc-receive strong{display:block;margin:8px 0;color:var(--g2);font:13px monospace;overflow-wrap:anywhere}
+.ibc-receive small{color:#719488;font:10px monospace}
+.ibc-status{margin:14px 0;border-left:2px solid var(--g);background:#03140d;padding:13px;color:var(--g);font:700 11px monospace}
+.ibc-status.error{color:#ff9b82;border-color:#ff6347;background:#1b0905}
+.ibc-review,.ibc-modal-actions button{width:100%;padding:16px;border:1px solid var(--g);background:var(--g);color:#00140c;font:700 12px monospace;letter-spacing:1px}
+.ibc-review:disabled{opacity:.35;cursor:not-allowed}
+.ibc-modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:20px}
+.ibc-modal[hidden]{display:none}
+.ibc-modal-card{width:min(760px,96vw);max-height:90vh;overflow:auto;border:1px solid var(--g);background:#010b07;padding:28px}
+.ibc-modal-card h2{color:var(--g2);font-size:26px}
+.ibc-modal-state{border:1px solid #176c4d;padding:15px;color:var(--g);font:700 12px monospace}
+.ibc-modal-state.error{border-color:#ff6347;color:#ff9b82}
+.ibc-modal-state.success{border-color:var(--g);color:var(--g2)}
+.ibc-modal-card pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #154d38;padding:16px;color:#d8f8e9;font-size:11px}
+.ibc-modal-card p{color:#8fa99d;font-size:12px}
+.ibc-modal-actions{display:flex;gap:10px}
+.ibc-modal-actions button:last-child{width:auto;background:transparent;color:var(--g)}
+@media(max-width:900px){.ibc-section{max-width:650px}}
+@media(max-width:560px){.ibc-section{margin-top:34px}.ibc-intro h2{font-size:36px}.ibc-rules{grid-template-columns:1fr}.ibc-card{padding:14px}.ibc-grid{grid-template-columns:1fr}.ibc-reverse{width:44px;justify-self:center}.ibc-modal-actions{display:grid}.ibc-modal-actions button:last-child{width:100%}}

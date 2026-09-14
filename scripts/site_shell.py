@@ -17,9 +17,9 @@ PAGES = (
 NAVIGATION = (
     ("index.html", "RANKING"),
     ("map-of-neta.html", "MAP OF NETA"),
-    ("neta-dao.html", "NETA DAO"),
     ("wynd-recovery.html", "WYND RECOVERY"),
     ("rescue-neta.html", "RESCUE NETA"),
+    ("neta-dao.html", "NETA DAO"),
 )
 HEADER_RE = re.compile(
     r"(?:<!-- site-header:start -->\n)?<header\b.*?</header>(?:\n<!-- site-header:end -->)?",
@@ -30,7 +30,7 @@ FOOTER_RE = re.compile(
     re.DOTALL,
 )
 CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">')
-CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
+CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
 ASSET_VERSIONS = {
     "index.html": {"app.js": "20260913-5", "styles.css": "20260914-7"},
     "map-of-neta.html": {"styles.css": "20260914-7"},

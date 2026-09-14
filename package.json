@@ -4,6 +4,7 @@
   "scripts": {
     "build:recovery-signing": "esbuild src/recovery-signing-client.js --bundle --minify --format=iife --global-name=NetaRecoverySigning --outfile=assets/recovery-signing-client.js",
     "build:swap-signing": "esbuild src/swap-signing-client.js --bundle --minify --format=iife --global-name=NetaSwapSigning --outfile=assets/swap-signing-client.js",
+    "build:ibc-signing": "esbuild src/ibc-signing-client.js --bundle --minify --format=iife --global-name=NetaIbcSigning --outfile=assets/ibc-signing-client.js",
     "test:browser": "playwright test"
   },
   "devDependencies": {

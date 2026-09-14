@@ -14,6 +14,10 @@ recovery and the tightly scoped Rescue NETA swap interface.
   $25 estimated-value cap per transaction.
 - Map of NETA combines verified swaps from the Juno WYND pair and Osmosis pool
   631 and displays their chain split and snapshot update time.
+- The Map development branch includes a controlled IBC panel for Juno,
+  Osmosis and Terra. It permits JUNO, OSMO, LUNA and NETA only; wrapped assets
+  may only return to their origin. Signing is temporarily UI-allowlisted to
+  the pilot Juno hotwallet and remains subject to Keplr approval.
 - The controlled JUNO/NETA Claim after its on-chain maturity time remains the
   final live recovery test; it is additional evidence rather than a public gate.
 

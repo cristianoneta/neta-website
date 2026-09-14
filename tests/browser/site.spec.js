@@ -1,4 +1,5 @@
 const {test, expect} = require("@playwright/test");
+const fs = require("node:fs");
 const registry = require("../../data/recovery/wynd-pools.json");
 const leaderboard = require("../../data/recovery/wynd-leaderboard.json");
 
@@ -305,6 +306,61 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   for (const link of [osmosis,juno]) {
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
+});
+
+test("IBC transfer panel exposes only origin and return assets for every route", async ({page}) => {
+  await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+  const routes = [
+    ["juno", "osmosis", ["JUNO", "OSMO", "NETA"], "channel-0 · JUNO"],
+    ["osmosis", "juno", ["JUNO", "OSMO", "NETA"], "channel-42 · JUNO"],
+    ["juno", "terra", ["JUNO", "LUNA", "NETA"], "channel-86 · JUNO"],
+    ["terra", "juno", ["JUNO", "LUNA", "NETA"], "channel-2 · JUNO"],
+    ["osmosis", "terra", ["OSMO", "LUNA"], "channel-251 · OSMO"],
+    ["terra", "osmosis", ["OSMO", "LUNA"], "channel-1 · OSMO"],
+  ];
+  for (const [from, to, assets, channel] of routes) {
+    await page.locator("#ibc-from").selectOption(from);
+    await page.locator("#ibc-to").selectOption(to);
+    await expect(page.locator("#ibc-asset option")).toHaveText(assets);
+    await expect(page.locator("#ibc-channel")).toHaveText(channel);
+  }
+  await page.locator("#ibc-from").selectOption("juno");
+  await page.locator("#ibc-to").selectOption("terra");
+  await page.locator("#ibc-asset").selectOption("NETA");
+  await expect(page.locator("#ibc-channel")).toHaveText("channel-154 · NETA");
+  await page.locator("#ibc-reverse").click();
+  await expect(page.locator("#ibc-channel")).toHaveText("channel-33 · NETA");
+});
+
+test("IBC transfer panel remains contained on desktop and mobile", async ({page}) => {
+  for (const viewport of [{width: 1440, height: 900}, {width: 390, height: 844}]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+    const section = page.locator(".ibc-section");
+    await expect(section).toBeVisible();
+    const box = await section.boundingBox();
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expect(page.locator("#ibc-review")).toBeVisible();
+    await expect(page.locator("#ibc-review")).toBeDisabled();
+  }
+});
+
+test("capture IBC branch preview", async ({page}) => {
+  fs.mkdirSync("artifacts/ibc-preview", {recursive: true});
+  await page.emulateMedia({reducedMotion: "reduce"});
+  await page.addInitScript(() => localStorage.setItem("neta-matrix-effect-enabled", "false"));
+  for (const [name, viewport] of [
+    ["desktop", {width: 1440, height: 900}],
+    ["mobile", {width: 390, height: 844}],
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+    await page.locator("header").evaluate(element => { element.style.display = "none"; });
+    const section = page.locator(".ibc-section");
+    await section.scrollIntoViewIfNeeded();
+    await section.screenshot({path: `artifacts/ibc-preview/${name}.png`});
   }
 });
 
