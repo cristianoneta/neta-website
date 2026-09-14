@@ -38,7 +38,7 @@
     "transfers": 2,
     "volume_neta": 4.0
   },
-  "generated_at": "2026-09-14T07:28:25.654873Z",
+  "generated_at": "2026-09-14T12:58:53.018094Z",
   "market": {
     "power_buyers": [
       {
@@ -47,9 +47,23 @@
         "sold_neta": 0.0,
         "swaps": 3,
         "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn"
+      },
+      {
+        "bought_neta": 1.269768,
+        "net_neta": 1.269768,
+        "sold_neta": 0.0,
+        "swaps": 1,
+        "wallet": "osmo14c2zjf87ym5rkd0rx4meq8lnrncjgq8ewhu6cu"
+      },
+      {
+        "bought_neta": 0.010094,
+        "net_neta": 9.4e-05,
+        "sold_neta": 0.01,
+        "swaps": 2,
+        "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
       }
     ],
-    "swaps": 6,
+    "swaps": 9,
     "top_sellers": [
       {
         "bought_neta": 0.0,

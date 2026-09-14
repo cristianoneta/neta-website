@@ -130,7 +130,7 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await expect(page.locator("#pool-fee")).toContainText("0.30%");
   await expect(page.locator("#minimum-received")).toHaveText("0.009589 NETA");
   await expect(page.locator(".swap-action")).toBeDisabled();
-  await expect(page.locator(".prototype-note")).toContainText("approved test wallet");
+  await expect(page.locator(".prototype-note")).toContainText("any connected Juno wallet");
 
   await page.locator("#offer-amount").fill("0,0100000");
   await expect(page.locator("#quote-error")).toContainText("UP TO 6 DECIMALS");
@@ -145,10 +145,10 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await expect(page.locator("#receive-logo")).toHaveAttribute("src", "assets/juno-chain.png");
 });
 
-test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
+test("Rescue NETA public signing builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
   const pair = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra";
   const neta = "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr";
-  const pilot = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const wallet = "juno1d0g7f97v87xwe6r4vr4jj3jfhzcv4vvfhamy8w";
   await page.route("**/assets/swap-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaSwapSigning={
@@ -184,7 +184,10 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   await page.evaluate(address => {
     window.NETA_WALLET_STATE = {address, signer: {}};
     dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: window.NETA_WALLET_STATE}));
-  }, pilot);
+  }, wallet);
+  await page.locator("#offer-amount").fill("3000");
+  await expect(page.locator("#quote-error")).toContainText("$25 LIMIT EXCEEDED");
+  await expect(page.locator("#swap-action")).toBeDisabled();
   await page.locator("#offer-amount").fill("1");
   await expect(page.locator("#swap-action")).toBeEnabled();
   await page.locator("#swap-action").click();
@@ -194,6 +197,9 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.swap.offer_asset).toEqual({info: {native: "ujuno"}, amount: "1000000"});
   expect(preview.message.swap.max_spread).toBe("0.05");
   expect(preview.message.swap.referral_address).toBeNull();
+  expect(preview.per_swap_limit_usd).toBe(25);
+  expect(preview.pilot_only).toBeUndefined();
+  expect(preview.memo).toBe("netareborn.com/rescue-neta:swap:v1");
 
   await page.locator("#close-swap").click();
   await page.locator("#slippage-summary-button").click();
@@ -207,12 +213,12 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(preview.message.swap.max_spread).toBe("0.025");
   expect(preview.minimum_received).toBe("0.009841 NETA");
 
-  await page.evaluate(({neta, pilot}) => {
+  await page.evaluate(({neta, wallet}) => {
     window.__swapResult = {transactionHash: "A".repeat(64), events: [{type: "wasm", attributes: [
       {key: "_contract_address", value: neta}, {key: "action", value: "transfer"},
-      {key: "to", value: pilot}, {key: "amount", value: "10094"},
+      {key: "to", value: wallet}, {key: "amount", value: "10094"},
     ]}]};
-  }, {neta, pilot});
+  }, {neta, wallet});
   await page.locator("#confirm-swap").click();
   await expect(page.locator("#swap-modal-state")).toContainText("TRANSACTION CONFIRMED");
   await expect(page.locator("#swap-result-hash")).toHaveText("A".repeat(64));
@@ -232,11 +238,11 @@ test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on r
   expect(hook.swap.ask_asset_info).toEqual({native: "ujuno"});
   expect(hook.swap.max_spread).toBe("0.025");
   expect(hook.swap.referral_address).toBeNull();
-  await page.evaluate(pilotAddress => {
+  await page.evaluate(walletAddress => {
     window.__swapResult = {transactionHash: "B".repeat(64), events: [{type: "transfer", attributes: [
-      {key: "recipient", value: pilotAddress}, {key: "amount", value: "983732ujuno"},
+      {key: "recipient", value: walletAddress}, {key: "amount", value: "983732ujuno"},
     ]}]};
-  }, pilot);
+  }, wallet);
   await page.locator("#confirm-swap").click();
   await expect(page.locator("#swap-modal-state")).toContainText("TRANSACTION CONFIRMED");
   await page.locator("#close-swap").click();
@@ -285,13 +291,16 @@ test("public signing policy allows only the exact Top-8 recovery contract tuples
   });
 });
 
-test("Map of NETA links Osmosis movers safely to Mintscan", async ({page}) => {
+test("Map of NETA links Osmosis and Juno movers to their explorers", async ({page}) => {
   await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
-  const link = page.locator("#buyers a.mover-wallet").first();
-  await expect(link).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
-  await expect(link).toHaveAttribute("target", "_blank");
-  await expect(link).toHaveAttribute("rel", "noopener noreferrer");
-  await expect(link).toHaveAttribute("title", /^osmo1[0-9a-z]{38}$/);
+  const osmosis = page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first();
+  const juno = page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first();
+  await expect(osmosis).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
+  await expect(juno).toHaveAttribute("href", /^https:\/\/atomscan\.com\/juno\/accounts\/juno1[0-9a-z]{38}$/);
+  for (const link of [osmosis,juno]) {
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
 });
 
 test("mobile navigation and recovery lookup remain usable", async ({page}) => {

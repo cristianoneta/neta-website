@@ -103,9 +103,13 @@ assert 'const LIMIT_USD=25' in rescue
 assert 'PAIR_CODE_ID="2289"' in rescue
 assert 'ask_asset_info:null' in rescue
 assert 'referral:false' in rescue
-assert 'pilotOnly:true' in (ROOT / "rescue-neta-signing-config.js").read_text(encoding="utf-8")
-assert 'pilotMaxUsd:1' in (ROOT / "rescue-neta-signing-config.js").read_text(encoding="utf-8")
-assert 'SIGNING.pilotOnly&&address!==SIGNING.pilotWallet' in rescue
+swap_config = (ROOT / "rescue-neta-signing-config.js").read_text(encoding="utf-8")
+assert 'publicMaxUsd:25' in swap_config
+assert 'pilotOnly' not in swap_config
+assert 'pilotWallet' not in swap_config
+assert 'pilotMaxUsd' not in swap_config
+assert 'SIGNING.pilotOnly' not in rescue
+assert 'per_swap_limit_usd:SIGNING.publicMaxUsd' in rescue
 assert 'SIGNING.publicMaxUsd===LIMIT_USD' in rescue
 assert 'gas>SIGNING.gasCap' in rescue
 assert 'receivedFromEvents(result.events,liveQuote.receive,address)' in rescue

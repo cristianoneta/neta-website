@@ -51,7 +51,7 @@
       <h1>RESCUE <b>NETA.</b></h1>
       <p>Preview a direct swap between JUNO and NETA in the existing legacy WYND pool. Quotes are read directly from the on-chain contract.</p>
     </div>
-    <div class="phase-badge"><span>PHASE 02</span><b>HOT-WALLET PILOT</b><small>ONE ALLOWLISTED TEST WALLET</small></div>
+    <div class="phase-badge"><span>PUBLIC ACCESS</span><b>NON-CUSTODIAL SWAPS</b><small>ANY JUNO WALLET VIA KEPLR</small></div>
   </section>
 
   <section class="rescue-layout">
@@ -75,7 +75,7 @@
 
     <section class="swap-shell" aria-labelledby="swap-title">
       <div class="swap-head">
-        <div><div class="kicker">LIVE CONTRACT QUOTE / PILOT</div><h2 id="swap-title">SWAP JUNO / NETA</h2></div>
+        <div><div class="kicker">LIVE CONTRACT QUOTE</div><h2 id="swap-title">SWAP JUNO / NETA</h2></div>
         <button id="settings-toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="slippage-settings" aria-label="Open slippage settings">⚙</button>
       </div>
 
@@ -120,8 +120,8 @@
         <div><dt>MAX SLIPPAGE</dt><dd><button id="slippage-summary-button" class="slippage-edit" type="button" aria-controls="slippage-settings"><span id="slippage-summary">5.00%</span><i>EDIT</i></button></dd></div>
       </dl>
 
-      <button id="swap-action" class="swap-action" type="button" disabled>CONNECT PILOT WALLET TO TEST</button>
-      <p id="pilot-note" class="prototype-note">Pilot signing is restricted to the approved test wallet and a maximum estimated value of $1.</p>
+      <button id="swap-action" class="swap-action" type="button" disabled>CONNECT KEPLR TO SWAP</button>
+      <p id="pilot-note" class="prototype-note">Public swaps are available to any connected Juno wallet and limited to an estimated value of $25 per transaction.</p>
     </section>
   </section>
 </main>
@@ -132,7 +132,7 @@
     <h2 id="swap-modal-title">SWAP // JUNO / NETA</h2>
     <div id="swap-modal-state" class="swap-modal-state">READY FOR FINAL LIVE REVALIDATION</div>
     <pre id="swap-preview"></pre>
-    <p id="swap-modal-message">The quote, wallet balance, pair identity and $1 pilot limit will be checked again before Keplr opens.</p>
+    <p id="swap-modal-message">The quote, wallet balance, pair identity and $25 per-swap limit will be checked again before Keplr opens.</p>
     <div id="swap-result" class="swap-result" hidden>
       <b id="swap-result-label">TRANSACTION CONFIRMED</b><span id="swap-result-hash"></span>
       <a id="swap-explorer" target="_blank" rel="noopener noreferrer">VIEW ON ATOMSCAN ↗</a>
@@ -152,9 +152,9 @@
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
 <script src="cosmos-client.js?v=1" defer></script>
-<script src="rescue-neta-signing-config.js?v=20260914-1" defer></script>
+<script src="rescue-neta-signing-config.js?v=20260914-2" defer></script>
 <script src="assets/swap-signing-client.js?v=20260914-1" defer></script>
-<script src="rescue-neta.js?v=20260914-4" defer></script>
+<script src="rescue-neta.js?v=20260914-5" defer></script>
 <script src="wallet-header.js?v=4" defer></script>
 <script src="matrix-blackout.js?v=20260913-1" defer></script>
 </body>

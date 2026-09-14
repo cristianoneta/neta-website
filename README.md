@@ -69,5 +69,16 @@ period. The message is rebuilt and simulated immediately before Keplr approval.
 After confirmation the expected position change is queried on-chain; a confirmed
 hash is preserved if RPC indexing delays that result check.
 
+## Rescue NETA swap safety boundary
+
+The public Rescue NETA page allows any connected Juno account to swap directly
+against the frozen legacy WYND JUNO/NETA Pair. Each transaction is limited to an
+estimated USD value of $25; users may submit multiple separate swaps. The page
+revalidates the pair code ID, asset tuple, 0.30% fee, current balance, fresh
+contract quote and selected 0.1–10% slippage immediately before Keplr opens.
+Native JUNO swaps execute on the Pair; NETA swaps use the NETA CW20 send hook.
+An included transaction is shown as confirmed only after its receiving-asset
+event satisfies the displayed minimum.
+
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
 the refactor rules.
