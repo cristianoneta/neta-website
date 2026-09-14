@@ -114,11 +114,11 @@ assert 'per_swap_limit_usd:SIGNING.publicMaxUsd' in rescue
 assert 'SIGNING.publicMaxUsd===LIMIT_USD' in rescue
 assert 'gas>SIGNING.gasCap' in rescue
 assert 'receivedFromEvents(result.events,liveQuote.receive,address)' in rescue
-assert 'const HOT_JUNO="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in ibc
-assert 'accounts.juno===HOT_JUNO' in ibc
+assert 'const HOT_JUNO=' not in ibc
+assert 'function connectedAndAllowed(){return Object.keys(CHAINS).every(chain=>Boolean(accounts[chain]))}' in ibc
 assert 'ORIGIN[symbol]===from||ORIGIN[symbol]===to' in ibc
-assert '"juno:terra":"channel-154"' in ibc
-assert '"terra:juno":"channel-33"' in ibc
+assert '"juno:terra":"channel-154"' not in ibc
+assert '"terra:juno":"channel-33"' not in ibc
 assert '"osmosis:terra":"channel-251"' in ibc
 assert '"terra:osmosis":"channel-1"' in ibc
 assert 'amount>balanceRaw' in ibc
