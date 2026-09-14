@@ -19,8 +19,8 @@ async function load(){
  try{
   const r=await fetch("data/map/map-of-neta.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();
   if(!d.validation?.passed)throw Error("unvalidated map data");
-  const j=d.chains.find(x=>x.id==="juno-1"),o=d.chains.find(x=>x.id==="osmosis-1");
-  $("#junoAmount").textContent=fmt(j?.neta)+" NETA";$("#osmoAmount").textContent=fmt(o?.neta)+" NETA";
+  const j=d.chains.find(x=>x.id==="juno-1"),o=d.chains.find(x=>x.id==="osmosis-1"),t=d.chains.find(x=>x.id==="phoenix-1");
+  $("#junoAmount").textContent=fmt(j?.neta)+" NETA";$("#osmoAmount").textContent=fmt(o?.neta)+" NETA";$("#terraAmount").textContent=fmt(t?.neta)+" NETA";
   $("#flowOut").textContent=fmt(d.flows.juno_to_osmosis_neta,6)+" NETA OUT";
   $("#flowIn").textContent=fmt(d.flows.osmosis_to_juno_neta,6)+" NETA IN";
   $("#volume").textContent=fmt(d.flows.volume_neta,6)+" NETA";$("#transfers").textContent=fmt(d.flows.transfers);
