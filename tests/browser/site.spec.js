@@ -122,6 +122,13 @@ test("NETA Socials testnet console is inert until explicitly connected", async (
   expect(await page.evaluate(() => window.__keplrCalls)).toBe(0);
 });
 
+test("NETA Socials testnet console surfaces a missing Keplr extension", async ({page}) => {
+  await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
+  await page.locator("#test-connect").click();
+  await expect(page.locator("#test-status")).toHaveText("FAILED");
+  await expect(page.locator("#test-output")).toContainText("KEPLR NOT FOUND");
+});
+
 test("recovery renders validated snapshots and stays fail-closed", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.message));

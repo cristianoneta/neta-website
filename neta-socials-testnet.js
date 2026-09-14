@@ -12,6 +12,7 @@
   const $=id=>document.getElementById(id),status=$("#test-status"),output=$("#test-output");
   const show=(label,data)=>{status.textContent=label;output.textContent=JSON.stringify(data,null,2)};
   const fail=error=>{status.textContent="FAILED";output.textContent=error instanceof Error?error.message:String(error)};
+  const deadline=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(`${label} TIMED OUT AFTER ${ms/1000} SECONDS`)),ms))]);
   const persist=()=>localStorage.setItem("neta-socials-uni7",JSON.stringify({mock:state.mock,socials:state.socials}));
   const busy=async(button,task)=>{button.disabled=true;try{await task()}catch(error){fail(error)}finally{button.disabled=button.dataset.done==="true"}};
   async function wasm(name){
@@ -23,11 +24,17 @@
     return bytes;
   }
   $("#test-connect").addEventListener("click",event=>busy(event.currentTarget,async()=>{
-    if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND");
-    await window.keplr.experimentalSuggestChain(CHAIN);await window.keplr.enable(CHAIN_ID);
-    const signer=window.getOfflineSigner(CHAIN_ID),accounts=await signer.getAccounts(),address=accounts[0]?.address;
+    show("CONNECTING · CHECK KEPLR",{"next":"Approve the uni-7 connection in Keplr."});
+    if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND — UNLOCK THE EXTENSION AND RELOAD THIS PAGE");
+    await deadline(window.keplr.experimentalSuggestChain(CHAIN),12000,"CHAIN SUGGESTION");
+    show("CONNECTING · WAITING FOR KEPLR",{"next":"Approve access to your uni-7 account."});
+    await deadline(window.keplr.enable(CHAIN_ID),12000,"KEPLR ACCESS");
+    const signer=window.getOfflineSigner?.(CHAIN_ID)||window.keplr.getOfflineSigner?.(CHAIN_ID);
+    if(!signer)throw new Error("KEPLR OFFLINE SIGNER IS UNAVAILABLE");
+    const accounts=await deadline(signer.getAccounts(),12000,"ACCOUNT LOOKUP"),address=accounts[0]?.address;
     if(address!==OWNER)throw new Error(`EXPECTED OWNER ${OWNER}, RECEIVED ${address||"NO ACCOUNT"}`);
-    state.client=await NetaSocialsTestnet.connect(RPC,signer);state.address=address;
+    show("CONNECTING · CHECKING RPC",{"rpc":RPC});
+    state.client=await deadline(NetaSocialsTestnet.connect(RPC,signer),12000,"UNI-7 RPC CONNECTION");state.address=address;
     const balance=await state.client.getBalance(address,"ujunox");
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
