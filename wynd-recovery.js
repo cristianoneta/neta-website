@@ -591,6 +591,9 @@ async function retryPool(pool,address,generation){
 
 async function refreshPositions(address){
   const generation=++queryGeneration;
+  const blockResult=await chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest").catch(()=>({data:null}));
+  if(blockResult.data)chainHeight=Number(blockResult.data.block.header.height);
+  if(generation!==queryGeneration)return;
   viewedAddress=address;
   positions.clear();
   $("#wallet-address").value=address;
@@ -663,6 +666,7 @@ async function init(){
   renderImpact();
   renderPools();
   renderLeaderboard();
+  $("#address-form button[type=submit]").disabled=false;
   $("#address-form").addEventListener("submit",event=>{
     event.preventDefault();
     const address=$("#wallet-address").value.trim().toLowerCase();

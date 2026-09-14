@@ -32,8 +32,11 @@ FOOTER_RE = re.compile(
 CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">')
 CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
 ASSET_VERSIONS = {
-    "index.html": {"app.js": "20260913-5"},
-    "wynd-recovery.html": {"wynd-recovery.js": "20260914-19", "wynd-recovery.css": "20260914-5"},
+    "index.html": {"app.js": "20260913-5", "styles.css": "20260914-7"},
+    "map-of-neta.html": {"styles.css": "20260914-7"},
+    "what-is-neta.html": {"styles.css": "20260914-7"},
+    "neta-dao.html": {"styles.css": "20260914-7"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20260914-21", "wynd-recovery.css": "20260914-5", "styles.css": "20260914-7"},
 }
 
 
@@ -42,7 +45,7 @@ def render_header(active_page: str) -> str:
     for href, label in NAVIGATION:
         active = ' class="active" aria-current="page"' if href == active_page else ""
         links.append(f"    <a{active} href=\"{href}\">{label}</a>")
-    links.append('    <a href="#" title="Coming next" aria-disabled="true">VALUE CALCULATOR</a>')
+    links.append('    <span class="nav-disabled" title="Coming next" aria-disabled="true">VALUE CALCULATOR</span>')
     return "\n".join((
         "<!-- site-header:start -->",
         "<header>",
@@ -54,15 +57,15 @@ def render_header(active_page: str) -> str:
         "  </nav>",
         '  <div class="wallet-shell">',
         '    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet">',
-        '      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance>READ-ONLY</small></span>',
+        '      <img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance aria-live="polite">READ-ONLY</small></span>',
         '    </button>',
-        '    <div id="wallet-menu" class="wallet-menu" role="dialog" aria-label="Keplr account" hidden>',
+        '    <div id="wallet-menu" class="wallet-menu" role="menu" aria-label="Keplr account actions" hidden>',
         '      <div class="wallet-menu-head"><span>CONNECTED WITH KEPLR</span><b data-wallet-menu-rank>UNRANKED</b></div>',
         '      <div class="wallet-menu-address" data-wallet-menu-address></div>',
         '      <div class="wallet-menu-total"><span>TOTAL ECONOMIC NETA</span><strong data-wallet-menu-total>0 NETA</strong><small>CURRENT RANKING SNAPSHOT</small></div>',
-        '      <a class="wallet-menu-action" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>',
-        '      <button class="wallet-menu-action" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>',
-        '      <button class="wallet-menu-action wallet-menu-disconnect" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>',
+        '      <a class="wallet-menu-action" role="menuitem" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a>',
+        '      <button class="wallet-menu-action" role="menuitem" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button>',
+        '      <button class="wallet-menu-action wallet-menu-disconnect" role="menuitem" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button>',
         '      <p>Disconnect clears this website session. Revoke the site permission separately in Keplr.</p>',
         '    </div>',
         '  </div>',

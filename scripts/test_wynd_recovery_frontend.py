@@ -27,6 +27,7 @@ for required in [
     'positionUsd', 'expectedAssets(pool,totalEconomic)',
     'data/recovery/wynd-market.json', 'data/recovery/wynd-leaderboard.json', 'POOL RESERVES',
     'chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")',
+    'const blockResult=await chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")',
     'fresh.pool.pair.address===pendingLiquidity.pool.pair.address',
     'fresh.junoRaw===pendingLiquidity.junoRaw', 'fresh.netaRaw===pendingLiquidity.netaRaw',
     'fresh.memo===pendingLiquidity.memo',
@@ -37,12 +38,12 @@ for required in [
     assert required in js, required
 for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
-    'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
+    'id="address-form"', '<button type="submit" disabled>SEARCH</button>', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'wallet-header.js?v=3', 'id="keplr-connect"',
-    'cosmos-client.js?v=2', 'recovery-signing-config.js?v=8',
-    'wynd-recovery.js?v=20260914-19',
-    'wynd-recovery.css?v=20260914-5', 'id="execute-action"', 'hidden disabled',
+    'wallet-header.js?v=4', 'id="keplr-connect"',
+    'cosmos-client.js?v=3', 'recovery-signing-config.js?v=8',
+    'wynd-recovery.js?v=20260914-21',
+    'wynd-recovery.css?v=20260914-5', 'styles.css?v=20260914-7', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
     assert required in html, required

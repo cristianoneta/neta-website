@@ -66,10 +66,13 @@ for page in PAGES:
     assert source.count("<!-- site-footer:start -->") == 1
     assert 'id="keplr-connect"' in source
     assert 'id="wallet-menu"' in source
+    assert 'role="menu"' in source
+    assert 'href="#" title="Coming next"' not in source
+    assert '<meta name="referrer" content="no-referrer">' in source
     assert source.count('http-equiv="Content-Security-Policy"') == 1
     assert "script-src 'self'" in source
     assert "object-src 'none'" in source
-    assert 'src="wallet-header.js?v=3"' in source
+    assert 'src="wallet-header.js?v=4"' in source
     for asset in parser.assets:
         parsed = urlsplit(asset)
         if parsed.scheme or parsed.netloc or asset.startswith("#"):
@@ -84,6 +87,9 @@ wallet_header = (ROOT / "wallet-header.js").read_text(encoding="utf-8")
 styles = (ROOT / "styles.css").read_text(encoding="utf-8")
 assert 'position:sticky;top:0' in styles
 assert 'window.keplr.enable(CHAIN_ID)' in wallet_header
+assert 'INVALID BECH32 CHECKSUM' in wallet_header
+assert 'aria-haspopup","menu"' in wallet_header
+assert 'script.src="address-index.js"' in wallet_header
 assert 'position?.total_neta' in wallet_header
 assert 'index[osmosisAddress]' in wallet_header
 assert 'neta:wallet-connected' in wallet_header
@@ -103,6 +109,11 @@ for browser_script in ROOT.glob("*.js"):
     source = browser_script.read_text(encoding="utf-8")
     assert ".innerHTML" not in source, f"{browser_script.name}: innerHTML is forbidden"
     assert "insertAdjacentHTML" not in source, f"{browser_script.name}: HTML string insertion is forbidden"
+cosmos_client = (ROOT / "cosmos-client.js").read_text(encoding="utf-8")
+assert "Promise.any(attempts)" in cosmos_client
+assert "hedgeDelayMs = 350" in cosmos_client
+assert "INVALID JUNO CONTRACT" in cosmos_client
+assert "unescape(encodeURIComponent" not in cosmos_client
 assert "window.NETA_ADDRESS_ROWS" in address_index
 assert "Object.create(null)" in address_index
 assert (ROOT / "address-index.js").stat().st_size < 2_000_000

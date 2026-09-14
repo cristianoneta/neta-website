@@ -37,6 +37,8 @@
     if(separator<1)throw new Error("INVALID BECH32 ADDRESS");
     const words=[...address.slice(separator+1)].map(char=>BECH32.indexOf(char));
     if(words.some(value=>value<0)||words.length<7)throw new Error("INVALID BECH32 ADDRESS");
+    const sourcePrefix=address.slice(0,separator).toLowerCase();
+    if(polymod([...hrpExpand(sourcePrefix),...words])!==1)throw new Error("INVALID BECH32 CHECKSUM");
     const data=words.slice(0,-6);
     const checksumInput=[...hrpExpand(prefix),...data,0,0,0,0,0,0];
     const checksum=polymod(checksumInput)^1;
@@ -65,10 +67,15 @@
     balance.textContent=message;
   }
 
+  function menuItems(){
+    return menu?[...menu.querySelectorAll("a[href],button:not([disabled])")]:[];
+  }
+
   function setMenu(open){
     if(!menu)return;
     menu.hidden=!open;
     button.setAttribute("aria-expanded",String(open));
+    if(open)queueMicrotask(()=>menuItems()[0]?.focus());
   }
 
   function resetButton(){
@@ -117,7 +124,7 @@
       label.textContent=short(address);
       balance.textContent=`${format(total)} NETA`;
       button.setAttribute("aria-label",`Open Keplr account menu for ${short(address)}`);
-      button.setAttribute("aria-haspopup","dialog");
+      button.setAttribute("aria-haspopup","menu");
       button.setAttribute("aria-expanded","false");
       if(menuAddress)menuAddress.textContent=address;
       if(menuTotal)menuTotal.textContent=`${format(total)} NETA`;
@@ -159,7 +166,16 @@
   });
   menu?.querySelector('[data-wallet-action="disconnect"]')?.addEventListener("click",disconnect);
   document.addEventListener("click",event=>{if(!menu?.hidden&&!button.parentElement.contains(event.target))setMenu(false)});
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!menu?.hidden){setMenu(false);button.focus();}});
+  document.addEventListener("keydown",event=>{
+    if(menu?.hidden)return;
+    if(event.key==="Escape"){setMenu(false);button.focus();return;}
+    if(event.key==="ArrowDown"||event.key==="ArrowUp"){
+      event.preventDefault();
+      const items=menuItems(),current=items.indexOf(document.activeElement);
+      const offset=event.key==="ArrowDown"?1:-1;
+      items[(current+offset+items.length)%items.length]?.focus();
+    }
+  });
   window.addEventListener("keplr_keystorechange",()=>{if(sessionStorage.getItem(SESSION_KEY)==="1")connect({silent:true})});
   if(sessionStorage.getItem(SESSION_KEY)==="1")connect({silent:true});
 })();
