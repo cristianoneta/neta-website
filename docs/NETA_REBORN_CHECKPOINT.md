@@ -865,3 +865,13 @@ live tests and cancellation/rejection paths pass.
 - Enabled scope: exactly wallet `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, pair `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`, action `bond`, amount at most `47283` raw LP, and period exactly `604800` seconds.
 - The frontend re-queries contract code IDs and the direct LP balance, checks the period allowlist, simulates the final message, enforces a `500000` gas cap, and revalidates the message immediately before Keplr signing.
 - Expected successful post-state: direct LP `47284`, one 7-day active stake of `47283` raw LP, no claim yet. The remaining direct LP is reserved for the immediate Withdraw pilot. The Bond pilot must be disabled and this exact post-state recorded before enabling another action.
+
+### Controlled bond live result
+
+- Transaction: `1B606F42BC52B54BA9F0A9816399846C8E1713AFF69189E6246F44AC53BF9214`
+- Height/time: `41744877` / `2026-09-14T07:37:40Z`; chain result `code 0`.
+- Gas used/wanted: `334236` / `403324`; fee `36300 ujuno`.
+- Events confirm CW20 `send` of `47283` raw LP from the pilot wallet to the allowlisted stake contract and stake action `bond` for the same wallet and amount.
+- Verified post-state: direct LP `47284`; active 7-day stake `47283`; locked `0`; claims empty.
+- UI defect found: CosmJS `execute()` returns a successful `ExecuteResult` without a `code` property, while failed deliveries throw. The frontend incorrectly treated the absent success code as failure. Both single- and multi-message success checks now accept an absent code and still reject any explicit non-zero code.
+- Bond authorization is closed. The next pilot authorizes only Withdraw of at most the remaining `47284` raw LP for the same wallet and pair.
