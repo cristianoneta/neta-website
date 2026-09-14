@@ -274,7 +274,11 @@ async function showLiquidityPreview(){
 async function executeLiquidityPilot(){
   if(!pendingLiquidity||!liquidityPilotAuthorized())throw new Error("LIQUIDITY PILOT IS NOT AUTHORIZED");
   const fresh=await prepareLiquidityPilot();
-  if(JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions))throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");
+  const sameIntent=fresh.pool.pair.address===pendingLiquidity.pool.pair.address
+    &&fresh.junoRaw===pendingLiquidity.junoRaw
+    &&fresh.netaRaw===pendingLiquidity.netaRaw
+    &&fresh.memo===pendingLiquidity.memo;
+  if(!sameIntent)throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");
   const signingClient=await loadSigningClient();await window.keplr.enable(CHAIN_ID);
   const signer=window.keplr.getOfflineSigner(CHAIN_ID),accounts=await signer.getAccounts();if(accounts[0]?.address!==wallet.address)throw new Error("KEPLR ACCOUNT CHANGED");
   const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
