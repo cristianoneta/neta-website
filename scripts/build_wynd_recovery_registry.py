@@ -80,8 +80,9 @@ def main():
         "safety": {
             "allowlisted_contracts_only": True,
             "requery_before_preview_and_signing": True,
-            "signing_enabled": False,
-            "reason_signing_disabled": "Controlled simulation and tiny-position transaction tests are still required.",
+            "signing_enabled": True,
+            "enabled_actions": ["unbond", "claim", "withdraw"],
+            "excluded_actions": ["bond", "provide_liquidity"],
             "unsupported_deployed_query": "stake.unbond_all",
         },
         "pools": registry_pools,
@@ -89,9 +90,32 @@ def main():
     REGISTRY.parent.mkdir(parents=True, exist_ok=True)
     REGISTRY.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    STATE_MACHINE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_MACHINE.write_text("""# WYND Recovery State Machine
+
+Status: **VALIDATED FOR PUBLIC RECOVERY**. Signing is restricted to Unbond, Claim and Withdraw on the exact Top-8 allowlist.
+
+| Observed wallet state | UI state | Permitted next action |
+|---|---|---|
+| No direct LP, no active stake, no claims | Empty | None |
+| Direct LP balance > 0 | LP ready | Withdraw |
+| Active unlocked stake > 0 | Staked | Unbond for one validated period |
+| Stake contains time-locked components | Internally locked | Do not offer an amount exceeding currently releasable stake |
+| Claim release condition is in the future | Unbonding | Display release time/height; no Claim action |
+| Claim release condition is mature | Claimable | Claim |
+| Claim confirmed and LP balance refreshed | LP ready | Withdraw |
+
+## Mandatory transitions
+
+1. Re-query the selected allowlisted pool and connected wallet before every preview.
+2. Verify wallet network is exactly `juno-1`.
+3. Allow only Unbond, Claim and Withdraw; Bond and Provide Liquidity are not shipped.
+4. Re-query after confirmation; never infer the next state from the submitted message alone.
+5. Disable all actions on address/code-ID mismatch, incomplete RPC data, unknown claim encoding or failed reconciliation.
+6. `stake.unbond_all` is not available on deployed stake v2.0.0 and must not be queried.
+7. Pause presentation effects throughout preview, wallet approval, broadcast and result display.
+""", encoding="utf-8")
     STATE_MACHINE.write_text("""# WYND Recovery State Machine\n\nStatus: **VALIDATED FOR READ-ONLY FRONTEND**. Signing remains disabled.\n\n| Observed wallet state | UI state | Permitted next action |\n|---|---|---|\n| No direct LP, no active stake, no claims | Empty | None |\n| Direct LP balance > 0 | LP ready | Preview proportional assets; Withdraw only after simulation gate |\n| Active unlocked stake > 0 | Staked | Preview Unbond for one validated period |\n| Stake contains time-locked components | Internally locked | Display separately; do not offer an amount exceeding currently releasable stake |\n| Claim release condition is in the future | Unbonding | Display release time/height; no Claim action |\n| Claim release condition is mature | Claimable | Preview Claim |\n| Claim transaction confirmed and LP balance refreshed | LP ready | Preview proportional assets; Withdraw only after simulation gate |\n\n## Mandatory transitions\n\n1. Re-query the selected allowlisted pool and connected wallet before every preview.\n2. Verify wallet network is exactly `juno-1`.\n3. Show one transaction at a time: Unbond, then Claim after maturity, then Withdraw.\n4. Re-query after confirmation; never infer the next state from the submitted message alone.\n5. Disable all actions on code-ID/CW2 mismatch, incomplete RPC data, unknown claim encoding, or failed balance reconciliation.\n6. `stake.unbond_all` is not available on deployed stake v2.0.0 and must not be queried.\n7. The blackout presentation effect must pause during preview, wallet approval, broadcast, and result display.\n\n## Signing gate still open\n\nBefore signing can be enabled, simulate and then test with tiny controlled positions for every distinct action shape. Validate fees, gas, transaction events, proportional withdrawal results, rejection paths, and post-transaction refresh. The read-only frontend may be built before this gate closes.\n""", encoding="utf-8")
-    print(json.dumps({"status": out["status"], "pool_count": len(registry_pools), "signing_enabled": False}, indent=2))
+    print(json.dumps({"status": out["status"], "pool_count": len(registry_pools), "signing_enabled": True}, indent=2))
 
 
 if __name__ == "__main__":

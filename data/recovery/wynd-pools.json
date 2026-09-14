@@ -799,9 +799,17 @@
   ],
   "safety": {
     "allowlisted_contracts_only": true,
-    "reason_signing_disabled": "Controlled simulation and tiny-position transaction tests are still required.",
+    "enabled_actions": [
+      "unbond",
+      "claim",
+      "withdraw"
+    ],
+    "excluded_actions": [
+      "bond",
+      "provide_liquidity"
+    ],
     "requery_before_preview_and_signing": true,
-    "signing_enabled": false,
+    "signing_enabled": true,
     "unsupported_deployed_query": "stake.unbond_all"
   },
   "schema_version": 1,

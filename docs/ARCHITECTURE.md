@@ -46,11 +46,11 @@
   with `valuation_locked: true` are never repriced.
 - Stake-contract custody is excluded from the economic-owner leaderboard to
   avoid double counting.
-- Signing remains disabled between explicitly reviewed pilots. Its dormant Keplr
-  path uses pinned CosmJS dependencies and an immutable `enabled:false`
-  production configuration. The generated adapter is shipped locally but loaded
-  only after every pilot and live-state gate passes; CI rebuilds it and rejects
-  any difference from the committed artifact.
+- Public signing is recovery-only: Unbond, Claim and Withdraw are enabled for the
+  exact frozen Top-8 Pair, LP-token and Stake address sets. Bond and Provide
+  Liquidity have no policy, UI control or execution branch. The pinned local
+  CosmJS adapter is loaded only after all wallet, contract and live-state gates
+  pass; CI rebuilds it and rejects any difference from the committed artifact.
 - Signing RPC connection attempts use the independent Polkachu, Kleomedes and
   Lavender.Five endpoints listed by the Cosmos Chain Registry. Each attempt has
   an eight-second deadline before the adapter fails over, and a client that
@@ -64,19 +64,15 @@
   Bech32 validation; rank and total NETA then fill in asynchronously. A snapshot
   failure leaves the verified wallet connected and labels only ranking data as
   unavailable.
-- Signing also requires a frozen single-action pilot scope: exact Juno wallet,
-  allowlisted pair, action, positive raw-amount cap and, for bond/unbond, exact
-  unbonding period. Claims abort if the live claimable amount differs from the
-  reviewed preview. Confirmed transactions are followed by an action-specific
+- Signing requires the connected Juno wallet to match the inspected address and
+  the Pool, LP and Stake contracts to match independent immutable allowlists.
+  Unbond amounts and periods, claimable totals and direct LP balances are loaded
+  again before execution. Claims abort if the live claimable amount differs from
+  the reviewed preview. Confirmed transactions are followed by an action-specific
   position check before the UI reports the result as verified.
 - WYND's legacy pair schema contains an `assets` field for withdrawal hooks, but
   the deployed pair implementation ignores it. The frontend therefore labels
   withdrawal assets as estimates and never presents them as enforced minimums.
-- The temporary JUNO/NETA liquidity pilot is separately wallet-scoped and
-  hard-disabled. Its two messages are simulated atomically: a capped CW20
-  allowance followed by `provide_liquidity` carrying exactly 1 JUNO. The live
-  reserve ratio, balances, contract identities and gas are rechecked before any
-  future Keplr prompt.
 
 ## Browser security boundary
 
@@ -94,8 +90,8 @@
 - `main` is protected by a repository ruleset against force-push and deletion.
 - Pull requests use one consolidated `Test website` workflow for integrity,
   recovery safety, signing-gate, syntax, build and Playwright coverage. Browser
-  tests exercise both a mocked confirmed-and-post-verified transaction and a
-  rejected Keplr request while production signing remains disabled.
+  tests exercise Withdraw and Claim success, rejected Keplr approval and a
+  confirmed transaction whose post-state is temporarily unavailable.
 - Superseded runs for the same PR/ref are cancelled. Data workflows only run for
   their owning files and keep scheduled/manual production writes serialized.
 - Third-party Actions are pinned to full commit SHAs. Dependabot updates are

@@ -1,6 +1,6 @@
 Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
   value:Object.freeze({
-    enabled:false,
+    enabled:true,
     chainId:"juno-1",
     rpcEndpoints:Object.freeze([
       "https://juno-rpc.polkachu.com:443",
@@ -9,10 +9,22 @@ Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{
     ]),
     gasPrice:"0.075ujuno",
     gasAdjustment:1.4,
-    gasCaps:Object.freeze({bond:500000,unbond:500000,claim:500000,withdraw:700000,liquidity:900000}),
+    gasCaps:Object.freeze({unbond:500000,claim:500000,withdraw:700000}),
     memo:"netareborn.com/wynd-recovery:v1",
-    pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0",unbondingPeriod:null}),
-    liquidityPilot:Object.freeze({enabled:false,wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",pair:"juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",netaToken:"juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",junoRaw:"1000000",maxNetaRaw:"10200",slippageTolerance:"0.01",allowanceBlocks:100,memo:"netareborn.com/wynd-recovery:liquidity-pilot:v1"}),
+    recovery:Object.freeze({
+      enabled:true,
+      actions:Object.freeze({unbond:true,claim:true,withdraw:true}),
+      contracts:Object.freeze({
+        "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3":Object.freeze({lpToken:"juno1an2xhen0fzme85dpy7vx60f6ecrufqj6vqkh8gdvlyhfhjmp24qqqleeav",stake:"juno1nfs4xjxum3fqd564yxj44ragxmh8ey7ugl50avquyt7zrvcwlf8q3juqqg"}),
+        "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj":Object.freeze({lpToken:"juno1jn6t0dsxryht8ljxulavxrfd22l87dvac8e9a99a7tuj29ysxksqffhf5k",stake:"juno1pawjm34dunptcs8wt2m5tgcyexyzc02pdl9xl52jvcqlpwcgus5sen5yrk"}),
+        "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt":Object.freeze({lpToken:"juno1yhtyn2dv5k7ladzrznxlep2xm6q7dsd332wak3hhdrw0staer0ps83q8jw",stake:"juno1u4h488kf6xhmelsuwm0gj7dhh8mfjm7n5pyu8c0l0xwy3pvrpc3ql2p6q2"}),
+        "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve":Object.freeze({lpToken:"juno13ld2eq3w8k6rap5n5vsmwr8c4zhqhtfu9vjx0gqmhpefefl97nxq4u4pap",stake:"juno1vntf38qmdx9aqskjnxdpcmtap0gymtcxnyf3pjcvn8a63j8q53tssrgzz8"}),
+        "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra":Object.freeze({lpToken:"juno1uu3cewmpynvgsdu3lfqv2rh2n5nwtrguahkw64wjk99eg8r6fsss0e757x",stake:"juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7"}),
+        "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf":Object.freeze({lpToken:"juno1stg339rrg9guqsuv205yayq2ttzwz4583luc9pznvexe7rtrtrksdxstg3",stake:"juno1zvxvs3tzfqd4eqt6g5dq9wsusy0ap5vk34nklqfl0u938sf3y7hql08umf"}),
+        "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5":Object.freeze({lpToken:"juno1k5vhzkssgh35zlv9hqaasetslgqyal6jane86umrqvrjav9eg3hq3pxa0l",stake:"juno1dhl0fxmkwp9m8m0c2mhqhs8utcpswp8ud9eh448ex9cjmqkm96zqa52m7p"}),
+        "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl":Object.freeze({lpToken:"juno1dx6djxrsr4f4mqjn3vsp6v0yrg78stv3d8qyp66k209qmzn7r3eqne7mwf",stake:"juno1d0mqxg0glg2u47q0uvcvw33fg8l5yg9vx5ean3qg3n3ng4tenecs4a7guy"}),
+      }),
+    }),
   }),
   writable:false,
   configurable:false,

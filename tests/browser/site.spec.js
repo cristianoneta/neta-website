@@ -18,7 +18,12 @@ function recoveryCodeIds() {
   return codeIds;
 }
 
-async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () => 0} = {}) {
+async function mockRecoveryChain(page, {
+  balanceFor = () => "0",
+  stakesFor = () => [],
+  claimsFor = () => [],
+  delayFor = () => 0,
+} = {}) {
   const codeIds = recoveryCodeIds();
   await page.route(/^https:\/\/juno-api\./, async route => {
     const url = new URL(route.request().url());
@@ -39,26 +44,15 @@ async function mockRecoveryChain(page, {balanceFor = () => "0", delayFor = () =>
     if (delay) await new Promise(resolve => setTimeout(resolve, delay));
     let data;
     if (query.balance) data = {balance: balanceFor(address, contract)};
-    else if (query.all_staked) data = {stakes: []};
-    else if (query.claims) data = {claims: []};
+    else if (query.all_staked) data = {stakes: stakesFor(address, contract)};
+    else if (query.claims) data = {claims: claimsFor(address, contract)};
     else if (query.share) data = registry.pools.find(pool => pool.pair.address === contract).assets.map(asset => ({info: asset.info, amount: "1000000"}));
     else data = {};
     await route.fulfill({headers, body: JSON.stringify({data})});
   });
 }
 
-async function installSigningPilot(page, {wallet, pool, action = "withdraw", maxAmountRaw = "1000000", executeBody}) {
-  await page.route("**/recovery-signing-config.js*", route => route.fulfill({
-    contentType: "application/javascript",
-    body: `Object.defineProperty(window,"NETA_RECOVERY_SIGNING",{value:Object.freeze({
-      enabled:true,chainId:"juno-1",rpcEndpoints:Object.freeze(["https://rpc.test"]),
-      gasPrice:"0.075ujuno",gasAdjustment:1.4,
-      gasCaps:Object.freeze({bond:500000,unbond:500000,claim:500000,withdraw:700000,liquidity:900000}),
-      memo:"netareborn.com/wynd-recovery:v1",
-      pilot:Object.freeze({wallet:"${wallet}",pair:"${pool.pair.address}",action:"${action}",maxAmountRaw:"${maxAmountRaw}",unbondingPeriod:null}),
-      liquidityPilot:Object.freeze({enabled:false})
-    }),writable:false,configurable:false});`,
-  }));
+async function installSigningClient(page, executeBody) {
   await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaRecoverySigning={
@@ -104,6 +98,42 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   await expect(page.locator("#transaction-explorer")).toHaveAttribute("rel", "noopener noreferrer");
   await expect(page.locator("#transaction-explorer")).toHaveAttribute("target", "_blank");
   expect(pageErrors).toEqual([]);
+});
+
+test("public signing policy allows only the exact Top-8 recovery contract tuples", async ({page}) => {
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  const policy = await page.evaluate(() => {
+    const config = window.NETA_RECOVERY_SIGNING;
+    try {
+      config.recovery.actions.bond = true;
+      config.recovery.contracts.extra = {lpToken: "x", stake: "y"};
+    } catch (_) {}
+    return {
+      enabled: config.enabled && config.recovery.enabled,
+      actions: Object.keys(config.recovery.actions).sort(),
+      contracts: Object.fromEntries(Object.entries(config.recovery.contracts).map(
+        ([pair, value]) => [pair, {lpToken: value.lpToken, stake: value.stake}],
+      )),
+      frozen: Object.isFrozen(config)
+        && Object.isFrozen(config.recovery)
+        && Object.isFrozen(config.recovery.actions)
+        && Object.isFrozen(config.recovery.contracts),
+      hasBond: Object.hasOwn(config.recovery.actions, "bond"),
+      hasExtra: Object.hasOwn(config.recovery.contracts, "extra"),
+    };
+  });
+  const expected = Object.fromEntries(registry.pools.map(pool => [
+    pool.pair.address,
+    {lpToken: pool.lp_token.address, stake: pool.stake.address},
+  ]));
+  expect(policy).toEqual({
+    enabled: true,
+    actions: ["claim", "unbond", "withdraw"],
+    contracts: expected,
+    frozen: true,
+    hasBond: false,
+    hasExtra: false,
+  });
 });
 
 test("Map of NETA links Osmosis movers safely to Mintscan", async ({page}) => {
@@ -330,11 +360,10 @@ test("confirmed withdraw verifies its result and exposes the transaction hash", 
   const address = leaderboard.top_wallets[0].address;
   let directRaw = "1000000";
   await page.exposeFunction("__confirmTestWithdrawal", () => { directRaw = "0"; });
-  await installSigningPilot(page, {
-    wallet: address,
-    pool,
-    executeBody: 'await window.__confirmTestWithdrawal();return{code:0,transactionHash:"a".repeat(64)};',
-  });
+  await installSigningClient(
+    page,
+    'await window.__confirmTestWithdrawal();return{code:0,transactionHash:"a".repeat(64)};',
+  );
   await mockRecoveryChain(page, {
     balanceFor: (_wallet, contract) => contract === pool.lp_token.address ? directRaw : "0",
   });
@@ -359,16 +388,22 @@ test("confirmed withdraw verifies its result and exposes the transaction hash", 
   );
 });
 
-test("rejected signing never presents a transaction as confirmed", async ({page}) => {
+test("confirmed unbond creates a pending claim and verifies the live post-state", async ({page}) => {
   const pool = registry.pools.find(item => item.name === "ujuno / NETA");
   const address = leaderboard.top_wallets[0].address;
-  await installSigningPilot(page, {
-    wallet: address,
-    pool,
-    executeBody: 'throw new Error("Request rejected by user");',
+  let stakes = [{stake: "1000000", total_locked: "0", unbonding_period: 604800}];
+  let claims = [];
+  await page.exposeFunction("__confirmTestUnbond", () => {
+    stakes = [];
+    claims = [{amount: "1000000", release_at: {at_height: 99999999}}];
   });
+  await installSigningClient(
+    page,
+    'await window.__confirmTestUnbond();return{transactionHash:"d".repeat(64)};',
+  );
   await mockRecoveryChain(page, {
-    balanceFor: (_wallet, contract) => contract === pool.lp_token.address ? "1000000" : "0",
+    stakesFor: (_wallet, contract) => contract === pool.stake.address ? stakes : [],
+    claimsFor: (_wallet, contract) => contract === pool.stake.address ? claims : [],
   });
   await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
   await page.evaluate(walletAddress => {
@@ -380,13 +415,107 @@ test("rejected signing never presents a transaction as confirmed", async ({page}
 
   await page.locator("#keplr-connect").click();
   await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
-  await page.getByRole("button", {name: "PREVIEW WITHDRAW"}).click();
+  await page.getByRole("button", {name: "PREVIEW UNBOND 7D"}).click();
+  await page.locator("#execute-action").click();
+
+  await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION + RESULT VERIFIED");
+  await expect(page.locator("#transaction-hash")).toHaveText("D".repeat(64));
+});
+
+test("rejected claim signing never presents a transaction as confirmed", async ({page}) => {
+  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
+  const address = leaderboard.top_wallets[0].address;
+  await installSigningClient(page, 'throw new Error("Request rejected by user");');
+  await mockRecoveryChain(page, {
+    claimsFor: (_wallet, contract) => contract === pool.stake.address
+      ? [{amount: "1000000", release_at: {at_height: 1}}]
+      : [],
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await page.getByRole("button", {name: "PREVIEW CLAIM"}).click();
   await page.locator("#execute-action").click();
 
   await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION NOT CONFIRMED");
   await expect(page.locator("#transaction-status")).toContainText("REQUEST REJECTED BY USER");
   await expect(page.locator("#transaction-hash")).toBeHidden();
   await expect(page.locator("#transaction-explorer")).toBeHidden();
+});
+
+test("confirmed claim returns LP tokens and verifies the live post-state", async ({page}) => {
+  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
+  const address = leaderboard.top_wallets[0].address;
+  let directRaw = "0";
+  let claims = [{amount: "1000000", release_at: {at_height: 1}}];
+  await page.exposeFunction("__confirmTestClaim", () => {
+    directRaw = "1000000";
+    claims = [];
+  });
+  await installSigningClient(
+    page,
+    'await window.__confirmTestClaim();return{transactionHash:"b".repeat(64)};',
+  );
+  await mockRecoveryChain(page, {
+    balanceFor: (_wallet, contract) => contract === pool.lp_token.address ? directRaw : "0",
+    claimsFor: (_wallet, contract) => contract === pool.stake.address ? claims : [],
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await page.getByRole("button", {name: "PREVIEW CLAIM"}).click();
+  await page.locator("#execute-action").click();
+
+  await expect(page.locator("#transaction-feedback-title")).toHaveText("TRANSACTION + RESULT VERIFIED");
+  await expect(page.locator("#transaction-hash")).toHaveText("B".repeat(64));
+  await expect(page.locator("#transaction-explorer")).toHaveAttribute(
+    "href",
+    `https://atomscan.com/juno/transactions/${"B".repeat(64)}`,
+  );
+});
+
+test("confirmed claim keeps its hash when post-state verification is incomplete", async ({page}) => {
+  test.slow();
+  const pool = registry.pools.find(item => item.name === "ujuno / NETA");
+  const address = leaderboard.top_wallets[0].address;
+  const claims = [{amount: "1000000", release_at: {at_height: 1}}];
+  await installSigningClient(page, 'return{transactionHash:"c".repeat(64)};');
+  await mockRecoveryChain(page, {
+    claimsFor: (_wallet, contract) => contract === pool.stake.address ? claims : [],
+  });
+  await page.goto("/wynd-recovery.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(walletAddress => {
+    window.keplr = {
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: walletAddress}]})
+    };
+  }, address);
+
+  await page.locator("#keplr-connect").click();
+  await expect(page.locator("#wallet-status")).toContainText("CONNECTED + CHECKED 8/8");
+  await page.getByRole("button", {name: "PREVIEW CLAIM"}).click();
+  await page.locator("#execute-action").click();
+
+  await expect(page.locator("#transaction-feedback-title")).toHaveText(
+    "TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE",
+    {timeout: 12_000},
+  );
+  await expect(page.locator("#transaction-hash")).toHaveText("C".repeat(64));
+  await expect(page.locator("#transaction-explorer")).toBeVisible();
 });
 
 test("wallet address conversion rejects an invalid Bech32 checksum", async ({page}) => {
