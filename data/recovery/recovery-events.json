@@ -1,4 +1,22 @@
 {
-  "events": [],
+  "events": [
+    {
+      "action": "unbond",
+      "height": 41745318,
+      "id": "juno:3F134F9C0759851A2602C63B1B58D91AD874A74071FCBE6C10AA03CC4AA8A249:unbond:9",
+      "lp_raw": 47283,
+      "memo": "netareborn.com/wynd-recovery:v1",
+      "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
+      "price_source": "CoinGecko simple/price",
+      "price_timestamp": "2026-09-14T08:47:09.511105Z",
+      "stake": "juno1tlhf68k8aksl30mdf5yngudk6z8w4qqzvvauzr92w3gwm7er9p9qxvudu7",
+      "timestamp": "2026-09-14T07:58:06Z",
+      "txhash": "3F134F9C0759851A2602C63B1B58D91AD874A74071FCBE6C10AA03CC4AA8A249",
+      "usd_value": "0.011003",
+      "valuation_locked": true,
+      "valuation_method": "two_times_single_external_price_anchor",
+      "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
+    }
+  ],
   "schema_version": 1
 }

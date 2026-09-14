@@ -2,7 +2,7 @@
   "collection_started_at": "2026-09-13T14:48:31.781583Z",
   "double_count_notice": "Unstaked and Claimed are separate milestones and must not be added as unique recovered value.",
   "juno_endpoint": "https://juno-api.polkachu.com",
-  "juno_last_height": 41745075,
+  "juno_last_height": 41746363,
   "memo_tag": "netareborn.com/wynd-recovery:v1",
   "pools": {
     "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5": {
@@ -44,8 +44,8 @@
       "claim_transactions": 0,
       "claimed_usd": 0,
       "name": "ujuno / NETA",
-      "unbond_transactions": 0,
-      "unstaked_usd": 0
+      "unbond_transactions": 1,
+      "unstaked_usd": 0.01
     },
     "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl": {
       "claim_transactions": 0,
@@ -62,11 +62,11 @@
       "unstaked_usd": 0
     }
   },
-  "price_source": null,
-  "price_timestamp": null,
+  "price_source": "CoinGecko simple/price",
+  "price_timestamp": "2026-09-14T08:47:09.511105Z",
   "schema_version": 1,
   "status": "COLLECTING",
-  "updated_at": "2026-09-14T07:47:08.761007Z",
+  "updated_at": "2026-09-14T08:47:09.690005Z",
   "validation": {
     "allowlisted_pairs_only": true,
     "event_ids_unique": true
