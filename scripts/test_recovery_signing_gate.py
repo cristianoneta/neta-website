@@ -23,9 +23,11 @@ assert "pilotAuthorized(pool,action,request)" in frontend
 assert "pilot.wallet!==wallet.address" in frontend
 assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
 assert "request.raw<=limit" in frontend
-assert 'action==="bond"&&Number(pilot.unbondingPeriod)!==request.period' in frontend
+assert '(action==="bond"||action==="unbond")&&Number(pilot.unbondingPeriod)!==request.period' in frontend
 assert 'position.direct<pilotAmount?position.direct:pilotAmount' in frontend
 assert frontend.count('result.code!==undefined&&Number(result.code)!==0') == 2
+assert 'position.claimable!==request.raw' in frontend
+assert 'verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before)' in frontend
 for required in [
     "liquidityPilotAuthorized()",
     'pool.name!=="ujuno / NETA"',

@@ -52,9 +52,10 @@ function setTransactionFeedback(state,title,detail,txhash=""){
   $("#transaction-feedback-title").textContent=title;
   $("#transaction-status").textContent=detail;
   const hash=$("#transaction-hash"),explorer=$("#transaction-explorer");
-  const validHash=/^[0-9A-F]{64}$/.test(txhash);
-  hash.hidden=!validHash;hash.textContent=validHash?txhash:"";
-  explorer.hidden=!validHash;explorer.href=validHash?ATOMSCAN_TX_BASE+txhash:"#";
+  const normalizedHash=String(txhash||"").toUpperCase();
+  const validHash=/^[0-9A-F]{64}$/.test(normalizedHash);
+  hash.hidden=!validHash;hash.textContent=validHash?normalizedHash:"";
+  explorer.hidden=!validHash;explorer.href=validHash?ATOMSCAN_TX_BASE+normalizedHash:"#";
   const ready=state==="ready";
   $("#preview-message").hidden=!ready;
   $("#preview-note").hidden=!ready;
@@ -164,9 +165,7 @@ function setSnapshotTimestamp(element,value,label){
 function classifyClaims(claims){
   const now=BigInt(Date.now())*1000000n;
   let claimable=0n;
-  let unbonding=0n;
-  let nextReleaseAt=null;
-  let nextReleaseHeight=null;
+  const tranches=[];
   for(const claim of claims||[]){
     const value=BigInt(claim.amount||0);
     const release=claim.release_at||{};
@@ -174,29 +173,31 @@ function classifyClaims(claims){
       ?BigInt(release.at_time)<=now
       :release.at_height!==undefined&&BigInt(release.at_height)<=BigInt(chainHeight);
     if(mature)claimable+=value;
-    else{
-      unbonding+=value;
-      if(release.at_time!==undefined){
-        const at=BigInt(release.at_time);
-        if(nextReleaseAt===null||at<nextReleaseAt)nextReleaseAt=at;
-      }else if(release.at_height!==undefined){
-        const height=BigInt(release.at_height);
-        if(nextReleaseHeight===null||height<nextReleaseHeight)nextReleaseHeight=height;
-      }
-    }
+    else tranches.push({
+      amount:value,
+      releaseAt:release.at_time!==undefined?BigInt(release.at_time):null,
+      releaseHeight:release.at_height!==undefined?BigInt(release.at_height):null,
+    });
   }
-  return{claimable,unbonding,nextReleaseAt,nextReleaseHeight};
+  tranches.sort((a,b)=>{
+    if(a.releaseAt!==null&&b.releaseAt!==null)return a.releaseAt<b.releaseAt?-1:a.releaseAt>b.releaseAt?1:0;
+    if(a.releaseHeight!==null&&b.releaseHeight!==null)return a.releaseHeight<b.releaseHeight?-1:a.releaseHeight>b.releaseHeight?1:0;
+    return a.releaseAt!==null?-1:1;
+  });
+  return{claimable,unbonding:tranches.reduce((sum,row)=>sum+row.amount,0n),tranches};
 }
 
 function unbondingDisplay(position,decimals){
-  const value=amount(position.unbonding,decimals).toLocaleString(undefined,{maximumFractionDigits:6});
-  if(position.unbonding<=0n)return value;
-  if(position.nextReleaseAt!==null){
-    const ready=new Date(Number(position.nextReleaseAt/1000000n));
-    return `${value} (READY ${ready.toLocaleString()})`;
-  }
-  if(position.nextReleaseHeight!==null)return `${value} (READY AT BLOCK ${position.nextReleaseHeight})`;
-  return value;
+  if(!position.unbondingTranches.length)return "0";
+  return position.unbondingTranches.map(row=>{
+    const value=amount(row.amount,decimals).toLocaleString(undefined,{maximumFractionDigits:6});
+    if(row.releaseAt!==null){
+      const ready=new Date(Number(row.releaseAt/1000000n));
+      return `${value} · READY ${ready.toLocaleString()}`;
+    }
+    if(row.releaseHeight!==null)return `${value} · READY AT BLOCK ${row.releaseHeight}`;
+    return value;
+  }).join(" // ");
 }
 
 async function verifyContracts(pool,force=false){
@@ -209,14 +210,26 @@ async function verifyContracts(pool,force=false){
   return result;
 }
 
+function assetKey(info={}){
+  if(info.native)return `native:${info.native}`;
+  if(info.token)return `token:${info.token}`;
+  throw new Error("UNKNOWN POOL ASSET TYPE");
+}
+
 async function expectedAssets(pool,raw){
   const response=await smart(pool.pair.address,{share:{amount:raw.toString()}});
   const assets=Array.isArray(response)?response:(response.assets||[]);
-  return assets.map((asset,index)=>({
-    symbol:(pool.assets[index]?.symbol||pool.assets[index]?.key||"ASSET").replace(/^u(?=[a-z])/i,"").toUpperCase(),
-    raw:asset.amount,
-    display:amount(asset.amount,pool.assets[index]?.decimals||6).toLocaleString(undefined,{maximumFractionDigits:6}),
-  }));
+  if(assets.length!==pool.assets.length)throw new Error("POOL SHARE ASSET COUNT CHANGED");
+  return assets.map(asset=>{
+    const definition=pool.assets.find(item=>assetKey(item.info)===assetKey(asset.info));
+    if(!definition)throw new Error("POOL SHARE RETURNED AN UNALLOWLISTED ASSET");
+    return{
+      info:definition.info,
+      symbol:(definition.symbol||definition.key||"ASSET").replace(/^u(?=[a-z])/i,"").toUpperCase(),
+      raw:asset.amount,
+      display:amount(asset.amount,definition.decimals||6).toLocaleString(undefined,{maximumFractionDigits:6}),
+    };
+  });
 }
 
 async function loadPosition(pool,address){
@@ -246,7 +259,7 @@ async function loadPosition(pool,address){
     available:byPeriod.reduce((sum,row)=>sum+row.available,0n),
     locked:byPeriod.reduce((sum,row)=>sum+row.locked,0n),
     claimable:claims.claimable,unbonding:claims.unbonding,
-    nextReleaseAt:claims.nextReleaseAt,nextReleaseHeight:claims.nextReleaseHeight,byPeriod,
+    unbondingTranches:claims.tranches,byPeriod,
   };
   return result;
 }
@@ -265,7 +278,7 @@ function pilotAuthorized(pool,action,request){
   if(!ADDRESS_PATTERN.test(pilot.wallet||"")||pilot.wallet!==wallet.address||wallet.address!==viewedAddress)return false;
   if(pilot.pair!==pool.pair.address||pilot.action!==action)return false;
   if(!["bond","unbond","claim","withdraw"].includes(action))return false;
-  if(action==="bond"&&Number(pilot.unbondingPeriod)!==request.period)return false;
+  if((action==="bond"||action==="unbond")&&Number(pilot.unbondingPeriod)!==request.period)return false;
   try{
     const limit=BigInt(pilot.maxAmountRaw);
     return limit>0n&&request.raw>0n&&request.raw<=limit;
@@ -378,7 +391,7 @@ async function prepareAction(pool,action,request){
     contract=pool.stake.address;
     message={unbond:{tokens:request.raw.toString(),unbonding_period:request.period}};
   }else if(action==="claim"){
-    if(position.claimable<request.raw)throw new Error("CLAIMABLE POSITION CHANGED");
+    if(position.claimable!==request.raw)throw new Error("CLAIMABLE POSITION CHANGED; REVIEW A NEW PREVIEW");
     contract=pool.stake.address;
     message={claim:{}};
   }else if(action==="withdraw"){
@@ -390,7 +403,25 @@ async function prepareAction(pool,action,request){
   }else{
     throw new Error("UNALLOWLISTED RECOVERY ACTION");
   }
-  return{contract,message,expected};
+  return{contract,message,expected,before:position};
+}
+
+function postconditionSatisfied(action,request,before,after){
+  if(action==="bond")return after.direct===before.direct-request.raw&&after.active>=before.active+request.raw;
+  if(action==="unbond")return after.active===before.active-request.raw&&after.unbonding+after.claimable>=before.unbonding+before.claimable+request.raw;
+  if(action==="claim")return after.claimable===0n&&after.direct>=before.direct+request.raw;
+  if(action==="withdraw")return after.direct===before.direct-request.raw;
+  return false;
+}
+
+async function verifyPostcondition(pool,action,request,before){
+  let last=null;
+  for(let attempt=0;attempt<4;attempt++){
+    if(attempt)await new Promise(resolve=>setTimeout(resolve,1200*attempt));
+    last=await loadPosition(pool,wallet.address);
+    if(postconditionSatisfied(action,request,before,last))return last;
+  }
+  throw new Error("TRANSACTION CONFIRMED, BUT THE EXPECTED POSITION CHANGE COULD NOT BE VERIFIED");
 }
 
 async function showPreview(pool,action,request){
@@ -444,8 +475,10 @@ async function executePendingAction(){
     setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
     const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
     if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
+    const completed=pendingAction;
+    await verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before);
     pendingAction=null;
-    setTransactionFeedback("success","TRANSACTION CONFIRMED","THE RECOVERY ACTION WAS CONFIRMED ON JUNO.",result.transactionHash);
+    setTransactionFeedback("success","TRANSACTION + RESULT VERIFIED","THE RECOVERY ACTION AND EXPECTED POSITION CHANGE WERE VERIFIED ON JUNO.",result.transactionHash);
     await refreshPositions(wallet.address);
   }catch(error){
     setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());

@@ -39,9 +39,9 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'wallet-header.js?v=2', 'id="keplr-connect"',
+    'wallet-header.js?v=3', 'id="keplr-connect"',
     'cosmos-client.js?v=2', 'recovery-signing-config.js?v=8',
-    'wynd-recovery.js?v=20260914-18',
+    'wynd-recovery.js?v=20260914-19',
     'wynd-recovery.css?v=20260914-5', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
@@ -56,7 +56,7 @@ for required in [
 ]:
     assert required in signing_config, required
 assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in signing_config
-for required in ['nextReleaseAt', 'nextReleaseHeight', 'unbondingDisplay(position,decimals)', 'READY AT BLOCK']:
+for required in ['unbondingTranches:claims.tranches', 'unbondingDisplay(position,decimals)', 'READY AT BLOCK', 'postconditionSatisfied(', 'verifyPostcondition(']:
     assert required in js, required
 assert (root/"assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
@@ -69,6 +69,6 @@ assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
 assert js.count('{cache:"no-store"}') == 4
 assert 'JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions)' not in js
-for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+txhash', '/^[0-9A-F]{64}$/']:
+for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+normalizedHash', '/^[0-9A-F]{64}$/', 'String(txhash||"").toUpperCase()']:
     assert required in js, required
 print("WYND recovery frontend safety tests passed")
