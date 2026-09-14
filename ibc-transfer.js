@@ -4,7 +4,7 @@
   const NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr",ICS20="juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn";
   const CHAINS={
     juno:{id:"juno-1",name:"JUNO",prefix:"juno",gas:"0.075ujuno",rpc:["https://juno-rpc.kleomedes.network","https://juno-rpc.polkachu.com"],lcd:["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"]},
-    osmosis:{id:"osmosis-1",name:"OSMOSIS",prefix:"osmo",gas:"0.025uosmo",rpc:["https://osmosis-rpc.polkachu.com"],lcd:["https://osmosis-api.polkachu.com"]},
+    osmosis:{id:"osmosis-1",name:"OSMOSIS",prefix:"osmo",gas:"0.025uosmo",rpc:["https://osmosis-rpc.polkachu.com","https://osmosis-rpc.publicnode.com:443"],lcd:["https://osmosis-api.polkachu.com","https://osmosis-rest.publicnode.com"]},
     terra:{id:"phoenix-1",name:"TERRA",prefix:"terra",gas:"0.15uluna",rpc:["https://terra-rpc.polkachu.com"],lcd:["https://terra-rest.publicnode.com","https://terra-api.polkachu.com"]},
   };
   const DENOMS={
@@ -23,8 +23,9 @@
   function display(raw){const whole=raw/1000000n,fraction=String(raw%1000000n).padStart(6,"0").replace(/0+$/,"");return fraction?`${whole}.${fraction}`:String(whole)}
   function isAllowedRoute(from,to,symbol){return from!==to&&(ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
   function setStatus(text,error=false){const node=$("#ibc-status");node.textContent=text;node.classList.toggle("error",error)}
-  function connectedAndAllowed(){return Object.keys(CHAINS).every(chain=>Boolean(accounts[chain]))}
-  async function getJson(url){const response=await fetch(url,{cache:"no-store"});if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
+  function selectedRoute(){return [$("#ibc-from").value,$("#ibc-to").value].filter(Boolean)}
+  function connectedAndAllowed(){return selectedRoute().every(chain=>Boolean(accounts[chain]))}
+  async function getJson(url,timeoutMs=8000){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);try{const response=await fetch(url,{cache:"no-store",signal:controller.signal});if(!response.ok)throw new Error(`HTTP ${response.status}`);return await response.json()}finally{clearTimeout(timer)}}
   async function readBalance(){
     const request=++balanceRequest,from=$("#ibc-from").value,symbol=$("#ibc-asset").value,address=accounts[from];balanceRaw=0n;
     if(!address){$("#ibc-balance").textContent="BALANCE —";return}
@@ -53,10 +54,11 @@
   function renderValidity(){const amount=rawAmount($("#ibc-amount").value),ok=connectedAndAllowed();$("#ibc-review").disabled=!(ok&&amount&&amount>0n&&amount<=balanceRaw);if(!ok)return;if(amount===null||amount<=0n)setStatus("ENTER AN AMOUNT TO BUILD THE TRANSFER.");else if(amount>balanceRaw)setStatus("AMOUNT EXCEEDS THE LIVE WALLET BALANCE.",true);else setStatus("ROUTE AND BALANCE READY FOR REVIEW.")}
   async function loadAccounts(){
     if(!window.keplr)return;
-    const found={};
-    for(const [key,cfg] of Object.entries(CHAINS)){await window.keplr.enable(cfg.id);const signer=window.keplr.getOfflineSigner(cfg.id),account=(await signer.getAccounts())[0];if(!account?.address.startsWith(cfg.prefix+"1"))throw new Error(`INVALID ${cfg.name} ACCOUNT`);found[key]=account.address}
+    const found={...accounts};
+    for(const key of selectedRoute()){const cfg=CHAINS[key];await window.keplr.enable(cfg.id);const signer=window.keplr.getOfflineSigner(cfg.id),account=(await signer.getAccounts())[0];if(!account?.address.startsWith(cfg.prefix+"1"))throw new Error(`INVALID ${cfg.name} ACCOUNT`);found[key]=account.address}
     accounts=found;render();
   }
+  function packetEvent(result){const event=(result.events||[]).find(item=>item.type==="send_packet");if(!event)return null;const attributes=Object.fromEntries((event.attributes||[]).map(item=>[item.key,item.value]));return{sequence:attributes.packet_sequence||null,source_channel:attributes.packet_src_channel||null,destination_channel:attributes.packet_dst_channel||null}}
   function preview(){
     const from=$("#ibc-from").value,to=$("#ibc-to").value,symbol=$("#ibc-asset").value,amount=rawAmount($("#ibc-amount").value),channel=symbol==="NETA"?NETA_CHANNEL[`${from}:${to}`]:CHANNEL[`${from}:${to}`];
     prepared={from,to,symbol,amount,channel,sender:accounts[from],receiver:accounts[to],denom:DENOMS[from][symbol]};
@@ -77,10 +79,11 @@
       }else message=window.NetaIbcSigning.transferMessage(prepared.sender,prepared.receiver,prepared.channel,prepared.denom,String(prepared.amount),timeout);
       const gas=await window.NetaIbcSigning.simulate(client,prepared.sender,message,MEMO);if(!Number.isFinite(gas)||gas<=0||gas>900000)throw new Error("UNSAFE GAS SIMULATION");
       $("#ibc-modal-state").textContent="WAITING FOR KEPLR APPROVAL…";const result=await window.NetaIbcSigning.broadcast(client,prepared.sender,message,2.0,MEMO);if(result.code!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}${result.rawLog?` // ${result.rawLog}`:""}${result.transactionHash?` // TX ${result.transactionHash}`:""}`);
-      $("#ibc-modal-state").textContent="SOURCE TRANSACTION CONFIRMED · PACKET SUBMITTED";$("#ibc-modal-state").className="ibc-modal-state success";$("#ibc-preview").textContent=JSON.stringify({transaction_hash:result.transactionHash,height:result.height,source_chain:cfg.name,destination_chain:CHAINS[prepared.to].name,ibc_packet_submitted:true,destination_receipt_verified:false},null,2);const explorer=$("#ibc-explorer"),base=prepared.from==="juno"?"https://atomscan.com/juno/transactions/":prepared.from==="osmosis"?"https://www.mintscan.io/osmosis/tx/":"https://www.mintscan.io/terra/tx/";explorer.href=base+encodeURIComponent(result.transactionHash);explorer.hidden=false;$("#ibc-modal-note").textContent="The source transaction is included. IBC delivery remains asynchronous until the packet acknowledgement and destination balance are verified.";$("#ibc-sign").hidden=true;await readBalance();renderValidity();
+      const packet=packetEvent(result),submitted=Boolean(packet);$("#ibc-modal-state").textContent=submitted?"SOURCE TRANSACTION CONFIRMED · PACKET SUBMITTED":"SOURCE TRANSACTION CONFIRMED · PACKET EVENT NOT VERIFIED";$("#ibc-modal-state").className="ibc-modal-state success";$("#ibc-preview").textContent=JSON.stringify({transaction_hash:result.transactionHash,height:result.height,source_chain:cfg.name,destination_chain:CHAINS[prepared.to].name,ibc_packet_submitted:submitted,packet_sequence:packet?.sequence||null,packet_source_channel:packet?.source_channel||null,packet_destination_channel:packet?.destination_channel||null,destination_receipt_verified:false},null,2);const explorer=$("#ibc-explorer"),base=prepared.from==="juno"?"https://atomscan.com/juno/transactions/":prepared.from==="osmosis"?"https://www.mintscan.io/osmosis/tx/":"https://www.mintscan.io/terra/tx/";explorer.href=base+encodeURIComponent(result.transactionHash);explorer.hidden=false;$("#ibc-modal-note").textContent=submitted?"The source transaction emitted an IBC packet. Delivery remains asynchronous until acknowledgement and destination balance are verified.":"The source transaction is included, but no send_packet event was found. Verify the transaction before assuming IBC delivery.";$("#ibc-sign").hidden=true;await readBalance();renderValidity();
     }catch(error){$("#ibc-modal-state").textContent=error instanceof Error?error.message:String(error);$("#ibc-modal-state").className="ibc-modal-state error"}finally{try{client?.disconnect()}catch{}busy=false;$("#ibc-sign").disabled=false}
   }
-  $("#ibc-from").addEventListener("change",render);$("#ibc-to").addEventListener("change",render);$("#ibc-asset").addEventListener("change",()=>{readBalance().then(renderValidity).catch(error=>setStatus(error.message,true));render()});$("#ibc-amount").addEventListener("input",renderValidity);$("#ibc-max").addEventListener("click",()=>{const from=$("#ibc-from").value,symbol=$("#ibc-asset").value,reserve={JUNO:200000n,OSMO:100000n,LUNA:200000n};const available=ORIGIN[symbol]===from&&symbol!=="NETA"?balanceRaw-(reserve[symbol]||0n):balanceRaw;$("#ibc-amount").value=display(available>0n?available:0n);renderValidity()});
+  function routeChanged(){render();if(window.NETA_WALLET_STATE)loadAccounts().catch(error=>setStatus(error.message,true))}
+  $("#ibc-from").addEventListener("change",routeChanged);$("#ibc-to").addEventListener("change",routeChanged);$("#ibc-asset").addEventListener("change",()=>{readBalance().then(renderValidity).catch(error=>setStatus(error.message,true));render()});$("#ibc-amount").addEventListener("input",renderValidity);$("#ibc-max").addEventListener("click",()=>{const from=$("#ibc-from").value,symbol=$("#ibc-asset").value,reserve={JUNO:200000n,OSMO:100000n,LUNA:200000n};const available=ORIGIN[symbol]===from&&symbol!=="NETA"?balanceRaw-(reserve[symbol]||0n):balanceRaw;$("#ibc-amount").value=display(available>0n?available:0n);renderValidity()});
   $("#ibc-reverse").addEventListener("click",()=>{const from=$("#ibc-from").value;$("#ibc-from").value=$("#ibc-to").value;$("#ibc-to").value=from;render()});$("#ibc-review").addEventListener("click",preview);$("#ibc-sign").addEventListener("click",sign);$("#ibc-close").addEventListener("click",()=>{$("#ibc-modal").hidden=true});
   addEventListener("neta:wallet-connected",()=>loadAccounts().catch(error=>setStatus(error.message,true)));addEventListener("neta:wallet-disconnected",()=>{accounts={};balanceRaw=0n;render()});
   render();if(window.NETA_WALLET_STATE)loadAccounts().catch(error=>setStatus(error.message,true));

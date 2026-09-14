@@ -65,15 +65,18 @@ jobs:
           python scripts/test_site_integrity.py
           python scripts/test_wynd_recovery_frontend.py
           python scripts/test_recovery_signing_gate.py
-          for file in *.js; do node --check "$file"; done
+          python scripts/test_ibc_transfer_frontend.py
+          for file in *.js src/*.js; do node --check "$file"; done
           npm run build:recovery-signing
           npm run build:swap-signing
+          npm run build:ibc-signing
           test -s assets/recovery-signing-client.js
           test -s assets/swap-signing-client.js
+          test -s assets/ibc-signing-client.js
       - name: Audit production and development dependencies
         run: npm audit --audit-level=high
       - name: Verify committed signing bundle is reproducible
-        run: git diff --exit-code -- assets/recovery-signing-client.js assets/swap-signing-client.js
+        run: git diff --exit-code -- assets/recovery-signing-client.js assets/swap-signing-client.js assets/ibc-signing-client.js
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run browser integration tests

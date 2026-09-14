@@ -8,17 +8,12 @@ html = (ROOT / "map-of-neta.html").read_text(encoding="utf-8")
 bundle = (ROOT / "assets/ibc-signing-client.js").read_text(encoding="utf-8")
 
 required = {
-    'HOT_JUNO': 'juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57',
     'Juno/Osmosis': '"juno:osmosis":"channel-0"',
     'Osmosis/Juno': '"osmosis:juno":"channel-42"',
-    'Juno/Terra': '"juno:terra":"channel-86"',
-    'Terra/Juno': '"terra:juno":"channel-2"',
     'Osmosis/Terra': '"osmosis:terra":"channel-251"',
     'Terra/Osmosis': '"terra:osmosis":"channel-1"',
     'NETA Osmosis': '"juno:osmosis":"channel-47"',
-    'NETA Terra': '"juno:terra":"channel-154"',
     'NETA return Osmosis': '"osmosis:juno":"channel-169"',
-    'NETA return Terra': '"terra:juno":"channel-33"',
 }
 for label, needle in required.items():
     assert needle in source, f"missing {label}: {needle}"
@@ -36,11 +31,19 @@ for denom in (
     assert denom in source
 
 assert 'ORIGIN[symbol]===from||ORIGIN[symbol]===to' in source
+assert 'HOT_JUNO' not in source
+assert 'public_access:true' in source
+assert 'selectedRoute().every' in source
+assert 'Object.entries(CHAINS)' not in source
+assert 'new AbortController()' in source
 assert 'TRANSFER PARAMETERS CHANGED — REVIEW AGAIN' in source
 assert 'gas>900000' in source
 assert 'SOURCE TRANSACTION CONFIRMED · PACKET SUBMITTED' in source
+assert 'PACKET EVENT NOT VERIFIED' in source
+assert 'item.type==="send_packet"' in source
 assert 'destination_receipt_verified:false' in source
 assert 'assets/ibc-signing-client.js' in html
 assert '/ibc.applications.transfer.v1.MsgTransfer' in bundle
 assert '/cosmwasm.wasm.v1.MsgExecuteContract' in bundle
+assert 'RPC TIMEOUT AFTER' in bundle
 print("Controlled IBC frontend safety tests passed")

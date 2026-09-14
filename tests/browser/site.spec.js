@@ -398,13 +398,15 @@ test("IBC transfer accepts comma and point decimal separators", async ({page}) =
     body: JSON.stringify({balance: {amount: "1000000000"}}),
   }));
   await page.addInitScript(accounts => {
+    window.ibcEnabledChains = [];
     window.keplr = {
-      enable: async () => {},
+      enable: async chainId => { window.ibcEnabledChains.push(chainId); },
       getOfflineSigner: chainId => ({getAccounts: async () => [{address: accounts[chainId]}]}),
     };
   }, accounts);
   await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
   await page.evaluate(() => dispatchEvent(new CustomEvent("neta:wallet-connected")));
+  await expect.poll(() => page.evaluate(() => window.ibcEnabledChains)).toEqual(["juno-1", "osmosis-1"]);
   await page.locator("#ibc-amount").fill("0,01");
   await expect(page.locator("#ibc-status")).toHaveText("ROUTE AND BALANCE READY FOR REVIEW.");
   await expect(page.locator("#ibc-review")).toBeEnabled();

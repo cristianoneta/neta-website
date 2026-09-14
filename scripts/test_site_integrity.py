@@ -115,7 +115,9 @@ assert 'SIGNING.publicMaxUsd===LIMIT_USD' in rescue
 assert 'gas>SIGNING.gasCap' in rescue
 assert 'receivedFromEvents(result.events,liveQuote.receive,address)' in rescue
 assert 'const HOT_JUNO=' not in ibc
-assert 'function connectedAndAllowed(){return Object.keys(CHAINS).every(chain=>Boolean(accounts[chain]))}' in ibc
+assert 'function connectedAndAllowed(){return selectedRoute().every(chain=>Boolean(accounts[chain]))}' in ibc
+assert 'Object.entries(CHAINS)' not in ibc
+assert 'new AbortController()' in ibc
 assert 'ORIGIN[symbol]===from||ORIGIN[symbol]===to' in ibc
 assert '"juno:terra":"channel-154"' not in ibc
 assert '"terra:juno":"channel-33"' not in ibc
@@ -123,6 +125,7 @@ assert '"osmosis:terra":"channel-251"' in ibc
 assert '"terra:osmosis":"channel-1"' in ibc
 assert 'amount>balanceRaw' in ibc
 assert 'gas>900000' in ibc
+assert 'item.type==="send_packet"' in ibc
 assert 'assets/ibc-signing-client.js' in (ROOT / "map-of-neta.html").read_text(encoding="utf-8")
 assert 'TRANSACTION INCLUDED · VERIFICATION INCOMPLETE' in rescue
 assert 'belief_price:belief' in rescue
