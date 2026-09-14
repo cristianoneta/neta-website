@@ -19,6 +19,7 @@ NAVIGATION = (
     ("map-of-neta.html", "MAP OF NETA"),
     ("wynd-recovery.html", "WYND RECOVERY"),
     ("rescue-neta.html", "RESCUE NETA"),
+    ("neta-socials.html", "NETA SOCIALS"),
     ("neta-dao.html", "NETA DAO"),
 )
 HEADER_RE = re.compile(
