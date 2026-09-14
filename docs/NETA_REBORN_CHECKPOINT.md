@@ -855,3 +855,13 @@ live tests and cancellation/rejection paths pass.
 - The first provided Atomscan URL contained one extra trailing character; the 64-character hash above is canonical.
 - The test exposed a frontend-only status visibility problem: confirmation text was below the long JSON preview. PR #37 added visible pending/success/error states, a full transaction hash and a safe Atomscan link.
 - After successful validation, the temporary liquidity-creation flag was disabled again. The minted LP remains available for the separately scoped Withdraw test.
+## Controlled WYND bond pilot prepared (2026-09-14)
+
+- Test wallet: `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57` (Keplr hot wallet; Ledger remains supported by the signer path but is not live-tested).
+- JUNO/NETA LP balance before the pilot: `94567` raw LP.
+- Live stake state before the pilot: no active stakes and no claims. Therefore the planned recovery sequence cannot start with Unbond until this test LP is staked once.
+- The live stake contract reports periods `604800`, `1209600`, `2419200`, and `3628800` seconds. The pilot uses the shortest allowlisted period, `604800` seconds (7 days).
+- The final `94567`-raw-LP CW20 send with hook `{"delegate":{"unbonding_period":604800}}` simulated successfully on `juno-1` with `286007` gas used. Invalid `bond` and `delegate_to` hook variants were rejected by the deployed contract.
+- Enabled scope: exactly wallet `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`, pair `juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra`, action `bond`, amount at most `94567` raw LP, and period exactly `604800` seconds.
+- The frontend re-queries contract code IDs and the direct LP balance, checks the period allowlist, simulates the final message, enforces a `500000` gas cap, and revalidates the message immediately before Keplr signing.
+- Expected successful post-state: direct LP `0`, one 7-day active stake of `94567` raw LP, no claim yet. The pilot must be disabled and this exact post-state recorded before enabling Unbond.
