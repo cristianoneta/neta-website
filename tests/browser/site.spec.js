@@ -135,6 +135,8 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await page.locator("#reverse-swap").click();
   await expect(page.locator("#offer-symbol")).toHaveText("NETA");
   await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
+  await expect(page.locator("#offer-logo")).toHaveAttribute("src", "assets/neta-token.png");
+  await expect(page.locator("#receive-logo")).toHaveAttribute("src", "assets/juno-chain.png");
 });
 
 test("Rescue NETA pilot builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
