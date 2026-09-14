@@ -57,17 +57,17 @@ test logs back to `main`.
 
 ## Recovery safety boundary
 
-The recovery UI is intentionally fail-closed. Read-only discovery is public;
-transaction signing remains disabled between separately reviewed pilots. The local
-CosmJS adapter is shipped lazily so an approved pilot can support both Keplr hot
-wallets and Ledger-backed Keplr accounts without fetching signing code during
-ordinary read-only use.
+The recovery UI is intentionally fail-closed. Read-only discovery remains public;
+connected users may sign only Unbond, Claim and Withdraw transactions for the
+eight frozen WYND contract sets. Bond and Provide Liquidity are not shipped.
+The local CosmJS adapter is loaded lazily and works through Keplr's signer
+interface; no private key or seed phrase is ever requested by the site.
 
-The dormant execution path requires one exact pilot wallet, pool, action,
-raw-amount limit and, for bond/unbond, unbonding period. It revalidates contract
-code IDs and wallet state before Keplr opens, then verifies the expected on-chain
-position change after confirmation. General signing cannot be enabled by changing
-a single boolean. No private key or seed phrase is ever requested by the site.
+Every transaction must match the connected and inspected wallet, the frozen Pair,
+LP-token and Stake allowlists, current live balances and a supported unbonding
+period. The message is rebuilt and simulated immediately before Keplr approval.
+After confirmation the expected position change is queried on-chain; a confirmed
+hash is preserved if RPC indexing delays that result check.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
 the refactor rules.

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -6,42 +7,45 @@ config = (root / "recovery-signing-config.js").read_text()
 frontend = (root / "wynd-recovery.js").read_text()
 html = (root / "wynd-recovery.html").read_text()
 client = (root / "src/recovery-signing-client.js").read_text()
+registry = json.loads((root / "data/recovery/wynd-pools.json").read_text())
 
-# The completed Unbond pilot and all other signing are disabled.
-assert config.count("enabled:false") == 2
-assert "enabled:true" not in config
+# Public signing is restricted to recovery-only actions and the exact frozen
+# Top-8 Pair, LP and Stake address sets.
+assert config.count("enabled:true") == 2
+assert 'actions:Object.freeze({unbond:true,claim:true,withdraw:true})' in config
+assert "gasCaps:Object.freeze({bond" not in config
+assert "liquidity" not in config.lower()
+for pool in registry["pools"]:
+    assert config.count(pool["pair"]["address"]) == 1
+    assert config.count(pool["lp_token"]["address"]) == 1
+    assert config.count(pool["stake"]["address"]) == 1
+
 assert "writable:false" in config and "configurable:false" in config
-assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0",unbondingPeriod:null})' in config
-assert 'liquidityPilot:Object.freeze({enabled:false' in config
-assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
-assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
-assert '<button id="execute-action"' in html
-assert 'hidden disabled' in html
-assert 'if(!pendingAction||!pilotAuthorized(' in frontend
+assert '<button id="execute-action"' in html and "hidden disabled" in html
+assert "liquidity-pilot" not in html
+assert 'if(!pendingAction||!recoveryAuthorized(' in frontend
 assert 'SIGNING_CONFIG?.enabled===true' in frontend
-assert "pilotAuthorized(pool,action,request)" in frontend
-assert "pilot.wallet!==wallet.address" in frontend
-assert "pilot.pair!==pool.pair.address||pilot.action!==action" in frontend
-assert "request.raw<=limit" in frontend
-assert '(action==="bond"||action==="unbond")&&Number(pilot.unbondingPeriod)!==request.period' in frontend
-assert 'position.direct<pilotAmount?position.direct:pilotAmount' in frontend
-assert frontend.count('result.code!==undefined&&Number(result.code)!==0') == 2
-assert 'position.claimable!==request.raw' in frontend
-assert 'verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before)' in frontend
-for required in [
-    "liquidityPilotAuthorized()",
-    'pool.name!=="ujuno / NETA"',
-    "LIVE NETA RATIO EXCEEDS PILOT CAP",
-    "increase_allowance",
-    "provide_liquidity",
-    "simulateMultiple",
-    "executeMultiple",
-    'hook={delegate:{unbonding_period:request.period}}',
-    'position.direct<request.raw',
-]:
-    assert required in frontend, required
+assert 'policy?.enabled!==true' in frontend
+assert '["unbond","claim","withdraw"].includes(action)' in frontend
+assert "policy.actions?.[action]!==true" in frontend
+assert "policy.contracts?.[pool.pair.address]" in frontend
+assert "contracts?.lpToken!==pool.lp_token.address" in frontend
+assert "contracts?.stake!==pool.stake.address" in frontend
+assert 'wallet.address!==viewedAddress' in frontend
+assert 'typeof request?.raw==="bigint"&&request.raw>0n' in frontend
+assert "position.claimable!==request.raw" in frontend
+assert "row.available<request.raw" in frontend
+assert "position.direct<request.raw" in frontend
+assert "pool.unbonding_periods_seconds.includes(request.period)" in frontend
+assert "verifyPostcondition(completed.pool,completed.action,completed.request,fresh.before)" in frontend
 
-# Every prospective transaction is reconstructed and checked immediately before use.
+for forbidden in [
+    "provide_liquidity", "increase_allowance", "executeLiquidityPilot",
+    "showLiquidityPreview", "liquidityPilotAuthorized", 'action==="bond"',
+    "delegate:{", "simulateMultiple", "executeMultiple",
+]:
+    assert forbidden not in frontend, forbidden
+
 for required in [
     "verifyContracts(pool,true)",
     "loadPosition(pool,wallet.address)",
@@ -55,19 +59,17 @@ for required in [
 ]:
     assert required in frontend, required
 
-# The adapter owns signing only; it exposes no raw transaction broadcast helper.
+# The adapter exposes no generic raw broadcast or retired multi-message helper.
 assert "SigningCosmWasmClient.connectWithSigner" in client
 assert "client.simulate" in client
 assert "client.execute" in client
-assert "client.executeMultiple" in client
+assert "client.executeMultiple" not in client
 assert "broadcastTx" not in client
 assert config.count("https://juno-rpc.") >= 2
 assert "https://rpc.lavenderfive.com:443/juno" in config
 assert "timeoutMs=8000" in client
 assert "CONNECTION TIMED OUT" in client
-# The pilot release ships the pinned local bundle loaded only after the
-# wallet, pair, amount and live-state gates have passed.
 assert (root / "assets/recovery-signing-client.js").exists()
 assert 'src="assets/recovery-signing-client.js' not in html
 
-print("Completed Unbond pilot is disabled; all signing is gated off")
+print("Public signing is restricted to Unbond, Claim and Withdraw on the exact Top-8 contracts")

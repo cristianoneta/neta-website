@@ -18,7 +18,6 @@ const contractChecks=new Map();
 const positions=new Map();
 let queryGeneration=0;
 let pendingAction=null;
-let pendingLiquidity=null;
 let signingClientPromise=null;
 const POOL_QUERY_CONCURRENCY=3;
 
@@ -272,87 +271,13 @@ function signingEnabled(){
     &&SIGNING_CONFIG.rpcEndpoints.length>0;
 }
 
-function pilotAuthorized(pool,action,request){
-  const pilot=SIGNING_CONFIG?.pilot;
-  if(!signingEnabled()||!pilot||!wallet)return false;
-  if(!ADDRESS_PATTERN.test(pilot.wallet||"")||pilot.wallet!==wallet.address||wallet.address!==viewedAddress)return false;
-  if(pilot.pair!==pool.pair.address||pilot.action!==action)return false;
-  if(!["bond","unbond","claim","withdraw"].includes(action))return false;
-  if((action==="bond"||action==="unbond")&&Number(pilot.unbondingPeriod)!==request.period)return false;
-  try{
-    const limit=BigInt(pilot.maxAmountRaw);
-    return limit>0n&&request.raw>0n&&request.raw<=limit;
-  }catch(_){return false;}
-}
-
-function liquidityPilotAuthorized(){
-  const pilot=SIGNING_CONFIG?.liquidityPilot;
-  return pilot?.enabled===true&&wallet?.address===pilot.wallet&&viewedAddress===pilot.wallet;
-}
-
-async function prepareLiquidityPilot(){
-  if(!liquidityPilotAuthorized())throw new Error("LIQUIDITY PILOT IS NOT AUTHORIZED");
-  const pilot=SIGNING_CONFIG.liquidityPilot;
-  const pool=registry.pools.find(item=>item.pair.address===pilot.pair);
-  if(!pool||pool.name!=="ujuno / NETA")throw new Error("JUNO/NETA PILOT POOL NOT ALLOWLISTED");
-  if(pool.assets[1]?.info?.token!==pilot.netaToken)throw new Error("NETA TOKEN MISMATCH");
-  const check=await verifyContracts(pool,true);if(!check.valid)throw new Error("LIVE CONTRACT CODE-ID MISMATCH");
-  const [live,netaBalance,junoBalance,block]=await Promise.all([smart(pool.pair.address,{pool:{}}),smart(pilot.netaToken,{balance:{address:wallet.address}}),chainClient.get(`/cosmos/bank/v1beta1/balances/${wallet.address}/by_denom?denom=ujuno`),chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")]);
-  const junoRaw=BigInt(pilot.junoRaw),maxNetaRaw=BigInt(pilot.maxNetaRaw);
-  if(junoRaw!==1000000n||maxNetaRaw<=0n)throw new Error("LIQUIDITY PILOT LIMIT INVALID");
-  const junoReserve=BigInt(live.assets.find(asset=>asset.info.native==="ujuno")?.amount||0);
-  const netaReserve=BigInt(live.assets.find(asset=>asset.info.token===pilot.netaToken)?.amount||0);
-  if(junoReserve<=0n||netaReserve<=0n)throw new Error("LIVE JUNO/NETA RESERVES INVALID");
-  const netaRaw=junoRaw*netaReserve/junoReserve;
-  if(netaRaw<=0n||netaRaw>maxNetaRaw)throw new Error("LIVE NETA RATIO EXCEEDS PILOT CAP");
-  if(BigInt(netaBalance.balance||0)<netaRaw)throw new Error(`WALLET NEEDS ${(Number(netaRaw)/1e6).toFixed(6)} NETA ON JUNO`);
-  if(BigInt(junoBalance.data?.balance?.amount||0)<junoRaw+500000n)throw new Error("WALLET NEEDS 1 JUNO PLUS FEE RESERVE");
-  const height=BigInt(block.data.block.header.height);
-  const instructions=[
-    {contract:pilot.netaToken,message:{increase_allowance:{spender:pilot.pair,amount:netaRaw.toString(),expires:{at_height:Number(height+BigInt(pilot.allowanceBlocks))}}},funds:[]},
-    {contract:pilot.pair,message:{provide_liquidity:{assets:[{info:{native:"ujuno"},amount:junoRaw.toString()},{info:{token:pilot.netaToken},amount:netaRaw.toString()}],slippage_tolerance:pilot.slippageTolerance,receiver:wallet.address}},funds:[{denom:"ujuno",amount:junoRaw.toString()}]},
-  ];
-  return{pool,junoRaw,netaRaw,instructions,memo:pilot.memo};
-}
-
-async function showLiquidityPreview(){
-  document.body.classList.add("modal-open");dispatchEvent(new Event("neta:blackout-pause"));
-  try{
-    const prepared=await prepareLiquidityPilot();pendingLiquidity=prepared;pendingAction=null;
-    $("#preview-title").textContent="CREATE TINY JUNO / NETA LP";
-    $("#preview-message").textContent=JSON.stringify({network:CHAIN_ID,sender:wallet.address,juno:"1.000000",neta:(Number(prepared.netaRaw)/1e6).toFixed(6),messages:prepared.instructions,memo:prepared.memo},null,2);
-    $("#execute-action").hidden=false;$("#execute-action").disabled=false;$("#preview-dialog").showModal();
-    setTransactionFeedback("ready","READY TO SIGN","FINAL BALANCE, CONTRACT + RATIO REVALIDATION WILL RUN BEFORE KEPLR OPENS");
-  }catch(error){document.body.classList.remove("modal-open");dispatchEvent(new Event("neta:blackout-resume"));$("#wallet-status").textContent=error.message;}
-}
-
-async function executeLiquidityPilot(){
-  if(!pendingLiquidity||!liquidityPilotAuthorized())throw new Error("LIQUIDITY PILOT IS NOT AUTHORIZED");
-  setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING WALLET, CONTRACTS, BALANCES AND CURRENT POOL RATIO…");
-  try{
-    const fresh=await prepareLiquidityPilot();
-    const sameIntent=fresh.pool.pair.address===pendingLiquidity.pool.pair.address
-      &&fresh.junoRaw===pendingLiquidity.junoRaw
-      &&fresh.netaRaw===pendingLiquidity.netaRaw
-      &&fresh.memo===pendingLiquidity.memo;
-    if(!sameIntent)throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");
-    const signingClient=await loadSigningClient();
-    setTransactionFeedback("pending","WAITING FOR KEPLR","REVIEW AND APPROVE THE TWO-MESSAGE TRANSACTION IN YOUR WALLET…");
-    await window.keplr.enable(CHAIN_ID);
-    const signer=window.keplr.getOfflineSigner(CHAIN_ID),accounts=await signer.getAccounts();if(accounts[0]?.address!==wallet.address)throw new Error("KEPLR ACCOUNT CHANGED");
-    const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
-    const gas=await signingClient.simulateMultiple(connection.client,wallet.address,fresh.instructions,fresh.memo);
-    if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING_CONFIG.gasCaps.liquidity)throw new Error("LIQUIDITY GAS EXCEEDS SAFETY CAP");
-    setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
-    const result=await signingClient.executeMultiple(connection.client,wallet.address,fresh.instructions,SIGNING_CONFIG.gasAdjustment,fresh.memo);
-    if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
-    pendingLiquidity=null;
-    setTransactionFeedback("success","TRANSACTION CONFIRMED","LIQUIDITY WAS ADDED AND LP TOKENS WERE SENT TO YOUR WALLET.",result.transactionHash);
-    await refreshPositions(wallet.address);
-  }catch(error){
-    setTransactionFeedback("error","TRANSACTION NOT CONFIRMED",error.message.toUpperCase());
-    throw error;
-  }
+function recoveryAuthorized(pool,action,request){
+  const policy=SIGNING_CONFIG?.recovery;
+  if(!signingEnabled()||policy?.enabled!==true||!wallet||wallet.address!==viewedAddress)return false;
+  if(!["unbond","claim","withdraw"].includes(action)||policy.actions?.[action]!==true)return false;
+  const contracts=policy.contracts?.[pool.pair.address];
+  if(contracts?.lpToken!==pool.lp_token.address||contracts?.stake!==pool.stake.address)return false;
+  return typeof request?.raw==="bigint"&&request.raw>0n;
 }
 
 function loadSigningClient(){
@@ -378,13 +303,7 @@ async function prepareAction(pool,action,request){
   let contract;
   let message;
   let expected=null;
-  if(action==="bond"){
-    if(position.direct<request.raw)throw new Error("DIRECT LP BALANCE CHANGED");
-    if(!pool.unbonding_periods_seconds.includes(request.period))throw new Error("UNALLOWLISTED BONDING PERIOD");
-    contract=pool.lp_token.address;
-    const hook={delegate:{unbonding_period:request.period}};
-    message={send:{contract:pool.stake.address,amount:request.raw.toString(),msg:encode(hook)}};
-  }else if(action==="unbond"){
+  if(action==="unbond"){
     const row=position.byPeriod.find(item=>item.period===request.period);
     if(!row||row.available<request.raw)throw new Error("AVAILABLE STAKE CHANGED");
     if(!pool.unbonding_periods_seconds.includes(request.period))throw new Error("UNALLOWLISTED UNBONDING PERIOD");
@@ -407,7 +326,6 @@ async function prepareAction(pool,action,request){
 }
 
 function postconditionSatisfied(action,request,before,after){
-  if(action==="bond")return after.direct===before.direct-request.raw&&after.active>=before.active+request.raw;
   if(action==="unbond")return after.active===before.active-request.raw&&after.unbonding+after.claimable>=before.unbonding+before.claimable+request.raw;
   if(action==="claim")return after.claimable===0n&&after.direct>=before.direct+request.raw;
   if(action==="withdraw")return after.direct===before.direct-request.raw;
@@ -435,7 +353,7 @@ async function showPreview(pool,action,request){
   try{
     const prepared=await prepareAction(pool,action,request);
     pendingAction={pool,action,request,prepared};
-    const enabled=pilotAuthorized(pool,action,request);
+    const enabled=recoveryAuthorized(pool,action,request);
     $("#preview-title").textContent=`${action.toUpperCase()} // ${pool.name.replaceAll("ujuno","JUNO")}`;
     $("#preview-message").textContent=JSON.stringify({
       network:CHAIN_ID,sender:wallet.address,memo:TX_MEMO,contract:prepared.contract,message:prepared.message,
@@ -455,7 +373,7 @@ async function showPreview(pool,action,request){
 }
 
 async function executePendingAction(){
-  if(!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request))throw new Error("SIGNING PILOT IS NOT AUTHORIZED");
+  if(!pendingAction||!recoveryAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request))throw new Error("RECOVERY ACTION IS NOT AUTHORIZED");
   const button=$("#execute-action");
   button.disabled=true;
   setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING CONTRACTS AND CURRENT POSITION…");
@@ -492,7 +410,7 @@ async function executePendingAction(){
     }
     throw error;
   }finally{
-    button.disabled=!pendingAction||!pilotAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);
+    button.disabled=!pendingAction||!recoveryAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);
   }
 }
 
@@ -522,11 +440,6 @@ function renderPosition(pool,position,valid){
   };
   for(const row of position.byPeriod.filter(item=>item.available>0n))add(`PREVIEW UNBOND ${row.period/86400}D`,"unbond",{raw:row.available,period:row.period});
   if(position.claimable>0n)add("PREVIEW CLAIM","claim",{raw:position.claimable});
-  const pilot=SIGNING_CONFIG?.pilot;
-  if(position.direct>0n&&pilot?.action==="bond"&&pilot.pair===pool.pair.address){
-    const pilotAmount=BigInt(pilot.maxAmountRaw);
-    add(`PREVIEW STAKE ${Number(pilot.unbondingPeriod)/86400}D`,"bond",{raw:position.direct<pilotAmount?position.direct:pilotAmount,period:Number(pilot.unbondingPeriod)});
-  }
   if(position.direct>0n)add("PREVIEW WITHDRAW","withdraw",{raw:position.direct});
   if(!actions.children.length){
     actions.append(disabledAction(position.totalEconomic>0n&&!ownsAddress?"CONNECT THIS WALLET FOR ACTIONS":"NO ACTION AVAILABLE"));
@@ -678,19 +591,16 @@ async function init(){
   });
   $("#preview-dialog").addEventListener("close",()=>{
     pendingAction=null;
-    pendingLiquidity=null;
     document.body.classList.remove("modal-open");
     dispatchEvent(new Event("neta:blackout-resume"));
   });
-  $("#execute-action").onclick=()=>(pendingLiquidity?executeLiquidityPilot():executePendingAction()).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
-  $("#liquidity-pilot").onclick=()=>showLiquidityPreview();
+  $("#execute-action").onclick=()=>executePendingAction().catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
   if(window.NETA_WALLET_STATE)acceptHeaderWallet(window.NETA_WALLET_STATE);
 }
 
 function acceptHeaderWallet(detail){
   if(!detail?.address||!ADDRESS_PATTERN.test(detail.address))return;
   wallet={address:detail.address,provider:detail.provider,signer:detail.signer};
-  const liquidityButton=$("#liquidity-pilot");liquidityButton.hidden=!SIGNING_CONFIG?.liquidityPilot?.enabled||wallet.address!==SIGNING_CONFIG.liquidityPilot.wallet;liquidityButton.disabled=liquidityButton.hidden;
   contractChecks.clear();
   if(registry)refreshPositions(wallet.address).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());
 }
@@ -700,8 +610,6 @@ window.addEventListener("neta:wallet-disconnected",()=>{
   wallet=null;
   contractChecks.clear();
   pendingAction=null;
-  pendingLiquidity=null;
-  $("#liquidity-pilot").hidden=true;
   const dialog=$("#preview-dialog");
   if(dialog.open)dialog.close();
   if(viewedAddress)refreshPositions(viewedAddress).catch(error=>$("#wallet-status").textContent=error.message.toUpperCase());

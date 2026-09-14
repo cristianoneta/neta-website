@@ -926,3 +926,24 @@ live tests and cancellation/rejection paths pass.
   Ranking page. It is cacheable and no longer blocks Keplr/Recovery, so creating
   dozens of duplicate static shards would add deployment complexity without
   improving the main search path.
+
+## Public recovery scope — prepared 2026-09-14
+
+- Recovery signing is opened only for Unbond, Claim and Withdraw across the
+  exact eight validated WYND Pair, LP-token and Stake contract sets.
+- Bond and Provide Liquidity were pilot-only setup actions and are removed from
+  the production configuration, UI, frontend execution branches and signing
+  adapter helpers.
+- Authorization requires three independent contract allowlists, the connected
+  wallet matching the inspected address, a positive live-derived amount, exact
+  claimable-amount checks and an allowlisted unbonding period.
+- The previously completed evidence remains applicable: 24/24 all-pool unsigned
+  simulations, five rejected unsafe cases, controlled JUNO/NETA Withdraw and
+  Unbond broadcasts, transaction-status handling and action-specific post-state
+  verification.
+- Claim was already simulated successfully on every pool. Before public merge,
+  browser coverage additionally exercises confirmed Claim success, Keplr
+  rejection and confirmed-hash preservation when the Claim post-state is not
+  yet visible.
+- The controlled JUNO/NETA Claim after maturity remains additional live
+  production evidence, not the sole technical gate for public recovery.
