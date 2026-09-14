@@ -1195,3 +1195,15 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - Amount input now accepts both decimal separators (`0.01` and `0,01`).
 - Next controlled live validation: return the received `0.01 JUNO` from Osmosis to Juno via `channel-42`. The Osmosis address currently needs native OSMO for gas before this can be signed.
 
+## IBC route policy update — 2026-09-14
+
+- The controlled wallet-only pilot is complete. IBC signing is now public for any connected Keplr wallet; the frontend no longer checks the former Juno hotwallet allowlist.
+- Active frontend routes are temporarily limited to Juno↔Osmosis and Osmosis↔Terra.
+- Juno↔Terra was removed from route selection pending restoration of reliable relaying on both the standard transfer path and the legacy NETA CW20-ICS20 path.
+- The successful live paths are Juno→Osmosis JUNO, Osmosis→Juno JUNO and Osmosis→Terra LUNA.
+- Pending test packets at the time of this decision:
+  - NETA Juno→Terra: source channel `channel-154`, destination `channel-33`, sequence `36`, 10,000 raw NETA; destination receipt false after timeout and source commitment still present.
+  - LUNA Terra→Juno: source channel `channel-2`, destination `channel-86`, sequence `1461`, 200,000 uluna; destination receipt was still false before timeout.
+- Do not restore Juno↔Terra in the frontend until packet delivery and timeout/refund handling are verified.
+- Terra is now displayed on Map of NETA as a future zone with exactly `0 NETA`. The data generator preserves the Terra row so scheduled map refreshes cannot remove it.
+
