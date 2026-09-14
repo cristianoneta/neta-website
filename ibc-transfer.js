@@ -17,7 +17,8 @@
   const NETA_CHANNEL={"juno:osmosis":"channel-47","osmosis:juno":"channel-169"};
   const MEMO="netareborn.com/map-of-neta:ibc:v1";
   let accounts={},balanceRaw=0n,prepared=null,busy=false,balanceRequest=0;
-  function routeOptions(from){return Object.keys(CHAINS).filter(to=>to!==from&&Boolean(CHANNEL[`${from}:${to}`]))}\n  function assetOptions(from,to){return Object.keys(ORIGIN).filter(symbol=>ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
+  function routeOptions(from){return Object.keys(CHAINS).filter(to=>to!==from&&Boolean(CHANNEL[`${from}:${to}`]))}
+  function assetOptions(from,to){return Object.keys(ORIGIN).filter(symbol=>ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
   function rawAmount(value){const normalized=value.trim().replace(",", ".");if(!/^(?:0|[1-9]\d*)(?:\.\d{0,6})?$/.test(normalized))return null;const [whole,fraction=""]=normalized.split(".");return BigInt(whole)*1000000n+BigInt((fraction+"000000").slice(0,6))}
   function display(raw){const whole=raw/1000000n,fraction=String(raw%1000000n).padStart(6,"0").replace(/0+$/,"");return fraction?`${whole}.${fraction}`:String(whole)}
   function isAllowedRoute(from,to,symbol){return from!==to&&(ORIGIN[symbol]===from||ORIGIN[symbol]===to)}
