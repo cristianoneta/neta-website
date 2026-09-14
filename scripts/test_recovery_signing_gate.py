@@ -11,7 +11,7 @@ client = (root / "src/recovery-signing-client.js").read_text()
 assert config.count("enabled:false") == 2
 assert "enabled:true" not in config
 assert "writable:false" in config and "configurable:false" in config
-assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0",unbondingPeriod:null})' in config
 assert 'liquidityPilot:Object.freeze({enabled:false' in config
 assert 'wallet:"juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"' in config
 assert 'junoRaw:"1000000",maxNetaRaw:"10200"' in config
