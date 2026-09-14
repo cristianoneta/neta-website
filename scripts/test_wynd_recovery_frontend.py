@@ -55,7 +55,7 @@ for required in [
     'liquidityPilot:Object.freeze({enabled:false', 'junoRaw:"1000000",maxNetaRaw:"10200"',
 ]:
     assert required in signing_config, required
-assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0"})' in signing_config
+assert 'pilot:Object.freeze({wallet:null,pair:null,action:null,maxAmountRaw:"0",unbondingPeriod:null})' in signing_config
 for required in ['unbondingTranches:claims.tranches', 'unbondingDisplay(position,decimals)', 'READY AT BLOCK', 'postconditionSatisfied(', 'verifyPostcondition(']:
     assert required in js, required
 assert (root/"assets/recovery-signing-client.js").exists()
