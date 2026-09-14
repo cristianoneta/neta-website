@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-api.polkachu.com https://juno-api.lavenderfive.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <title>NETA Socials — Community Board</title>
+  <meta name="description" content="A token-gated community board for NETA stakers on Juno.">
+  <link rel="stylesheet" href="styles.css?v=20260914-7">
+  <link rel="stylesheet" href="neta-socials.css?v=1">
+  <link rel="stylesheet" href="matrix-blackout.css?v=20260913-1">
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<header>
+  <a class="logo" href="index.html" aria-label="NETA Reborn home"><img src="assets/neta-mark.svg" alt=""><span>[ NETA ]</span></a>
+  <nav aria-label="Primary navigation">
+    <a href="index.html">RANKING</a><a href="map-of-neta.html">MAP OF NETA</a><a href="wynd-recovery.html">WYND RECOVERY</a><a href="rescue-neta.html">RESCUE NETA</a><a class="active" aria-current="page" href="neta-socials.html">NETA SOCIALS</a><a href="neta-dao.html">NETA DAO</a>
+  </nav>
+  <div class="wallet-shell">
+    <button id="keplr-connect" class="keplr-connect" type="button" aria-label="Connect Keplr wallet"><img src="assets/keplr-symbol.svg" alt=""><span><b data-wallet-label>CONNECT KEPLR</b><small data-wallet-balance aria-live="polite">READ-ONLY</small></span></button>
+    <div id="wallet-menu" class="wallet-menu" role="menu" aria-label="Keplr account actions" hidden>
+      <div class="wallet-menu-head"><span>CONNECTED WITH KEPLR</span><b data-wallet-menu-rank>UNRANKED</b></div><div class="wallet-menu-address" data-wallet-menu-address></div>
+      <div class="wallet-menu-total"><span>TOTAL ECONOMIC NETA</span><strong data-wallet-menu-total>0 NETA</strong><small>CURRENT RANKING SNAPSHOT</small></div>
+      <a class="wallet-menu-action" role="menuitem" data-wallet-action="ranking" href="index.html">VIEW MY RANK <span>→</span></a><button class="wallet-menu-action" role="menuitem" data-wallet-action="copy" type="button">COPY ADDRESS <span>□</span></button><button class="wallet-menu-action wallet-menu-disconnect" role="menuitem" data-wallet-action="disconnect" type="button">DISCONNECT THIS SITE <span>×</span></button><p>Disconnect clears this website session. Revoke the site permission separately in Keplr.</p>
+    </div>
+  </div>
+</header>
+
+<main class="socials-page">
+  <section class="socials-hero">
+    <div><div class="kicker">TOKEN-GATED COMMUNITY ON JUNO</div><h1>NETA <b>SOCIALS.</b></h1><p>A public conversation layer for the NETA community. Read freely. Connect a wallet with at least 10 actively staked NETA to open threads and join the discussion.</p></div>
+    <div class="preview-seal"><span>FRONTEND</span><strong>DRAFT</strong><small>NO SIGNING · NO STORAGE</small></div>
+  </section>
+
+  <section class="access-strip" aria-label="Social access status">
+    <div><span>CONNECTED WALLET</span><strong id="social-wallet">NOT CONNECTED</strong></div>
+    <div><span>ACTIVE DAO STAKE</span><strong id="social-stake">— NETA</strong></div>
+    <div><span>POSTING ACCESS</span><strong id="social-access" data-state="locked">LOCKED</strong></div>
+    <div class="rule-cell"><span>REQUIREMENT</span><strong>10 NETA STAKED</strong></div>
+  </section>
+
+  <section class="socials-board">
+    <aside class="thread-rail">
+      <div class="rail-head"><div><span>COMMUNITY BOARD</span><strong>THREADS</strong></div><button id="new-thread" type="button" disabled>+ NEW</button></div>
+      <div class="thread-filters"><button class="active" type="button">LATEST</button><button type="button">ACTIVE</button><button type="button">CLOSED</button></div>
+      <div class="thread-list" role="list">
+        <button class="thread-item active" type="button" data-thread="0"><span class="thread-state">OPEN · FEATURED</span><strong>What should NETA build next?</strong><small>3 COMMENTS · 18 MIN AGO</small></button>
+        <button class="thread-item" type="button" data-thread="1"><span class="thread-state">OPEN</span><strong>Restoring the Terra relayer path</strong><small>2 COMMENTS · 1 H AGO</small></button>
+        <button class="thread-item" type="button" data-thread="2"><span class="thread-state closed">CLOSED</span><strong>Community liquidity priorities</strong><small>4 COMMENTS · 1 D AGO</small></button>
+      </div>
+      <div class="rail-foot"><span>ON-CHAIN AT LAUNCH</span><small>Threads and comments will be permanent Juno transactions.</small></div>
+    </aside>
+
+    <article class="conversation-panel">
+      <header class="conversation-head"><div><span id="thread-state">THREAD #001 · OPEN</span><h2 id="thread-title">What should NETA build next?</h2></div><button type="button" disabled>•••</button></header>
+      <div class="thread-author"><span class="address-orb">N</span><div><strong id="thread-author">juno1z3x…s5et57</strong><small>THREAD AUTHOR · 18 MIN AGO</small></div><span class="owner-badge">OWNER</span></div>
+      <div class="thread-body" id="thread-body">NETA Reborn now has recovery tools, live market data and controlled IBC routes. Which utility should receive priority next—and what would make it genuinely useful for long-term NETA holders?</div>
+      <div class="conversation-divider"><span>3 COMMENTS</span></div>
+      <div id="comment-list" class="comment-list">
+        <article class="comment"><div class="comment-meta"><span class="address-orb">01</span><div><strong>juno15agz…e5h02p</strong><small>300 NETA STAKED · 12 MIN AGO</small></div><b>#001</b></div><p>A small coordination layer feels more valuable than another dashboard. Keep the first version narrow: threads, comments and transparent token-gated access.</p></article>
+        <article class="comment"><div class="comment-meta"><span class="address-orb">02</span><div><strong>juno1zz6v…9sa3qs7</strong><small>319 NETA STAKED · 8 MIN AGO</small></div><b>#002</b></div><p>Names can come later. Starting with wallet addresses makes authorship verifiable and avoids building an identity system before the discussion layer works.</p></article>
+        <article class="comment"><div class="comment-meta"><span class="address-orb">03</span><div><strong>juno1lujh…yz9s64</strong><small>10 NETA STAKED · 3 MIN AGO</small></div><b>#003</b></div><p>My vote is to finish reliable IBC monitoring first, then use this board to coordinate the next integrations.</p></article>
+      </div>
+      <form id="comment-form" class="comment-composer"><label for="comment-text">JOIN THE THREAD</label><textarea id="comment-text" maxlength="1000" placeholder="Connect an eligible wallet to comment…" disabled></textarea><div><span id="comment-count">0 / 1000</span><button id="comment-submit" type="submit" disabled>CONNECT WALLET</button></div></form>
+    </article>
+  </section>
+</main>
+
+<div id="draft-modal" class="draft-modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="draft-title"><span>NETA SOCIALS</span><h2 id="draft-title">FRONTEND DRAFT ONLY</h2><p>The final interaction will open Keplr and write to the NETA Socials contract. No transaction or content was submitted.</p><button id="draft-close" type="button">CLOSE</button></div></div>
+<footer><div>NETA SOCIALS · JUNO</div><div>10 NETA ACTIVE STAKE REQUIRED</div></footer>
+<button id="matrix-toggle" type="button" aria-pressed="true">MATRIX EFFECT: ON</button>
+<script src="data.js"></script><script src="wallet-header.js?v=20260914-4"></script><script src="neta-socials.js?v=1"></script><script src="matrix-blackout.js?v=20260913-1"></script>
+</body>
+</html>
