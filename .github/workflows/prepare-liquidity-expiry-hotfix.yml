@@ -1,0 +1,88 @@
+name: Prepare liquidity expiry hotfix
+
+on:
+  push:
+    branches:
+      - hotfix/liquidity-pilot-expiry-revalidation
+    paths:
+      - .github/workflows/prepare-liquidity-expiry-hotfix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: hotfix/liquidity-pilot-expiry-revalidation
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Apply expiry revalidation hotfix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          js = Path("wynd-recovery.js")
+          text = js.read_text()
+          old = '  if(JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions))throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");'
+          new = '''  const sameIntent=fresh.pool.pair.address===pendingLiquidity.pool.pair.address
+              &&fresh.junoRaw===pendingLiquidity.junoRaw
+              &&fresh.netaRaw===pendingLiquidity.netaRaw
+              &&fresh.memo===pendingLiquidity.memo;
+            if(!sameIntent)throw new Error("LIQUIDITY RATIO CHANGED DURING APPROVAL");'''
+          assert text.count(old) == 1
+          js.write_text(text.replace(old, new, 1))
+
+          html = Path("wynd-recovery.html")
+          text = html.read_text()
+          assert text.count("wynd-recovery.js?v=20260913-12") == 1
+          html.write_text(text.replace("wynd-recovery.js?v=20260913-12", "wynd-recovery.js?v=20260914-13", 1))
+
+          shell = Path("scripts/site_shell.py")
+          text = shell.read_text()
+          assert text.count('"wynd-recovery.html": {"wynd-recovery.js": "20260913-12"}') == 1
+          shell.write_text(text.replace('"wynd-recovery.html": {"wynd-recovery.js": "20260913-12"}', '"wynd-recovery.html": {"wynd-recovery.js": "20260914-13"}', 1))
+
+          test = Path("scripts/test_wynd_recovery_frontend.py")
+          text = test.read_text()
+          marker = '    \'chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest")\','
+          addition = '''    'fresh.pool.pair.address===pendingLiquidity.pool.pair.address',
+              'fresh.junoRaw===pendingLiquidity.junoRaw', 'fresh.netaRaw===pendingLiquidity.netaRaw',
+              'fresh.memo===pendingLiquidity.memo','''
+          assert text.count(marker) == 1
+          text = text.replace(marker, marker + "\n" + addition, 1)
+          assert text.count("'wynd-recovery.js?v=20260913-12'") == 1
+          text = text.replace("'wynd-recovery.js?v=20260913-12'", "'wynd-recovery.js?v=20260914-13'", 1)
+          marker = 'assert js.count(\'{cache:"no-store"}\') == 4'
+          assert text.count(marker) == 1
+          text = text.replace(marker, marker + "\nassert 'JSON.stringify(fresh.instructions)!==JSON.stringify(pendingLiquidity.instructions)' not in js", 1)
+          test.write_text(text)
+          PY
+      - name: Verify complete website
+        run: |
+          npm ci
+          python scripts/test_site_integrity.py
+          python scripts/test_wynd_recovery_frontend.py
+          python scripts/test_recovery_signing_gate.py
+          for file in *.js; do node --check "$file"; done
+          npm run build:recovery-signing
+          npx playwright install --with-deps chromium
+          npm run test:browser
+      - name: Commit hotfix and remove bootstrap workflow
+        run: |
+          git config user.name "NETA Reborn Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/prepare-liquidity-expiry-hotfix.yml
+          git add wynd-recovery.js wynd-recovery.html scripts/site_shell.py scripts/test_wynd_recovery_frontend.py
+          git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l)" -eq 5
+          git commit -m "Fix liquidity pilot expiry revalidation"
+          git push origin HEAD:hotfix/liquidity-pilot-expiry-revalidation
