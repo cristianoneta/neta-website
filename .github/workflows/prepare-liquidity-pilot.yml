@@ -86,6 +86,6 @@ jobs:
           git rm .github/workflows/prepare-liquidity-pilot.yml
           git add assets/recovery-signing-client.js recovery-signing-config.js scripts/test_recovery_signing_gate.py scripts/test_wynd_recovery_frontend.py
           git diff --cached --check
-          test "$(git diff --cached --name-only | wc -l)" -eq 4
+          test "$(git diff --cached --name-only | wc -l)" -eq 5
           git commit -m "Enable wallet-scoped JUNO/NETA liquidity pilot"
           git push origin HEAD:pilot/enable-juno-neta-liquidity-v2
