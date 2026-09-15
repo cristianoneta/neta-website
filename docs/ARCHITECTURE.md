@@ -103,7 +103,8 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
 
 - The production website targets the checksum-locked Juno mainnet deployment
   recorded in `data/socials-mainnet-release.json`. Contract state remains the
-  authority; while `paused: true`, the public page is read-only.
+  authority. The production instance is live; an emergency pause makes the
+  public page read-only without changing the deployed frontend.
 - Contract `config`, `comment_eligibility`, moderator and ban queries are
   authoritative. Frontend labels and disabled controls are not authorization.
 - Every execute message rechecks the connected signer and opens a separate
