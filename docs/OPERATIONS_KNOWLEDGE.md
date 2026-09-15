@@ -203,3 +203,9 @@ The amount remains an explicit unattributed bridge residual until delivery. A
 negative difference or a positive difference without packet evidence fails
 closed. The unresolved Terra `0.010000 NETA` remains separate and is not
 covered by this active Osmosis-transit classification.
+
+Every collector that commits generated data must also tolerate a concurrent
+writer landing between its fetch/rebase and push. Use a bounded three-attempt
+`fetch main` → deterministic rebase → push loop with short backoff. Separate
+concurrency groups prevent cancellation; the retry loop prevents the remaining
+non-fast-forward race without weakening any data validation.
