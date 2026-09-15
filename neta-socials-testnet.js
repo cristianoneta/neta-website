@@ -2,12 +2,12 @@
   const init=()=>{
   const CHAIN_ID="uni-7";
   const OWNER="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
-  const RPC="https://juno-testnet-rpc.polkachu.com";
+  const RPC="https://juno.rpc.t.stavr.tech";
   const ARTIFACTS={
     mock:{url:"assets/contracts/neta_socials_stake_mock.wasm",sha256:"c4920d17c0c44fd8dfe72f01d9c3d0faa8b1fafc1d70f511684f3426a4c30f81"},
     socials:{url:"assets/contracts/neta_socials.wasm",sha256:"49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869"},
   };
-  const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPC,rest:"https://juno-testnet-api.polkachu.com",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.003,average:.0045,high:.006}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
+  const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPC,rest:"https://juno.api.t.stavr.tech",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.003,average:.0045,high:.006}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
   const saved=(()=>{try{return JSON.parse(localStorage.getItem("neta-socials-uni7")||"{}")}catch{return{}}})();
   const state={client:null,address:null,mock:saved.mock||null,socials:saved.socials||null};
   const $=selector=>document.querySelector(selector),connect=$("#test-connect");
@@ -28,7 +28,7 @@
   connect.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     show("CONNECTING · CHECK KEPLR",{"next":"Approve the uni-7 connection in Keplr."});
     if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND — UNLOCK THE EXTENSION AND RELOAD THIS PAGE");
-    await deadline(window.keplr.experimentalSuggestChain(CHAIN),12000,"CHAIN SUGGESTION");
+    await deadline(window.keplr.experimentalSuggestChain(CHAIN),25000,"CHAIN SUGGESTION");
     show("CONNECTING · WAITING FOR KEPLR",{"next":"Approve access to your uni-7 account."});
     await deadline(window.keplr.enable(CHAIN_ID),12000,"KEPLR ACCESS");
     const signer=window.getOfflineSigner?.(CHAIN_ID)||window.keplr.getOfflineSigner?.(CHAIN_ID);
@@ -36,7 +36,7 @@
     const accounts=await deadline(signer.getAccounts(),12000,"ACCOUNT LOOKUP"),address=accounts[0]?.address;
     if(address!==OWNER)throw new Error(`EXPECTED OWNER ${OWNER}, RECEIVED ${address||"NO ACCOUNT"}`);
     show("CONNECTING · CHECKING RPC",{"rpc":RPC});
-    state.client=await deadline(NetaSocialsTestnet.connect(RPC,signer),12000,"UNI-7 RPC CONNECTION");state.address=address;
+    state.client=await deadline(NetaSocialsTestnet.connect(RPC,signer),25000,"UNI-7 RPC CONNECTION");state.address=address;
     const balance=await state.client.getBalance(address,"ujunox");
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
