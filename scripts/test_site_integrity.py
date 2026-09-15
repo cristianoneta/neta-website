@@ -75,6 +75,8 @@ socials_script = (ROOT / "neta-socials.js").read_text(encoding="utf-8")
 assert "assets/recovery-signing-client.js?v=7" in socials_html
 assert "ON-CHAIN MAINNET" in socials_html
 assert "<strong>LIVE</strong>" in socials_html
+assert 'href="https://t.me/+mfsF41Zra7I2ZDYy"' in socials_html
+assert 'rel="noopener noreferrer"' in socials_html
 assert 'CONTRACT="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in socials_script
 assert 'CHAIN_ID="juno-1"' in socials_script
 assert "NetaRecoverySigning.execute" in socials_script
