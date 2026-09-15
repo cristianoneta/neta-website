@@ -174,6 +174,7 @@ test("NETA Socials testnet passes fee protection to the actual Keplr sign call",
   });
   await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
   await page.locator("#test-connect").click();
+  await expect(page.locator("#test-status")).toHaveText("CONNECTED TO UNI-7");
   expect(await page.evaluate(() => window.__signOptions)).toEqual({preferNoSetFee: true});
 });
 
