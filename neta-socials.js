@@ -6,7 +6,7 @@
   const LCD=["https://juno-api.polkachu.com","https://juno-api.lavenderfive.com"];
   const UNI_7={
     chainId:"uni-7",chainName:"Juno Testnet",
-    rpc:"https://juno-testnet-rpc.polkachu.com",rest:"https://juno-testnet-api.polkachu.com",
+    rpc:"https://juno.rpc.t.stavr.tech",rest:"https://juno.api.t.stavr.tech",
     bip44:{coinType:118},
     bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},
     currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],
