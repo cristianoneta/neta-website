@@ -133,7 +133,7 @@ test("NETA Socials testnet console surfaces a missing Keplr extension", async ({
 });
 
 test("NETA Socials testnet connection button toggles connected and disconnected", async ({page}) => {
-  await page.route("**/assets/socials-testnet-client.js?v=1", route => route.fulfill({
+  await page.route("**/assets/socials-testnet-client.js?v=2", route => route.fulfill({
     contentType: "application/javascript",
     body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'110000000'}),disconnect:()=>{window.__rpcDisconnected=true}})};",
   }));
