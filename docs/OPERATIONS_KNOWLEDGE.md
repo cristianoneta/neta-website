@@ -13,7 +13,7 @@ remain in `NETA_REBORN_CHECKPOINT.md`, but must not override this document.
 | Map of NETA | Juno + Osmosis events | Read-only activity plus controlled, self-custodial IBC signing |
 | WYND Recovery | Juno mainnet | Only Unbond, Claim and Withdraw on eight frozen contract tuples |
 | Rescue NETA | Juno mainnet | Only the frozen WYND JUNO/NETA pair; $25 estimated-value cap per transaction |
-| NETA Socials | Juno mainnet | Deployed paused; reads are public and every future write needs a separate Keplr approval with no funds attached |
+| NETA Socials | Juno mainnet | Live; writes are stake-gated and every transaction needs a separate Keplr approval with no funds attached |
 
 Browser state and UI checks are never protocol authorization. Contracts and
 chain state remain authoritative. The site never requests a seed phrase or
@@ -82,7 +82,7 @@ NETA is not a public frontend route and Terra is displayed with zero NETA.
 | Mainnet Socials | code 5167, `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9` |
 | Minimum stake | `10000000` raw NETA (10 NETA) |
 | Cooldown | 30 seconds per address across threads and comments |
-| Current mainnet state | `paused: true`; owner is stake-exempt but cannot post while paused |
+| Current mainnet state | `paused: false`; activated at height `41784461`; owner is stake-exempt |
 
 The contract supports immutable threads/comments, close/reopen, hide/unhide
 with an on-chain reason, moderator assignment, bans, pause, configuration and a
@@ -149,8 +149,8 @@ The guarded console connected only the configured owner on `juno-1`, verified
 the production staking contract and locked checksum, stored code `5167`, and
 instantiated `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`.
 Independent REST queries confirmed creator, migration admin, owner, stake
-contract, threshold, cooldown and paused state. The console still has no
-execute or unpause capability.
+contract, threshold and cooldown. Deployment initially completed paused. The
+deployment console still has no execute or unpause capability.
 
 The production stake gate was then verified read-only with distinct non-owner
 wallets: a wallet with zero active stake returned `stake_eligible: false`, and
@@ -158,3 +158,9 @@ a wallet with 300 active NETA returned `stake_eligible: true`. The unlinked
 `neta-socials-admin.html` surface rechecks those gates plus contract identity and
 configuration before exposing its only two writes: explicit unpause and
 emergency pause. Both are `set_paused` messages with no attached funds.
+
+The owner unpaused the production contract with transaction
+`8B2354A8C603CB9EE0A95009FA734D3C4FEF84CA31AFB563D97D3EFDDADC3FD6`
+at height `41784461`. Independent verification returned code `0`,
+`paused: false` and owner `can_post: true`; no funds were attached. The public
+frontend is live, and the admin surface retains the emergency-pause path.
