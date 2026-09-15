@@ -132,6 +132,31 @@ test("NETA Socials testnet console surfaces a missing Keplr extension", async ({
   await expect(page.locator("#test-output")).toContainText("KEPLR NOT FOUND");
 });
 
+test("NETA Socials testnet connection button toggles connected and disconnected", async ({page}) => {
+  await page.route("**/assets/socials-testnet-client.js?v=1", route => route.fulfill({
+    contentType: "application/javascript",
+    body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'110000000'}),disconnect:()=>{window.__rpcDisconnected=true}})};",
+  }));
+  await page.addInitScript(() => {
+    window.keplr = {
+      experimentalSuggestChain: async () => {},
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}),
+    };
+  });
+  await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
+  const button = page.locator("#test-connect");
+  await button.click();
+  await expect(button).toHaveText("CONNECTED · DISCONNECT");
+  await expect(button).toHaveAttribute("data-state", "connected");
+  await expect(page.locator("#test-status")).toHaveText("CONNECTED TO UNI-7");
+  await button.click();
+  await expect(button).toHaveText("CONNECT KEPLR");
+  await expect(button).toHaveAttribute("data-state", "disconnected");
+  await expect(page.locator("#test-status")).toHaveText("NOT CONNECTED");
+  expect(await page.evaluate(() => window.__rpcDisconnected)).toBe(true);
+});
+
 test("recovery renders validated snapshots and stays fail-closed", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.message));

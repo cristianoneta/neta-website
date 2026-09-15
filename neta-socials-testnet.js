@@ -18,6 +18,12 @@
   const deadline=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(`${label} TIMED OUT AFTER ${ms/1000} SECONDS`)),ms))]);
   const persist=()=>localStorage.setItem("neta-socials-uni7",JSON.stringify({mock:state.mock,socials:state.socials}));
   const busy=async(button,task)=>{button.disabled=true;try{await task()}catch(error){fail(error)}finally{button.disabled=button.dataset.done==="true"}};
+  const disconnected=()=>{
+    state.client?.disconnect?.();state.client=null;state.address=null;
+    connect.textContent="CONNECT KEPLR";connect.dataset.state="disconnected";
+    $("#test-mock").disabled=true;$("#test-socials").disabled=true;$("#test-verify").disabled=true;
+    status.textContent="NOT CONNECTED";output.textContent="No transactions submitted.";
+  };
   async function wasm(name){
     const item=ARTIFACTS[name],response=await fetch(item.url,{cache:"no-store"});
     if(!response.ok)throw new Error("WASM DOWNLOAD FAILED");
@@ -27,6 +33,7 @@
     return bytes;
   }
   connect.addEventListener("click",event=>busy(event.currentTarget,async()=>{
+    if(state.client){disconnected();return}
     phase="KEPLR DETECTION";show("CONNECTING · CHECK KEPLR",{"next":"Approve the uni-7 connection in Keplr."});
     if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND — UNLOCK THE EXTENSION AND RELOAD THIS PAGE");
     phase="CHAIN SUGGESTION";await deadline(window.keplr.experimentalSuggestChain(CHAIN),45000,"CHAIN SUGGESTION");
@@ -46,6 +53,7 @@
     if(!state.client)throw new Error(`ALL RPC ENDPOINTS FAILED\n${failures.join("\n")}`);
     state.address=address;
     phase="JUNOX BALANCE";const balance=await deadline(state.client.getBalance(address,"ujunox"),45000,"JUNOX BALANCE");
+    connect.textContent="CONNECTED · DISCONNECT";connect.dataset.state="connected";
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
   }));
