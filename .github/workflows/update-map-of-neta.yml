@@ -69,10 +69,16 @@ jobs:
           fi
           git commit -m "chore: update Map of NETA event history"
           BRANCH="${GITHUB_REF_NAME}"
-          git fetch origin "$BRANCH"
-          git rebase -X theirs "origin/$BRANCH"
-          git push origin "HEAD:$BRANCH"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git rebase -X theirs "origin/$BRANCH"
+            if git push origin "HEAD:$BRANCH"; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              break
+            fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
       - name: Request GitHub Pages rebuild
         if: github.ref == 'refs/heads/main' && steps.commit_data.outputs.changed == 'true'
         env:
