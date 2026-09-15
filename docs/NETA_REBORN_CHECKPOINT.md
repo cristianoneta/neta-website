@@ -1304,8 +1304,10 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 
 ### Uni-7 Socials frontend integration
 
-- The public Socials page reads the newest 30 threads and up to 100 comments per selected thread directly from contract `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` without requiring a wallet.
+- The public Socials page reads the newest 10 threads directly from contract `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` without requiring a wallet. Explicit load-more controls fetch older threads in pages of 10 and comments in pages of 100, with exclusive cursors and ID de-duplication.
 - Posting access comes from the contract's `comment_eligibility` query. The connected address must match the Uni-7 signer immediately before signing.
 - New threads enforce 120 title characters and 5,000 body characters; comments enforce 1,000 characters. Every write opens a separate Keplr confirmation and attaches no funds.
 - Transaction-indexing-disabled responses are recovered only by finding the exact new thread or comment in contract state. Other errors remain fail-closed.
 - The interface explicitly identifies the deployment as live on Uni-7 testnet, not Juno mainnet.
+- Async selection, wallet-eligibility and initial-load responses are versioned so a delayed network response cannot overwrite a newer thread or wallet state.
+- Main website CI rebuilds and byte-compares the committed Socials signing bundle alongside the recovery, swap and IBC bundles.

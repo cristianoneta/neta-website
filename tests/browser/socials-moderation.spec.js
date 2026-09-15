@@ -63,3 +63,38 @@ test("NETA Socials loads older threads in exact pages without duplicates", async
   const labels = await page.locator(".thread-item strong").allTextContents();
   expect(new Set(labels).size).toBe(35);
 });
+
+test("NETA Socials paginates comments and ignores stale thread responses", async ({page}) => {
+  const author = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const threads = [
+    {id: 2, author, title: "Slow thread", body: "Body", created_time: 2, comment_count: 1, closed: false},
+    {id: 1, author, title: "Paged thread", body: "Body", created_time: 1, comment_count: 205, closed: false},
+  ];
+  const comments = Array.from({length: 205}, (_, index) => ({
+    id: index + 1, thread_id: 1, author, body: `Comment ${index + 1}`, created_time: index + 1,
+  }));
+  await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
+    const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
+    let data = [];
+    if (query.threads) data = threads;
+    if (query.comments?.thread_id === 2) {
+      await new Promise(resolve => setTimeout(resolve, 250));
+      data = [{id: 1, thread_id: 2, author, body: "Slow response", created_time: 1}];
+    }
+    if (query.comments?.thread_id === 1) {
+      const start = query.comments.start_after;
+      data = comments.filter(comment => start == null || comment.id > start).slice(0, query.comments.limit);
+    }
+    await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
+  });
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  await page.getByRole("button", {name: /Paged thread/}).click();
+  await expect(page.getByRole("heading", {name: "Paged thread"})).toBeVisible();
+  await page.getByRole("button", {name: "LOAD MORE COMMENTS"}).click();
+  await expect(page.locator(".comment")).toHaveCount(200);
+  await page.getByRole("button", {name: "LOAD MORE COMMENTS"}).click();
+  await expect(page.locator(".comment")).toHaveCount(205);
+  await expect(page.locator(".comments-load-more")).toHaveCount(0);
+  await expect(page.getByRole("heading", {name: "Paged thread"})).toBeVisible();
+  await expect(page.locator(".comment").last()).toContainText("Comment 205");
+});

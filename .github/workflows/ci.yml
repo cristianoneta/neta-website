@@ -70,13 +70,15 @@ jobs:
           npm run build:recovery-signing
           npm run build:swap-signing
           npm run build:ibc-signing
+          npm run build:socials-testnet
           test -s assets/recovery-signing-client.js
           test -s assets/swap-signing-client.js
           test -s assets/ibc-signing-client.js
+          test -s assets/socials-testnet-client.js
       - name: Audit production and development dependencies
         run: npm audit --audit-level=high
       - name: Verify committed signing bundle is reproducible
-        run: git diff --exit-code -- assets/recovery-signing-client.js assets/swap-signing-client.js assets/ibc-signing-client.js
+        run: git diff --exit-code -- assets/recovery-signing-client.js assets/swap-signing-client.js assets/ibc-signing-client.js assets/socials-testnet-client.js
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run browser integration tests
