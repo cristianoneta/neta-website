@@ -10,6 +10,7 @@ on:
       - "scripts/run_neta_data.py"
       - "scripts/lp_attribution.py"
       - "scripts/test_neta_core.py"
+      - "scripts/test_neta_bridge_accounting.py"
       - "requirements.txt"
   push:
     branches: [main]
@@ -62,7 +63,9 @@ jobs:
         run: pip install -r requirements.txt
       - name: Fetch and validate all NETA data
         if: steps.gate.outputs.run == 'true'
-        run: python scripts/run_neta_data.py --output .
+        run: |
+          PYTHONPATH=scripts python scripts/test_neta_bridge_accounting.py
+          python scripts/run_neta_data.py --output .
       - name: Show validation summary
         if: steps.gate.outputs.run == 'true'
         run: cat metadata.json

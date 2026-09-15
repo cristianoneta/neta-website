@@ -4,11 +4,14 @@ from __future__ import annotations
 import argparse, base64, datetime as dt, json, os, re, tempfile, time
 from pathlib import Path
 from typing import Dict, List, Tuple
+from urllib.parse import quote
 import requests
 
 NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
 DAO="juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh"
 ESCROW="juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn"
+OSMOSIS_NETA_CHANNEL="channel-47"
+OSMOSIS_NETA_COUNTERPARTY="channel-169"
 DENOM="ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A"
 WYND_PAIR="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OSMO_POOL_ADDR="osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x"
@@ -37,6 +40,56 @@ def req_json(bases,path,params=None,retries=3):
                 err=e; time.sleep(min(2**n,5))
         log(f"endpoint failed: {base}")
     raise RuntimeError(f"all endpoints failed for {path}: {err}")
+
+def smart_query(contract,msg):
+    encoded=quote(base64.b64encode(json.dumps(msg,separators=(',',':')).encode()).decode(),safe='')
+    data,endpoint=req_json(JUNO,f"/cosmwasm/wasm/v1/contract/{contract}/smart/{encoded}")
+    if "data" not in data: raise RuntimeError(f"smart query returned no data for {contract}")
+    return data["data"],endpoint
+
+def cw20_amount(amounts,contract):
+    found=[]
+    for item in amounts:
+        cw20=item.get("cw20") if isinstance(item,dict) else None
+        if isinstance(cw20,dict) and cw20.get("address")==contract:
+            found.append(int(cw20["amount"]))
+    if len(found)>1: raise RuntimeError(f"duplicate CW20 balance for {contract}")
+    return found[0] if found else 0
+
+def bridge_accounting():
+    """Return per-channel NETA liabilities and open packet commitments."""
+    listing,endpoint=smart_query(ESCROW,{"list_channels":{}})
+    channels=listing.get("channels")
+    if not isinstance(channels,list) or not channels:
+        raise RuntimeError("ICS20 contract returned no channels")
+    ids=[item.get("id") for item in channels if isinstance(item,dict)]
+    if len(ids)!=len(channels) or len(set(ids))!=len(ids):
+        raise RuntimeError("ICS20 contract returned invalid or duplicate channel IDs")
+
+    liabilities={}; commitments={}; port=f"wasm.{ESCROW}"
+    for info in channels:
+        channel=info["id"]
+        detail,_=smart_query(ESCROW,{"channel":{"id":channel}})
+        if detail.get("info")!=info:
+            raise RuntimeError(f"ICS20 channel metadata changed while reading {channel}")
+        amount=cw20_amount(detail.get("balances",[]),NETA)
+        if amount: liabilities[channel]=amount
+        packet_data,_=req_json(JUNO,f"/ibc/core/channel/v1/channels/{channel}/ports/{port}/packet_commitments",{"pagination.limit":"1000"})
+        rows=packet_data.get("commitments")
+        if not isinstance(rows,list):
+            raise RuntimeError(f"packet commitment query returned invalid data for {channel}")
+        sequences=[]
+        for row in rows:
+            if row.get("channel_id")!=channel or row.get("port_id")!=port:
+                raise RuntimeError(f"packet commitment identity mismatch for {channel}")
+            sequences.append(int(row["sequence"]))
+        if sequences: commitments[channel]=sorted(sequences)
+
+    osmosis=next((x for x in channels if x.get("id")==OSMOSIS_NETA_CHANNEL),None)
+    expected={"port_id":"transfer","channel_id":OSMOSIS_NETA_COUNTERPARTY}
+    if not osmosis or osmosis.get("counterparty_endpoint")!=expected:
+        raise RuntimeError("Osmosis NETA channel identity mismatch")
+    return liabilities,commitments,endpoint
 
 # ---- bech32 ----
 CS="qpzry9x8gf2tvdw0s3jn54khce6mua7l"; CM={c:i for i,c in enumerate(CS)}
@@ -321,14 +374,23 @@ def build(out):
     lp_neta=dict(wynd_lp)
     for a,x in osmo_lp.items(): lp_neta[a]=lp_neta.get(a,0)+x
     escrow=juno.get(ESCROW,0); osmo_total=sum(osmo.values())
-    if escrow!=osmo_total: raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != Osmosis {osmo_total/1e6:.6f}")
+    channel_liabilities,packet_commitments,bridge_endpoint=bridge_accounting()
+    channel_total=sum(channel_liabilities.values())
+    osmosis_liability=channel_liabilities.get(OSMOSIS_NETA_CHANNEL,0)
+    if escrow!=channel_total:
+        raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != all channel liabilities {channel_total/1e6:.6f}")
+    if osmosis_liability!=osmo_total:
+        raise RuntimeError(f"Osmosis channel liability {osmosis_liability/1e6:.6f} != Osmosis {osmo_total/1e6:.6f}")
     if juno.get(WYND_PAIR,0)!=sum(wynd_lp.values()): raise RuntimeError("WYND pool direct NETA != attributed LP NETA")
     if osmo.get(OSMO_POOL_ADDR,0)!=sum(osmo_lp.values()): raise RuntimeError("Pool 631 direct NETA != attributed LP NETA")
     dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(unbonding.values()); claim=sum(claimable.values())
     dao_res=dao_balance-active-unst-claim
     if dao_res<0: raise RuntimeError("DAO attribution exceeds staking contract balance")
     rows,residual=merge(juno,osmo,staked,unbonding,claimable,lp_neta,supply)
-    if residual!=dao_res: raise RuntimeError(f"economic residual {residual} != DAO residual {dao_res}")
+    bridge_res=channel_total-osmosis_liability
+    expected_residual=dao_res+bridge_res
+    if residual!=expected_residual:
+        raise RuntimeError(f"economic residual {residual} != DAO {dao_res} + non-Osmosis bridge {bridge_res}")
     if residual>1_000_000: raise RuntimeError("residual > 1 NETA")
     public=[pub(r,supply) for r in rows]; ranked=sum(r["total_raw"] for r in rows)
     juno_custody=sum(1 for r in rows if r["juno_custody"])
@@ -338,7 +400,8 @@ def build(out):
         raise RuntimeError("custody-holder union does not equal economic holders")
     def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
     onepct=max(1,(len(rows)+99)//100)
-    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
+    bridge={"contract":ESCROW,"query_endpoint":bridge_endpoint,"osmosis_channel":OSMOSIS_NETA_CHANNEL,"osmosis_counterparty_channel":OSMOSIS_NETA_COUNTERPARTY,"channel_liabilities_neta":{k:round(v/1e6,6) for k,v in sorted(channel_liabilities.items())},"unattributed_non_osmosis_neta":round(bridge_res/1e6,6),"open_packet_commitments":packet_commitments}
+    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_all_channel_liabilities":True,"osmosis_channel_liability_equals_osmosis_primary_state":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_dao_and_bridge_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(dao_res/1e6,6),"bridge_unattributed_neta":round(bridge_res/1e6,6),"unattributed_total_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"bridge":bridge,"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"method":"CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
     (out/"holders.json").write_text(json.dumps(public,separators=(',',':')),encoding='utf-8')
     write_address_index(out,public)
     (out/"metadata.json").write_text(json.dumps(meta,indent=2),encoding='utf-8')
@@ -351,6 +414,6 @@ def main():
         tmp=Path(td); meta=build(tmp)
         out.mkdir(parents=True,exist_ok=True)
         for name in ("holders.json","address_index.json","metadata.json","data.js","address-index.js"): os.replace(tmp/name,out/name)
-    log(f"VALIDATED: {meta['economic_master_entries']:,} economic entries; {meta['wallet_attributed_neta']:,.6f} attributed + {meta['dao_residual_neta']:.6f} residual = {meta['total_supply_neta']:,.6f} NETA")
+    log(f"VALIDATED: {meta['economic_master_entries']:,} economic entries; {meta['wallet_attributed_neta']:,.6f} attributed + {meta['dao_residual_neta']:.6f} DAO + {meta['bridge_unattributed_neta']:.6f} bridge residual = {meta['total_supply_neta']:,.6f} NETA")
     return 0
 if __name__=="__main__": raise SystemExit(main())
