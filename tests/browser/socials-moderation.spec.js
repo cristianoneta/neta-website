@@ -29,3 +29,35 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeEnabled();
 });
+
+test("NETA Socials loads older threads in exact pages without duplicates", async ({page}) => {
+  const author = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const threads = Array.from({length: 35}, (_, index) => ({
+    id: 65 - index, author, title: `Thread ${65 - index}`, body: "Body",
+    created_time: 1000 - index, comment_count: 0, closed: index % 2 === 0,
+  }));
+  await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
+    const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
+    let data = [];
+    if (query.threads) {
+      const start = query.threads.start_after;
+      data = threads.filter(thread => start == null || thread.id < start).slice(0, query.threads.limit);
+    }
+    await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
+  });
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator(".thread-item:not(.thread-load-more)")).toHaveCount(10);
+  await expect(page.locator(".thread-author .author-holdings")).toContainText("NETA TOTAL · OF WHICH");
+  await expect(page.locator(".thread-author .author-holdings")).toContainText("NETA STAKED");
+  const loadMore = page.getByRole("button", {name: "LOAD MORE · 10 OLDER THREADS"});
+  await expect(loadMore).toBeVisible();
+  await loadMore.click();
+  await expect(page.locator(".thread-item:not(.thread-load-more)")).toHaveCount(20);
+  await loadMore.click();
+  await expect(page.locator(".thread-item:not(.thread-load-more)")).toHaveCount(30);
+  await loadMore.click();
+  await expect(page.locator(".thread-item:not(.thread-load-more)")).toHaveCount(35);
+  await expect(page.locator(".thread-load-more")).toHaveCount(0);
+  const labels = await page.locator(".thread-item strong").allTextContents();
+  expect(new Set(labels).size).toBe(35);
+});
