@@ -128,5 +128,17 @@ NETA Socials is not yet approved for mainnet. Before deployment:
 6. Deploy the exact optimized checksum against the real DAO staking contract,
    verify config and eligibility while paused, then unpause explicitly.
 
+Compatibility evidence collected on 2026-09-15: live Juno reported app
+`v30.0.0`; the official tag pins `wasmd v0.61.11` and `wasmvm/v3 v3.0.4`.
+The exact Socials artifact has already been accepted and executed on Uni-7 with
+the same `wasmd` generation. This clears the initial ABI concern, but not the
+required mainnet StoreCode/Instantiate simulation or current advisory audit.
+
+The distinct-role frontend test covers owner-only moderator assignment and
+banning, moderator-only hide execution, automatic moderator revocation on ban,
+and the banned user's disabled posting controls. Ownership transfer remains an
+intentional contract/CLI administration path; the public community UI does not
+expose proposal, acceptance or cancellation controls.
+
 Separately, the outstanding Terra packet and the controlled WYND Claim remain
 operational follow-ups; neither should be represented as silently complete.
