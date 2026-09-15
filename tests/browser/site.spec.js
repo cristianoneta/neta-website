@@ -160,7 +160,7 @@ test("NETA Socials testnet connection button toggles connected and disconnected"
 test("NETA Socials testnet passes fee protection to the actual Keplr sign call", async ({page}) => {
   await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
     contentType: "application/javascript",
-    body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{window.__capturedSigner=signer;return{getBalance:async()=>({amount:'110000000'})}};",
+    body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{window.__capturedSigner=signer;return{getBalance:async()=>({amount:'110000000'})}}};",
   }));
   await page.addInitScript(() => {
     window.__signOptions = null;
