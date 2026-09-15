@@ -1273,3 +1273,16 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
   - LUNA Terra→Juno: source channel `channel-2`, destination `channel-86`, sequence `1461`, 200,000 uluna; destination receipt was still false before timeout.
 - Do not restore Juno↔Terra in the frontend until packet delivery and timeout/refund handling are verified.
 - Terra is now displayed on Map of NETA as a future zone with exactly `0 NETA`. The data generator preserves the Terra row so scheduled map refreshes cannot remove it.
+
+## 2026-09-15 — Uni-7 live deployment console debugging
+
+- PR #80 fixed the silent Keplr click path; merged as `cace41d0d30cc52b9997ef861f3ad59d72a347fa`.
+- Polkachu's Uni-7 RPC/REST endpoints were unavailable. PR #81 moved the console to STAVR; merged as `3e3ceb2eb4b1dddb68f90d0f0ea8704e38e79a44`.
+- PR #82 added phase-specific connection errors, 45-second network deadlines, and cache busting; merged as `f2a41936a2f98fa48b345c3a9a86aefb039c779a`.
+- A browser-level STAVR RPC failure was isolated after Keplr access and account lookup succeeded. NodesHub was validated on chain `uni-7` with HTTPS GET, CORS preflight, and JSON-RPC POST. PR #83 made NodesHub primary and retained STAVR as automatic fallback; merged as `1a8fbb3dfb2a53cb332f9206d2e415ad97358320`.
+- Active primary endpoints: RPC `https://juno.test.rpc.nodeshub.online`; REST `https://juno.test.api.nodeshub.online`. Fallback RPC: `https://juno.rpc.t.stavr.tech`.
+- Keplr caches suggested-chain endpoint data. If its transaction window reports `Failed to fetch balance`, use Settings → Remove Custom Chains for Juno Testnet/uni-7. If Keplr shows its internal unknown-error screen, first use Reset Cache Data; if needed use Reset Cache Data Including Suggest Chains & Endpoints. Never clear the entire extension storage or enter a seed phrase for this flow.
+- PR #84 made the console connection button a true connect/disconnect toggle and added a regression test; merged as `fa74a0c9e2e054b4aa376491476f14636927fd51`.
+- Uni-7 rejected the previous `0.0045ujunox` gas price with SDK code 13: got `5669ujunox`, required `94482ujunox` for gas `578258`. PR #85 raised signing gas price to `0.2ujunox`, aligned Keplr gas steps to low/average/high `0.1/0.2/0.3`, rebuilt the browser bundle, and merged as `bb2bcb5a4a10d49c54368bc998c67f97ea7ce623` after 34/34 browser tests passed.
+- At the observed gas limit, the new fee is approximately `0.115652 JUNOX`. The failed insufficient-fee broadcast did not deploy a contract.
+- Deployment state at the end of this note: wallet connection succeeds and reports 110 JUNOX; stake mock and Socials contract addresses are still null until the user retries step 02 with the updated live bundle.
