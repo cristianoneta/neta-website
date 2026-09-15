@@ -68,17 +68,20 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
   await page.locator("#moderation-reason").fill("spam");
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: true, reason: "spam"}});
+  await expect(page.locator("#moderation-modal")).toBeHidden();
   await expect(page.getByRole("button", {name: "UNHIDE", exact: true})).toBeVisible();
 
   await page.getByRole("button", {name: "MAKE MODERATOR", exact: true}).click();
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_moderator: {address: user, enabled: true}});
+  await expect(page.locator("#moderation-modal")).toBeHidden();
   await expect(page.getByRole("button", {name: "REMOVE MODERATOR", exact: true})).toBeVisible();
 
   await page.getByRole("button", {name: "BAN USER", exact: true}).click();
   await page.locator("#moderation-reason").fill("spam");
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_user_banned: {address: user, banned: true, reason: "spam"}});
+  await expect(page.locator("#moderation-modal")).toBeHidden();
   await expect(page.getByRole("button", {name: "UNBAN USER", exact: true})).toBeVisible();
   await expect(page.getByRole("button", {name: "MAKE MODERATOR", exact: true})).toHaveCount(0);
 });
