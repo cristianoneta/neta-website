@@ -2,12 +2,12 @@
   const init=()=>{
   const CHAIN_ID="uni-7";
   const OWNER="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
-  const RPC="https://juno.rpc.t.stavr.tech";
+  const RPCS=["https://juno.test.rpc.nodeshub.online","https://juno.rpc.t.stavr.tech"];
   const ARTIFACTS={
     mock:{url:"assets/contracts/neta_socials_stake_mock.wasm",sha256:"c4920d17c0c44fd8dfe72f01d9c3d0faa8b1fafc1d70f511684f3426a4c30f81"},
     socials:{url:"assets/contracts/neta_socials.wasm",sha256:"49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869"},
   };
-  const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPC,rest:"https://juno.api.t.stavr.tech",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.003,average:.0045,high:.006}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
+  const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPCS[0],rest:"https://juno.test.api.nodeshub.online",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.003,average:.0045,high:.006}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
   const saved=(()=>{try{return JSON.parse(localStorage.getItem("neta-socials-uni7")||"{}")}catch{return{}}})();
   const state={client:null,address:null,mock:saved.mock||null,socials:saved.socials||null};
   const $=selector=>document.querySelector(selector),connect=$("#test-connect");
@@ -36,8 +36,15 @@
     if(!signer)throw new Error("KEPLR OFFLINE SIGNER IS UNAVAILABLE");
     phase="ACCOUNT LOOKUP";const accounts=await deadline(signer.getAccounts(),12000,"ACCOUNT LOOKUP"),address=accounts[0]?.address;
     if(address!==OWNER)throw new Error(`EXPECTED OWNER ${OWNER}, RECEIVED ${address||"NO ACCOUNT"}`);
-    phase="UNI-7 RPC CONNECTION";show("CONNECTING · CHECKING RPC",{"rpc":RPC});
-    state.client=await deadline(NetaSocialsTestnet.connect(RPC,signer),45000,"UNI-7 RPC CONNECTION");state.address=address;
+    phase="UNI-7 RPC CONNECTION";
+    const failures=[];
+    for(const rpc of RPCS){
+      show("CONNECTING · CHECKING RPC",{rpc,attempt:failures.length+1,total:RPCS.length});
+      try{state.client=await deadline(NetaSocialsTestnet.connect(rpc,signer),45000,"UNI-7 RPC CONNECTION");break}
+      catch(error){failures.push(`${rpc}: ${error instanceof Error?error.message:String(error)}`)}
+    }
+    if(!state.client)throw new Error(`ALL RPC ENDPOINTS FAILED\n${failures.join("\n")}`);
+    state.address=address;
     phase="JUNOX BALANCE";const balance=await deadline(state.client.getBalance(address,"ujunox"),45000,"JUNOX BALANCE");
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
