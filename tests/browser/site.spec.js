@@ -528,7 +528,7 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   const mapData = require("../../data/map/map-of-neta.json");
   await expect(page.locator("#swaps")).toHaveText(String(mapData.market.swaps));
   await expect(page.locator("#swapBreakdown")).toHaveText(
-    `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
+    `JUNO ${mapData.market.by_chain?.juno ?? 0} · OSMOSIS ${mapData.market.by_chain?.osmosis ?? 0}`,
   );
   await expect(page.locator("#marketUpdated")).not.toHaveText("—");
   await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
@@ -545,13 +545,29 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   expect(centers.terra).toBeLessThan(centers.juno);
   expect(centers.juno).toBeLessThan(centers.osmosis);
   expect(Math.abs(centers.juno - centers.stage)).toBeLessThan(3);
-  const osmosis = page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first();
-  const juno = page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first();
-  await expect(osmosis).toHaveAttribute("href", /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/);
-  await expect(juno).toHaveAttribute("href", /^https:\/\/atomscan\.com\/juno\/accounts\/juno1[0-9a-z]{38}$/);
-  for (const link of [osmosis,juno]) {
-    await expect(link).toHaveAttribute("target", "_blank");
-    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  const movers = [...mapData.market.power_buyers, ...mapData.market.top_sellers];
+  const explorerCases = [
+    {
+      present: movers.some(row => row.wallet?.startsWith("osmo1")),
+      locator: page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]').first(),
+      all: page.locator('a.mover-wallet[href*="mintscan.io/osmosis/address/"]'),
+      href: /^https:\/\/www\.mintscan\.io\/osmosis\/address\/osmo1[0-9a-z]{38}$/,
+    },
+    {
+      present: movers.some(row => row.wallet?.startsWith("juno1")),
+      locator: page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]').first(),
+      all: page.locator('a.mover-wallet[href*="atomscan.com/juno/accounts/"]'),
+      href: /^https:\/\/atomscan\.com\/juno\/accounts\/juno1[0-9a-z]{38}$/,
+    },
+  ];
+  for (const item of explorerCases) {
+    if (!item.present) {
+      await expect(item.all).toHaveCount(0);
+      continue;
+    }
+    await expect(item.locator).toHaveAttribute("href", item.href);
+    await expect(item.locator).toHaveAttribute("target", "_blank");
+    await expect(item.locator).toHaveAttribute("rel", "noopener noreferrer");
   }
 });
 

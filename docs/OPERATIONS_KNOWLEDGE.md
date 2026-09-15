@@ -177,3 +177,27 @@ The owner unpaused the production contract with transaction
 at height `41784461`. Independent verification returned code `0`,
 `paused: false` and owner `can_post: true`; no funds were attached. The public
 frontend is live, and the admin surface retains the emergency-pause path.
+
+
+## Data-worker refresh and immutable snapshots
+
+Production refreshes must be dispatched from the current `main` branch. Do not
+use GitHub's "re-run job" action on an old scheduled run: GitHub retains that
+run's original head SHA, so the worker can calculate valid data from stale
+source and then conflict with newer generated files. All production collectors
+therefore explicitly check out `main`. Their shared
+`neta-repository-writer-main` concurrency group serializes repository writes,
+and generated-data rebases use a deterministic conflict strategy.
+
+The NETA indexer chooses one finalized Juno height at the beginning of a build.
+Every Juno CW20, DAO, WYND LP, WYND staking, pair-reserve and ICS20 query carries
+that same `x-cosmos-block-height` header. Osmosis bank state, Pool 631 state,
+locks and IBC commitments likewise use one recorded Osmosis height. Never mix a
+live REST response with height-pinned state in an accounting invariant.
+
+A Juno/Osmosis difference may be published as `in_transit_neta` only when an
+open packet commitment exists on Juno `channel-47` or Osmosis `channel-169`.
+The amount remains an explicit unattributed bridge residual until delivery. A
+negative difference or a positive difference without packet evidence fails
+closed. The unresolved Terra `0.010000 NETA` remains separate and is not
+covered by this active Osmosis-transit classification.
