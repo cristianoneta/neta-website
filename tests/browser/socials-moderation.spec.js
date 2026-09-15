@@ -77,6 +77,12 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
   await page.locator("#moderation-reason").fill("spam");
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: true, reason: "spam"}});
+  await page.reload({waitUntil: "domcontentloaded"});
+  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
+  await expect(page.locator(".moderation-notice")).toContainText("COMMENT HIDDEN BY A MODERATOR");
+  await expect(page.locator(".moderation-notice")).toContainText("REASON: spam");
+  await expect(page.getByRole("button", {name: "UNHIDE", exact: true})).toBeVisible();
+  await expect(page.locator(".comment")).not.toContainText("Review me");
 });
 
 test("NETA Socials loads older threads in exact pages without duplicates", async ({page}) => {
