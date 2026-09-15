@@ -1271,5 +1271,12 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - Pending test packets at the time of this decision:
   - NETA Juno→Terra: source channel `channel-154`, destination `channel-33`, sequence `36`, 10,000 raw NETA; destination receipt false after timeout and source commitment still present.
   - LUNA Terra→Juno: source channel `channel-2`, destination `channel-86`, sequence `1461`, 200,000 uluna; destination receipt was still false before timeout.
+- The 10,000 raw NETA Terra packet explains the later exact `0.010000 NETA`
+  difference between the shared Juno CW20-ICS20 contract balance and Osmosis
+  NETA supply. The bridge contract serves multiple channels, so its complete
+  CW20 balance is not an Osmosis-only escrow. Production accounting now checks
+  Osmosis against NETA outstanding on `channel-47`, checks the full bridge
+  balance against NETA outstanding across every reported channel, and records
+  live packet commitments. No fixed adjustment or tolerance is used.
 - Do not restore Juno↔Terra in the frontend until packet delivery and timeout/refund handling are verified.
 - Terra is now displayed on Map of NETA as a future zone with exactly `0 NETA`. The data generator preserves the Terra row so scheduled map refreshes cannot remove it.
