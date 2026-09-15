@@ -40,8 +40,13 @@
     phase="KEPLR ACCESS";show("CONNECTING · WAITING FOR KEPLR",{"next":"Approve access to your uni-7 account."});
     await deadline(window.keplr.enable(CHAIN_ID),12000,"KEPLR ACCESS");
     const signOptions={preferNoSetFee:true};
-    const signer=window.keplr.getOfflineSigner?.(CHAIN_ID,signOptions)||window.getOfflineSigner?.(CHAIN_ID,signOptions);
-    if(!signer)throw new Error("KEPLR OFFLINE SIGNER IS UNAVAILABLE");
+    const baseSigner=window.keplr.getOfflineSigner?.(CHAIN_ID)||window.getOfflineSigner?.(CHAIN_ID);
+    if(!baseSigner)throw new Error("KEPLR OFFLINE SIGNER IS UNAVAILABLE");
+    const signer={
+      getAccounts:()=>baseSigner.getAccounts(),
+      signDirect:(address,document)=>window.keplr.signDirect(CHAIN_ID,address,document,signOptions),
+      signAmino:(address,document)=>window.keplr.signAmino(CHAIN_ID,address,document,signOptions),
+    };
     phase="ACCOUNT LOOKUP";const accounts=await deadline(signer.getAccounts(),12000,"ACCOUNT LOOKUP"),address=accounts[0]?.address;
     if(address!==OWNER)throw new Error(`EXPECTED OWNER ${OWNER}, RECEIVED ${address||"NO ACCOUNT"}`);
     phase="UNI-7 RPC CONNECTION";
