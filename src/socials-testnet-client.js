@@ -3,7 +3,7 @@ import {SigningCosmWasmClient} from "@cosmjs/cosmwasm-stargate";
 
 export async function connect(rpc,signer){
   return SigningCosmWasmClient.connectWithSigner(rpc,signer,{
-    gasPrice:GasPrice.fromString("0.0045ujunox"),
+    gasPrice:GasPrice.fromString("0.2ujunox"),
   });
 }
 
