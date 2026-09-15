@@ -1,14 +1,20 @@
 # NETA Reborn — Technical Checkpoint
 
-Last updated: 2026-09-14
+Last updated: 2026-09-15
+
+> **Current source of truth:** read
+> [OPERATIONS_KNOWLEDGE.md](OPERATIONS_KNOWLEDGE.md) for present contracts,
+> routes, deployment state and mainnet gates, and
+> [CODEBASE_REVIEW_2026-09-15.md](CODEBASE_REVIEW_2026-09-15.md) for the latest
+> review. The handoffs below are chronological evidence and may describe work
+> that was subsequently completed or superseded.
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
 
-## NEW-CHAT HANDOFF — NETA SOCIALS UNI-7 TEST (2026-09-14)
+## HISTORICAL HANDOFF — NETA SOCIALS UNI-7 TEST (2026-09-14)
 
-Start the next chat by reading this entire file. Continue with PR #80 and do
-not ask the user to deploy again until that PR is green, merged and visibly
-deployed.
+This records the state before PR #80 and the completed Uni-7 deployment. Do not
+use it as a current continuation instruction.
 
 ### Current state
 
@@ -71,7 +77,7 @@ deployed.
    exercise thread/comment/moderation/cooldown behavior without attaching
    funds.
 
-## NEW-CHAT HANDOFF — CONTROLLED IBC TRANSFERS (2026-09-14)
+## HISTORICAL HANDOFF — CONTROLLED IBC TRANSFERS (2026-09-14)
 
 Start the next chat by reading this entire file, then continue from this
 section. Repository: `cristianoneta/neta-website`. Development branch:
@@ -221,7 +227,7 @@ Juno CW20-ICS20 contract:
   stacked like the Rescue NETA swap flow: heading, explanation/steps, then the
   centered IBC transfer card. It is not a separate subpage.
 
-## Current production state — 2026-09-14
+## Historical production snapshot — 2026-09-14
 
 - Public pages are Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue
   NETA. `What is NETA` is intentionally offline pending a substantive rewrite.
@@ -242,7 +248,7 @@ Juno CW20-ICS20 contract:
   `2026-09-21T07:58:06.734070343Z`. Claim is already covered by all-pool
   simulations and browser tests; the broadcast is additional production evidence.
 
-### Controlled IBC transfer work — development branch
+### Historical controlled IBC rollout state — 2026-09-14
 
 - Map of NETA contains an IBC panel for Juno, Osmosis and Terra. The only
   assets are JUNO, OSMO, LUNA and NETA.

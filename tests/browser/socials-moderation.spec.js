@@ -36,7 +36,7 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
 test("NETA Socials confirms exact comment, ban and moderator actions", async ({page}) => {
   const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
   const user = "juno1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq5yw7w";
-  let hidden = false, banned = false, moderator = false;
+  let hidden = false, banned = false, moderator = false, moderatorListQueries = 0;
   await page.exposeFunction("__applySocialAction", message => {
     if (message.set_comment_hidden) hidden = message.set_comment_hidden.hidden;
     if (message.set_user_banned) banned = message.set_user_banned.banned;
@@ -53,6 +53,7 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
     if (query.comments) data = [{id: 7, thread_id: 1, author: user, body: "Review me", created_time: 2, moderation: hidden ? {hidden: true, reason: "spam"} : null}];
     if (query.comment_eligibility) data = {address: owner, staked: "0", minimum_stake: "10000000", owner_exempt: true, stake_eligible: true, banned: false, paused: false, cooldown_remaining_seconds: 0, can_post: true};
     if (query.moderator) data = {address: query.moderator.address, moderator: query.moderator.address === owner || moderator};
+    if (query.moderators) { moderatorListQueries += 1; data = moderator ? [user] : []; }
     if (query.ban_status) data = {address: query.ban_status.address, record: banned ? {banned: true, reason: "spam"} : null};
     await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
   });
@@ -60,6 +61,7 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
   await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
   await expect(page.getByRole("button", {name: "HIDE", exact: true})).toBeVisible();
+  expect(moderatorListQueries).toBe(1);
 
   await page.getByRole("button", {name: "HIDE", exact: true}).click();
   await page.getByRole("button", {name: "CANCEL", exact: true}).click();
@@ -121,12 +123,13 @@ test("NETA Socials loads older threads in exact pages without duplicates", async
 
 test("NETA Socials paginates comments and ignores stale thread responses", async ({page}) => {
   const author = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const moderator = "juno1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq5yw7w";
   const threads = [
     {id: 2, author, title: "Slow thread", body: "Body", created_time: 2, comment_count: 1, closed: false},
     {id: 1, author, title: "Paged thread", body: "Body", created_time: 1, comment_count: 205, closed: false},
   ];
   const comments = Array.from({length: 205}, (_, index) => ({
-    id: index + 1, thread_id: 1, author, body: `Comment ${index + 1}`, created_time: index + 1,
+    id: index + 1, thread_id: 1, author: index < 100 ? author : moderator, body: `Comment ${index + 1}`, created_time: index + 1,
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
@@ -140,6 +143,8 @@ test("NETA Socials paginates comments and ignores stale thread responses", async
       const start = query.comments.start_after;
       data = comments.filter(comment => start == null || comment.id > start).slice(0, query.comments.limit);
     }
+    if (query.moderators) data = [moderator];
+    if (query.ban_status) data = {address: query.ban_status.address, record: null};
     await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
   });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
@@ -147,6 +152,7 @@ test("NETA Socials paginates comments and ignores stale thread responses", async
   await expect(page.getByRole("heading", {name: "Paged thread"})).toBeVisible();
   await page.getByRole("button", {name: "LOAD MORE COMMENTS"}).click();
   await expect(page.locator(".comment")).toHaveCount(200);
+  await expect(page.locator(".comment").nth(100)).toContainText("MODERATOR");
   await page.getByRole("button", {name: "LOAD MORE COMMENTS"}).click();
   await expect(page.locator(".comment")).toHaveCount(205);
   await expect(page.locator(".comments-load-more")).toHaveCount(0);

@@ -2,11 +2,13 @@
 
 Static, data-driven community website for the NETA ecosystem on Juno and
 Osmosis. It includes the holder ranking, Map of NETA, public WYND liquidity
-recovery and the tightly scoped Rescue NETA swap interface.
+recovery, the tightly scoped Rescue NETA swap interface and a Uni-7 deployment
+of the on-chain NETA Socials board.
 
 ## Current production state
 
-- Public pages: Ranking, Map of NETA, NETA DAO, WYND Recovery and Rescue NETA.
+- Public pages: Ranking, Map of NETA, NETA DAO, WYND Recovery, Rescue NETA and
+  NETA Socials.
 - `What is NETA` is intentionally offline until its content is rewritten.
 - Recovery permits only Unbond, Claim and Withdraw for eight frozen, validated
   WYND pool contract sets. Bond and Provide Liquidity are not shipped.
@@ -14,10 +16,13 @@ recovery and the tightly scoped Rescue NETA swap interface.
   $25 estimated-value cap per transaction.
 - Map of NETA combines verified swaps from the Juno WYND pair and Osmosis pool
   631 and displays their chain split and snapshot update time.
-- The Map development branch includes a controlled IBC panel for Juno,
-  Osmosis and Terra. It permits JUNO, OSMO, LUNA and NETA only; wrapped assets
-  may only return to their origin. Signing is temporarily UI-allowlisted to
-  the pilot Juno hotwallet and remains subject to Keplr approval.
+- Map of NETA includes controlled IBC transfers for allowlisted routes and
+  assets. Wrapped assets may only return to their origin. The unresolved
+  Juno-to-Terra NETA packet remains visible in channel-aware accounting and its
+  route stays disabled rather than being hidden by a tolerance.
+- NETA Socials reads and writes the live Uni-7 contract. It is a testnet surface,
+  not a mainnet deployment; every write requires a separate Keplr approval and
+  attaches no funds.
 - The controlled JUNO/NETA Claim after its on-chain maturity time remains the
   final live recovery test; it is additional evidence rather than a public gate.
 
@@ -32,18 +37,14 @@ python3 -m http.server 8000
 Open `http://localhost:8000`. Do not open the HTML files directly: browser
 security rules can block the JSON requests used by the recovery and map pages.
 
-Run the fast regression suite before changing generated data or recovery code:
+Run the deterministic regression suite before changing generated data,
+transaction code or contracts:
 
 ```bash
-PYTHONPATH=scripts .venv/bin/python scripts/test_neta_core.py
-PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_stats.py
-PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_market.py
-PYTHONPATH=scripts .venv/bin/python scripts/test_wynd_recovery_leaderboard.py
-.venv/bin/python scripts/test_wynd_recovery_frontend.py
-.venv/bin/python scripts/test_recovery_signing_gate.py
-.venv/bin/python scripts/test_site_integrity.py
-.venv/bin/python scripts/test_map_chain_detection.py
-node --check wynd-recovery.js
+for test_file in scripts/test_*.py; do
+  PYTHONPATH=scripts .venv/bin/python "$test_file"
+done
+for file in *.js src/*.js; do node --check "$file"; done
 npm ci
 npx playwright install chromium
 npm run test:browser
@@ -97,5 +98,7 @@ Native JUNO swaps execute on the Pair; NETA swaps use the NETA CW20 send hook.
 An included transaction is shown as confirmed only after its receiving-asset
 event satisfies the displayed minimum.
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
-the refactor rules.
+See [docs/OPERATIONS_KNOWLEDGE.md](docs/OPERATIONS_KNOWLEDGE.md) for the current
+contracts, pools, IBC, Uni-7 and Keplr knowledge; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+for component boundaries; and [docs/CODEBASE_REVIEW_2026-09-15.md](docs/CODEBASE_REVIEW_2026-09-15.md)
+for the latest critical review and remaining gates.

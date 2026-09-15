@@ -37,7 +37,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
 
 concurrency:
   group: website-ci-${{ github.workflow }}-${{ github.ref }}
@@ -58,14 +57,15 @@ jobs:
           cache: npm
       - name: Install JavaScript dependencies
         run: npm ci
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
       - name: Verify site and recovery safety gates
         shell: bash
         run: |
           set -o pipefail
-          python scripts/test_site_integrity.py
-          python scripts/test_wynd_recovery_frontend.py
-          python scripts/test_recovery_signing_gate.py
-          python scripts/test_ibc_transfer_frontend.py
+          for test_file in scripts/test_*.py; do
+            PYTHONPATH=scripts python "$test_file"
+          done
           for file in *.js src/*.js; do node --check "$file"; done
           npm run build:recovery-signing
           npm run build:swap-signing
@@ -90,8 +90,16 @@ jobs:
           name: ibc-branch-preview
           path: artifacts/ibc-preview/*.png
           if-no-files-found: error
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+    steps:
       - name: Deploy tested main revision to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           curl --fail-with-body --request POST \
             --header "Accept: application/vnd.github+json" \

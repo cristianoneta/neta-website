@@ -25,6 +25,11 @@ The public snapshot exposes both the total and the per-chain counts, plus its
 generation timestamp, so collector lag is visible rather than mistaken for
 missing market activity.
 
+IBC escrow is reconciled per source channel. A bridge contract's aggregate
+balance is not assumed to belong entirely to one destination chain. Outstanding
+packet commitments remain explicit liabilities until acknowledgement or a
+verified timeout/refund; no tolerance converts them into unexplained residuals.
+
 ## Recovery invariants
 
 - Exactly eight validated WYND pools are exposed.
@@ -94,6 +99,26 @@ missing market activity.
 - A transaction is confirmed only after inclusion and a receiving-asset event
   satisfying the reviewed minimum output.
 
+## NETA Socials invariants
+
+- The production website currently targets the explicit `uni-7` contract; it
+  never represents this instance as Juno mainnet.
+- Contract `config`, `comment_eligibility`, moderator and ban queries are
+  authoritative. Frontend labels and disabled controls are not authorization.
+- Every execute message rechecks the connected signer and opens a separate
+  Keplr approval. No execute or instantiate path accepts attached funds.
+- The global 30-second cooldown applies to threads and comments. Owner stake
+  exemption does not bypass pause, ban or cooldown.
+- Thread and comment bodies are immutable. Close/reopen and moderation actions
+  are separate on-chain state; hidden content remains queryable and is rendered
+  as an auditable tombstone by the official client.
+- Transaction-indexing-disabled errors are recovered only by querying the exact
+  expected post-state. Other broadcast errors remain failures.
+- Initial thread pages contain 10 rows; comment pages contain 100 rows. Exclusive
+  cursors, ID de-duplication and request-version checks prevent duplicates and
+  stale async responses.
+- The Uni-7 stake mock is chain-ID restricted and is never a mainnet dependency.
+
 ## Browser security boundary
 
 - Snapshot and chain data is rendered with DOM creation plus `textContent`; the
@@ -108,11 +133,13 @@ missing market activity.
 ## Pull-request and workflow model
 
 - `main` is protected by a repository ruleset against force-push and deletion.
-- Pull requests use one consolidated `Test website` workflow for integrity,
-  recovery safety, signing-gate, syntax, build and Playwright coverage. Browser
+- Pull requests use one consolidated `Test website` workflow for all deterministic
+  Python suites, syntax, reproducible signing bundles and Playwright coverage. Browser
   tests exercise Withdraw and Claim success, rejected Keplr approval and a
   confirmed transaction whose post-state is temporarily unavailable.
-- Superseded runs for the same PR/ref are cancelled. Data workflows only run for
+- The test job has read-only repository access. Pages write permission exists
+  only in the dependent main-push deployment job. Superseded runs for the same
+  PR/ref are cancelled. Data workflows only run for
   their owning files and keep scheduled/manual production writes serialized.
 - Third-party Actions are pinned to full commit SHAs. Dependabot updates are
   reviewed and merged through the same protected-branch flow.
