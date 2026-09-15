@@ -1278,5 +1278,7 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
   Osmosis against NETA outstanding on `channel-47`, checks the full bridge
   balance against NETA outstanding across every reported channel, and records
   live packet commitments. No fixed adjustment or tolerance is used.
+  Unindexed non-Osmosis channel liabilities are reported separately from the
+  DAO residual instead of being assigned to an incorrect economic wallet.
 - Do not restore Juno↔Terra in the frontend until packet delivery and timeout/refund handling are verified.
 - Terra is now displayed on Map of NETA as a future zone with exactly `0 NETA`. The data generator preserves the Terra row so scheduled map refreshes cannot remove it.
