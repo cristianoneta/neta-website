@@ -134,7 +134,7 @@ test("NETA Socials public page exposes only the established Juno mainnet", async
   });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
   await expect(page.locator(".preview-seal")).toContainText("JUNO-1");
-  await expect(page.locator(".preview-seal")).toContainText("PAUSED");
+  await expect(page.locator(".preview-seal")).toContainText("LIVE");
   await expect(page.locator("#add-juno-testnet")).toHaveCount(0);
   expect(await page.evaluate(() => window.__suggestedChainCalls)).toBe(0);
 });
