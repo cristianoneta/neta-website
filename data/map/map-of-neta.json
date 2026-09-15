@@ -23,7 +23,7 @@
   "flows": {
     "discovered_chains": [
       {
-        "events": 3,
+        "events": 4,
         "id": "osmosis",
         "movement_verified": true,
         "name": "Osmosis",
@@ -37,19 +37,58 @@
         "ranking_supported": false
       }
     ],
-    "juno_to_osmosis_neta": 0.0,
-    "net_to_osmosis_neta": 0.0,
+    "juno_to_osmosis_neta": 116.076969,
+    "net_to_osmosis_neta": 116.076969,
     "osmosis_to_juno_neta": 0.0,
-    "routes": [],
-    "transfers": 0,
-    "volume_neta": 0.0
+    "routes": [
+      {
+        "from_chain": "juno",
+        "neta": 116.076969,
+        "to_chain": "osmosis",
+        "transfers": 1
+      }
+    ],
+    "transfers": 1,
+    "volume_neta": 116.076969
   },
-  "generated_at": "2026-09-15T19:24:46.741185Z",
+  "generated_at": "2026-09-15T20:34:26.840314Z",
   "market": {
-    "by_chain": {},
-    "power_buyers": [],
-    "swaps": 0,
-    "top_sellers": []
+    "by_chain": {
+      "juno": 18
+    },
+    "power_buyers": [
+      {
+        "bought_neta": 115.891937,
+        "net_neta": 115.891937,
+        "sold_neta": 0.0,
+        "swaps": 8,
+        "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
+      }
+    ],
+    "swaps": 18,
+    "top_sellers": [
+      {
+        "bought_neta": 0.0,
+        "net_neta": -13.047752,
+        "sold_neta": 13.047752,
+        "swaps": 6,
+        "wallet": "juno1xlj0alc6vy6kkmla0v7ynz2rafprjerz94zhpj"
+      },
+      {
+        "bought_neta": 0.0,
+        "net_neta": -2.413467,
+        "sold_neta": 2.413467,
+        "swaps": 3,
+        "wallet": "juno1a5c9v9d2kj4dru20n3p4jywpj2ls3ujddy558u"
+      },
+      {
+        "bought_neta": 0.0,
+        "net_neta": -0.115561,
+        "sold_neta": 0.115561,
+        "swaps": 1,
+        "wallet": "juno1n8na8sx06dj90jwedg27cyy6ptqqkeyx8sv5m9"
+      }
+    ]
   },
   "periods": {
     "24h": {
