@@ -191,6 +191,7 @@ test("NETA Socials mainnet deployment remains sequential and paused", async ({pa
   await page.locator("#mainnet-connect").click();
   await expect(page.locator("#mainnet-preflight")).toBeEnabled();
   await page.locator("#mainnet-preflight").click();
+  await expect.poll(() => page.locator("#mainnet-status").innerText()).not.toBe("CONNECTED TO JUNO-1");
   if (await page.locator("#mainnet-status").innerText() === "FAILED CLOSED") {
     throw new Error(await page.locator("#mainnet-output").innerText());
   }
