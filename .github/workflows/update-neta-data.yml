@@ -11,6 +11,7 @@ on:
       - "scripts/lp_attribution.py"
       - "scripts/test_neta_core.py"
       - "scripts/test_neta_bridge_accounting.py"
+      - "scripts/test_neta_snapshot_consistency.py"
       - "requirements.txt"
   push:
     branches: [main]
@@ -36,8 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Checkout
+      - name: Checkout current source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
       - name: Berlin update-time gate
         id: gate
         shell: bash
@@ -64,6 +67,7 @@ jobs:
       - name: Fetch and validate all NETA data
         if: steps.gate.outputs.run == 'true'
         run: |
+          PYTHONPATH=scripts python scripts/test_neta_snapshot_consistency.py
           PYTHONPATH=scripts python scripts/test_neta_bridge_accounting.py
           python scripts/run_neta_data.py --output .
       - name: Show validation summary
@@ -84,7 +88,7 @@ jobs:
           git add holders.json address_index.json metadata.json data.js address-index.js
           git commit -m "chore: daily NETA on-chain data update"
           git fetch origin main
-          git rebase origin/main
+          git rebase -X theirs origin/main
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Request GitHub Pages rebuild
