@@ -389,6 +389,21 @@ def write_address_index(out, rows):
 def gini(vals):
     xs=sorted(v for v in vals if v>=0); sm=sum(xs); n=len(xs)
     return 0 if not xs or sm==0 else (2*sum((i+1)*x for i,x in enumerate(xs)))/(n*sm)-(n+1)/n
+def bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments):
+    """Classify a cross-chain supply gap only when an IBC packet proves transit."""
+    transit=osmosis_liability-osmo_total
+    relevant=bool(
+        packet_commitments.get(OSMOSIS_NETA_CHANNEL)
+        or packet_commitments.get(f"osmosis:{OSMOSIS_NETA_COUNTERPARTY}")
+    )
+    if transit<0:
+        raise RuntimeError(
+            f"Osmosis primary state exceeds channel liability by {-transit/1e6:.6f} NETA"
+        )
+    if transit and not relevant:
+        raise RuntimeError(f"unexplained Juno/Osmosis bridge difference: {transit/1e6:.6f} NETA")
+    return transit
+
 def build(out):
     juno_state=juno_snapshot()
     juno_height=juno_state[0]
@@ -407,19 +422,7 @@ def build(out):
     osmosis_liability=channel_liabilities.get(OSMOSIS_NETA_CHANNEL,0)
     if escrow!=channel_total:
         raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != all channel liabilities {channel_total/1e6:.6f}")
-    bridge_in_transit=osmosis_liability-osmo_total
-    relevant_commitments=bool(
-        packet_commitments.get(OSMOSIS_NETA_CHANNEL)
-        or packet_commitments.get(f"osmosis:{OSMOSIS_NETA_COUNTERPARTY}")
-    )
-    if bridge_in_transit<0:
-        raise RuntimeError(
-            f"Osmosis primary state exceeds channel liability by {-bridge_in_transit/1e6:.6f} NETA"
-        )
-    if bridge_in_transit and not relevant_commitments:
-        raise RuntimeError(
-            f"unexplained Juno/Osmosis bridge difference: {bridge_in_transit/1e6:.6f} NETA"
-        )
+    bridge_in_transit=bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments)
     if juno.get(WYND_PAIR,0)!=sum(wynd_lp.values()): raise RuntimeError("WYND pool direct NETA != attributed LP NETA")
     if osmo.get(OSMO_POOL_ADDR,0)!=sum(osmo_lp.values()): raise RuntimeError("Pool 631 direct NETA != attributed LP NETA")
     dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(unbonding.values()); claim=sum(claimable.values())
