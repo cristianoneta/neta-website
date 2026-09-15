@@ -130,6 +130,38 @@ test("NETA Socials testnet resumes from the confirmed uni-7 code checkpoints", a
   expect(source).not.toContain("mock:saved.mock");
 });
 
+test("NETA Socials testnet accepts REST hex checksums and never re-uploads checkpointed code", async ({page}) => {
+  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+    contentType: "application/javascript",
+    body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'109000000'}),getSequence:async()=>({sequence:3})}),upload:async()=>{window.__uploads=(window.__uploads||0)+1;throw new Error('unexpected upload')},instantiate:async(_client,_address,codeId)=>{window.__instantiateCode=codeId;return{contractAddress:'juno1mock',transactionHash:'MOCK_TX'}}};",
+  }));
+  await page.route("**/cosmwasm/wasm/v1/code?**", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({code_infos: [
+      {code_id: "110", creator: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57", data_hash: "49DA22C2837CBFB86BED4E714D840CFFEFA2E2D26E9660F47A3EB17F745EE869"},
+      {code_id: "109", creator: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57", data_hash: "C4920D17C0C44FD8DFE72F01D9C3D0FAA8B1FAFC1D70F511684F3426A4C30F81"},
+    ]}),
+  }));
+  await page.route("**/cosmwasm/wasm/v1/code/*/contracts?**", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({contracts: []}),
+  }));
+  await page.addInitScript(() => {
+    window.__uploads = 0;
+    window.keplr = {
+      experimentalSuggestChain: async () => {},
+      enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}),
+    };
+  });
+  await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
+  await page.locator("#test-connect").click();
+  await expect(page.locator("#test-mock")).toBeEnabled();
+  await page.locator("#test-mock").click();
+  await expect.poll(() => page.evaluate(() => window.__instantiateCode)).toBe(109);
+  expect(await page.evaluate(() => window.__uploads)).toBe(0);
+});
+
 test("NETA Socials testnet console surfaces a missing Keplr extension", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.stack || error.message));
