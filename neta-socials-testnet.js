@@ -55,25 +55,31 @@
     phase="JUNOX BALANCE";const balance=await deadline(state.client.getBalance(address,"ujunox"),45000,"JUNOX BALANCE");
     connect.textContent="CONNECTED · DISCONNECT";connect.dataset.state="connected";
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
-    show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
+    show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,gas_price:"0.2ujunox",recovered:{stake_contract:state.mock,socials_contract:state.socials}});
   }));
   $("#test-mock")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.client)throw new Error("CONNECT FIRST");
+    phase="STAKE MOCK UPLOAD";
     const upload=await NetaSocialsTestnet.upload(state.client,state.address,await wasm("mock"),"NETA Socials uni-7 stake mock upload");
+    phase="STAKE MOCK INSTANTIATION";
     const instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,balances:[{address:state.address,balance:"10000000"}]},"NETA Socials uni-7 stake mock");
     state.mock=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-socials").disabled=false;show("STAKE MOCK DEPLOYED",{code_id:upload.codeId,contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
   }));
   $("#test-socials")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.mock)throw new Error("DEPLOY MOCK FIRST");
+    phase="SOCIALS UPLOAD";
     const upload=await NetaSocialsTestnet.upload(state.client,state.address,await wasm("socials"),"NETA Socials uni-7 code upload");
+    phase="SOCIALS INSTANTIATION";
     const instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,stake_contract:state.mock,minimum_stake:"10000000"},"NETA Socials uni-7");
     state.socials=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-verify").disabled=false;show("SOCIALS DEPLOYED · PAUSED",{code_id:upload.codeId,contract:state.socials,stake_contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
   }));
   $("#test-verify")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.socials)throw new Error("DEPLOY SOCIALS FIRST");
+    phase="SOCIALS CONFIG VERIFICATION";
     const before=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     if(!before.paused||before.stake_contract!==state.mock)throw new Error("DEPLOYMENT CONFIG VERIFICATION FAILED");
-    const tx=await NetaSocialsTestnet.execute(state.client,state.address,state.socials,{set_paused:{paused:false}},"Enable NETA Socials uni-7 testing");
+    phase="SOCIALS UNPAUSE";const tx=await NetaSocialsTestnet.execute(state.client,state.address,state.socials,{set_paused:{paused:false}},"Enable NETA Socials uni-7 testing");
+    phase="SOCIALS POST-DEPLOY VERIFICATION";
     const config=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     const eligibility=await NetaSocialsTestnet.query(state.client,state.socials,{comment_eligibility:{address:state.address}});
     if(config.paused||!eligibility.can_post)throw new Error("POST-DEPLOY VERIFICATION FAILED");
