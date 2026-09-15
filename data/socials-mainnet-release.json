@@ -3,7 +3,7 @@
   "deployment_status": "live_verified",
   "chain_id": "juno-1",
   "contract_name": "crates.io:neta-socials",
-  "contract_version": "1.0.0",
+  "contract_version": "0.2.1",
   "wasm_path": "assets/contracts/neta_socials.wasm",
   "wasm_sha256": "49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869",
   "owner": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
