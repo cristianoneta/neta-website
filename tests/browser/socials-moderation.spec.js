@@ -18,8 +18,7 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   });
   await page.addInitScript(() => { window.keplr = {experimentalSuggestChain: async () => {}, enable: async () => {}, getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}), signDirect: async () => ({}), signAmino: async () => ({})}; });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
-  const reconnect = async () => page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
-  await reconnect();
+  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await page.getByRole("button", {name: "CLOSE THREAD"}).click();
   await expect(page.getByRole("dialog", {name: "CLOSE THREAD"})).toBeVisible();
@@ -59,7 +58,8 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
   });
   await page.addInitScript(() => { window.keplr = {experimentalSuggestChain: async () => {}, enable: async () => {}, getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}), signDirect: async () => ({}), signAmino: async () => ({})}; });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
-  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
+  const reconnect = async () => page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
+  await reconnect();
   await expect(page.getByRole("button", {name: "HIDE", exact: true})).toBeVisible();
 
   await page.getByRole("button", {name: "HIDE", exact: true}).click();
