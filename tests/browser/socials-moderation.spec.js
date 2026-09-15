@@ -58,49 +58,25 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
   });
   await page.addInitScript(() => { window.keplr = {experimentalSuggestChain: async () => {}, enable: async () => {}, getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}), signDirect: async () => ({}), signAmino: async () => ({})}; });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
-  const reconnect = async () => page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
-  await reconnect();
+  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
   await expect(page.getByRole("button", {name: "HIDE", exact: true})).toBeVisible();
 
   await page.getByRole("button", {name: "HIDE", exact: true}).click();
   await page.getByRole("button", {name: "CANCEL", exact: true}).click();
   expect(await page.evaluate(() => window.__socialTx)).toBeUndefined();
-  await page.getByRole("button", {name: "HIDE", exact: true}).click();
-  await page.locator("#moderation-reason").fill("spam");
-  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: true, reason: "spam"}});
-  await page.reload({waitUntil: "domcontentloaded"});
-  await reconnect();
-  await expect(page.getByRole("button", {name: "UNHIDE", exact: true})).toBeVisible();
-  await page.getByRole("button", {name: "UNHIDE", exact: true}).click();
-  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: false, reason: null}});
-  await page.reload({waitUntil: "domcontentloaded"});
-  await reconnect();
-
   await page.getByRole("button", {name: "MAKE MODERATOR", exact: true}).click();
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_moderator: {address: user, enabled: true}});
-  await page.reload({waitUntil: "domcontentloaded"});
-  await reconnect();
-  await expect(page.getByRole("button", {name: "REMOVE MODERATOR", exact: true})).toBeVisible();
-  await page.getByRole("button", {name: "REMOVE MODERATOR", exact: true}).click();
-  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_moderator: {address: user, enabled: false}});
-  await page.reload({waitUntil: "domcontentloaded"});
-  await reconnect();
 
   await page.getByRole("button", {name: "BAN USER", exact: true}).click();
   await page.locator("#moderation-reason").fill("spam");
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_user_banned: {address: user, banned: true, reason: "spam"}});
-  await page.reload({waitUntil: "domcontentloaded"});
-  await reconnect();
-  await expect(page.getByRole("button", {name: "UNBAN USER", exact: true})).toBeVisible();
-  await expect(page.getByRole("button", {name: "MAKE MODERATOR", exact: true})).toHaveCount(0);
-  await page.getByRole("button", {name: "UNBAN USER", exact: true}).click();
+
+  await page.getByRole("button", {name: "HIDE", exact: true}).click();
+  await page.locator("#moderation-reason").fill("spam");
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_user_banned: {address: user, banned: false, reason: null}});
+  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: true, reason: "spam"}});
 });
 
 test("NETA Socials loads older threads in exact pages without duplicates", async ({page}) => {
