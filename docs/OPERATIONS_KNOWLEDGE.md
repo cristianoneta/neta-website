@@ -142,3 +142,13 @@ expose proposal, acceptance or cancellation controls.
 
 Separately, the outstanding Terra packet and the controlled WYND Claim remain
 operational follow-ups; neither should be represented as silently complete.
+
+## Mainnet deployment preparation — 2026-09-15
+
+The guarded mainnet deployment path is defined by
+`data/socials-mainnet-release.json` and `docs/NETA_SOCIALS_MAINNET_RUNBOOK.md`.
+The unlinked `neta-socials-mainnet.html` console can connect only the configured
+owner on `juno-1`, verify the real staking contract, checksum the locked WASM,
+store code, instantiate and verify the resulting paused instance. It has no
+execute or unpause capability. The public Socials frontend remains on Uni-7
+until a verified mainnet contract address is recorded in a later reviewed PR.
