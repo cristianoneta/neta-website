@@ -1,5 +1,7 @@
 name: Update WYND recovery market data
 
+# Full refresh checkpoint: 2026-09-15
+
 on:
   workflow_dispatch:
   schedule:
