@@ -157,24 +157,25 @@ test("NETA Socials testnet connection button toggles connected and disconnected"
   expect(await page.evaluate(() => window.__rpcDisconnected)).toBe(true);
 });
 
-test("NETA Socials testnet prevents Keplr from replacing the audited fee", async ({page}) => {
+test("NETA Socials testnet passes fee protection to the actual Keplr sign call", async ({page}) => {
   await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
     contentType: "application/javascript",
-    body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'110000000'})})};",
+    body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{window.__capturedSigner=signer;return{getBalance:async()=>({amount:'110000000'})}}};",
   }));
   await page.addInitScript(() => {
     window.__signOptions = null;
     window.keplr = {
       experimentalSuggestChain: async () => {},
       enable: async () => {},
-      getOfflineSigner: (_chainId, options) => {
-        window.__signOptions = options;
-        return {getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]};
-      },
+      getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}),
+      signDirect: async (_chainId, _address, document, options) => { window.__signOptions = options; return {signed: document, signature: {}}; },
+      signAmino: async () => { throw new Error("unexpected amino signing"); },
     };
   });
   await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
   await page.locator("#test-connect").click();
+  await expect(page.locator("#test-status")).toHaveText("CONNECTED TO UNI-7");
+  await page.evaluate(() => window.__capturedSigner.signDirect("juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57", {}));
   expect(await page.evaluate(() => window.__signOptions)).toEqual({preferNoSetFee: true});
 });
 
