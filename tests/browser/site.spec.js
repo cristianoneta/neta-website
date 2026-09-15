@@ -160,7 +160,7 @@ test("NETA Socials testnet connection button toggles connected and disconnected"
 test("NETA Socials testnet passes fee protection to the actual Keplr sign call", async ({page}) => {
   await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
     contentType: "application/javascript",
-    body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{await signer.signDirect('juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57',{});return{getBalance:async()=>({amount:'110000000'})}};",
+    body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{window.__capturedSigner=signer;return{getBalance:async()=>({amount:'110000000'})}};",
   }));
   await page.addInitScript(() => {
     window.__signOptions = null;
@@ -175,6 +175,7 @@ test("NETA Socials testnet passes fee protection to the actual Keplr sign call",
   await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
   await page.locator("#test-connect").click();
   await expect(page.locator("#test-status")).toHaveText("CONNECTED TO UNI-7");
+  await page.evaluate(() => window.__capturedSigner.signDirect("juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57", {}));
   expect(await page.evaluate(() => window.__signOptions)).toEqual({preferNoSetFee: true});
 });
 
