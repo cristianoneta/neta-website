@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <title>NETA Socials — guarded mainnet administration</title>
+  <link rel="stylesheet" href="styles.css?v=20260915-1"><link rel="stylesheet" href="neta-socials-testnet.css?v=1">
+</head>
+<body>
+<main class="testnet-page">
+  <div class="kicker">HIDDEN ADMIN CONSOLE · JUNO-1 ONLY</div>
+  <h1>NETA SOCIALS ADMIN</h1>
+  <p>This guarded console can only change the paused state of the checksum-locked mainnet Socials contract. Every write requires a separate Keplr confirmation. No funds are attached.</p>
+  <div class="testnet-warning">MAINNET · VERIFY EVERY KEPLR MESSAGE · USE EMERGENCY PAUSE IF A LIVE INVARIANT FAILS.</div>
+  <p id="admin-status" class="testnet-status" role="status">NOT CONNECTED</p>
+  <div class="testnet-stage"><span>01</span><div><strong>CONNECT OWNER</strong><small>Require the configured owner on Juno mainnet.</small></div><button id="admin-connect" type="button">CONNECT KEPLR</button></div>
+  <div class="testnet-stage"><span>02</span><div><strong>READ-ONLY PREFLIGHT</strong><small>Verify contract identity, admin, configuration and both production stake gates.</small></div><button id="admin-preflight" type="button" disabled>RUN PREFLIGHT</button></div>
+  <div class="testnet-stage"><span>03</span><div><strong>ACTIVATE POSTING</strong><small>Send only <code>set_paused: false</code>, with no funds.</small></div><button id="admin-unpause" type="button" disabled>REVIEW UNPAUSE</button></div>
+  <div class="testnet-stage"><span>04</span><div><strong>EMERGENCY CONTROL</strong><small>Send only <code>set_paused: true</code>, with no funds.</small></div><button id="admin-pause" type="button" disabled>REVIEW EMERGENCY PAUSE</button></div>
+  <pre id="admin-output" class="testnet-output">No transactions submitted.</pre>
+</main>
+<script src="assets/recovery-signing-client.js?v=7"></script><script src="neta-socials-admin.js?v=1"></script>
+</body>
+</html>

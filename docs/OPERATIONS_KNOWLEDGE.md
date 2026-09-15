@@ -151,3 +151,10 @@ instantiated `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`.
 Independent REST queries confirmed creator, migration admin, owner, stake
 contract, threshold, cooldown and paused state. The console still has no
 execute or unpause capability.
+
+The production stake gate was then verified read-only with distinct non-owner
+wallets: a wallet with zero active stake returned `stake_eligible: false`, and
+a wallet with 300 active NETA returned `stake_eligible: true`. The unlinked
+`neta-socials-admin.html` surface rechecks those gates plus contract identity and
+configuration before exposing its only two writes: explicit unpause and
+emergency pause. Both are `set_paused` messages with no attached funds.

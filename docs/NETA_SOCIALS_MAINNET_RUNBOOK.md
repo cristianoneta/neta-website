@@ -39,6 +39,13 @@ contract, 10 NETA threshold, 30-second cooldown and `paused: true`.
 
 The deployment console deliberately has no execute or unpause capability.
 
+The unlinked, noindex `neta-socials-admin.html` console is the only browser
+surface for changing the paused state. Before enabling either control it
+requires the exact owner on `juno-1` and verifies code ID, creator, migration
+admin, label, application config, one production wallet below the 10-NETA gate
+and one production wallet above it. Its only execute message is `set_paused`;
+it attaches no funds. It retains an explicit emergency-pause path after launch.
+
 ## Before public activation
 
 - Query one non-owner below 10 active staked NETA and confirm
@@ -51,6 +58,15 @@ The deployment console deliberately has no execute or unpause capability.
 - Unpause with one explicit owner transaction, then smoke-test thread, comment,
   cooldown, close/reopen, hide/unhide, moderator and ban/unban behavior.
 - Pause immediately if any live invariant differs from the verified result.
+
+Production gate evidence collected at heights `41784186`–`41784201`:
+
+- `juno1w9ee57gnduzm4l9h6xwn9tee9pyh8wlrr3xckg`: `0` active stake,
+  `stake_eligible: false`.
+- `juno15agzfrclmqnq72asjssh80723c9fvkq2e5h02p`: `300000000` raw active
+  stake (300 NETA), `stake_eligible: true`.
+
+Both correctly returned `can_post: false` while the global pause remained set.
 
 ## Administrative recovery
 
