@@ -1311,3 +1311,5 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - The interface explicitly identifies the deployment as live on Uni-7 testnet, not Juno mainnet.
 - Async selection, wallet-eligibility and initial-load responses are versioned so a delayed network response cannot overwrite a newer thread or wallet state.
 - Main website CI rebuilds and byte-compares the committed Socials signing bundle alongside the recovery, swap and IBC bundles.
+- The Socials contract CI consumes the committed Cargo lockfile with `--locked` for schema generation, clippy, tests and release builds. A pinned `cargo-audit` release checks that exact dependency graph against the current RustSec advisory database and fails on warnings.
+- `cosmwasm-std` is locked at `1.5.11`, which is in the patched `>=1.5.4, <2.0.0` range for RUSTSEC-2024-0338. VM-level advisories remain a chain/operator concern and must be checked against the Juno mainnet `wasmd`/`wasmvm` release before mainnet deployment.
