@@ -191,6 +191,9 @@ test("NETA Socials mainnet deployment remains sequential and paused", async ({pa
   await page.locator("#mainnet-connect").click();
   await expect(page.locator("#mainnet-preflight")).toBeEnabled();
   await page.locator("#mainnet-preflight").click();
+  if (await page.locator("#mainnet-status").innerText() === "FAILED CLOSED") {
+    throw new Error(await page.locator("#mainnet-output").innerText());
+  }
   await expect(page.locator("#mainnet-status")).toHaveText("READ-ONLY PREFLIGHT PASSED");
   await expect(page.locator("#mainnet-upload")).toBeEnabled();
   await page.locator("#mainnet-upload").click();
