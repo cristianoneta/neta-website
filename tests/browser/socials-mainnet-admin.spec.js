@@ -3,7 +3,6 @@ const {test,expect}=require("@playwright/test");
 test("guarded Socials admin verifies gates and sends only exact pause messages",async({page})=>{
   const owner="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
   const contract="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9";
-  let paused=true;
   await page.route("**/assets/recovery-signing-client.js?v=7",route=>route.fulfill({contentType:"application/javascript",body:`window.NetaRecoverySigning={
     connect:async()=>({client:{
       getChainId:async()=>"juno-1",
@@ -11,7 +10,7 @@ test("guarded Socials admin verifies gates and sends only exact pause messages",
       queryContractSmart:async(_target,message)=>{if(message.config)return{owner:"${owner}",pending_owner:null,stake_contract:"juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh",minimum_stake:"10000000",paused,post_cooldown_seconds:30};const address=message.comment_eligibility.address;if(address==="${owner}")return{address,staked:"0",minimum_stake:"10000000",owner_exempt:true,stake_eligible:true,banned:false,paused,cooldown_remaining_seconds:0,can_post:!paused};if(address.endsWith("5h02p"))return{address,staked:"300000000",minimum_stake:"10000000",owner_exempt:false,stake_eligible:true,banned:false,paused,cooldown_remaining_seconds:0,can_post:!paused};return{address,staked:"0",minimum_stake:"10000000",owner_exempt:false,stake_eligible:false,banned:false,paused,cooldown_remaining_seconds:0,can_post:false}}
     }}),
     execute:async(_client,sender,target,message,gas,memo)=>{window.__adminTx={sender,target,message,gas,memo};paused=message.set_paused.paused;return{transactionHash:"ADMIN_HASH"}}
-  };`}));
+  };let paused=true;`}));
   await page.addInitScript(address=>{window.keplr={enable:async chain=>{window.__enabledChain=chain},getOfflineSigner:()=>({getAccounts:async()=>[{address}]}),signDirect:async()=>({}),signAmino:async()=>({})}},owner);
   await page.goto("/neta-socials-admin.html",{waitUntil:"domcontentloaded"});
   await expect(page.locator("#admin-unpause")).toBeDisabled();
