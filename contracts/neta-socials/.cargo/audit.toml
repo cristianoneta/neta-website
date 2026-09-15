@@ -9,4 +9,5 @@ ignore = [
 ]
 
 [output]
+quiet = false
 deny = ["warnings"]
