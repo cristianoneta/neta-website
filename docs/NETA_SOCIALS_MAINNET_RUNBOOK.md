@@ -1,9 +1,9 @@
 # NETA Socials mainnet runbook
 
-Status: **deployed and independently verified paused**. Code ID `5167` and
+Status: **live and independently verified unpaused**. Code ID `5167` and
 contract `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`
-are recorded in the release manifest. Public writes remain disabled while the
-contract is paused.
+are recorded in the release manifest. Public writes are enabled subject to the
+10-NETA stake gate, bans and the 30-second cooldown.
 
 ## Locked release
 
@@ -67,6 +67,16 @@ Production gate evidence collected at heights `41784186`–`41784201`:
   stake (300 NETA), `stake_eligible: true`.
 
 Both correctly returned `can_post: false` while the global pause remained set.
+
+## Activation record
+
+The owner explicitly unpaused the contract on 2026-09-15. Transaction
+`8B2354A8C603CB9EE0A95009FA734D3C4FEF84CA31AFB563D97D3EFDDADC3FD6`
+was included successfully at height `41784461` at `2026-09-15T14:24:34Z`.
+Independent REST verification returned transaction code `0`, `paused: false`
+and owner `can_post: true`. The execute message was exactly
+`{ "set_paused": { "paused": false } }` and attached no funds. The guarded
+admin console remains available for an explicit emergency pause.
 
 ## Administrative recovery
 
