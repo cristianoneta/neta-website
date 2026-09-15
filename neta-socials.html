@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno.test.rpc.nodeshub.online https://juno.test.api.nodeshub.online https://juno.rpc.t.stavr.tech https://juno.api.t.stavr.tech; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://rest.cosmos.directory; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'; upgrade-insecure-requests">
   <title>NETA Socials — Community Board</title>
   <meta name="description" content="A token-gated community board for NETA stakers on Juno.">
   <link rel="stylesheet" href="styles.css?v=20260914-7">
@@ -32,7 +32,7 @@
 <main class="socials-page">
   <section class="socials-hero">
     <div><div class="kicker">TOKEN-GATED COMMUNITY ON JUNO</div><h1>NETA <b>SOCIALS.</b></h1><p>A public conversation layer for the NETA community. Read freely. Connect a wallet with at least 10 actively staked NETA to open threads and join the discussion.</p></div>
-    <div class="preview-seal"><span>UNI-7</span><strong>LIVE</strong><small>ON-CHAIN TESTNET</small></div>
+    <div class="preview-seal"><span>JUNO-1</span><strong>PAUSED</strong><small>ON-CHAIN MAINNET</small></div>
   </section>
 
   <section class="access-strip" aria-label="Social access status">
@@ -49,7 +49,7 @@
       <div class="thread-list thread-list-empty" role="status">
         <div class="thread-empty"><span>NO THREADS YET</span><strong>THE BOARD IS EMPTY.</strong><small>The first on-chain conversation will appear here after launch.</small></div>
       </div>
-      <div class="rail-foot"><span id="social-live-status">CONNECTING TO UNI-7…</span><small>Threads and comments are permanent Uni-7 testnet transactions.</small></div>
+      <div class="rail-foot"><span id="social-live-status">CONNECTING TO JUNO MAINNET…</span><small>Threads and comments are permanent Juno mainnet transactions.</small></div>
     </aside>
 
     <article class="conversation-panel conversation-empty">
@@ -63,10 +63,10 @@
   </section>
 </main>
 
-<div id="draft-modal" class="draft-modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="draft-title"><span>NETA SOCIALS · UNI-7</span><h2 id="draft-title">OPEN A NEW THREAD</h2><form id="thread-form"><label for="thread-title">TITLE</label><input id="thread-title" maxlength="120" required placeholder="1–120 characters"><label for="thread-body">MESSAGE</label><textarea id="thread-body" maxlength="5000" required placeholder="1–5,000 characters"></textarea><p id="compose-status">Nothing is sent until you approve the separate Keplr transaction.</p><div class="draft-actions"><button id="draft-close" type="button">CANCEL</button><button id="thread-submit" type="submit">REVIEW IN KEPLR</button></div></form></div></div>
+<div id="draft-modal" class="draft-modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="draft-title"><span>NETA SOCIALS · JUNO MAINNET</span><h2 id="draft-title">OPEN A NEW THREAD</h2><form id="thread-form"><label for="thread-title">TITLE</label><input id="thread-title" maxlength="120" required placeholder="1–120 characters"><label for="thread-body">MESSAGE</label><textarea id="thread-body" maxlength="5000" required placeholder="1–5,000 characters"></textarea><p id="compose-status">Nothing is sent until you approve the separate Keplr transaction.</p><div class="draft-actions"><button id="draft-close" type="button">CANCEL</button><button id="thread-submit" type="submit">REVIEW IN KEPLR</button></div></form></div></div>
 <div id="moderation-modal" class="draft-modal moderation-modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="moderation-title" aria-describedby="moderation-message"><span>NETA SOCIALS · ON-CHAIN ACTION</span><h2 id="moderation-title">CONFIRM ACTION</h2><p id="moderation-message"></p><label id="moderation-reason-label" for="moderation-reason" hidden>PUBLIC MODERATION REASON</label><textarea id="moderation-reason" maxlength="280" placeholder="Required · 1–280 characters" hidden></textarea><p id="moderation-status">Nothing is sent until you approve the separate Keplr transaction.</p><div class="draft-actions"><button id="moderation-cancel" type="button">CANCEL</button><button id="moderation-confirm" type="button">CONFIRM IN KEPLR</button></div></div></div>
-<footer><div>NETA SOCIALS · JUNO <button id="add-juno-testnet" class="testnet-link" type="button" title="Add the Juno Uni-7 testnet to Keplr">· UNI-7</button></div><div>10 NETA ACTIVE STAKE REQUIRED</div></footer>
+<footer><div>NETA SOCIALS · JUNO MAINNET</div><div>10 NETA ACTIVE STAKE REQUIRED</div></footer>
 <button id="matrix-toggle" type="button" aria-pressed="true">MATRIX EFFECT: ON</button>
-<script src="data.js"></script><script src="address-index.js"></script><script src="wallet-header.js?v=20260914-4"></script><script src="assets/socials-testnet-client.js?v=3"></script><script src="neta-socials.js?v=12"></script><script src="matrix-blackout.js?v=20260913-1"></script>
+<script src="data.js"></script><script src="address-index.js"></script><script src="wallet-header.js?v=20260914-4"></script><script src="assets/recovery-signing-client.js?v=7"></script><script src="neta-socials.js?v=13"></script><script src="matrix-blackout.js?v=20260913-1"></script>
 </body>
 </html>

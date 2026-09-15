@@ -91,11 +91,11 @@ test("NETA Socials starts with an honest empty state", async ({page}) => {
   await expect(page.locator(".conversation-empty-body")).toContainText("NO MESSAGES TO DISPLAY");
 });
 
-test("NETA Socials reads uni-7 and builds an exact owner thread transaction", async ({page}) => {
+test("NETA Socials reads Juno mainnet and builds an exact owner thread transaction", async ({page}) => {
   const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
     contentType: "application/javascript",
-    body: "window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,contract,message,memo)=>{window.__socialTx={sender,contract,message,memo};return{transactionHash:'TEST_HASH'}}};",
+    body: "window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,contract,message,_gas,memo)=>{window.__socialTx={sender,contract,message,memo};return{transactionHash:'TEST_HASH'}}};",
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const encoded = decodeURIComponent(route.request().url().split("/smart/")[1]);
@@ -106,7 +106,7 @@ test("NETA Socials reads uni-7 and builds an exact owner thread transaction", as
   });
   await page.addInitScript(() => {
     window.keplr = {
-      experimentalSuggestChain: async () => {}, enable: async () => {},
+      enable: async chainId => { window.__enabledChain = chainId; },
       getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}),
       signDirect: async () => ({}), signAmino: async () => ({}),
     };
@@ -116,32 +116,27 @@ test("NETA Socials reads uni-7 and builds an exact owner thread transaction", as
   await expect(page.locator("#new-thread")).toBeEnabled();
   await page.locator("#new-thread").click();
   await page.locator("#thread-title").fill("First on-chain thread");
-  await page.locator("#thread-body").fill("Hello from Uni-7.");
+  await page.locator("#thread-body").fill("Hello from Juno Mainnet.");
   await page.locator("#thread-submit").click();
   await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({
     sender: owner,
-    contract: "juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8",
-    message: {create_thread: {title: "First on-chain thread", body: "Hello from Uni-7."}},
-    memo: "NETA Socials uni-7 create thread",
+    contract: "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9",
+    message: {create_thread: {title: "First on-chain thread", body: "Hello from Juno Mainnet."}},
+    memo: "NETA Socials mainnet create thread",
   });
+  expect(await page.evaluate(() => window.__enabledChain)).toBe("juno-1");
 });
 
-test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
+test("NETA Socials public page exposes only the established Juno mainnet", async ({page}) => {
   await page.addInitScript(() => {
-    window.__suggestedChain = null;
-    window.keplr = {experimentalSuggestChain: async chain => { window.__suggestedChain = chain; }};
+    window.__suggestedChainCalls = 0;
+    window.keplr = {experimentalSuggestChain: async () => { window.__suggestedChainCalls += 1; }};
   });
   await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
-  const button = page.locator("#add-juno-testnet");
-  await expect(button).toHaveText("· UNI-7");
-  await button.click();
-  await expect(button).toHaveText("· UNI-7 ADDED");
-  const chain = await page.evaluate(() => window.__suggestedChain);
-  expect(chain.chainId).toBe("uni-7");
-  expect(chain.rpc).toBe("https://juno.test.rpc.nodeshub.online");
-  expect(chain.rest).toBe("https://juno.test.api.nodeshub.online");
-  expect(chain.feeCurrencies[0].coinMinimalDenom).toBe("ujunox");
-  expect(chain.bech32Config.bech32PrefixAccAddr).toBe("juno");
+  await expect(page.locator(".preview-seal")).toContainText("JUNO-1");
+  await expect(page.locator(".preview-seal")).toContainText("PAUSED");
+  await expect(page.locator("#add-juno-testnet")).toHaveCount(0);
+  expect(await page.evaluate(() => window.__suggestedChainCalls)).toBe(0);
 });
 
 test("NETA Socials testnet console is inert until explicitly connected", async ({page}) => {

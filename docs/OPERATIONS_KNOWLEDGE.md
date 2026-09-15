@@ -13,7 +13,7 @@ remain in `NETA_REBORN_CHECKPOINT.md`, but must not override this document.
 | Map of NETA | Juno + Osmosis events | Read-only activity plus controlled, self-custodial IBC signing |
 | WYND Recovery | Juno mainnet | Only Unbond, Claim and Withdraw on eight frozen contract tuples |
 | Rescue NETA | Juno mainnet | Only the frozen WYND JUNO/NETA pair; $25 estimated-value cap per transaction |
-| NETA Socials | Juno `uni-7` testnet | Reads are public; every write needs a separate Keplr approval and attaches no funds |
+| NETA Socials | Juno mainnet | Deployed paused; reads are public and every future write needs a separate Keplr approval with no funds attached |
 
 Browser state and UI checks are never protocol authorization. Contracts and
 chain state remain authoritative. The site never requests a seed phrase or
@@ -72,16 +72,17 @@ hidden by tolerance or retries. Check packet commitment, acknowledgement,
 receipt and timeout/refund state. Until sequence 36 is resolved, Juno↔Terra
 NETA is not a public frontend route and Terra is displayed with zero NETA.
 
-## NETA Socials on Uni-7
+## NETA Socials deployments
 
 | Item | Verified value |
 | --- | --- |
 | Deployment/admin/owner wallet | `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57` |
 | Stake mock | code 109, `juno1gfwuyxn774nk5u430vjwtw6szjn4nhzmkqfxql4nqsp322drrcfqhveamm` |
-| Socials | code 110, `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` |
+| Uni-7 Socials (historical test deployment) | code 110, `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` |
+| Mainnet Socials | code 5167, `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9` |
 | Minimum stake | `10000000` raw NETA (10 NETA) |
 | Cooldown | 30 seconds per address across threads and comments |
-| Current state | `paused: false`; owner is stake-exempt |
+| Current mainnet state | `paused: true`; owner is stake-exempt but cannot post while paused |
 
 The contract supports immutable threads/comments, close/reopen, hide/unhide
 with an on-chain reason, moderator assignment, bans, pause, configuration and a
@@ -112,27 +113,24 @@ an end-to-end positive and negative test.
   recovery accepts both encodings and reuses verified code IDs instead of
   uploading duplicate WASM.
 
-## Mainnet readiness gates
+## Mainnet activation gates
 
-NETA Socials is not yet approved for mainnet. Before deployment:
+The exact contract is deployed and verified paused. Before unpausing:
 
-1. Run locked Rust format, clippy, unit, schema, optimized-WASM checksum and
-   current RustSec audit jobs successfully.
-2. Confirm compatibility with the exact Juno mainnet `wasmd`/`wasmvm` stack and
-   re-evaluate every documented advisory exception.
-3. Complete the non-owner 10-NETA allow/deny test on Uni-7.
-4. Exercise owner, moderator, banned-user, hidden-thread/comment and ownership
-   transfer paths with distinct wallets.
-5. Select production owner and CosmWasm migration admin deliberately; document
-   how either moves to DAO/multisig control.
-6. Deploy the exact optimized checksum against the real DAO staking contract,
-   verify config and eligibility while paused, then unpause explicitly.
+1. Keep locked Rust, optimized-WASM, JavaScript and browser checks green.
+2. Merge and deploy the public frontend configured for the recorded mainnet
+   contract while the contract remains paused.
+3. Confirm one non-owner below 10 active NETA is ineligible and one non-owner at
+   or above 10 active NETA is eligible according to the production stake query.
+4. Explicitly unpause with one reviewed owner transaction.
+5. Smoke-test thread, comment, cooldown, close/reopen, hide/unhide, moderator and
+   ban/unban behavior; pause immediately if any invariant differs.
 
 Compatibility evidence collected on 2026-09-15: live Juno reported app
 `v30.0.0`; the official tag pins `wasmd v0.61.11` and `wasmvm/v3 v3.0.4`.
-The exact Socials artifact has already been accepted and executed on Uni-7 with
-the same `wasmd` generation. This clears the initial ABI concern, but not the
-required mainnet StoreCode/Instantiate simulation or current advisory audit.
+The exact Socials artifact was accepted on Uni-7 and then stored on mainnet as
+code `5167`. Mainnet instantiation and read-only verification completed at
+height `41783543` with `paused: true`.
 
 The distinct-role frontend test covers owner-only moderator assignment and
 banning, moderator-only hide execution, automatic moderator revocation on ban,
@@ -143,12 +141,13 @@ expose proposal, acceptance or cancellation controls.
 Separately, the outstanding Terra packet and the controlled WYND Claim remain
 operational follow-ups; neither should be represented as silently complete.
 
-## Mainnet deployment preparation — 2026-09-15
+## Mainnet deployment — 2026-09-15
 
 The guarded mainnet deployment path is defined by
 `data/socials-mainnet-release.json` and `docs/NETA_SOCIALS_MAINNET_RUNBOOK.md`.
-The unlinked `neta-socials-mainnet.html` console can connect only the configured
-owner on `juno-1`, verify the real staking contract, checksum the locked WASM,
-store code, instantiate and verify the resulting paused instance. It has no
-execute or unpause capability. The public Socials frontend remains on Uni-7
-until a verified mainnet contract address is recorded in a later reviewed PR.
+The guarded console connected only the configured owner on `juno-1`, verified
+the production staking contract and locked checksum, stored code `5167`, and
+instantiated `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`.
+Independent REST queries confirmed creator, migration admin, owner, stake
+contract, threshold, cooldown and paused state. The console still has no
+execute or unpause capability.

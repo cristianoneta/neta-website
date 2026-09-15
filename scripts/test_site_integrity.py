@@ -64,8 +64,20 @@ assert 'const CHAIN_ID="juno-1"' in mainnet_script
 assert 'const MINIMUM_STAKE="10000000"' in mainnet_script
 assert 'config.paused!==true' in mainnet_script
 assert "set_paused" not in mainnet_script
-assert '"public_frontend_enabled": false' in mainnet_manifest
-assert '"deployment_status": "prepared_not_broadcast"' in mainnet_manifest
+assert '"public_frontend_enabled": true' in mainnet_manifest
+assert '"deployment_status": "deployed_paused_verified"' in mainnet_manifest
+assert '"code_id": 5167' in mainnet_manifest
+assert '"contract_address": "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in mainnet_manifest
+socials_html = (ROOT / "neta-socials.html").read_text(encoding="utf-8")
+socials_script = (ROOT / "neta-socials.js").read_text(encoding="utf-8")
+assert "assets/recovery-signing-client.js?v=7" in socials_html
+assert "ON-CHAIN MAINNET" in socials_html
+assert 'CONTRACT="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in socials_script
+assert 'CHAIN_ID="juno-1"' in socials_script
+assert "NetaRecoverySigning.execute" in socials_script
+assert '"0.1ujuno"' in socials_script
+assert "experimentalSuggestChain" not in socials_script
+assert "ujunox" not in socials_script
 onchain_workflow = (ROOT / ".github/workflows/update-neta-data.yml").read_text(encoding="utf-8")
 assert 'pull_request:\n    branches: [main]\n    paths:' in onchain_workflow
 

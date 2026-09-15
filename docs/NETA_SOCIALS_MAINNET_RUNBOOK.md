@@ -1,6 +1,9 @@
 # NETA Socials mainnet runbook
 
-Status: **prepared, not broadcast**. The public Socials page remains on Uni-7.
+Status: **deployed and independently verified paused**. Code ID `5167` and
+contract `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`
+are recorded in the release manifest. Public writes remain disabled while the
+contract is paused.
 
 ## Locked release
 
@@ -25,6 +28,14 @@ not byte-identical to `assets/contracts/neta_socials.wasm`.
    `MAINNET DEPLOYMENT VERIFIED · PAUSED`.
 8. Record the code ID, contract address and transaction hashes in the release
    manifest through a reviewed PR.
+
+Steps 1–8 completed on 2026-09-15. StoreCode transaction
+`A05F35033ACAC542863607B8E739A50EE0EE51F945F4F8DAB4BA6D53C29EB41B`
+at height `41783460` stored code ID `5167`. Instantiate transaction
+`DEDD5CB4CB02C4B0B3912E7350BF459CA3137B83857CE38D6152E8C6261E0701`
+at height `41783543` created the recorded contract. Independent REST queries
+confirmed the checksum, creator, migration admin, owner, production stake
+contract, 10 NETA threshold, 30-second cooldown and `paused: true`.
 
 The deployment console deliberately has no execute or unpause capability.
 

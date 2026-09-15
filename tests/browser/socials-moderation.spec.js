@@ -2,12 +2,12 @@ const {test, expect} = require("@playwright/test");
 
 test("NETA Socials owner closes and reopens a thread with exact messages", async ({page}) => {
   const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
-  const contract = "juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8";
+  const contract = "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9";
   let closed = false;
   await page.exposeFunction("__setSocialThreadClosed", value => { closed = value; });
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
     contentType: "application/javascript",
-    body: `window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__setSocialThreadClosed(message.set_thread_closed.closed);return{transactionHash:"TEST_HASH"}}};`,
+    body: `window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__setSocialThreadClosed(message.set_thread_closed.closed);return{transactionHash:"TEST_HASH"}}};`,
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
@@ -23,7 +23,7 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   await page.getByRole("button", {name: "CLOSE THREAD"}).click();
   await expect(page.getByRole("dialog", {name: "CLOSE THREAD"})).toBeVisible();
   await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({sender: owner, target: contract, message: {set_thread_closed: {thread_id: 1, closed: true}}, memo: "NETA Socials uni-7 close thread"});
+  await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({sender: owner, target: contract, message: {set_thread_closed: {thread_id: 1, closed: true}}, memo: "NETA Socials mainnet close thread"});
   await expect(page.getByRole("button", {name: "REOPEN THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeDisabled();
   await page.getByRole("button", {name: "REOPEN THREAD"}).click();
@@ -42,9 +42,9 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
     if (message.set_user_banned) banned = message.set_user_banned.banned;
     if (message.set_moderator) moderator = message.set_moderator.enabled;
   });
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
     contentType: "application/javascript",
-    body: `window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applySocialAction(message);return{transactionHash:"TEST_HASH"}}};`,
+    body: `window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applySocialAction(message);return{transactionHash:"TEST_HASH"}}};`,
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
@@ -96,9 +96,9 @@ test("NETA Socials enforces owner, moderator and banned-user frontend roles", as
     if (message.set_user_banned) { banned = message.set_user_banned.banned; if (banned) moderator = false; }
     if (message.set_comment_hidden) hidden = message.set_comment_hidden.hidden;
   });
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
     contentType: "application/javascript",
-    body: `window.NetaSocialsTestnet={connect:async()=>({disconnect(){}}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applyRoleAction(message);return{transactionHash:"TEST_HASH"}}};`,
+    body: `window.NetaRecoverySigning={connect:async()=>({client:{disconnect(){}}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applyRoleAction(message);return{transactionHash:"TEST_HASH"}}};`,
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));

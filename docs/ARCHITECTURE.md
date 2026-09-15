@@ -101,8 +101,9 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
 
 ## NETA Socials invariants
 
-- The production website currently targets the explicit `uni-7` contract; it
-  never represents this instance as Juno mainnet.
+- The production website targets the checksum-locked Juno mainnet deployment
+  recorded in `data/socials-mainnet-release.json`. Contract state remains the
+  authority; while `paused: true`, the public page is read-only.
 - Contract `config`, `comment_eligibility`, moderator and ban queries are
   authoritative. Frontend labels and disabled controls are not authorization.
 - Every execute message rechecks the connected signer and opens a separate
@@ -117,7 +118,9 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
 - Initial thread pages contain 10 rows; comment pages contain 100 rows. Exclusive
   cursors, ID de-duplication and request-version checks prevent duplicates and
   stale async responses.
-- The Uni-7 stake mock is chain-ID restricted and is never a mainnet dependency.
+- The production gate reads only the established mainnet NETA staking contract.
+  The Uni-7 stake mock remains chain-ID restricted and is never a mainnet
+  dependency.
 
 ## Browser security boundary
 
