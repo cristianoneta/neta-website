@@ -91,6 +91,41 @@ test("NETA Socials starts with an honest empty state", async ({page}) => {
   await expect(page.locator(".conversation-empty-body")).toContainText("NO MESSAGES TO DISPLAY");
 });
 
+test("NETA Socials reads uni-7 and builds an exact owner thread transaction", async ({page}) => {
+  const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+    contentType: "application/javascript",
+    body: "window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,contract,message,memo)=>{window.__socialTx={sender,contract,message,memo};return{transactionHash:'TEST_HASH'}}};",
+  }));
+  await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
+    const encoded = decodeURIComponent(route.request().url().split("/smart/")[1]);
+    const query = JSON.parse(Buffer.from(encoded, "base64").toString("utf8"));
+    let data = [];
+    if (query.comment_eligibility) data = {address: owner, staked: "0", minimum_stake: "10000000", owner_exempt: true, stake_eligible: true, banned: false, paused: false, cooldown_remaining_seconds: 0, can_post: true};
+    await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
+  });
+  await page.addInitScript(() => {
+    window.keplr = {
+      experimentalSuggestChain: async () => {}, enable: async () => {},
+      getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}),
+      signDirect: async () => ({}), signAmino: async () => ({}),
+    };
+  });
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
+  await expect(page.locator("#new-thread")).toBeEnabled();
+  await page.locator("#new-thread").click();
+  await page.locator("#thread-title").fill("First on-chain thread");
+  await page.locator("#thread-body").fill("Hello from Uni-7.");
+  await page.locator("#thread-submit").click();
+  await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({
+    sender: owner,
+    contract: "juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8",
+    message: {create_thread: {title: "First on-chain thread", body: "Hello from Uni-7."}},
+    memo: "NETA Socials uni-7 create thread",
+  });
+});
+
 test("NETA Socials can suggest the hidden Uni-7 chain", async ({page}) => {
   await page.addInitScript(() => {
     window.__suggestedChain = null;

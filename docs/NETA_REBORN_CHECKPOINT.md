@@ -1300,3 +1300,12 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - Final Socials configuration: owner is the deployment wallet, pending owner null, stake contract is the exact mock above, minimum stake `10000000` raw NETA, posting cooldown `30` seconds, and `paused: false`.
 - Final owner eligibility query: owner exemption true, stake eligible true, banned false, cooldown remaining zero, and `can_post: true`. The mock reported staked `0`, which is acceptable because the owner exemption independently authorizes the deployment wallet.
 - The unpause broadcast was recovered from verified contract state because Uni-7 transaction indexing is disabled; no transaction hash was available from CosmJS. Success was accepted only after querying `paused: false` and `can_post: true`.
+
+
+### Uni-7 Socials frontend integration
+
+- The public Socials page reads the newest 30 threads and up to 100 comments per selected thread directly from contract `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` without requiring a wallet.
+- Posting access comes from the contract's `comment_eligibility` query. The connected address must match the Uni-7 signer immediately before signing.
+- New threads enforce 120 title characters and 5,000 body characters; comments enforce 1,000 characters. Every write opens a separate Keplr confirmation and attaches no funds.
+- Transaction-indexing-disabled responses are recovered only by finding the exact new thread or comment in contract state. Other errors remain fail-closed.
+- The interface explicitly identifies the deployment as live on Uni-7 testnet, not Juno mainnet.
