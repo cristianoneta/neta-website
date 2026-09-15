@@ -104,7 +104,7 @@
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,gas_price:"0.2ujunox",recovered:{stake_contract:state.mock,socials_contract:state.socials}});
   }));
-  $("#test-mock")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  $("#test-mock")?.addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.client)throw new Error("CONNECT FIRST");
     phase="STAKE MOCK UPLOAD";
     let upload=state.mockCodeId?{codeId:state.mockCodeId,transactionHash:state.mockCodeId===CHECKPOINT.mockCodeId?CHECKPOINT.mockUploadTx:"RECOVERED_FROM_CHAIN"}:null;
@@ -115,9 +115,9 @@
     let instance;
     try{instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,balances:[{address:state.address,balance:"10000000"}]},"NETA Socials uni-7 stake mock")}
     catch(error){if(!indexingDisabled(error))throw error;instance={contractAddress:await recoverAfterIndexError(()=>recoverContract(upload.codeId,"NETA Socials uni-7 stake mock"),"STAKE MOCK INSTANTIATION"),transactionHash:"RECOVERED_FROM_CHAIN"}}
-    state.mock=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-socials").disabled=false;show("STAKE MOCK DEPLOYED",{code_id:upload.codeId,contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
-  }));
-  $("#test-socials")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
+    state.mock=instance.contractAddress;persist();button.dataset.done="true";$("#test-socials").disabled=false;show("STAKE MOCK DEPLOYED",{code_id:upload.codeId,contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
+  })});
+  $("#test-socials")?.addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.mock)throw new Error("DEPLOY MOCK FIRST");
     phase="SOCIALS UPLOAD";
     let upload=state.socialsCodeId?{codeId:state.socialsCodeId,transactionHash:"RECOVERED_FROM_CHAIN"}:null;
@@ -128,9 +128,9 @@
     let instance;
     try{instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,stake_contract:state.mock,minimum_stake:"10000000"},"NETA Socials uni-7")}
     catch(error){if(!indexingDisabled(error))throw error;instance={contractAddress:await recoverAfterIndexError(()=>recoverContract(upload.codeId,"NETA Socials uni-7"),"SOCIALS INSTANTIATION"),transactionHash:"RECOVERED_FROM_CHAIN"}}
-    state.socials=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-verify").disabled=false;show("SOCIALS DEPLOYED · PAUSED",{code_id:upload.codeId,contract:state.socials,stake_contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
-  }));
-  $("#test-verify")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
+    state.socials=instance.contractAddress;persist();button.dataset.done="true";$("#test-verify").disabled=false;show("SOCIALS DEPLOYED · PAUSED",{code_id:upload.codeId,contract:state.socials,stake_contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
+  })});
+  $("#test-verify")?.addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.socials)throw new Error("DEPLOY SOCIALS FIRST");
     phase="SOCIALS CONFIG VERIFICATION";
     const before=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
@@ -140,8 +140,8 @@
     const config=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     const eligibility=await NetaSocialsTestnet.query(state.client,state.socials,{comment_eligibility:{address:state.address}});
     if(config.paused||!eligibility.can_post)throw new Error("POST-DEPLOY VERIFICATION FAILED");
-    event.currentTarget.dataset.done="true";show("UNI-7 DEPLOYMENT VERIFIED · POSTING ENABLED",{contract:state.socials,stake_contract:state.mock,unpause_tx:tx.transactionHash,config,eligibility});
-  }));
+    button.dataset.done="true";show("UNI-7 DEPLOYMENT VERIFIED · POSTING ENABLED",{contract:state.socials,stake_contract:state.mock,unpause_tx:tx.transactionHash,config,eligibility});
+  })});
   };
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
