@@ -78,6 +78,17 @@ assert "NetaRecoverySigning.execute" in socials_script
 assert '"0.1ujuno"' in socials_script
 assert "experimentalSuggestChain" not in socials_script
 assert "ujunox" not in socials_script
+admin_html = (ROOT / "neta-socials-admin.html").read_text(encoding="utf-8")
+admin_script = (ROOT / "neta-socials-admin.js").read_text(encoding="utf-8")
+assert '<meta name="robots" content="noindex,nofollow,noarchive">' in admin_html
+assert "REVIEW EMERGENCY PAUSE" in admin_html
+assert 'const CHAIN_ID="juno-1"' in admin_script
+assert 'const CODE_ID=5167' in admin_script
+assert 'CONTRACT="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in admin_script
+assert "set_paused" in admin_script
+assert "upload(" not in admin_script
+assert "instantiate(" not in admin_script
+assert "funds:" not in admin_script
 onchain_workflow = (ROOT / ".github/workflows/update-neta-data.yml").read_text(encoding="utf-8")
 assert 'pull_request:\n    branches: [main]\n    paths:' in onchain_workflow
 
