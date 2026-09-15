@@ -7,7 +7,7 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   await page.exposeFunction("__setSocialThreadClosed", value => { closed = value; });
   await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
     contentType: "application/javascript",
-    body: `window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__setSocialThreadClosed(message.set_closed.closed);return{transactionHash:"TEST_HASH"}}};`,
+    body: `window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__setSocialThreadClosed(message.set_thread_closed.closed);return{transactionHash:"TEST_HASH"}}};`,
   }));
   await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
     const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
@@ -21,11 +21,11 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await page.getByRole("button", {name: "CLOSE THREAD"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({sender: owner, target: contract, message: {set_closed: {thread_id: 1, closed: true}}, memo: "NETA Socials uni-7 close thread"});
+  await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({sender: owner, target: contract, message: {set_thread_closed: {thread_id: 1, closed: true}}, memo: "NETA Socials uni-7 close thread"});
   await expect(page.getByRole("button", {name: "REOPEN THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeDisabled();
   await page.getByRole("button", {name: "REOPEN THREAD"}).click();
-  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_closed: {thread_id: 1, closed: false}});
+  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_thread_closed: {thread_id: 1, closed: false}});
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeEnabled();
 });
