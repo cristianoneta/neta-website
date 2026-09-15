@@ -31,7 +31,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: neta-repository-writer-${{ github.ref_name }}
+  group: update-neta-data-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:

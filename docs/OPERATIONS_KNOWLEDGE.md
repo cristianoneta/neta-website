@@ -185,12 +185,11 @@ Production refreshes must be dispatched from the current `main` branch. Do not
 use GitHub's "re-run job" action on an old scheduled run: GitHub retains that
 run's original head SHA, so the worker can calculate valid data from stale
 source and then conflict with newer generated files. All production collectors
-therefore explicitly check out `main`. Their shared
-`neta-repository-writer-main` concurrency group protects repository writes,
-but GitHub retains only one running and one pending job per group. A complete
-manual refresh must therefore be started and awaited sequentially; dispatching
-three or more collectors together cancels excess pending runs. Generated-data
-rebases use a deterministic conflict strategy.
+therefore explicitly check out `main`. Each collector has its own concurrency
+group because GitHub retains only one running and one pending job per group;
+a shared group silently cancelled excess refreshes. The collectors write
+disjoint generated files, and current-main checkout plus deterministic rebases
+allow all four refreshes to run without losing newer commits.
 
 The NETA indexer chooses one finalized Juno height at the beginning of a build.
 Every Juno CW20, DAO, WYND LP, WYND staking, pair-reserve and ICS20 query carries
