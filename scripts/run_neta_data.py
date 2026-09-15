@@ -129,4 +129,27 @@ def _parallel_scan_osmo():
 
 update_neta_data.scan_osmo = _parallel_scan_osmo
 
-raise SystemExit(update_neta_data.main())
+
+def run_with_snapshot_retries(run, attempts=3, delay_seconds=30):
+    """Retry only a cross-chain snapshot skew, never an accounting failure.
+
+    Juno escrow and Osmosis supply cannot be queried atomically. An IBC packet
+    can therefore make one otherwise valid snapshot differ briefly. Each retry
+    performs the complete validation again; no tolerance or partial data is
+    ever accepted.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return run()
+        except RuntimeError as exc:
+            if not str(exc).startswith("bridge escrow ") or attempt == attempts:
+                raise
+            update_neta_data.log(
+                f"Cross-chain snapshot skew ({attempt}/{attempts}): {exc}; "
+                f"retrying the complete snapshot in {delay_seconds}s"
+            )
+            time.sleep(delay_seconds)
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_with_snapshot_retries(update_neta_data.main))
