@@ -528,7 +528,7 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
   const mapData = require("../../data/map/map-of-neta.json");
   await expect(page.locator("#swaps")).toHaveText(String(mapData.market.swaps));
   await expect(page.locator("#swapBreakdown")).toHaveText(
-    `JUNO ${mapData.market.by_chain.juno} · OSMOSIS ${mapData.market.by_chain.osmosis}`,
+    `JUNO ${mapData.market.by_chain?.juno ?? 0} · OSMOSIS ${mapData.market.by_chain?.osmosis ?? 0}`,
   );
   await expect(page.locator("#marketUpdated")).not.toHaveText("—");
   await expect(page.locator("#terraAmount")).toHaveText("0 NETA");
