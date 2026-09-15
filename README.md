@@ -2,8 +2,8 @@
 
 Static, data-driven community website for the NETA ecosystem on Juno and
 Osmosis. It includes the holder ranking, Map of NETA, public WYND liquidity
-recovery, the tightly scoped Rescue NETA swap interface and a Uni-7 deployment
-of the on-chain NETA Socials board.
+recovery, the tightly scoped Rescue NETA swap interface and the on-chain NETA
+Socials board on Juno mainnet.
 
 ## Current production state
 
@@ -20,9 +20,10 @@ of the on-chain NETA Socials board.
   assets. Wrapped assets may only return to their origin. The unresolved
   Juno-to-Terra NETA packet remains visible in channel-aware accounting and its
   route stays disabled rather than being hidden by a tolerance.
-- NETA Socials reads and writes the live Uni-7 contract. It is a testnet surface,
-  not a mainnet deployment; every write requires a separate Keplr approval and
-  attaches no funds.
+- NETA Socials reads and writes the checksum-locked Juno mainnet contract. A
+  minimum of 10 actively staked NETA is required, except for the owner. Every
+  write requires a separate Keplr approval and attaches no funds. A guarded,
+  unlinked admin surface retains the emergency-pause path.
 - The controlled JUNO/NETA Claim after its on-chain maturity time remains the
   final live recovery test; it is additional evidence rather than a public gate.
 
@@ -41,13 +42,10 @@ Run the deterministic regression suite before changing generated data,
 transaction code or contracts:
 
 ```bash
-for test_file in scripts/test_*.py; do
-  PYTHONPATH=scripts .venv/bin/python "$test_file"
-done
-for file in *.js src/*.js; do node --check "$file"; done
 npm ci
-npx playwright install chromium
-npm run test:browser
+npm run test:static
+npm run test:browser:install
+npm test
 ```
 
 The public header and footer are generated from one definition. After changing
@@ -71,7 +69,9 @@ python scripts/test_site_integrity.py
 
 The GitHub Actions collectors serialize repository writes per branch to avoid
 competing rebases and deployments. Tests validate pull requests but do not write
-test logs back to `main`.
+test logs back to `main`. An hourly read-only monitor fails visibly if ranking
+or Map data is older than eight hours, recovery statistics are older than three
+hours, or the daily recovery market data is older than 30 hours.
 
 ## Recovery safety boundary
 
@@ -99,6 +99,6 @@ An included transaction is shown as confirmed only after its receiving-asset
 event satisfies the displayed minimum.
 
 See [docs/OPERATIONS_KNOWLEDGE.md](docs/OPERATIONS_KNOWLEDGE.md) for the current
-contracts, pools, IBC, Uni-7 and Keplr knowledge; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+contracts, pools, IBC, mainnet, Uni-7 and Keplr knowledge; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 for component boundaries; and [docs/CODEBASE_REVIEW_2026-09-15.md](docs/CODEBASE_REVIEW_2026-09-15.md)
 for the latest critical review and remaining gates.
