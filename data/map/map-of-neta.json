@@ -38,26 +38,20 @@
       }
     ],
     "juno_to_osmosis_neta": 0.0,
-    "net_to_osmosis_neta": -1.0,
-    "osmosis_to_juno_neta": 1.0,
+    "net_to_osmosis_neta": 0.0,
+    "osmosis_to_juno_neta": 0.0,
     "routes": [
       {
         "from_chain": "juno",
         "neta": 0.01,
         "to_chain": "terra",
         "transfers": 1
-      },
-      {
-        "from_chain": "osmosis",
-        "neta": 1.0,
-        "to_chain": "juno",
-        "transfers": 1
       }
     ],
-    "transfers": 2,
-    "volume_neta": 1.0
+    "transfers": 1,
+    "volume_neta": 0.0
   },
-  "generated_at": "2026-09-14T19:27:30.655546Z",
+  "generated_at": "2026-09-15T01:32:10.960767Z",
   "market": {
     "by_chain": {
       "juno": 3,
