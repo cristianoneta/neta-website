@@ -1,19 +1,20 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-14T13:29:49.747248Z",
+  "generated_at": "2026-09-15T10:43:11.297540Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
-    "juno_ics20_escrow_equals_osmosis_primary_state": true,
+    "juno_ics20_escrow_equals_all_channel_liabilities": true,
+    "osmosis_channel_liability_equals_osmosis_primary_state": true,
     "dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual": true,
     "wynd_pool_neta_fully_attributed": true,
     "osmosis_pool_631_neta_fully_attributed": true,
-    "economic_total_plus_residual_equals_supply": true,
+    "economic_total_plus_dao_and_bridge_residual_equals_supply": true,
     "custody_holder_union_equals_economic_holders": true
   },
   "total_supply_neta": 31886.6,
   "total_supply_source": "cw20_token_info",
-  "juno_custody_addresses": 12280,
+  "juno_custody_addresses": 12281,
   "osmosis_primary_state_addresses": 3720,
   "dao_active_stakers": 2090,
   "dao_active_staking_neta": 4180.135927,
@@ -22,31 +23,49 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 5313,
-  "lp_neta": 1859.085237,
-  "economic_master_entries": 13972,
+  "lp_neta": 1858.755516,
+  "economic_master_entries": 13973,
   "cross_chain_matches": 2028,
-  "wallet_attributed_neta": 31886.39,
+  "wallet_attributed_neta": 31886.38,
   "dao_residual_neta": 0.21,
-  "excluded_bridge_escrow_neta": 10480.41154,
-  "gini": 0.877821,
+  "bridge_unattributed_neta": 0.01,
+  "unattributed_total_neta": 0.22,
+  "excluded_bridge_escrow_neta": 10480.42154,
+  "bridge": {
+    "contract": "juno1v4887y83d6g28puzvt8cl0f3cdhd3y6y9mpysnsp3k8krdm7l6jqgm0rkn",
+    "query_endpoint": "https://juno-api.polkachu.com",
+    "osmosis_channel": "channel-47",
+    "osmosis_counterparty_channel": "channel-169",
+    "channel_liabilities_neta": {
+      "channel-154": 0.01,
+      "channel-47": 10480.41154
+    },
+    "unattributed_non_osmosis_neta": 0.01,
+    "open_packet_commitments": {
+      "channel-154": [
+        36
+      ]
+    }
+  },
+  "gini": 0.877832,
   "concentration_neta": {
     "top_1": 1612.135373,
     "top_5": 4732.521975,
-    "top_10": 6214.528123,
-    "top_25": 8886.725064,
-    "top_50": 11098.483706,
-    "top_100": 13601.107027,
-    "top_1_percent": 14740.018529,
+    "top_10": 6214.511197,
+    "top_25": 8886.658311,
+    "top_50": 11098.376015,
+    "top_100": 13600.995714,
+    "top_1_percent": 14739.893746,
     "top_1_percent_wallets": 140
   },
   "osmosis": {
-    "height": 70562358,
+    "height": 70621623,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 70562358,
+      "height": 70621623,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 899739185,
+      "pool_neta_raw": 899767088,
       "lp_supply_raw": 225004459685449894124978,
       "direct_share_holders": 578,
       "economic_wallets": 1969,
@@ -60,7 +79,7 @@
   "juno": {
     "method": "CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
-      "pool_neta_raw": 959346052,
+      "pool_neta_raw": 958988428,
       "lp_supply_raw": 8961183403,
       "attributable_lp_supply_raw": 8961182403,
       "economic_wallets": 3344,
@@ -71,8 +90,8 @@
     }
   },
   "dao": {
-    "height": 41752384,
-    "block_time": "2026-09-14T13:26:25.535682+00:00",
+    "height": 41779673,
+    "block_time": "2026-09-15T10:39:35.791635+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 291,
     "method": "CosmWasm AllContractState; claims classified by release_at at snapshot"
