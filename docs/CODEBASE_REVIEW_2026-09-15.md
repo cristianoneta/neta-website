@@ -8,9 +8,10 @@ endpoint or dependency changes are safe automatically.
 
 No new critical vulnerability or accounting bypass was found in the reviewed
 source. The existing transaction flows remain fail-closed and require Keplr.
-The project is suitable for continued testnet and controlled mainnet use of the
-already deployed recovery/swap surfaces. NETA Socials is **not** mainnet-ready
-until the gates in `OPERATIONS_KNOWLEDGE.md` are completed.
+The project is suitable for controlled mainnet use. The NETA Socials findings
+below were the pre-launch gates; they were subsequently completed, and the
+production instance was activated at height `41784461`. Current state is
+recorded in `OPERATIONS_KNOWLEDGE.md` and the release manifest.
 
 ## Changes made by this review
 
@@ -39,7 +40,7 @@ until the gates in `OPERATIONS_KNOWLEDGE.md` are completed.
 
 ## Prioritized findings
 
-### P1 — required before Socials mainnet
+### Completed pre-launch findings
 
 - The deployed Socials instance depends on a synthetic Uni-7 stake mock. The
   real DAO staking query and 10-NETA threshold need a distinct-wallet live test.
