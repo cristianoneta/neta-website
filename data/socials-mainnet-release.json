@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "deployment_status": "deployed_paused_verified",
+  "deployment_status": "live_verified",
   "chain_id": "juno-1",
   "contract_name": "crates.io:neta-socials",
   "contract_version": "1.0.0",
@@ -20,6 +20,10 @@
   "upload_height": 41783460,
   "instantiate_tx": "DEDD5CB4CB02C4B0B3912E7350BF459CA3137B83857CE38D6152E8C6261E0701",
   "instantiate_height": 41783543,
-  "verified_paused": true,
+  "verified_paused": false,
+  "unpause_tx": "8B2354A8C603CB9EE0A95009FA734D3C4FEF84CA31AFB563D97D3EFDDADC3FD6",
+  "unpause_height": 41784461,
+  "unpause_timestamp": "2026-09-15T14:24:34Z",
+  "unpause_no_funds_attached": true,
   "post_cooldown_seconds": 30
 }
