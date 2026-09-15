@@ -31,26 +31,26 @@
     state.address=address;const balance=await state.client.getBalance(address,"ujuno");connect.textContent="CONNECTED · DISCONNECT";$("#mainnet-preflight").disabled=false;
     show("CONNECTED TO JUNO-1",{address,juno:Number(balance.amount)/1e6,gas_price:"0.1ujuno",writes_enabled:false});
   }));
-  $("#mainnet-preflight").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  $("#mainnet-preflight").addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.client)throw new Error("CONNECT FIRST");phase="PRODUCTION STAKE QUERY";
-    const stake=await state.client.queryContractSmart(STAKE_CONTRACT,{staked_balance_at_height:{address:OWNER,height:null}});phase="WASM CHECKSUM";state.wasm=await loadWasm();if(state.codeId)await verifyCode(state.codeId);state.preflight=true;event.currentTarget.dataset.done="true";if(state.contract)$("#mainnet-verify").disabled=false;else if(state.codeId)$("#mainnet-instantiate").disabled=false;else $("#mainnet-upload").disabled=false;
+    const stake=await state.client.queryContractSmart(STAKE_CONTRACT,{staked_balance_at_height:{address:OWNER,height:null}});phase="WASM CHECKSUM";state.wasm=await loadWasm();if(state.codeId)await verifyCode(state.codeId);state.preflight=true;button.dataset.done="true";if(state.contract)$("#mainnet-verify").disabled=false;else if(state.codeId)$("#mainnet-instantiate").disabled=false;else $("#mainnet-upload").disabled=false;
     show("READ-ONLY PREFLIGHT PASSED",{chain_id:await state.client.getChainId(),owner:OWNER,stake_contract:STAKE_CONTRACT,owner_stake_response:stake,minimum_stake:MINIMUM_STAKE,wasm_sha256:WASM.sha256,next:"StoreCode still requires a separate Keplr approval."});
-  }));
-  $("#mainnet-upload").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  })});
+  $("#mainnet-upload").addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.preflight||!state.wasm)throw new Error("RUN PREFLIGHT FIRST");phase="MAINNET STORECODE";
-    const result=await state.client.upload(state.address,state.wasm,"auto","NETA Socials v1 mainnet code upload");state.codeId=result.codeId;await verifyCode(state.codeId);persist();event.currentTarget.dataset.done="true";$("#mainnet-instantiate").disabled=false;
+    const result=await state.client.upload(state.address,state.wasm,"auto","NETA Socials v1 mainnet code upload");state.codeId=result.codeId;await verifyCode(state.codeId);persist();button.dataset.done="true";$("#mainnet-instantiate").disabled=false;
     show("MAINNET CODE STORED",{code_id:state.codeId,upload_tx:result.transactionHash,wasm_sha256:WASM.sha256,next:"Verify the Instantiate message in the next separate Keplr transaction."});
-  }));
-  $("#mainnet-instantiate").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  })});
+  $("#mainnet-instantiate").addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.codeId)throw new Error("STORE CODE FIRST");phase="MAINNET INSTANTIATION";
-    const message={owner:OWNER,stake_contract:STAKE_CONTRACT,minimum_stake:MINIMUM_STAKE};const result=await state.client.instantiate(state.address,state.codeId,message,"NETA Socials v1","auto",{admin:OWNER});state.contract=result.contractAddress;persist();event.currentTarget.dataset.done="true";$("#mainnet-verify").disabled=false;
+    const message={owner:OWNER,stake_contract:STAKE_CONTRACT,minimum_stake:MINIMUM_STAKE};const result=await state.client.instantiate(state.address,state.codeId,message,"NETA Socials v1","auto",{admin:OWNER});state.contract=result.contractAddress;persist();button.dataset.done="true";$("#mainnet-verify").disabled=false;
     show("MAINNET CONTRACT INSTANTIATED · STILL PAUSED",{code_id:state.codeId,contract:state.contract,instantiate_tx:result.transactionHash,configuration:message,next:"Run read-only on-chain verification. This console cannot unpause."});
-  }));
-  $("#mainnet-verify").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  })});
+  $("#mainnet-verify").addEventListener("click",event=>{const button=event.currentTarget;busy(button,async()=>{
     if(!state.contract||!state.codeId)throw new Error("INSTANTIATE FIRST");phase="POST-DEPLOYMENT VERIFICATION";
     const config=await state.client.queryContractSmart(state.contract,{config:{}});const eligibility=await state.client.queryContractSmart(state.contract,{comment_eligibility:{address:OWNER}});await verifyCode(state.codeId);const info=await contractInfo(state.contract);
     if(config.owner!==OWNER||config.stake_contract!==STAKE_CONTRACT||String(config.minimum_stake)!==MINIMUM_STAKE||config.paused!==true)throw new Error("CONTRACT CONFIGURATION DOES NOT MATCH THE LOCKED MANIFEST");
     if(String(info.code_id)!==String(state.codeId)||info.admin!==OWNER||info.creator!==OWNER)throw new Error("CHAIN-LEVEL CODE OR ADMIN VERIFICATION FAILED");
-    event.currentTarget.dataset.done="true";show("MAINNET DEPLOYMENT VERIFIED · PAUSED",{code_id:state.codeId,contract:state.contract,wasm_sha256:WASM.sha256,chain_contract_info:{creator:info.creator,admin:info.admin,label:info.label},config,owner_eligibility:eligibility,public_frontend_enabled:false});
-  }));
+    button.dataset.done="true";show("MAINNET DEPLOYMENT VERIFIED · PAUSED",{code_id:state.codeId,contract:state.contract,wasm_sha256:WASM.sha256,chain_contract_info:{creator:info.creator,admin:info.admin,label:info.label},config,owner_eligibility:eligibility,public_frontend_enabled:false});
+  })});
 })();
