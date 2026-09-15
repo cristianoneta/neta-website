@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "deployment_status": "prepared_not_broadcast",
+  "chain_id": "juno-1",
+  "contract_name": "crates.io:neta-socials",
+  "contract_version": "1.0.0",
+  "wasm_path": "assets/contracts/neta_socials.wasm",
+  "wasm_sha256": "49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869",
+  "owner": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+  "migration_admin": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+  "stake_contract": "juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh",
+  "minimum_stake_raw": "10000000",
+  "minimum_stake_neta": "10",
+  "instantiate_starts_paused": true,
+  "deployment_console_can_unpause": false,
+  "public_frontend_enabled": false,
+  "code_id": null,
+  "contract_address": null,
+  "upload_tx": null,
+  "instantiate_tx": null
+}

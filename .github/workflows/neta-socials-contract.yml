@@ -49,7 +49,10 @@ jobs:
             --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
             cosmwasm/optimizer:0.17.0
       - name: Verify optimized WASM checksum
-        run: cd artifacts && sha256sum -c checksums.txt
+        run: |
+          cd artifacts
+          sha256sum -c checksums.txt
+          cmp neta_socials.wasm ../../../assets/contracts/neta_socials.wasm
       - name: Upload contract verification artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:

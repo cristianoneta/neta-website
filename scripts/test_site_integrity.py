@@ -55,6 +55,17 @@ assert 'github.event_name == \'push\'' in ci_workflow
 assert 'repos/${{ github.repository }}/pages/builds' in ci_workflow
 assert not (ROOT / ".github/workflows/test-site-integrity.yml").exists()
 assert not (ROOT / ".github/workflows/test-wynd-recovery-frontend.yml").exists()
+mainnet_html = (ROOT / "neta-socials-mainnet.html").read_text(encoding="utf-8")
+mainnet_script = (ROOT / "neta-socials-mainnet.js").read_text(encoding="utf-8")
+mainnet_manifest = (ROOT / "data/socials-mainnet-release.json").read_text(encoding="utf-8")
+assert '<meta name="robots" content="noindex,nofollow,noarchive">' in mainnet_html
+assert "THIS CONSOLE CANNOT UNPAUSE THE CONTRACT" in mainnet_html
+assert 'const CHAIN_ID="juno-1"' in mainnet_script
+assert 'const MINIMUM_STAKE="10000000"' in mainnet_script
+assert 'config.paused!==true' in mainnet_script
+assert "set_paused" not in mainnet_script
+assert '"public_frontend_enabled": false' in mainnet_manifest
+assert '"deployment_status": "prepared_not_broadcast"' in mainnet_manifest
 onchain_workflow = (ROOT / ".github/workflows/update-neta-data.yml").read_text(encoding="utf-8")
 assert 'pull_request:\n    branches: [main]\n    paths:' in onchain_workflow
 
