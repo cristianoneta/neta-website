@@ -8,9 +8,10 @@
     mock:{url:"assets/contracts/neta_socials_stake_mock.wasm",sha256:"c4920d17c0c44fd8dfe72f01d9c3d0faa8b1fafc1d70f511684f3426a4c30f81"},
     socials:{url:"assets/contracts/neta_socials.wasm",sha256:"49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869"},
   };
+  const CHECKPOINT={mockCodeId:101,mockUploadTx:"FB17B44194CD18D7A978A7895F7DE7CCBB11A1F90FE726849F2BDF49E6EC4492"};
   const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPCS[0],rest:"https://juno.test.api.nodeshub.online",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.1,average:.2,high:.3}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
   const saved=(()=>{try{return JSON.parse(localStorage.getItem("neta-socials-uni7")||"{}")}catch{return{}}})();
-  const state={client:null,address:null,mock:saved.mock||null,socials:saved.socials||null,mockCodeId:saved.mockCodeId||null,socialsCodeId:saved.socialsCodeId||null};
+  const state={client:null,address:null,mock:saved.mock||null,socials:saved.socials||null,mockCodeId:saved.mockCodeId||CHECKPOINT.mockCodeId,socialsCodeId:saved.socialsCodeId||null};
   const $=selector=>document.querySelector(selector),connect=$("#test-connect");
   const status=$("#test-status"),output=$("#test-output");
   let phase="START";
@@ -106,7 +107,7 @@
   $("#test-mock")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.client)throw new Error("CONNECT FIRST");
     phase="STAKE MOCK UPLOAD";
-    let upload=state.mockCodeId?{codeId:state.mockCodeId,transactionHash:"RECOVERED_FROM_CHAIN"}:null;
+    let upload=state.mockCodeId?{codeId:state.mockCodeId,transactionHash:state.mockCodeId===CHECKPOINT.mockCodeId?CHECKPOINT.mockUploadTx:"RECOVERED_FROM_CHAIN"}:null;
     if(!upload)try{upload=await NetaSocialsTestnet.upload(state.client,state.address,await wasm("mock"),"NETA Socials uni-7 stake mock upload")}
     catch(error){if(!indexingDisabled(error))throw error;upload={codeId:await recoverAfterIndexError(()=>recoverCode("mock"),"STAKE MOCK UPLOAD"),transactionHash:"RECOVERED_FROM_CHAIN"}}
     state.mockCodeId=upload.codeId;persist();
