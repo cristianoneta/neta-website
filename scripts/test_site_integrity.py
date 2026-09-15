@@ -2,8 +2,10 @@
 """Static integration checks across every public page."""
 from __future__ import annotations
 
-import subprocess
+import json
 import re
+import subprocess
+import tomllib
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -58,6 +60,8 @@ assert not (ROOT / ".github/workflows/test-wynd-recovery-frontend.yml").exists()
 mainnet_html = (ROOT / "neta-socials-mainnet.html").read_text(encoding="utf-8")
 mainnet_script = (ROOT / "neta-socials-mainnet.js").read_text(encoding="utf-8")
 mainnet_manifest = (ROOT / "data/socials-mainnet-release.json").read_text(encoding="utf-8")
+mainnet_release = json.loads(mainnet_manifest)
+socials_package = tomllib.loads((ROOT / "contracts/neta-socials/Cargo.toml").read_text(encoding="utf-8"))
 assert '<meta name="robots" content="noindex,nofollow,noarchive">' in mainnet_html
 assert "THIS CONSOLE CANNOT UNPAUSE THE CONTRACT" in mainnet_html
 assert 'const CHAIN_ID="juno-1"' in mainnet_script
@@ -66,6 +70,7 @@ assert 'config.paused!==true' in mainnet_script
 assert "set_paused" not in mainnet_script
 assert '"public_frontend_enabled": true' in mainnet_manifest
 assert '"deployment_status": "live_verified"' in mainnet_manifest
+assert mainnet_release["contract_version"] == socials_package["package"]["version"] == "0.2.1"
 assert '"code_id": 5167' in mainnet_manifest
 assert '"contract_address": "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in mainnet_manifest
 assert '"verified_paused": false' in mainnet_manifest
@@ -76,6 +81,7 @@ assert "assets/recovery-signing-client.js?v=7" in socials_html
 assert "ON-CHAIN MAINNET" in socials_html
 assert "<strong>LIVE</strong>" in socials_html
 assert 'href="https://t.me/+mfsF41Zra7I2ZDYy"' in socials_html
+assert 'href="https://daodao.zone/dao/juno1c5v6jkmre5xa9vf9aas6yxewc7aqmjy0rlkkyk4d88pnwuhclyhsrhhns6/home"' in socials_html
 assert 'rel="noopener noreferrer"' in socials_html
 assert 'CONTRACT="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in socials_script
 assert 'CHAIN_ID="juno-1"' in socials_script

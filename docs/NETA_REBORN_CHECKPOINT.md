@@ -11,6 +11,21 @@ Last updated: 2026-09-15
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
 
+## CURRENT CLOSURE — PRODUCTION REVIEW (2026-09-15)
+
+The canonical current state remains in `OPERATIONS_KNOWLEDGE.md`. NETA Socials
+is live on Juno mainnet at the checksum-locked contract recorded in
+`data/socials-mainnet-release.json`; the guarded emergency-pause path remains.
+The final review introduced one shared deterministic test runner, corrected the
+release version to the deployed Cargo/CW2 version `0.2.1`, and added an hourly
+read-only freshness monitor for ranking, Map, recovery statistics and recovery
+market data. No production signing message or deployed bytecode changed.
+
+All historical feature branches were associated with merged PRs except the
+explicitly rejected cross-chain retry experiment. Once the final cleanup PR is
+merged, those branches may be deleted without losing Git history, PR diffs or
+the durable operational knowledge in this repository.
+
 ## HISTORICAL HANDOFF — NETA SOCIALS UNI-7 TEST (2026-09-14)
 
 This records the state before PR #80 and the completed Uni-7 deployment. Do not

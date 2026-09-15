@@ -13,6 +13,26 @@ below were the pre-launch gates; they were subsequently completed, and the
 production instance was activated at height `41784461`. Current state is
 recorded in `OPERATIONS_KNOWLEDGE.md` and the release manifest.
 
+## Post-launch closure review
+
+The complete production tree was reviewed again after Socials activation.
+Application JavaScript passed syntax checks, all deterministic Python suites
+passed, npm reported no known vulnerabilities, and the required GitHub browser
+suite remained the merge gate. No new critical transaction, authorization or
+accounting defect was found. The deployed Socials contract and public signing
+messages were intentionally left unchanged after launch.
+
+The closure changes make local and CI checks use the same deterministic runner,
+add manifest and contract paths to central CI, correct stale Uni-7 wording, and
+add an hourly fail-closed production-data freshness monitor. Large browser
+controllers remain a maintainability concern, but splitting them immediately
+after mainnet activation would add regression risk without changing a security
+boundary; that work should occur incrementally behind existing browser tests.
+
+The review also corrected release metadata from `1.0.0` to the deployed
+Cargo/CW2 version `0.2.1`. The stored WASM checksum and mainnet code ID were
+already correct; this was a documentation mismatch, not a bytecode mismatch.
+
 ## Changes made by this review
 
 - Central CI now installs Python dependencies and executes every deterministic
@@ -32,9 +52,9 @@ recorded in `OPERATIONS_KNOWLEDGE.md` and the release manifest.
 - All 14 deterministic Python test programs: passed.
 - JavaScript syntax checks: passed.
 - `npm audit --audit-level=low`: 0 vulnerabilities.
-- Browser suite: 43 tests are defined. Local execution was blocked because this
-  environment could not download Chromium; GitHub CI remains the acceptance
-  gate.
+- Browser suite: 46 tests are defined and passed in the required GitHub CI
+  acceptance gate. A fresh local checkout must run
+  `npm run test:browser:install` once before `npm test`.
 - Rust format/clippy/tests/audit: local Cargo is unavailable; the pinned contract
   workflows remain the acceptance gate.
 
@@ -42,11 +62,13 @@ recorded in `OPERATIONS_KNOWLEDGE.md` and the release manifest.
 
 ### Completed pre-launch findings
 
-- The deployed Socials instance depends on a synthetic Uni-7 stake mock. The
-  real DAO staking query and 10-NETA threshold need a distinct-wallet live test.
-- Contract dependencies are intentionally locked on CosmWasm 1.5.x with two
-  reviewed RustSec exceptions. Re-run the current advisory database and verify
-  Juno mainnet VM compatibility immediately before deployment.
+- The synthetic Uni-7 mock was replaced by the real DAO staking contract for
+  mainnet. Distinct non-owner wallets below and above 10 NETA verified both
+  sides of the production gate before activation.
+- Contract dependencies remain intentionally locked on CosmWasm 1.5.x with two
+  reviewed RustSec exceptions. The advisory database and Juno mainnet VM
+  compatibility were checked before deployment; CI continues to rebuild and
+  compare the exact optimized WASM.
 - Application owner and chain migration admin are separate powers. A mainnet
   governance/multisig transition must address both explicitly.
 - Hidden content remains publicly queryable by design. UI moderation is a

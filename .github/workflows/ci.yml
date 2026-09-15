@@ -11,6 +11,8 @@ on:
       - "assets/**"
       - "src/**"
       - "scripts/**"
+      - "contracts/**"
+      - "data/socials-mainnet-release.json"
       - ".github/workflows/**"
       - "tests/browser/**"
       - "data/recovery/wynd-pools.json"
@@ -27,6 +29,8 @@ on:
       - "assets/**"
       - "src/**"
       - "scripts/**"
+      - "contracts/**"
+      - "data/socials-mainnet-release.json"
       - ".github/workflows/**"
       - "tests/browser/**"
       - "data/recovery/wynd-pools.json"
@@ -60,13 +64,8 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Verify site and recovery safety gates
-        shell: bash
         run: |
-          set -o pipefail
-          for test_file in scripts/test_*.py; do
-            PYTHONPATH=scripts python "$test_file"
-          done
-          for file in *.js src/*.js; do node --check "$file"; done
+          npm run test:static
           npm run build:recovery-signing
           npm run build:swap-signing
           npm run build:ibc-signing
