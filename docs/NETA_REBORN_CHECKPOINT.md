@@ -1290,3 +1290,13 @@ Phase 2's pilot implementation was isolated in `src/swap-signing-client.js`, `re
 - Root cause of the repeated post-checkpoint StoreCode prompt: Uni-7 REST currently returns code checksums as 64-character hexadecimal strings, while the browser recovery helper decoded every value as Base64. The exact code match therefore returned null. The connect path then assigned that null result over confirmed code IDs 109/110 because its fallback handled rejected promises but not a successful null result. The fix accepts both REST hex and Base64 checksum encodings and applies the checkpoint fallback after null results as well. Regression coverage proves a hex response leads directly to mock code 109 instantiation with zero upload calls.
 
 - After Socials code 110 and both contracts were recovered successfully, the remaining unpause path was hardened before signing. Uni-7 may include the execute transaction but make CosmJS throw because transaction indexing is disabled. The console now treats only that exact error as recoverable, polls the Socials config until paused is false, and then performs the normal config plus posting-eligibility verification. Any other execute error still fails closed.
+
+
+### Uni-7 deployment completed — 2026-09-15
+
+- Stake mock: code ID `109`, contract `juno1gfwuyxn774nk5u430vjwtw6szjn4nhzmkqfxql4nqsp322drrcfqhveamm`, created at height `17894374`.
+- NETA Socials: code ID `110`, contract `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8`, created at height `17894445`.
+- Both contracts were created by and retain admin `juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57`; REST contract info confirms the exact expected labels and code IDs.
+- Final Socials configuration: owner is the deployment wallet, pending owner null, stake contract is the exact mock above, minimum stake `10000000` raw NETA, posting cooldown `30` seconds, and `paused: false`.
+- Final owner eligibility query: owner exemption true, stake eligible true, banned false, cooldown remaining zero, and `can_post: true`. The mock reported staked `0`, which is acceptable because the owner exemption independently authorizes the deployment wallet.
+- The unpause broadcast was recovered from verified contract state because Uni-7 transaction indexing is disabled; no transaction hash was available from CosmJS. Success was accepted only after querying `paused: false` and `can_post: true`.
