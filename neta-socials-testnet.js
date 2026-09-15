@@ -134,7 +134,17 @@
     phase="SOCIALS CONFIG VERIFICATION";
     const before=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     if(!before.paused||before.stake_contract!==state.mock)throw new Error("DEPLOYMENT CONFIG VERIFICATION FAILED");
-    phase="SOCIALS UNPAUSE";const tx=await NetaSocialsTestnet.execute(state.client,state.address,state.socials,{set_paused:{paused:false}},"Enable NETA Socials uni-7 testing");
+    phase="SOCIALS UNPAUSE";
+    let tx;
+    try{tx=await NetaSocialsTestnet.execute(state.client,state.address,state.socials,{set_paused:{paused:false}},"Enable NETA Socials uni-7 testing")}
+    catch(error){
+      if(!indexingDisabled(error))throw error;
+      await recoverAfterIndexError(async()=>{
+        const recovered=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}}).catch(()=>null);
+        return recovered&&!recovered.paused;
+      },"SOCIALS UNPAUSE");
+      tx={transactionHash:"RECOVERED_FROM_CHAIN"};
+    }
     phase="SOCIALS POST-DEPLOY VERIFICATION";
     const config=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     const eligibility=await NetaSocialsTestnet.query(state.client,state.socials,{comment_eligibility:{address:state.address}});
