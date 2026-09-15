@@ -19,6 +19,18 @@ Browser state and UI checks are never protocol authorization. Contracts and
 chain state remain authoritative. The site never requests a seed phrase or
 private key.
 
+## Production data monitoring
+
+`monitor-data-freshness.yml` runs hourly with read-only repository permission.
+It fails if the economic ranking or Map of NETA snapshot is older than eight
+hours, recovery statistics are older than three hours, or the daily recovery
+market snapshot is older than 30 hours. Missing, invalid, timezone-free or
+materially future-dated timestamps also fail closed. The JSON result is written
+to the GitHub Actions job summary so a stale worker is distinguishable from a
+source-format failure. Thresholds deliberately exceed the intended schedules
+to tolerate normal GitHub cron delays without concealing a missed production
+cycle.
+
 ## Economic NETA accounting
 
 The holder model is:
@@ -80,6 +92,7 @@ NETA is not a public frontend route and Terra is displayed with zero NETA.
 | Stake mock | code 109, `juno1gfwuyxn774nk5u430vjwtw6szjn4nhzmkqfxql4nqsp322drrcfqhveamm` |
 | Uni-7 Socials (historical test deployment) | code 110, `juno1vgh9dd4zs7gsg7p602pv5lw3xly6wq6xww3s98keddc6vqazga8qgnm4g8` |
 | Mainnet Socials | code 5167, `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9` |
+| Contract/CW2 version | `crates.io:neta-socials` `0.2.1` |
 | Minimum stake | `10000000` raw NETA (10 NETA) |
 | Cooldown | 30 seconds per address across threads and comments |
 | Current mainnet state | `paused: false`; activated at height `41784461`; owner is stake-exempt |
