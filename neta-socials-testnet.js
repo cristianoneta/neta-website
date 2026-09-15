@@ -40,19 +40,19 @@
     $("#test-mock").disabled=Boolean(state.mock);$("#test-socials").disabled=!state.mock||Boolean(state.socials);$("#test-verify").disabled=!state.socials;
     show("CONNECTED TO UNI-7",{address,junox:Number(balance.amount)/1e6,recovered:{stake_contract:state.mock,socials_contract:state.socials}});
   }));
-  $("#test-mock").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  $("#test-mock")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.client)throw new Error("CONNECT FIRST");
     const upload=await NetaSocialsTestnet.upload(state.client,state.address,await wasm("mock"),"NETA Socials uni-7 stake mock upload");
     const instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,balances:[{address:state.address,balance:"10000000"}]},"NETA Socials uni-7 stake mock");
     state.mock=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-socials").disabled=false;show("STAKE MOCK DEPLOYED",{code_id:upload.codeId,contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
   }));
-  $("#test-socials").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  $("#test-socials")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.mock)throw new Error("DEPLOY MOCK FIRST");
     const upload=await NetaSocialsTestnet.upload(state.client,state.address,await wasm("socials"),"NETA Socials uni-7 code upload");
     const instance=await NetaSocialsTestnet.instantiate(state.client,state.address,upload.codeId,{owner:state.address,stake_contract:state.mock,minimum_stake:"10000000"},"NETA Socials uni-7");
     state.socials=instance.contractAddress;persist();event.currentTarget.dataset.done="true";$("#test-verify").disabled=false;show("SOCIALS DEPLOYED · PAUSED",{code_id:upload.codeId,contract:state.socials,stake_contract:state.mock,upload_tx:upload.transactionHash,instantiate_tx:instance.transactionHash});
   }));
-  $("#test-verify").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  $("#test-verify")?.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     if(!state.socials)throw new Error("DEPLOY SOCIALS FIRST");
     const before=await NetaSocialsTestnet.query(state.client,state.socials,{config:{}});
     if(!before.paused||before.stake_contract!==state.mock)throw new Error("DEPLOYMENT CONFIG VERIFICATION FAILED");
