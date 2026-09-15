@@ -122,7 +122,7 @@ test("NETA Socials testnet console is inert until explicitly connected", async (
   expect(await page.evaluate(() => window.__keplrCalls)).toBe(0);
 });
 
-test("NETA Socials testnet console surfaces a missing Keplr extension", async ({page}) => {
+test("NETA Socials testnet resumes from the confirmed uni-7 code checkpoints", async ({page}) => {\n  const controller = await page.request.get("/neta-socials-testnet.js?v=13");\n  const source = await controller.text();\n  expect(source).toContain("mockCodeId:109,socialsCodeId:110");\n  expect(source).toContain("mock:null,socials:null");\n  expect(source).not.toContain("mock:saved.mock");\n});\n\ntest("NETA Socials testnet console surfaces a missing Keplr extension", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.stack || error.message));
   await page.goto("/neta-socials-testnet.html", {waitUntil: "domcontentloaded"});
