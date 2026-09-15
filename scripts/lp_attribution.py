@@ -34,20 +34,20 @@ def decode_state_blob(s):
     return base64.b64decode(s,altchars=b"-_")
 
 
-def contract_state(addr):
+def contract_state(addr,height=None):
     rows=[]; key=None
     while True:
         q={"pagination.limit":"5000"}
         if key:q["pagination.key"]=key
-        d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{addr}/state",q)
+        d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{addr}/state",q,height=height)
         rows += [(decode_state_blob(x["key"]),decode_state_blob(x["value"])) for x in d.get("models",[])]
         key=(d.get("pagination") or {}).get("next_key")
         if not key:return rows
 
 
-def smart(contract,msg):
+def smart(contract,msg,height=None):
     q=base64.b64encode(json.dumps(msg,separators=(",",":" )).encode()).decode()
-    d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{contract}/smart/{q}")
+    d,_=u.req_json(u.JUNO,f"/cosmwasm/wasm/v1/contract/{contract}/smart/{q}",height=height)
     return d.get("data",d)
 
 
@@ -78,8 +78,8 @@ def allocate_exact(pool_neta,economic,supply):
     return out
 
 
-def wynd_attribution():
-    lp_rows=contract_state(WYND_LP)
+def wynd_attribution(height=None):
+    lp_rows=contract_state(WYND_LP,height)
     direct={}; token_info=None
     for k,v in lp_rows:
         ns,suf=u.nskey(k)
@@ -96,7 +96,7 @@ def wynd_attribution():
     if custody<=0: raise RuntimeError("WYND stake contract has no LP custody")
 
     active={}; claims={}; unknown=[]
-    for k,v in contract_state(WYND_STAKE):
+    for k,v in contract_state(WYND_STAKE,height):
         ns,suf=u.nskey(k); obj=parse_json(v)
         if ns=="stake":
             try:
@@ -128,7 +128,7 @@ def wynd_attribution():
     if sum(economic.values())!=attributable_supply:
         raise RuntimeError("WYND economic LP shares plus pair minimum liquidity do not equal LP supply")
 
-    pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}})["balance"])
+    pool_neta=int(smart(u.NETA,{"balance":{"address":WYND_PAIR}},height=height)["balance"])
     neta=allocate_exact(pool_neta,economic,attributable_supply)
     return neta,{"pool_neta_raw":pool_neta,"lp_supply_raw":supply,"attributable_lp_supply_raw":attributable_supply,"economic_wallets":len(economic),"custody_lp_raw":custody,"active_lp_raw":sum(active.values()),"claim_lp_raw":sum(claims.values()),"pair_minimum_liquidity_lp_raw":pair_self_lp}
 
@@ -228,7 +228,11 @@ def osmosis_attribution(direct=None,height=None,rpc=None):
     pool=None
     for base in OSMO_LCD:
         try:
-            r=requests.get(base+f"/osmosis/gamm/v1beta1/pools/{OSMO_POOL_ID}",timeout=30);r.raise_for_status();pool=r.json().get("pool")
+            r=requests.get(
+                base+f"/osmosis/gamm/v1beta1/pools/{OSMO_POOL_ID}",
+                headers={"x-cosmos-block-height":str(height)},
+                timeout=30,
+            );r.raise_for_status();pool=r.json().get("pool")
             if pool:break
         except Exception:pass
     if not pool:raise RuntimeError("Osmosis Pool 631 query failed")
@@ -281,7 +285,10 @@ def osmosis_attribution(direct=None,height=None,rpc=None):
 
 
 def build():
-    wynd,wm=wynd_attribution(); osmo,om=osmosis_attribution()
+    juno_height=u.juno_snapshot()[0]
+    osmo_height,osmo_rpc=u.latest_height()
+    wynd,wm=wynd_attribution(juno_height)
+    osmo,om=osmosis_attribution(height=osmo_height,rpc=osmo_rpc)
     return {"wynd":wm,"osmosis_pool_631":om,"wynd_wallet_neta_raw":wynd,"osmosis_pool_631_wallet_neta_raw":osmo}
 
 
