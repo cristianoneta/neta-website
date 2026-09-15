@@ -64,3 +64,20 @@ docker run --rm -v "$(pwd)/contracts/neta-socials:/code" cosmwasm/optimizer:0.17
 ```
 
 Only the optimized `artifacts/neta_socials.wasm` file and its recorded checksum are intended for deployment.
+
+## Juno v30 compatibility evidence
+
+Verified on 2026-09-15:
+
+- A live Juno mainnet ABCI query reported application `juno` version `v30.0.0`.
+- The official Juno `v30.0.0` source pins `wasmd v0.61.11` and
+  `wasmvm/v3 v3.0.4`.
+- The exact optimized CosmWasm 1.5.11 contract checksum was already accepted,
+  instantiated and executed on Uni-7 under the same `wasmd v0.61.11`
+  generation.
+
+This is strong WASM ABI compatibility evidence, not permission to broadcast a
+mainnet deployment blindly. Immediately before mainnet, rerun the locked
+RustSec job, verify the live Juno app version has not changed, simulate StoreCode
+and Instantiate with the exact optimized artifact, and keep the instance paused
+until its real staking contract and eligibility queries are verified.
