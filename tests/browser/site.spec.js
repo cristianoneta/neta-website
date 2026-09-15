@@ -162,6 +162,13 @@ test("NETA Socials testnet accepts REST hex checksums and never re-uploads check
   expect(await page.evaluate(() => window.__uploads)).toBe(0);
 });
 
+test("NETA Socials testnet recovers an indexed-disabled unpause from contract state", async ({page}) => {
+  const controller = await page.request.get("/neta-socials-testnet.js?v=15");
+  const source = await controller.text();
+  expect(source).toContain("return recovered&&!recovered.paused;");
+  expect(source).toContain('tx={transactionHash:"RECOVERED_FROM_CHAIN"};');
+});
+
 test("NETA Socials testnet console surfaces a missing Keplr extension", async ({page}) => {
   const pageErrors = [];
   page.on("pageerror", error => pageErrors.push(error.stack || error.message));
