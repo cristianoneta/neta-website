@@ -157,6 +157,56 @@ test("NETA Socials testnet console is inert until explicitly connected", async (
   expect(await page.evaluate(() => window.__keplrCalls)).toBe(0);
 });
 
+test("NETA Socials mainnet deployment remains sequential and paused", async ({page}) => {
+  const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const stake = "juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh";
+  const contract = "juno1mainnetcontract0000000000000000000000000000000000000";
+  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+    contentType: "application/javascript",
+    body: `window.NetaRecoverySigning={connect:async()=>({client:{
+      getChainId:async()=>"juno-1",getBalance:async()=>({amount:"5000000"}),disconnect:()=>{},
+      queryContractSmart:async(target,message)=>message.staked_balance_at_height?{balance:"0",height:1}:message.config?{owner:"${owner}",pending_owner:null,stake_contract:"${stake}",minimum_stake:"10000000",paused:true,post_cooldown_seconds:30}:{address:"${owner}",staked:"0",minimum_stake:"10000000",owner_exempt:true,stake_eligible:true,banned:false,paused:true,cooldown_remaining_seconds:0,can_post:false},
+      upload:async()=>{window.__mainnetUpload=true;return{codeId:321,transactionHash:"UPLOAD_HASH"}},
+      instantiate:async(sender,codeId,message,label)=>{window.__mainnetInstantiate={sender,codeId,message,label};return{contractAddress:"${contract}",transactionHash:"INSTANTIATE_HASH"}}
+    }})};`,
+  }));
+  await page.route("**/cosmwasm/wasm/v1/**", route => {
+    const body = route.request().url().includes("/code/321")
+      ? {code_info: {code_id: "321", creator: owner, data_hash: "49da22c2837cbfb86bed4e714d840cffefa2e2d26e9660f47a3eb17f745ee869"}}
+      : {contract_info: {code_id: "321", creator: owner, admin: owner, label: "NETA Socials v1"}};
+    return route.fulfill({contentType: "application/json", body: JSON.stringify(body)});
+  });
+  await page.addInitScript(address => {
+    window.keplr = {
+      enable: async chainId => { window.__enabledChain = chainId; },
+      getOfflineSigner: () => ({getAccounts: async () => [{address}]}),
+      signDirect: async () => ({}), signAmino: async () => ({}),
+    };
+  }, owner);
+  await page.goto("/neta-socials-mainnet.html", {waitUntil: "domcontentloaded"});
+  await expect(page.locator("#mainnet-status")).toHaveText("NOT CONNECTED");
+  await expect(page.locator("#mainnet-upload")).toBeDisabled();
+  await expect(page.locator("#mainnet-instantiate")).toBeDisabled();
+  await expect(page.locator("#mainnet-verify")).toBeDisabled();
+  await page.locator("#mainnet-connect").click();
+  await expect(page.locator("#mainnet-preflight")).toBeEnabled();
+  await page.locator("#mainnet-preflight").click();
+  await expect(page.locator("#mainnet-upload")).toBeEnabled();
+  await page.locator("#mainnet-upload").click();
+  await expect(page.locator("#mainnet-instantiate")).toBeEnabled();
+  await page.locator("#mainnet-instantiate").click();
+  await expect.poll(() => page.evaluate(() => window.__mainnetInstantiate)).toEqual({
+    sender: owner,
+    codeId: 321,
+    message: {owner, stake_contract: stake, minimum_stake: "10000000"},
+    label: "NETA Socials v1",
+  });
+  await page.locator("#mainnet-verify").click();
+  await expect(page.locator("#mainnet-status")).toHaveText("MAINNET DEPLOYMENT VERIFIED · PAUSED");
+  await expect(page.locator("#mainnet-output")).toContainText('"public_frontend_enabled": false');
+  expect(await page.evaluate(() => window.__enabledChain)).toBe("juno-1");
+});
+
 test("NETA Socials testnet resumes from the confirmed uni-7 code checkpoints", async ({page}) => {
   const controller = await page.request.get("/neta-socials-testnet.js?v=13");
   const source = await controller.text();
