@@ -49,6 +49,8 @@ test("NETA Socials loads older threads in exact pages without duplicates", async
   await expect(page.locator(".thread-item:not(.thread-load-more)")).toHaveCount(10);
   await expect(page.locator(".thread-author .author-holdings")).toContainText("NETA TOTAL · OF WHICH");
   await expect(page.locator(".thread-author .author-holdings")).toContainText("NETA STAKED");
+  await expect(page.locator(".thread-author .author-name-row")).toHaveCSS("display", "flex");
+  await expect(page.locator(".thread-author .author-holdings")).toHaveCSS("color", "rgb(0, 255, 157)");
   const loadMore = page.getByRole("button", {name: "LOAD MORE · 10 OLDER THREADS"});
   await expect(loadMore).toBeVisible();
   await loadMore.click();
