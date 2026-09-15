@@ -1,0 +1,13 @@
+[advisories]
+# cosmwasm-std 1.5.11 includes cosmwasm-crypto only for non-WASM builds.
+# The affected curve code is absent from the deployed wasm32 artifact, and this
+# contract never handles secret scalar material in native tests.
+ignore = [
+  "RUSTSEC-2024-0344",
+  # Transitive cosmwasm-std 1.x derive helper; no patched compatible release.
+  "RUSTSEC-2024-0388",
+]
+
+[output]
+quiet = false
+deny = ["warnings"]
