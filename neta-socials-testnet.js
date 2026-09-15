@@ -28,7 +28,7 @@
     }catch(error){failures.push(`${base}: ${error instanceof Error?error.message:String(error)}`)}
     throw new Error(`CHAIN RECOVERY FAILED\n${failures.join("\n")}`);
   };
-  const hashHex=value=>[...Uint8Array.from(atob(value||""),character=>character.charCodeAt(0))].map(byte=>byte.toString(16).padStart(2,"0")).join("");
+  const hashHex=value=>/^[0-9a-f]{64}$/i.test(value||"")?value.toLowerCase():[...Uint8Array.from(atob(value||""),character=>character.charCodeAt(0))].map(byte=>byte.toString(16).padStart(2,"0")).join("");
   const recoverCode=async name=>{
     const data=await rest("/cosmwasm/wasm/v1/code?pagination.limit=1000&pagination.reverse=true");
     const match=(data.code_infos||[]).find(info=>info.creator===OWNER&&hashHex(info.data_hash)===ARTIFACTS[name].sha256);
@@ -93,8 +93,8 @@
     phase="JUNOX BALANCE";const balance=await deadline(state.client.getBalance(address,"ujunox"),45000,"JUNOX BALANCE");
     const account=state.client.getSequence?await state.client.getSequence(address).catch(()=>null):null;
     if(account?.sequence>0){
-      state.mockCodeId=await recoverCode("mock").catch(()=>CHECKPOINT.mockCodeId);
-      state.socialsCodeId=await recoverCode("socials").catch(()=>CHECKPOINT.socialsCodeId);
+      state.mockCodeId=await recoverCode("mock").catch(()=>null)||CHECKPOINT.mockCodeId;
+      state.socialsCodeId=await recoverCode("socials").catch(()=>null)||CHECKPOINT.socialsCodeId;
       state.mock=await recoverContract(state.mockCodeId,"NETA Socials uni-7 stake mock").catch(()=>null);
       state.socials=await recoverContract(state.socialsCodeId,"NETA Socials uni-7").catch(()=>null);
     }
