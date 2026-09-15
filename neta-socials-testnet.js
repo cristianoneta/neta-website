@@ -10,7 +10,9 @@
   const CHAIN={chainId:CHAIN_ID,chainName:"Juno Testnet",rpc:RPC,rest:"https://juno-testnet-api.polkachu.com",bip44:{coinType:118},bech32Config:{bech32PrefixAccAddr:"juno",bech32PrefixAccPub:"junopub",bech32PrefixValAddr:"junovaloper",bech32PrefixValPub:"junovaloperpub",bech32PrefixConsAddr:"junovalcons",bech32PrefixConsPub:"junovalconspub"},currencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6}],feeCurrencies:[{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6,gasPriceStep:{low:.003,average:.0045,high:.006}}],stakeCurrency:{coinDenom:"JUNOX",coinMinimalDenom:"ujunox",coinDecimals:6},features:["cosmwasm"]};
   const saved=(()=>{try{return JSON.parse(localStorage.getItem("neta-socials-uni7")||"{}")}catch{return{}}})();
   const state={client:null,address:null,mock:saved.mock||null,socials:saved.socials||null};
-  const $=id=>document.getElementById(id),status=$("#test-status"),output=$("#test-output");
+  const $=id=>document.getElementById(id),connect=$("#test-connect");
+  if(!connect){setTimeout(init,0);return}
+  const status=$("#test-status"),output=$("#test-output");
   const show=(label,data)=>{status.textContent=label;output.textContent=JSON.stringify(data,null,2)};
   const fail=error=>{status.textContent="FAILED";output.textContent=error instanceof Error?error.message:String(error)};
   const deadline=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(`${label} TIMED OUT AFTER ${ms/1000} SECONDS`)),ms))]);
@@ -24,7 +26,7 @@
     if(digest!==item.sha256)throw new Error("WASM CHECKSUM MISMATCH");
     return bytes;
   }
-  $("#test-connect").addEventListener("click",event=>busy(event.currentTarget,async()=>{
+  connect.addEventListener("click",event=>busy(event.currentTarget,async()=>{
     show("CONNECTING · CHECK KEPLR",{"next":"Approve the uni-7 connection in Keplr."});
     if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND — UNLOCK THE EXTENSION AND RELOAD THIS PAGE");
     await deadline(window.keplr.experimentalSuggestChain(CHAIN),12000,"CHAIN SUGGESTION");
