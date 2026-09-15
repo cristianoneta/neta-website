@@ -65,13 +65,16 @@ assert 'const MINIMUM_STAKE="10000000"' in mainnet_script
 assert 'config.paused!==true' in mainnet_script
 assert "set_paused" not in mainnet_script
 assert '"public_frontend_enabled": true' in mainnet_manifest
-assert '"deployment_status": "deployed_paused_verified"' in mainnet_manifest
+assert '"deployment_status": "live_verified"' in mainnet_manifest
 assert '"code_id": 5167' in mainnet_manifest
 assert '"contract_address": "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in mainnet_manifest
+assert '"verified_paused": false' in mainnet_manifest
+assert '"unpause_tx": "8B2354A8C603CB9EE0A95009FA734D3C4FEF84CA31AFB563D97D3EFDDADC3FD6"' in mainnet_manifest
 socials_html = (ROOT / "neta-socials.html").read_text(encoding="utf-8")
 socials_script = (ROOT / "neta-socials.js").read_text(encoding="utf-8")
 assert "assets/recovery-signing-client.js?v=7" in socials_html
 assert "ON-CHAIN MAINNET" in socials_html
+assert "<strong>LIVE</strong>" in socials_html
 assert 'CONTRACT="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9"' in socials_script
 assert 'CHAIN_ID="juno-1"' in socials_script
 assert "NetaRecoverySigning.execute" in socials_script
