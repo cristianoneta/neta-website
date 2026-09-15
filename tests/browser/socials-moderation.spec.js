@@ -21,13 +21,62 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await page.getByRole("button", {name: "CLOSE THREAD"}).click();
+  await expect(page.getByRole("dialog", {name: "CLOSE THREAD"})).toBeVisible();
+  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx)).toEqual({sender: owner, target: contract, message: {set_thread_closed: {thread_id: 1, closed: true}}, memo: "NETA Socials uni-7 close thread"});
   await expect(page.getByRole("button", {name: "REOPEN THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeDisabled();
   await page.getByRole("button", {name: "REOPEN THREAD"}).click();
+  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
   await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_thread_closed: {thread_id: 1, closed: false}});
   await expect(page.getByRole("button", {name: "CLOSE THREAD"})).toBeVisible();
   await expect(page.locator("#comment-body")).toBeEnabled();
+});
+
+test("NETA Socials confirms exact comment, ban and moderator actions", async ({page}) => {
+  const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
+  const user = "juno1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq5yw7w";
+  let hidden = false, banned = false, moderator = false;
+  await page.exposeFunction("__applySocialAction", message => {
+    if (message.set_comment_hidden) hidden = message.set_comment_hidden.hidden;
+    if (message.set_user_banned) banned = message.set_user_banned.banned;
+    if (message.set_moderator) moderator = message.set_moderator.enabled;
+  });
+  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+    contentType: "application/javascript",
+    body: `window.NetaSocialsTestnet={connect:async()=>({}),execute:async(_client,sender,target,message,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applySocialAction(message);return{transactionHash:"TEST_HASH"}}};`,
+  }));
+  await page.route("**/cosmwasm/wasm/v1/contract/**/smart/**", async route => {
+    const query = JSON.parse(Buffer.from(decodeURIComponent(route.request().url().split("/smart/")[1]), "base64").toString("utf8"));
+    let data = [];
+    if (query.threads) data = [{id: 1, author: owner, title: "Moderation", body: "Body", created_time: 1, comment_count: 1, closed: false}];
+    if (query.comments) data = [{id: 7, thread_id: 1, author: user, body: "Review me", created_time: 2, moderation: hidden ? {hidden: true, reason: "spam"} : null}];
+    if (query.comment_eligibility) data = {address: owner, staked: "0", minimum_stake: "10000000", owner_exempt: true, stake_eligible: true, banned: false, paused: false, cooldown_remaining_seconds: 0, can_post: true};
+    if (query.moderator) data = {address: query.moderator.address, moderator: query.moderator.address === owner || moderator};
+    if (query.ban_status) data = {address: query.ban_status.address, record: banned ? {banned: true, reason: "spam"} : null};
+    await route.fulfill({contentType: "application/json", body: JSON.stringify({data})});
+  });
+  await page.addInitScript(() => { window.keplr = {experimentalSuggestChain: async () => {}, enable: async () => {}, getOfflineSigner: () => ({getAccounts: async () => [{address: "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"}]}), signDirect: async () => ({}), signAmino: async () => ({})}; });
+  await page.goto("/neta-socials.html", {waitUntil: "domcontentloaded"});
+  await page.evaluate(address => dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: {address}})), owner);
+  await expect(page.getByRole("button", {name: "HIDE", exact: true})).toBeVisible();
+
+  await page.getByRole("button", {name: "HIDE", exact: true}).click();
+  await page.getByRole("button", {name: "CANCEL", exact: true}).click();
+  expect(await page.evaluate(() => window.__socialTx)).toBeUndefined();
+  await page.getByRole("button", {name: "MAKE MODERATOR", exact: true}).click();
+  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
+  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_moderator: {address: user, enabled: true}});
+
+  await page.getByRole("button", {name: "BAN USER", exact: true}).click();
+  await page.locator("#moderation-reason").fill("spam");
+  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
+  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_user_banned: {address: user, banned: true, reason: "spam"}});
+
+  await page.getByRole("button", {name: "HIDE", exact: true}).click();
+  await page.locator("#moderation-reason").fill("spam");
+  await page.getByRole("button", {name: "CONFIRM IN KEPLR"}).click();
+  await expect.poll(() => page.evaluate(() => window.__socialTx.message)).toEqual({set_comment_hidden: {thread_id: 1, comment_id: 7, hidden: true, reason: "spam"}});
 });
 
 test("NETA Socials loads older threads in exact pages without duplicates", async ({page}) => {
