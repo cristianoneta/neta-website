@@ -12,12 +12,12 @@
   <h1>NETA SOCIALS TESTNET</h1>
   <p>This console deploys the audited Socials build and a uni-7-only staking mock. Every transaction requires a separate Keplr confirmation. It never asks for a seed phrase and never attaches funds.</p>
   <div class="testnet-warning">TESTNET ONLY · JUNOX pays gas. Do not use production keys beyond signing normal uni-7 transactions.</div>
+  <p id="test-status" class="testnet-status" role="status">NOT CONNECTED</p>
   <div class="testnet-stage"><span>01</span><div><strong>CONNECT UNI-7</strong><small>Suggest the chain, verify the expected wallet and show its JUNOX balance.</small></div><button id="test-connect" type="button">CONNECT KEPLR</button></div>
   <div class="testnet-stage"><span>02</span><div><strong>DEPLOY STAKE MOCK</strong><small>Upload the locked mock WASM and instantiate it with a synthetic 10 NETA stake.</small></div><button id="test-mock" type="button" disabled>UPLOAD + DEPLOY</button></div>
   <div class="testnet-stage"><span>03</span><div><strong>DEPLOY SOCIALS</strong><small>Upload the exact optimized Socials WASM and instantiate it paused against the mock.</small></div><button id="test-socials" type="button" disabled>UPLOAD + DEPLOY</button></div>
   <div class="testnet-stage"><span>04</span><div><strong>VERIFY + UNPAUSE</strong><small>Query configuration and eligibility, then explicitly enable testnet posting.</small></div><button id="test-verify" type="button" disabled>VERIFY + UNPAUSE</button></div>
-  <p id="test-status" class="testnet-status" role="status">NOT CONNECTED</p>
   <pre id="test-output" class="testnet-output">No transactions submitted.</pre>
 </main>
-<script src="assets/socials-testnet-client.js?v=1"></script><script src="neta-socials-testnet.js?v=1"></script>
+<script src="assets/socials-testnet-client.js?v=1"></script><script src="neta-socials-testnet.js?v=2"></script>
 </body></html>
