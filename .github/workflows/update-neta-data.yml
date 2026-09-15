@@ -1,6 +1,8 @@
 name: Update NETA on-chain data
 # Schema v3: DAO maturity split, validated LP attribution, economic custody counts, cache refresh.
 
+# Full refresh checkpoint: 2026-09-15
+
 on:
   pull_request:
     branches: [main]
