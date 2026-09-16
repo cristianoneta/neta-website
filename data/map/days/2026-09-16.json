@@ -39,6 +39,19 @@
       "type": "swap",
       "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
       "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 70682504,
+      "id": "osmosis:32240B527D48C3CFE33CF30791A198AB31E3831A7E9D00DFCF32B45870E6B098:pool631:27",
+      "market": "pool-631",
+      "neta_raw": 241292,
+      "timestamp": "2026-09-16T08:19:48Z",
+      "txhash": "32240B527D48C3CFE33CF30791A198AB31E3831A7E9D00DFCF32B45870E6B098",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
     }
   ]
 }
