@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Deterministic tests for centralized production refresh cadence."""
 
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from data_refresh_schedule import due_collectors
 
+BERLIN = ZoneInfo("Europe/Berlin")
+
 
 def at(hour: int) -> datetime:
-    # September uses CEST, so Berlin local time is UTC + 2.
-    return datetime(2026, 9, 16, hour - 2, 7, tzinfo=timezone.utc)
+    return datetime(2026, 9, 16, hour, 7, tzinfo=BERLIN)
 
 
 def test_non_schedule_runs_everything() -> None:
