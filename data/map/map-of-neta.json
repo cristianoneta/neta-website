@@ -48,10 +48,21 @@
         "transfers": 1
       }
     ],
+    "top_transfers": [
+      {
+        "from_chain": "osmosis",
+        "neta": 28.601495,
+        "timestamp": "2026-09-16T17:01:38Z",
+        "to_chain": "juno",
+        "txhash": "F1724B2B876C507BFA202FCFDF13703E698FEB69DC84AE19693A6DB315D40FB5",
+        "wallet": "osmo1uynr9jqem0dlqpmnkq870tejzst4kmscxulms9",
+        "wallet_chain": "osmosis"
+      }
+    ],
     "transfers": 1,
     "volume_neta": 28.601495
   },
-  "generated_at": "2026-09-16T20:22:11.285831Z",
+  "generated_at": "2026-09-16T20:34:11.308681Z",
   "market": {
     "by_chain": {
       "osmosis": 14
@@ -93,16 +104,117 @@
   "periods": {
     "24h": {
       "available": true,
-      "coverage_percent": 100
+      "coverage_percent": 100,
+      "top_ibc_transfers": [
+        {
+          "from_chain": "osmosis",
+          "neta": 28.601495,
+          "timestamp": "2026-09-16T17:01:38Z",
+          "to_chain": "juno",
+          "txhash": "F1724B2B876C507BFA202FCFDF13703E698FEB69DC84AE19693A6DB315D40FB5",
+          "wallet": "osmo1uynr9jqem0dlqpmnkq870tejzst4kmscxulms9",
+          "wallet_chain": "osmosis"
+        }
+      ]
     },
     "30d": {
-      "available": false
+      "available": false,
+      "coverage_percent": 13.68,
+      "top_ibc_transfers": [
+        {
+          "from_chain": "juno",
+          "neta": 116.076969,
+          "timestamp": "2026-09-15T20:03:19Z",
+          "to_chain": "osmosis",
+          "txhash": "B326E7399774D8E52FA39DDB2EAD593B61C7813BA74FD4263CE39B551C9764DD",
+          "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+          "wallet_chain": "juno"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 28.601495,
+          "timestamp": "2026-09-16T17:01:38Z",
+          "to_chain": "juno",
+          "txhash": "F1724B2B876C507BFA202FCFDF13703E698FEB69DC84AE19693A6DB315D40FB5",
+          "wallet": "osmo1uynr9jqem0dlqpmnkq870tejzst4kmscxulms9",
+          "wallet_chain": "osmosis"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 3.0,
+          "timestamp": "2026-09-13T14:12:51Z",
+          "to_chain": "juno",
+          "txhash": "40D7CB95D4B07F8AFF83779BC10E57724ECD0EC2FC38624D791287232D030E27",
+          "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+          "wallet_chain": "osmosis"
+        }
+      ]
     },
     "7d": {
-      "available": false
+      "available": false,
+      "coverage_percent": 58.62,
+      "top_ibc_transfers": [
+        {
+          "from_chain": "juno",
+          "neta": 116.076969,
+          "timestamp": "2026-09-15T20:03:19Z",
+          "to_chain": "osmosis",
+          "txhash": "B326E7399774D8E52FA39DDB2EAD593B61C7813BA74FD4263CE39B551C9764DD",
+          "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+          "wallet_chain": "juno"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 28.601495,
+          "timestamp": "2026-09-16T17:01:38Z",
+          "to_chain": "juno",
+          "txhash": "F1724B2B876C507BFA202FCFDF13703E698FEB69DC84AE19693A6DB315D40FB5",
+          "wallet": "osmo1uynr9jqem0dlqpmnkq870tejzst4kmscxulms9",
+          "wallet_chain": "osmosis"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 3.0,
+          "timestamp": "2026-09-13T14:12:51Z",
+          "to_chain": "juno",
+          "txhash": "40D7CB95D4B07F8AFF83779BC10E57724ECD0EC2FC38624D791287232D030E27",
+          "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+          "wallet_chain": "osmosis"
+        }
+      ]
     },
     "90d": {
-      "available": false
+      "available": false,
+      "coverage_percent": 4.56,
+      "top_ibc_transfers": [
+        {
+          "from_chain": "juno",
+          "neta": 116.076969,
+          "timestamp": "2026-09-15T20:03:19Z",
+          "to_chain": "osmosis",
+          "txhash": "B326E7399774D8E52FA39DDB2EAD593B61C7813BA74FD4263CE39B551C9764DD",
+          "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+          "wallet_chain": "juno"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 28.601495,
+          "timestamp": "2026-09-16T17:01:38Z",
+          "to_chain": "juno",
+          "txhash": "F1724B2B876C507BFA202FCFDF13703E698FEB69DC84AE19693A6DB315D40FB5",
+          "wallet": "osmo1uynr9jqem0dlqpmnkq870tejzst4kmscxulms9",
+          "wallet_chain": "osmosis"
+        },
+        {
+          "from_chain": "osmosis",
+          "neta": 3.0,
+          "timestamp": "2026-09-13T14:12:51Z",
+          "to_chain": "juno",
+          "txhash": "40D7CB95D4B07F8AFF83779BC10E57724ECD0EC2FC38624D791287232D030E27",
+          "wallet": "osmo1f7qvypfaee56km5rp8lvay4f0saq9xn4mz2srn",
+          "wallet_chain": "osmosis"
+        }
+      ]
     }
   },
   "schema_version": 1,
