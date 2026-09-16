@@ -133,6 +133,7 @@ jobs:
           fi
           if [ "${{ steps.due.outputs.stats }}" = "true" ]; then
             git add data/recovery/recovery-events.json data/recovery/recovery-stats.json
+            git add docs/diagnostics/latest_wynd_recovery_stats_test.log
           fi
 
           if git diff --cached --quiet; then
