@@ -7,6 +7,7 @@
   <title>Map of NETA</title>
   <link rel="stylesheet" href="styles.css?v=20260914-7">
   <link rel="stylesheet" href="map-of-neta.css?v=9">
+  <link rel="stylesheet" href="map-of-neta-transfers.css?v=1">
   <link rel="stylesheet" href="map-of-neta-links.css?v=1">
   <link rel="stylesheet" href="ibc-transfer.css?v=2">
   <style>.ibc-explorer{display:inline-block;border:1px solid var(--g);padding:11px 14px;color:var(--g);font:700 11px monospace}.ibc-explorer[hidden]{display:none}</style>
@@ -95,6 +96,10 @@
         <div><span>TRANSFERS</span><strong id="transfers">0</strong></div>
         <div><span>NET FLOW</span><strong id="netFlow">0 NETA</strong></div>
       </div>
+      <section class="largest-transfers" aria-labelledby="largest-transfers-title">
+        <div class="largest-transfers-head"><span id="largest-transfers-title">LARGEST IBC TRANSFERS</span><small id="largest-transfers-period">24H</small></div>
+        <ol id="largestTransfers"><li class="empty-transfer">No verified IBC transfers in this period.</li></ol>
+      </section>
     </section>
     <aside class="movers-panel">
       <h2>MARKET MOVERS <span>· 24H</span></h2>
@@ -134,7 +139,7 @@
 </footer>
 <!-- site-footer:end -->
 <script src="matrix-background.js?v=1"></script>
-<script src="map-of-neta.js?v=6"></script>
+<script src="map-of-neta.js?v=7"></script>
   <script src="assets/ibc-signing-client.js?v=2"></script>
   <script src="ibc-transfer.js?v=8"></script>
   <script src="wallet-header.js?v=4" defer></script>

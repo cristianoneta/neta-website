@@ -1,0 +1,9 @@
+.largest-transfers{margin:0 14px 14px;border:1px solid #0d6a46;background:#010b07}
+.largest-transfers-head{display:flex;justify-content:space-between;padding:11px 16px;border-bottom:1px solid #0d6a46;color:#5fb895;font-size:10px;letter-spacing:2px}
+.largest-transfers-head small{color:var(--g2)}
+.largest-transfers ol{list-style:none;margin:0;padding:0}
+.largest-transfers li{display:grid;grid-template-columns:42px minmax(130px,.7fr) minmax(140px,.65fr) 1fr;align-items:center;gap:14px;padding:11px 16px;border-top:1px solid #123a2c;font-size:12px}
+.largest-transfers li:first-child{border-top:0}.transfer-rank{color:var(--g);font-weight:700}.transfer-route{color:#8bc9b1;letter-spacing:1px}.largest-transfers strong{color:var(--g2);font-size:14px}
+.transfer-meta{display:flex;justify-content:space-between;gap:16px;min-width:0}.transfer-meta a,.transfer-meta span{color:var(--g);text-decoration:none}.transfer-meta a:hover{text-decoration:underline}.transfer-meta time{color:#668679;white-space:nowrap}
+.largest-transfers .empty-transfer{display:block;color:#527465;padding:18px 16px}
+@media(max-width:700px){.largest-transfers li{grid-template-columns:32px 1fr auto}.transfer-meta{grid-column:2/-1}.transfer-meta time{font-size:10px}}
