@@ -171,31 +171,30 @@ def aggregate(root,all_events,state,metadata,registry):
     for e in flows:
         key=(e["from_chain"],e["to_chain"]); route_raw[key]=route_raw.get(key,0)+e["neta_raw"]
     routes=[{"from_chain":a,"to_chain":b,"neta":round(raw/1e6,6),"transfers":sum(1 for e in flows if e["from_chain"]==a and e["to_chain"]==b)} for (a,b),raw in sorted(route_raw.items())]
-    j2o=route_raw.get(("juno","osmosis"),0)/1e6
-    o2j=route_raw.get(("osmosis","juno"),0)/1e6
+    j2o=route_raw.get(("juno","osmosis"),0)/1e6; o2j=route_raw.get(("osmosis","juno"),0)/1e6
     discovered={}
     for e in (x for x in all_events if x["type"]=="ibc"):
         remote=e.get("remote_chain") or (e["to_chain"] if e["from_chain"]=="juno" else e["from_chain"])
-        x=discovered.setdefault(remote,{"id":remote,"name":registry["chains"].get(remote,{}).get("name",remote),"movement_verified":bool(e.get("chain_verified")),"ranking_supported":registry["chains"].get(remote,{}).get("ranking_supported",False),"events":0})
-        x["events"]+=1
+        x=discovered.setdefault(remote,{"id":remote,"name":registry["chains"].get(remote,{}).get("name",remote),"movement_verified":bool(e.get("chain_verified")),"ranking_supported":registry["chains"].get(remote,{}).get("ranking_supported",False),"events":0}); x["events"]+=1
     movers={}
     for e in swaps:
         x=movers.setdefault(e["wallet_id"],{"wallet":e.get("wallet"),"bought_raw":0,"sold_raw":0,"swaps":0})
         if e["direction"]=="buy": x["bought_raw"]+=e["neta_raw"]
         else: x["sold_raw"]+=e["neta_raw"]
         x["swaps"]+=1
-    for x in movers.values():
-        x["net_raw"]=x["bought_raw"]-x["sold_raw"]
+    for x in movers.values(): x["net_raw"]=x["bought_raw"]-x["sold_raw"]
     by_chain={}
-    for e in swaps:
-        by_chain[e["chain"]]=by_chain.get(e["chain"],0)+1
-    buyers=sorted((x for x in movers.values() if x["net_raw"]>0),key=lambda x:-x["net_raw"])[:3]
-    sellers=sorted((x for x in movers.values() if x["net_raw"]<0),key=lambda x:x["net_raw"])[:3]
+    for e in swaps: by_chain[e["chain"]]=by_chain.get(e["chain"],0)+1
+    buyers=sorted((x for x in movers.values() if x["net_raw"]>0),key=lambda x:-x["net_raw"])[:3]; sellers=sorted((x for x in movers.values() if x["net_raw"]<0),key=lambda x:x["net_raw"])[:3]
     def public(x): return {"wallet":x["wallet"],"net_neta":round(x["net_raw"]/1e6,6),"bought_neta":round(x["bought_raw"]/1e6,6),"sold_neta":round(x["sold_raw"]/1e6,6),"swaps":x["swaps"]}
-    supply=float(metadata["total_supply_neta"]); osmo=float(metadata["excluded_bridge_escrow_neta"])
-    started=parse_time(state["collection_started_at"]); coverage=min(1,(t-started).total_seconds()/86400)
+    def transfer_public(e): return {"neta":round(e["neta_raw"]/1e6,6),"from_chain":e["from_chain"],"to_chain":e["to_chain"],"wallet":e.get("sender") or e.get("receiver"),"wallet_chain":e["from_chain"],"timestamp":e["timestamp"],"txhash":e["txhash"]}
+    def top_transfers(hours):
+        selected=(e for e in all_events if e["type"]=="ibc" and parse_time(e["timestamp"])>=t-dt.timedelta(hours=hours))
+        return [transfer_public(e) for e in sorted(selected,key=lambda e:(-e["neta_raw"],e["timestamp"],e["id"]))[:3]]
+    supply=float(metadata["total_supply_neta"]); osmo=float(metadata["excluded_bridge_escrow_neta"]); started=parse_time(state["collection_started_at"]); elapsed_hours=max(0,(t-started).total_seconds()/3600)
+    periods={label:{"available":elapsed_hours>=hours,"coverage_percent":round(min(1,elapsed_hours/hours)*100,2),"top_ibc_transfers":top_transfers(hours)} for label,hours in (("24h",24),("7d",168),("30d",720),("90d",2160))}
     chain_totals_match=sum(by_chain.values())==len(swaps)
-    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":chain_totals_match,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True,"unknown_routes_not_misclassified":all(not (e.get("chain_resolution")=="unresolved" and e.get("remote_chain")=="osmosis") for e in flows),"swap_chain_totals_match":chain_totals_match},"periods":{"24h":{"available":coverage>=1,"coverage_percent":round(coverage*100,2)},"7d":{"available":False},"30d":{"available":False},"90d":{"available":False}},"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)},{"id":"phoenix-1","name":"Terra","role":"future","neta":0.0}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows),"routes":routes,"discovered_chains":sorted(discovered.values(),key=lambda x:x["id"])},"market":{"swaps":len(swaps),"by_chain":dict(sorted(by_chain.items())),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
+    return {"schema_version":1,"generated_at":iso(t),"collection_started_at":state["collection_started_at"],"validation":{"passed":chain_totals_match,"event_ids_unique":len(all_events)==len({e["id"] for e in all_events}),"cursors_monotonic":True,"unknown_routes_not_misclassified":all(not (e.get("chain_resolution")=="unresolved" and e.get("remote_chain")=="osmosis") for e in flows),"swap_chain_totals_match":chain_totals_match},"periods":periods,"chains":[{"id":"juno-1","name":"Juno","role":"origin","neta":round(supply-osmo,6)},{"id":"osmosis-1","name":"Osmosis","role":"ibc","neta":round(osmo,6)},{"id":"phoenix-1","name":"Terra","role":"future","neta":0.0}],"flows":{"juno_to_osmosis_neta":round(j2o,6),"osmosis_to_juno_neta":round(o2j,6),"volume_neta":round(j2o+o2j,6),"net_to_osmosis_neta":round(j2o-o2j,6),"transfers":len(flows),"routes":routes,"top_transfers":periods["24h"]["top_ibc_transfers"],"discovered_chains":sorted(discovered.values(),key=lambda x:x["id"])},"market":{"swaps":len(swaps),"by_chain":dict(sorted(by_chain.items())),"power_buyers":[public(x) for x in buyers],"top_sellers":[public(x) for x in sellers]}}
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--root",default="."); a=ap.parse_args(); root=Path(a.root)
