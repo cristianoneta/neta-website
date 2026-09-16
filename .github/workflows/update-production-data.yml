@@ -1,0 +1,169 @@
+name: Update production data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "7 * * * *"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-production-data.yml"
+      - "scripts/data_refresh_schedule.py"
+      - "scripts/test_data_refresh_schedule.py"
+      - "scripts/update_neta_data.py"
+      - "scripts/run_neta_data.py"
+      - "scripts/lp_attribution.py"
+      - "scripts/update_map_of_neta.py"
+      - "scripts/update_wynd_recovery_market.py"
+      - "scripts/update_wynd_recovery_leaderboard.py"
+      - "scripts/update_wynd_recovery_stats.py"
+      - "scripts/validate_wynd_recovery_snapshots.py"
+      - "scripts/test_*.py"
+      - "data/map/chains.json"
+      - "data/recovery/wynd-pools.json"
+      - "requirements.txt"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-production-data.yml"
+      - "scripts/data_refresh_schedule.py"
+      - "scripts/test_data_refresh_schedule.py"
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: production-data-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect-validate-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout one coherent source snapshot
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Select collectors due now
+        id: due
+        run: |
+          PYTHONPATH=scripts python scripts/test_data_refresh_schedule.py
+          python scripts/data_refresh_schedule.py \
+            --event "${{ github.event_name }}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Collect and validate NETA ranking
+        if: steps.due.outputs.neta == 'true'
+        run: |
+          PYTHONPATH=scripts python scripts/test_neta_snapshot_consistency.py
+          PYTHONPATH=scripts python scripts/test_neta_bridge_accounting.py
+          python scripts/run_neta_data.py --output .
+          python - <<'PY'
+          import json
+          metadata = json.load(open("metadata.json", encoding="utf-8"))
+          if metadata.get("validation", {}).get("passed") is not True:
+              raise SystemExit("NETA accounting validation did not pass")
+          PY
+
+      - name: Collect and validate Map of NETA
+        if: steps.due.outputs.map == 'true'
+        run: |
+          python scripts/test_map_chain_detection.py
+          python scripts/update_map_of_neta.py --root .
+          python - <<'PY'
+          import json
+          payload = json.load(open("data/map/map-of-neta.json", encoding="utf-8"))
+          if payload.get("validation", {}).get("passed") is not True:
+              raise SystemExit("Map of NETA validation did not pass")
+          PY
+
+      - name: Collect and validate WYND market
+        if: steps.due.outputs.market == 'true'
+        run: |
+          PYTHONPATH=scripts python scripts/test_neta_core.py
+          PYTHONPATH=scripts python scripts/test_wynd_recovery_market.py
+          PYTHONPATH=scripts python scripts/test_wynd_recovery_leaderboard.py
+          PYTHONPATH=scripts python scripts/test_wynd_recovery_snapshots.py
+          python scripts/update_wynd_recovery_market.py --root .
+          PYTHONPATH=scripts python scripts/update_wynd_recovery_leaderboard.py --root .
+          PYTHONPATH=scripts python scripts/validate_wynd_recovery_snapshots.py --root .
+
+      - name: Collect and validate WYND recovery statistics
+        if: steps.due.outputs.stats == 'true'
+        run: |
+          mkdir -p docs/diagnostics
+          set -o pipefail
+          { python scripts/test_wynd_recovery_stats.py && python scripts/update_wynd_recovery_stats.py --root .; } \
+            2>&1 | tee docs/diagnostics/latest_wynd_recovery_stats_test.log
+
+      - name: Validate complete publication snapshot
+        run: |
+          PYTHONPATH=scripts python scripts/validate_wynd_recovery_snapshots.py --root .
+          python scripts/check_data_freshness.py --root .
+
+      - name: Publish one atomic data commit
+        if: github.event_name != 'pull_request'
+        id: publish
+        shell: bash
+        run: |
+          git config user.name "NETA Reborn Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          if [ "${{ steps.due.outputs.neta }}" = "true" ]; then
+            git add holders.json address_index.json metadata.json data.js address-index.js
+          fi
+          if [ "${{ steps.due.outputs.map }}" = "true" ]; then
+            git add data/map
+          fi
+          if [ "${{ steps.due.outputs.market }}" = "true" ]; then
+            git add data/recovery/wynd-market.json data/recovery/wynd-leaderboard.json
+          fi
+          if [ "${{ steps.due.outputs.stats }}" = "true" ]; then
+            git add data/recovery/recovery-events.json data/recovery/recovery-stats.json
+          fi
+
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No validated data changes to publish."
+            exit 0
+          fi
+
+          git commit -m "chore: publish validated production data"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase -X theirs origin/main
+            if git push origin HEAD:main; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if [ "$attempt" = 3 ]; then
+              echo "Atomic production-data push failed after three attempts." >&2
+              exit 1
+            fi
+            sleep $((attempt * 2))
+          done
+
+      - name: Request one GitHub Pages rebuild
+        if: github.event_name != 'pull_request' && steps.publish.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          curl --fail-with-body --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"

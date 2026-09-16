@@ -181,15 +181,30 @@ frontend is live, and the admin surface retains the emergency-pause path.
 
 ## Data-worker refresh and immutable snapshots
 
-Production refreshes must be dispatched from the current `main` branch. Do not
-use GitHub's "re-run job" action on an old scheduled run: GitHub retains that
-run's original head SHA, so the worker can calculate valid data from stale
-source and then conflict with newer generated files. All production collectors
-therefore explicitly check out `main`. Each collector has its own concurrency
-group because GitHub retains only one running and one pending job per group;
-a shared group silently cancelled excess refreshes. The collectors write
-disjoint generated files, and current-main checkout plus deterministic rebases
-allow all four refreshes to run without losing newer commits.
+Production collection and publication are centralized in
+`.github/workflows/update-production-data.yml`. A single run checks out one
+coherent source snapshot, executes only the collectors due at that Berlin-local
+hour, validates the complete publication snapshot, creates at most one data
+commit and requests at most one Pages rebuild. The former standalone writer
+workflows were retired so independently correct collectors cannot race while
+pushing to `main`.
+
+The production cadence is:
+
+- Map of NETA and recovery statistics: hourly.
+- Economic NETA ranking: every three hours.
+- WYND recovery market and leaderboard: every six hours at 03:00, 09:00,
+  15:00 and 21:00 Europe/Berlin.
+- A manual dispatch or a qualifying production-code push runs every collector,
+  which is the supported full-refresh path outside the normal schedule.
+
+Pull requests run the same collectors and validations but never commit data or
+request Pages. Production runs use one concurrency group with
+`cancel-in-progress: false`; normal runtimes remain well below the hourly
+interval. The publisher still uses a bounded three-attempt
+`fetch main` → deterministic rebase → push loop because a human commit can
+land during collection even though data workers no longer compete with one
+another.
 
 The NETA indexer chooses one finalized Juno height at the beginning of a build.
 Every Juno CW20, DAO, WYND LP, WYND staking, pair-reserve and ICS20 query carries
@@ -203,9 +218,3 @@ The amount remains an explicit unattributed bridge residual until delivery. A
 negative difference or a positive difference without packet evidence fails
 closed. The unresolved Terra `0.010000 NETA` remains separate and is not
 covered by this active Osmosis-transit classification.
-
-Every collector that commits generated data must also tolerate a concurrent
-writer landing between its fetch/rebase and push. Use a bounded three-attempt
-`fetch main` → deterministic rebase → push loop with short backoff. Separate
-concurrency groups prevent cancellation; the retry loop prevents the remaining
-non-fast-forward race without weakening any data validation.
