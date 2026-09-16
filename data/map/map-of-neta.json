@@ -3,13 +3,13 @@
     {
       "id": "juno-1",
       "name": "Juno",
-      "neta": 21290.101491,
+      "neta": 21318.702986,
       "role": "origin"
     },
     {
       "id": "osmosis-1",
       "name": "Osmosis",
-      "neta": 10596.498509,
+      "neta": 10567.897014,
       "role": "ibc"
     },
     {
@@ -57,7 +57,7 @@
     "transfers": 2,
     "volume_neta": 144.678464
   },
-  "generated_at": "2026-09-16T18:23:41.602889Z",
+  "generated_at": "2026-09-16T19:24:20.981822Z",
   "market": {
     "by_chain": {
       "juno": 18,
