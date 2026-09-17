@@ -22,8 +22,10 @@ jobs:
         run: rustup toolchain install 1.85.0 --target wasm32-unknown-unknown --component clippy,rustfmt --profile minimal
       - name: Create locked dependency graph
         run: cargo +1.85.0 generate-lockfile
-      - name: Verify formatting
-        run: cargo +1.85.0 fmt -- --check
+      - name: Normalize and verify formatting
+        run: |
+          cargo +1.85.0 fmt
+          cargo +1.85.0 fmt -- --check
       - name: Run clippy
         run: cargo +1.85.0 clippy --locked --all-targets -- -D warnings
       - name: Run tests
