@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://juno.test.rpc.nodeshub.online https://juno.test.api.nodeshub.online https://juno.rpc.t.stavr.tech https://juno.api.t.stavr.tech; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>NETA Governance — uni-7 deployment console</title>
+  <link rel="stylesheet" href="styles.css?v=20260914-7"><link rel="stylesheet" href="neta-socials-testnet.css?v=1"><link rel="stylesheet" href="neta-governance-testnet.css?v=1">
+</head>
+<body>
+<main class="testnet-page">
+  <div class="kicker">HIDDEN DEPLOYMENT CONSOLE · UNI-7 ONLY</div>
+  <h1>NETA GOVERNANCE TESTNET</h1>
+  <p>This console deploys the two WASM files produced by PR #125. Every write requires a separate Keplr confirmation, attaches no funds and is restricted to the configured test wallet.</p>
+  <div class="testnet-warning">TESTNET ONLY · JUNOX pays gas. Extract both downloaded CI artifacts and select the <code>.wasm</code> files below.</div>
+  <p id="test-status" class="testnet-status" role="status">NOT CONNECTED</p>
+
+  <div class="testnet-stage"><span>01</span><div><strong>CONNECT UNI-7</strong><small>Suggest uni-7, verify the expected wallet and display its JUNOX balance.</small></div><button id="test-connect" type="button">CONNECT KEPLR</button></div>
+
+  <div class="testnet-stage artifact-stage"><span>02</span><div><strong>SELECT ACCESS MOCK WASM</strong><small>Use <code>neta_socials_stake_mock.wasm</code> from the green testnet-mock artifact.</small><input id="mock-wasm" type="file" accept=".wasm,application/wasm"></div><button id="test-mock" type="button" disabled>UPLOAD + DEPLOY</button></div>
+
+  <div class="testnet-stage artifact-stage"><span>03</span><div><strong>SELECT GOVERNANCE WASM</strong><small>Use <code>neta_governance.wasm</code> from the green governance artifact.</small><input id="governance-wasm" type="file" accept=".wasm,application/wasm"></div><button id="test-governance" type="button" disabled>UPLOAD + DEPLOY PAUSED</button></div>
+
+  <div class="testnet-stage"><span>04</span><div><strong>VERIFY + UNPAUSE</strong><small>Verify owner, access contracts, strict 10 NETA threshold and paused state; then enable Uni-7 testing with one explicit transaction.</small></div><button id="test-verify" type="button" disabled>VERIFY + UNPAUSE</button></div>
+
+  <div class="testnet-stage"><span>05</span><div><strong>RUN PERMISSION SMOKE TEST</strong><small>Publish a minimal test draft and move it from Discussion to Voting through the same contract messages used by the UI.</small></div><button id="test-smoke" type="button" disabled>RUN TWO TRANSACTIONS</button></div>
+  <pre id="test-output" class="testnet-output">No transactions submitted.</pre>
+</main>
+<script src="assets/socials-testnet-client.js?v=3"></script><script src="neta-governance-testnet.js?v=1"></script>
+</body></html>
+
