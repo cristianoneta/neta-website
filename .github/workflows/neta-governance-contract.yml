@@ -1,0 +1,48 @@
+name: NETA Governance contract
+
+on:
+  pull_request:
+    paths:
+      - "contracts/neta-governance/**"
+      - ".github/workflows/neta-governance-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/neta-governance
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.85.0 --target wasm32-unknown-unknown --component clippy,rustfmt --profile minimal
+      - name: Create locked dependency graph
+        run: cargo +1.85.0 generate-lockfile
+      - name: Verify formatting
+        run: cargo +1.85.0 fmt -- --check
+      - name: Run clippy
+        run: cargo +1.85.0 clippy --locked --all-targets -- -D warnings
+      - name: Run tests
+        run: cargo +1.85.0 test --locked
+      - name: Build optimized Uni-7 WASM
+        run: |
+          docker run --rm \
+            -v "$PWD:/code" \
+            --mount type=volume,source=neta_governance_cache,target=/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+            cosmwasm/optimizer:0.17.0
+      - name: Verify artifact checksum
+        run: cd artifacts && sha256sum -c checksums.txt
+      - name: Upload Uni-7 artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: neta-governance-uni7
+          path: |
+            contracts/neta-governance/Cargo.lock
+            contracts/neta-governance/artifacts/neta_governance.wasm
+            contracts/neta-governance/artifacts/checksums.txt
+          if-no-files-found: error
