@@ -1,7 +1,7 @@
 WYND recovery stats parser tests passed
 {
   "status": "COLLECTING",
-  "last_height": 41827000,
+  "last_height": 41829792,
   "new_tagged_events": 0,
   "total_events": 1
 }
