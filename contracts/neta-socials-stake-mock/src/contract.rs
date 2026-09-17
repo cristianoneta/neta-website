@@ -1,5 +1,8 @@
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, StakedBalanceAtHeightResponse};
+use crate::msg::{
+    ExecuteMsg, InstantiateMsg, QueryMsg, StakedBalanceAtHeightResponse,
+    VotingPowerAtHeightResponse,
+};
 use crate::state::{BALANCES, OWNER};
 use cosmwasm_std::{
     entry_point, to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
@@ -74,6 +77,14 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
                 .may_load(deps.storage, &address)?
                 .unwrap_or_else(Uint128::zero);
             to_json_binary(&StakedBalanceAtHeightResponse { balance, height })
+        }
+        QueryMsg::VotingPowerAtHeight { address, height } => {
+            let address = deps.api.addr_validate(&address)?;
+            let height = height.unwrap_or(env.block.height).min(env.block.height);
+            let power = BALANCES
+                .may_load(deps.storage, &address)?
+                .unwrap_or_else(Uint128::zero);
+            to_json_binary(&VotingPowerAtHeightResponse { power, height })
         }
     }
 }
