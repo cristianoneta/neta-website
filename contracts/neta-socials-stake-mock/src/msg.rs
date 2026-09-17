@@ -26,10 +26,21 @@ pub enum QueryMsg {
         address: String,
         height: Option<u64>,
     },
+    #[returns(VotingPowerAtHeightResponse)]
+    VotingPowerAtHeight {
+        address: String,
+        height: Option<u64>,
+    },
 }
 
 #[cw_serde]
 pub struct StakedBalanceAtHeightResponse {
     pub balance: Uint128,
+    pub height: u64,
+}
+
+#[cw_serde]
+pub struct VotingPowerAtHeightResponse {
+    pub power: Uint128,
     pub height: u64,
 }
