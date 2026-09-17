@@ -25,7 +25,31 @@
   function enable(){$("#test-mock").disabled=!state.client||!$("#mock-wasm").files[0]||!!state.mock;$("#test-governance").disabled=!state.mock||!$("#governance-wasm").files[0]||!!state.governance;$("#test-verify").disabled=!state.governance;}
   restore();
   $("#mock-wasm").onchange=enable;$("#governance-wasm").onchange=enable;
-  $("#test-connect").onclick=e=>busy(e.currentTarget,async()=>{if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND");await window.keplr.experimentalSuggestChain(CHAIN);await window.keplr.enable(CHAIN_ID);const base=window.keplr.getOfflineSigner?.(CHAIN_ID)||window.getOfflineSigner?.(CHAIN_ID);if(!base)throw new Error("UNI-7 SIGNER UNAVAILABLE");const signer={getAccounts:()=>base.getAccounts(),signDirect:(a,d)=>window.keplr.signDirect(CHAIN_ID,a,d,{preferNoSetFee:true}),signAmino:(a,d)=>window.keplr.signAmino(CHAIN_ID,a,d,{preferNoSetFee:true})};state.address=(await signer.getAccounts())[0]?.address;if(state.address!==OWNER)throw new Error(`EXPECTED ${OWNER}, RECEIVED ${state.address||"NO ACCOUNT"}`);for(const rpc of RPCS)try{state.client=await deadline(NetaSocialsTestnet.connect(rpc,signer),45000,"RPC CONNECTION");break}catch{}if(!state.client)throw new Error("ALL UNI-7 RPC ENDPOINTS FAILED");const balance=await state.client.getBalance(state.address,"ujunox");e.currentTarget.textContent="CONNECTED · UNI-7";e.currentTarget.dataset.done="true";enable();show("CONNECTED",{address:state.address,junox:Number(balance.amount)/1e6,recovered:{access_mock:state.mock,governance:state.governance}})});
+  $("#test-connect").onclick=e=>busy(e.currentTarget,async()=>{
+    const button=e.currentTarget;
+    button.textContent="CHECK KEPLR";
+    show("CONNECTING · OPEN KEPLR",{next:"Approve the uni-7 chain suggestion. If no popup is visible, open the Keplr extension manually."});
+    if(!window.keplr?.experimentalSuggestChain)throw new Error("KEPLR NOT FOUND — UNLOCK THE EXTENSION AND RELOAD THIS PAGE");
+    await deadline(window.keplr.experimentalSuggestChain(CHAIN),45000,"CHAIN SUGGESTION");
+    show("CONNECTING · WALLET ACCESS",{next:"Approve access to the uni-7 account in Keplr."});
+    await deadline(window.keplr.enable(CHAIN_ID),15000,"KEPLR ACCESS");
+    const base=window.keplr.getOfflineSigner?.(CHAIN_ID)||window.getOfflineSigner?.(CHAIN_ID);
+    if(!base)throw new Error("UNI-7 SIGNER UNAVAILABLE");
+    const signer={getAccounts:()=>base.getAccounts(),signDirect:(a,d)=>window.keplr.signDirect(CHAIN_ID,a,d,{preferNoSetFee:true}),signAmino:(a,d)=>window.keplr.signAmino(CHAIN_ID,a,d,{preferNoSetFee:true})};
+    show("CONNECTING · CHECKING ACCOUNT");
+    state.address=(await deadline(signer.getAccounts(),15000,"ACCOUNT LOOKUP"))[0]?.address;
+    if(state.address!==OWNER)throw new Error(`EXPECTED ${OWNER}, RECEIVED ${state.address||"NO ACCOUNT"}`);
+    const failures=[];
+    for(const rpc of RPCS){
+      show("CONNECTING · CHECKING RPC",{rpc,attempt:failures.length+1,total:RPCS.length});
+      try{state.client=await deadline(NetaSocialsTestnet.connect(rpc,signer),45000,"RPC CONNECTION");break}catch(error){failures.push(`${rpc}: ${error?.message||String(error)}`)}
+    }
+    if(!state.client)throw new Error(`ALL UNI-7 RPC ENDPOINTS FAILED\n${failures.join("\n")}`);
+    show("CONNECTING · READING JUNOX BALANCE");
+    const balance=await deadline(state.client.getBalance(state.address,"ujunox"),30000,"BALANCE QUERY");
+    button.textContent="CONNECTED · UNI-7";button.dataset.done="true";enable();
+    show("CONNECTED",{address:state.address,junox:Number(balance.amount)/1e6,recovered:{access_mock:state.mock,governance:state.governance}})
+  });
   $("#test-mock").onclick=e=>busy(e.currentTarget,async()=>{const artifact=await selected("#mock-wasm");const up=await upload(artifact,"NETA Governance uni-7 access mock upload");state.mockCodeId=up.codeId;const ins=await instantiate(up.codeId,{owner:state.address,balances:[{address:state.address,balance:"11000000"}]},"NETA Governance uni-7 access mock");state.mock=ins.contractAddress;persist();e.currentTarget.dataset.done="true";enable();show("ACCESS MOCK DEPLOYED",{code_id:up.codeId,contract:state.mock,synthetic_stake_neta:11,upload_tx:up.transactionHash,instantiate_tx:ins.transactionHash})});
   $("#test-governance").onclick=e=>busy(e.currentTarget,async()=>{const artifact=await selected("#governance-wasm");const up=await upload(artifact,"NETA Governance uni-7 upload");state.governanceCodeId=up.codeId;const ins=await instantiate(up.codeId,{owner:state.address,dao_voting_contract:state.mock,stake_contract:state.mock,comment_threshold:"10000000"},"NETA Governance uni-7");state.governance=ins.contractAddress;persist();e.currentTarget.dataset.done="true";enable();show("GOVERNANCE DEPLOYED · PAUSED",{code_id:up.codeId,contract:state.governance,access_mock:state.mock,threshold_neta:"strictly > 10",upload_tx:up.transactionHash,instantiate_tx:ins.transactionHash})});
   $("#test-verify").onclick=e=>busy(e.currentTarget,async()=>{const before=await NetaSocialsTestnet.query(state.client,state.governance,{config:{}});if(before.owner!==state.address||before.dao_voting_contract!==state.mock||before.stake_contract!==state.mock||before.comment_threshold!=="10000000"||!before.paused)throw new Error("PAUSED CONFIG VERIFICATION FAILED");const tx=await execute(state.governance,{set_paused:{paused:false}},"Enable NETA Governance uni-7",async()=>!(await NetaSocialsTestnet.query(state.client,state.governance,{config:{}})).paused);const config=await NetaSocialsTestnet.query(state.client,state.governance,{config:{}}),access=await NetaSocialsTestnet.query(state.client,state.governance,{access:{address:state.address}});if(config.paused||!access.can_publish||!access.can_comment)throw new Error("POST-DEPLOY ACCESS VERIFICATION FAILED");e.currentTarget.dataset.done="true";$("#test-smoke").disabled=false;show("DEPLOYMENT VERIFIED · TESTING ENABLED",{contract:state.governance,unpause_tx:tx.transactionHash,config,access})});
