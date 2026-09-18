@@ -3,13 +3,13 @@
     {
       "id": "juno-1",
       "name": "Juno",
-      "neta": 21318.702986,
+      "neta": 21218.702986,
       "role": "origin"
     },
     {
       "id": "osmosis-1",
       "name": "Osmosis",
-      "neta": 10567.897014,
+      "neta": 10667.897014,
       "role": "ibc"
     },
     {
@@ -62,10 +62,10 @@
     "transfers": 1,
     "volume_neta": 100.0
   },
-  "generated_at": "2026-09-18T06:25:50.214369Z",
+  "generated_at": "2026-09-18T07:24:42.807433Z",
   "market": {
     "by_chain": {
-      "osmosis": 41
+      "osmosis": 44
     },
     "power_buyers": [
       {
@@ -90,7 +90,7 @@
         "wallet": "osmo10xq0kqczu556lr0q8gzxhq95ff30l64lavneen"
       }
     ],
-    "swaps": 41,
+    "swaps": 44,
     "top_sellers": [
       {
         "bought_neta": 0.0,
@@ -133,7 +133,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 18.38,
+      "coverage_percent": 18.52,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -166,7 +166,7 @@
     },
     "7d": {
       "available": false,
-      "coverage_percent": 78.77,
+      "coverage_percent": 79.36,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -199,7 +199,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 6.13,
+      "coverage_percent": 6.17,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
