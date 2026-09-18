@@ -71,23 +71,26 @@
       {
         "bought_neta": 48.108757,
         "net_neta": 48.108757,
-        "sold_neta": 0.0,
-        "swaps": 6,
-        "wallet": "osmo1g5msdjxz790xzhl5al7lpwt8w9nfams6pv93uy"
+      "sold_neta": 0.0,
+      "swaps": 6,
+      "total_neta": 54.537246,
+      "wallet": "osmo1g5msdjxz790xzhl5al7lpwt8w9nfams6pv93uy"
       },
       {
         "bought_neta": 42.711925,
         "net_neta": 30.025423,
-        "sold_neta": 12.686502,
-        "swaps": 5,
-        "wallet": "osmo12mvlwequdm23ltcl4utawkfm0ezxt3xhrucfpv"
+      "sold_neta": 12.686502,
+      "swaps": 5,
+      "total_neta": 42.711926,
+      "wallet": "osmo12mvlwequdm23ltcl4utawkfm0ezxt3xhrucfpv"
       },
       {
         "bought_neta": 7.344347,
         "net_neta": 7.344347,
-        "sold_neta": 0.0,
-        "swaps": 1,
-        "wallet": "osmo1yf5k9ausjy8ejf2507f8s0cssqwuhtgcgpjgu3"
+      "sold_neta": 0.0,
+      "swaps": 1,
+      "total_neta": 0.0,
+      "wallet": "osmo1yf5k9ausjy8ejf2507f8s0cssqwuhtgcgpjgu3"
       }
     ],
     "swaps": 82,
@@ -95,23 +98,26 @@
       {
         "bought_neta": 0.0,
         "net_neta": -99.8,
-        "sold_neta": 99.8,
-        "swaps": 1,
-        "wallet": "osmo1eghwxnz0e2549jv97vrkl5yskd86rqe2yaqwm2"
+      "sold_neta": 99.8,
+      "swaps": 1,
+      "total_neta": 0.0,
+      "wallet": "osmo1eghwxnz0e2549jv97vrkl5yskd86rqe2yaqwm2"
       },
       {
         "bought_neta": 0.858553,
         "net_neta": -3.821052,
-        "sold_neta": 4.679605,
-        "swaps": 32,
-        "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
+      "sold_neta": 4.679605,
+      "swaps": 32,
+      "total_neta": 0.0,
+      "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
       },
       {
         "bought_neta": 0.0,
         "net_neta": -2.703037,
-        "sold_neta": 2.703037,
-        "swaps": 3,
-        "wallet": "osmo1khrd2gyj6hu2s6hh4kpgp42etgdfch3rtvmz82"
+      "sold_neta": 2.703037,
+      "swaps": 3,
+      "total_neta": 0.0,
+      "wallet": "osmo1khrd2gyj6hu2s6hh4kpgp42etgdfch3rtvmz82"
       }
     ]
   },
