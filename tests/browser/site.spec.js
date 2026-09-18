@@ -569,6 +569,42 @@ test("Map of NETA links Osmosis and Juno movers to their explorers", async ({pag
     await expect(item.locator).toHaveAttribute("target", "_blank");
     await expect(item.locator).toHaveAttribute("rel", "noopener noreferrer");
   }
+  const firstMover = [...mapData.market.power_buyers, ...mapData.market.top_sellers][0];
+  await expect(page.locator(".mover-wallet-total").first()).toHaveText(
+    `Total NETA: ${new Intl.NumberFormat("en-US", {maximumFractionDigits: 6}).format(firstMover.total_neta || 0)}`,
+  );
+});
+
+test("Largest IBC transfers use ATOMScan for Juno and Mintscan for Osmosis", async ({page}) => {
+  await page.goto("/map-of-neta.html", {waitUntil: "domcontentloaded"});
+  const transfers = require("../../data/map/map-of-neta.json").periods["24h"].top_ibc_transfers;
+  for (let index = 0; index < transfers.length; index += 1) {
+    const row = transfers[index];
+    const link = page.locator("#largestTransfers li").nth(index).locator(".transfer-meta a");
+    if (row.wallet.startsWith("juno1")) {
+      await expect(link).toHaveAttribute("href", `https://atomscan.com/juno/accounts/${row.wallet}`);
+      await expect(link).toHaveAttribute("aria-label", `Open ${row.wallet} on ATOMScan`);
+    } else if (row.wallet.startsWith("osmo1")) {
+      await expect(link).toHaveAttribute("href", `https://www.mintscan.io/osmosis/address/${row.wallet}`);
+      await expect(link).toHaveAttribute("aria-label", `Open ${row.wallet} on Mintscan`);
+    }
+  }
+});
+
+test("ranking rank header restores canonical order and holder addresses link by chain", async ({page}) => {
+  await page.goto("/index.html", {waitUntil: "domcontentloaded"});
+  await page.locator('th[data-sort="neta_dao_unstaking"]').click();
+  await expect(page.locator("#rows tr").first().locator("td").first()).not.toHaveText("1");
+  await page.locator('th[data-sort="rank"]').click();
+  await expect(page.locator("#rows tr").first().locator("td").first()).toHaveText("1");
+  await expect(page.locator('th[data-sort="rank"]')).toContainText("↑");
+
+  const junoLink = page.locator('#rows a.holder-address-link[href*="atomscan.com/juno/accounts/juno1"]').first();
+  const osmosisLink = page.locator('#rows a.holder-address-link[href*="mintscan.io/osmosis/address/osmo1"]').first();
+  await expect(junoLink).toHaveAttribute("target", "_blank");
+  await expect(junoLink).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(osmosisLink).toHaveAttribute("target", "_blank");
+  await expect(osmosisLink).toHaveAttribute("rel", "noopener noreferrer");
 });
 
 test("IBC transfer panel exposes only active public routes and return assets", async ({page}) => {

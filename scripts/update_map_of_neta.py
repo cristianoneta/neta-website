@@ -163,7 +163,8 @@ def load_json(path,default):
 def write_json(path,data):
     path.parent.mkdir(parents=True,exist_ok=True); path.write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
 
-def aggregate(root,all_events,state,metadata,registry):
+def aggregate(root,all_events,state,metadata,registry,holder_totals=None):
+    holder_totals=holder_totals or {}
     t=now(); cutoff=t-dt.timedelta(hours=24)
     recent=[e for e in all_events if parse_time(e["timestamp"])>=cutoff]
     flows=[e for e in recent if e["type"]=="ibc"]; swaps=[e for e in recent if e["type"]=="swap"]
@@ -186,7 +187,7 @@ def aggregate(root,all_events,state,metadata,registry):
     by_chain={}
     for e in swaps: by_chain[e["chain"]]=by_chain.get(e["chain"],0)+1
     buyers=sorted((x for x in movers.values() if x["net_raw"]>0),key=lambda x:-x["net_raw"])[:3]; sellers=sorted((x for x in movers.values() if x["net_raw"]<0),key=lambda x:x["net_raw"])[:3]
-    def public(x): return {"wallet":x["wallet"],"net_neta":round(x["net_raw"]/1e6,6),"bought_neta":round(x["bought_raw"]/1e6,6),"sold_neta":round(x["sold_raw"]/1e6,6),"swaps":x["swaps"]}
+    def public(x): return {"wallet":x["wallet"],"net_neta":round(x["net_raw"]/1e6,6),"bought_neta":round(x["bought_raw"]/1e6,6),"sold_neta":round(x["sold_raw"]/1e6,6),"swaps":x["swaps"],"total_neta":holder_totals.get(x["wallet"],0.0)}
     def transfer_public(e): return {"neta":round(e["neta_raw"]/1e6,6),"from_chain":e["from_chain"],"to_chain":e["to_chain"],"wallet":e.get("sender") or e.get("receiver"),"wallet_chain":e["from_chain"],"timestamp":e["timestamp"],"txhash":e["txhash"]}
     def top_transfers(hours):
         selected=(e for e in all_events if e["type"]=="ibc" and parse_time(e["timestamp"])>=t-dt.timedelta(hours=hours))
@@ -226,7 +227,14 @@ def main():
     for day,es in by_day.items(): write_json(root/f"data/map/days/{day}.json",{"date":day,"events":es})
     metadata=load_json(root/"metadata.json",{})
     if not metadata.get("validation",{}).get("passed"): raise RuntimeError("holder metadata is not validated")
-    public=aggregate(root,all_events,state,metadata,registry)
+    address_index=load_json(root/"address_index.json",{})
+    fields=address_index.get("fields") or []
+    holder_totals={}
+    for values in address_index.get("rows") or []:
+        row=dict(zip(fields,values)); total=float(row.get("total_neta") or 0)
+        for address in (row.get("juno_address"),row.get("osmosis_address")):
+            if address: holder_totals[address]=total
+    public=aggregate(root,all_events,state,metadata,registry,holder_totals)
     if not all(public["validation"].values()): raise RuntimeError("Map validation failed")
     state["updated_at"]=public["generated_at"]; state["juno_endpoint"]=j_ep; state["osmosis_endpoint"]=o_ep
     write_json(state_path,state); write_json(root/"data/map/map-of-neta.json",public)

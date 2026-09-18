@@ -27,10 +27,21 @@ document.querySelector("#updated").textContent="LAST UPDATED: "+new Date(M.gener
 const val=(h,k)=>k==="neta_dao_staking"?stake(h):k==="neta_dao_unstaking"?unstake(h):k==="neta_dao_claimable"?claimable(h):k==="lp_neta"?lp(h):Number(h[k]||0);
 function sorted(){return [...allRows].sort((a,b)=>{const d=val(a,sortKey)-val(b,sortKey);return d?sortDir*d:Number(a.rank||0)-Number(b.rank||0)}).slice(0,100)}
 
+function explorerForAddress(address){
+  if(/^juno1[0-9a-z]{38}$/.test(address||""))return{href:`https://atomscan.com/juno/accounts/${encodeURIComponent(address)}`,name:"ATOMScan"};
+  if(/^osmo1[0-9a-z]{38}$/.test(address||""))return{href:`https://www.mintscan.io/osmosis/address/${encodeURIComponent(address)}`,name:"Mintscan"};
+  return null;
+}
+
 function addressCell(holder,mobile=false){
   const root=node("div",mobile?"mobile-address":"");
   if(holder.label)root.append(node("div",mobile?"mobile-label":"label",holder.label));
-  root.append(document.createTextNode(sh(holder.juno_address||holder.osmosis_address)));
+  const address=holder.juno_address||holder.osmosis_address,explorer=explorerForAddress(address);
+  if(explorer){
+    const link=node("a","holder-address-link",sh(address));
+    link.href=explorer.href;link.target="_blank";link.rel="noopener noreferrer";link.title=address;
+    link.setAttribute("aria-label",`Open ${address} on ${explorer.name}`);root.append(link);
+  }else root.append(document.createTextNode(sh(address)));
   return root;
 }
 
@@ -65,7 +76,7 @@ function render(){
   document.querySelectorAll("th.sortable").forEach(th=>{const active=th.dataset.sort===sortKey;th.classList.toggle("active-sort",active);th.textContent=th.textContent.replace(/ [↕↑↓]$/,'')+(active?(sortDir<0?' ↓':' ↑'):' ↕')});
 }
 
-document.querySelectorAll("th.sortable").forEach(th=>{th.style.cursor="pointer";th.title="Click to sort";th.onclick=()=>{const key=th.dataset.sort;if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=-1}render()}});
+document.querySelectorAll("th.sortable").forEach(th=>{th.style.cursor="pointer";th.title="Click to sort";th.onclick=()=>{const key=th.dataset.sort;if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=key==="rank"?1:-1}render()}});
 render();
 
 function topPercentText(rank,total){const pct=(rank/total)*100;if(pct<.1)return"TOP <0.1%";if(pct<1)return`TOP ${pct.toFixed(1)}%`;return`TOP ${Math.ceil(pct)}%`}

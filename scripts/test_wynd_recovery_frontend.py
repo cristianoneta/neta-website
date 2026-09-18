@@ -40,7 +40,7 @@ for required in [
     'wallet-header.js?v=4', 'id="keplr-connect"',
     'cosmos-client.js?v=3', 'recovery-signing-config.js?v=9',
     'wynd-recovery.js?v=20260914-22',
-    'wynd-recovery.css?v=20260914-7', 'styles.css?v=20260914-7', 'id="execute-action"', 'hidden disabled',
+    'wynd-recovery.css?v=20260914-7', 'styles.css?v=20260918-1', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
     assert required in html, required
