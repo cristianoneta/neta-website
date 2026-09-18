@@ -11,6 +11,21 @@ Last updated: 2026-09-15
 
 This file is the durable technical knowledge base for the NETA Reborn holder/indexer work. Future analysis should read this file before changing LP attribution logic.
 
+## UI CONSISTENCY UPDATE — 2026-09-18
+
+- Explorer links are selected by address prefix everywhere touched by this update:
+  `juno1…` opens ATOMScan and `osmo1…` opens Mintscan. This includes the
+  Largest IBC Transfers list, Market Movers and the Top Holders ranking.
+- Market Movers now carry `total_neta` from the already validated economic
+  ranking snapshot. The value appears on hover/focus on desktop and inline on
+  mobile; an address absent from the snapshot is displayed as `0` without a
+  new chain query.
+- The Top Holders rank column is sortable. Selecting `#` after any component
+  sort restores canonical rank order (rank 1 first); selecting it again
+  reverses the order.
+- `scripts/update_map_of_neta.py` enriches every newly generated mover row from
+  `address_index.json`, so hourly refreshes preserve the UI behavior.
+
 ## CURRENT CLOSURE — PRODUCTION REVIEW (2026-09-15)
 
 The canonical current state remains in `OPERATIONS_KNOWLEDGE.md`. NETA Socials
