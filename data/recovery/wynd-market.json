@@ -4,24 +4,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "1268859.430442",
+          "display": "1273791.689554",
           "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
-          "raw": "1268859430442",
+          "raw": "1273791689554",
           "symbol": "WYND",
           "usd_price": null
         },
         {
           "decimals": 6,
-          "display": "251.440399",
+          "display": "250.468742",
           "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
-          "raw": "251440399",
+          "raw": "250468742",
           "symbol": "ATOM",
-          "usd_price": "1.65"
+          "usd_price": "1.66"
         }
       ],
       "name": "WYND / ATOM",
       "pair": "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5",
-      "pool_value_usd": "829.753317",
+      "pool_value_usd": "831.556223",
       "total_share_raw": "16230598229",
       "valuation_method": "two_times_single_external_price_anchor"
     },
@@ -29,24 +29,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "1267295.266365",
+          "display": "1272126.947743",
           "key": "native:ujuno",
-          "raw": "1267295266365",
+          "raw": "1272126947743",
           "symbol": "JUNO",
-          "usd_price": "0.00957761"
+          "usd_price": "0.00981201"
         },
         {
           "decimals": 6,
-          "display": "7644.242335",
+          "display": "7615.266641",
           "key": "native:ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
-          "raw": "7644242335",
+          "raw": "7615266641",
           "symbol": "ATOM",
-          "usd_price": "1.65"
+          "usd_price": "1.66"
         }
       ],
       "name": "ujuno / ATOM",
       "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-      "pool_value_usd": "24750.659669",
+      "pool_value_usd": "25123.464957",
       "total_share_raw": "89761104045",
       "valuation_method": "sum_of_both_external_price_anchors"
     },
@@ -54,24 +54,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "4388994.487406",
+          "display": "4372005.970419",
           "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
-          "raw": "4388994487406",
+          "raw": "4372005970419",
           "symbol": "WYND",
           "usd_price": null
         },
         {
           "decimals": 6,
-          "display": "1471.898747",
+          "display": "1477.636519",
           "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
-          "raw": "1471898747",
+          "raw": "1477636519",
           "symbol": "USDC",
-          "usd_price": "0.999537"
+          "usd_price": "0.999521"
         }
       ],
       "name": "WYND / USDC",
       "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
-      "pool_value_usd": "2942.434516",
+      "pool_value_usd": "2953.857462",
       "total_share_raw": "74958722515",
       "valuation_method": "two_times_single_external_price_anchor"
     },
@@ -79,24 +79,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "1486900.794421",
+          "display": "1491933.717266",
           "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
-          "raw": "1486900794421",
+          "raw": "1491933717266",
           "symbol": "WYND",
           "usd_price": null
         },
         {
           "decimals": 6,
-          "display": "49075.475974",
+          "display": "48910.254778",
           "key": "native:ujuno",
-          "raw": "49075475974",
+          "raw": "48910254778",
           "symbol": "JUNO",
-          "usd_price": "0.00957761"
+          "usd_price": "0.00981201"
         }
       ],
       "name": "WYND / ujuno",
       "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-      "pool_value_usd": "940.051539",
+      "pool_value_usd": "959.815818",
       "total_share_raw": "250846698920",
       "valuation_method": "two_times_single_external_price_anchor"
     },
@@ -104,24 +104,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "603786.326323",
+          "display": "604346.419278",
           "key": "native:ujuno",
-          "raw": "603786326323",
+          "raw": "604346419278",
           "symbol": "JUNO",
-          "usd_price": "0.00957761"
+          "usd_price": "0.00981201"
         },
         {
           "decimals": 6,
-          "display": "6220.778666",
+          "display": "6215.031732",
           "key": "native:ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
-          "raw": "6220778666",
+          "raw": "6215031732",
           "symbol": "USDC",
-          "usd_price": "0.999537"
+          "usd_price": "0.999521"
         }
       ],
       "name": "ujuno / USDC",
       "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
-      "pool_value_usd": "12000.728402",
+      "pool_value_usd": "12141.907841",
       "total_share_raw": "52511840165",
       "valuation_method": "sum_of_both_external_price_anchors"
     },
@@ -133,7 +133,7 @@
           "key": "native:ujuno",
           "raw": "105911629243",
           "symbol": "JUNO",
-          "usd_price": "0.00957761"
+          "usd_price": "0.00981201"
         },
         {
           "decimals": 6,
@@ -146,7 +146,7 @@
       ],
       "name": "ujuno / NETA",
       "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
-      "pool_value_usd": "2028.760559",
+      "pool_value_usd": "2078.411930",
       "total_share_raw": "8961183403",
       "valuation_method": "two_times_single_external_price_anchor"
     },
@@ -154,24 +154,24 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "1059899.818515",
+          "display": "1066885.841986",
           "key": "cw20:juno1mkw83sv6c7sjdvsaplrzc8yaes9l42p4mhy0ssuxjnyzl87c9eps7ce3m9",
-          "raw": "1059899818515",
+          "raw": "1066885841986",
           "symbol": "WYND",
           "usd_price": null
         },
         {
           "decimals": 6,
-          "display": "9883.464728",
+          "display": "9819.430652",
           "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
-          "raw": "9883464728",
+          "raw": "9819430652",
           "symbol": "OSMO",
-          "usd_price": "0.03482157"
+          "usd_price": "0.0344196"
         }
       ],
       "name": "WYND / OSMO",
       "pair": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
-      "pool_value_usd": "688.315518",
+      "pool_value_usd": "675.961751",
       "total_share_raw": "95380460556",
       "valuation_method": "two_times_single_external_price_anchor"
     },
@@ -179,32 +179,32 @@
       "assets": [
         {
           "decimals": 6,
-          "display": "215306.017423",
+          "display": "214548.036211",
           "key": "native:ujuno",
-          "raw": "215306017423",
+          "raw": "214548036211",
           "symbol": "JUNO",
-          "usd_price": "0.00957761"
+          "usd_price": "0.00981201"
         },
         {
           "decimals": 6,
-          "display": "60552.99384",
+          "display": "60767.893855",
           "key": "native:ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518",
-          "raw": "60552993840",
+          "raw": "60767893855",
           "symbol": "OSMO",
-          "usd_price": "0.03482157"
+          "usd_price": "0.0344196"
         }
       ],
       "name": "ujuno / OSMO",
       "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-      "pool_value_usd": "4170.667379",
+      "pool_value_usd": "4196.754076",
       "total_share_raw": "104783420853",
       "valuation_method": "sum_of_both_external_price_anchors"
     }
   },
   "price_source": "CoinGecko simple/price",
-  "price_timestamp": "2026-09-18T07:24:43.629705Z",
+  "price_timestamp": "2026-09-18T13:24:28.893493Z",
   "schema_version": 1,
   "status": "LIVE_DAILY",
   "update_policy": "Refresh at least once per UTC day; never used to revalue historical recovery events.",
-  "updated_at": "2026-09-18T07:24:44.933335Z"
+  "updated_at": "2026-09-18T13:24:30.697301Z"
 }
