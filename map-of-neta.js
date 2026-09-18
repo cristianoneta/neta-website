@@ -1,20 +1,23 @@
 const $=s=>document.querySelector(s),fmt=(n,d=0)=>new Intl.NumberFormat("en-US",{maximumFractionDigits:d}).format(Number(n||0));
 let mapData=null;
 function short(a){return a&&a.length>18?a.slice(0,9)+"…"+a.slice(-5):a||"—"}
-function moverWallet(address){
+function moverWallet(address,totalNeta){
   const value=typeof address==="string"?address:"";
+  const total=fmt(totalNeta,6),tooltip=`Total NETA: ${total}`;
   let href=null,explorer=null;
   if(/^osmo1[0-9a-z]{38}$/.test(value)){href=`https://www.mintscan.io/osmosis/address/${encodeURIComponent(value)}`;explorer="Mintscan"}
   else if(/^juno1[0-9a-z]{38}$/.test(value)){href=`https://atomscan.com/juno/accounts/${encodeURIComponent(value)}`;explorer="ATOMScan"}
   if(!href){
-    const label=document.createElement("span");label.className="mover-wallet";label.textContent=short(value);return label;
+    const label=document.createElement("span");label.className="mover-wallet";label.title=`${value} · ${tooltip}`;label.append(Object.assign(document.createElement("span"),{className:"mover-wallet-main",textContent:short(value)}),Object.assign(document.createElement("span"),{className:"mover-wallet-total",textContent:tooltip}));return label;
   }
-  const link=document.createElement("a");link.className="mover-wallet";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.title=value;link.setAttribute("aria-label",`Open ${value} on ${explorer}`);link.textContent=short(value);return link;
+  const link=document.createElement("a");link.className="mover-wallet";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.title=`${value} · ${tooltip}`;link.setAttribute("aria-label",`Open ${value} on ${explorer}; ${tooltip}`);link.append(Object.assign(document.createElement("span"),{className:"mover-wallet-main",textContent:short(value)}),Object.assign(document.createElement("span"),{className:"mover-wallet-total",textContent:tooltip}));return link;
 }
 function transferExplorer(address,chain){
   if(!address)return null;
-  if(chain==="osmosis"||address.startsWith("osmo1"))return `https://www.mintscan.io/osmosis/address/${encodeURIComponent(address)}`;
-  if(chain==="juno"||address.startsWith("juno1"))return `https://www.mintscan.io/juno/address/${encodeURIComponent(address)}`;
+  if(address.startsWith("juno1"))return `https://atomscan.com/juno/accounts/${encodeURIComponent(address)}`;
+  if(address.startsWith("osmo1"))return `https://www.mintscan.io/osmosis/address/${encodeURIComponent(address)}`;
+  if(chain==="juno")return `https://atomscan.com/juno/accounts/${encodeURIComponent(address)}`;
+  if(chain==="osmosis")return `https://www.mintscan.io/osmosis/address/${encodeURIComponent(address)}`;
   return null;
 }
 function renderLargestTransfers(rows,period){
@@ -23,14 +26,14 @@ function renderLargestTransfers(rows,period){
   rows.slice(0,3).forEach((row,index)=>{
     const item=document.createElement("li"),rank=document.createElement("span"),route=document.createElement("span"),amount=document.createElement("strong"),meta=document.createElement("span");
     rank.className="transfer-rank";rank.textContent=String(index+1).padStart(2,"0");route.className="transfer-route";route.textContent=`${String(row.from_chain||"").toUpperCase()} → ${String(row.to_chain||"").toUpperCase()}`;amount.textContent=`${fmt(row.neta,6)} NETA`;
-    meta.className="transfer-meta";const href=transferExplorer(row.wallet,row.wallet_chain);const wallet=href?document.createElement("a"):document.createElement("span");wallet.textContent=short(row.wallet);wallet.title=row.wallet||"";if(href){wallet.href=href;wallet.target="_blank";wallet.rel="noopener noreferrer";wallet.setAttribute("aria-label",`Open ${row.wallet} on Mintscan`)}
+    meta.className="transfer-meta";const href=transferExplorer(row.wallet,row.wallet_chain);const wallet=href?document.createElement("a"):document.createElement("span");wallet.textContent=short(row.wallet);wallet.title=row.wallet||"";if(href){const explorer=String(row.wallet||"").startsWith("juno1")?"ATOMScan":"Mintscan";wallet.href=href;wallet.target="_blank";wallet.rel="noopener noreferrer";wallet.setAttribute("aria-label",`Open ${row.wallet} on ${explorer}`)}
     const time=document.createElement("time");time.dateTime=row.timestamp;time.textContent=new Date(row.timestamp).toLocaleString();meta.append(wallet,time);item.append(rank,route,amount,meta);list.append(item);
   });
 }
 function renderMovers(id,rows,positive){
   const el=$(id);el.replaceChildren();
   if(!rows.length){const empty=document.createElement("li");empty.className="empty-mover";empty.textContent="No verified activity collected yet.";el.append(empty);return}
-  rows.forEach((r,i)=>{const item=document.createElement("li"),rank=document.createElement("span"),value=document.createElement("span");rank.textContent=i+1;value.className="mover-value";value.textContent=`${positive?"+":""}${fmt(r.net_neta,6)} NETA`;item.append(rank,moverWallet(r.wallet),value);el.append(item)});
+  rows.forEach((r,i)=>{const item=document.createElement("li"),rank=document.createElement("span"),value=document.createElement("span");rank.textContent=i+1;value.className="mover-value";value.textContent=`${positive?"+":""}${fmt(r.net_neta,6)} NETA`;item.append(rank,moverWallet(r.wallet,r.total_neta),value);el.append(item)});
 }
 async function load(){
  try{
