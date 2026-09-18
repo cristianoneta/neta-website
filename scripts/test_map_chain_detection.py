@@ -39,8 +39,10 @@ assert [(event["chain"],event["market"],event["direction"],event["neta_raw"],eve
 assert len({event["id"] for event in parsed})==2
 osmosis_event={"id":"osmosis:C:pool631:0","timestamp":"2026-09-14T12:45:00Z","height":200,"type":"swap","chain":"osmosis","market":"pool-631","wallet":"osmo1example","wallet_id":"example","direction":"buy","neta_raw":500000,"txhash":"C"*64}
 M.now=lambda:dt.datetime(2026,9,14,13,0,tzinfo=dt.timezone.utc)
-summary=M.aggregate(pathlib.Path("."),parsed+[osmosis_event],{"collection_started_at":"2026-09-12T00:00:00Z"},{"total_supply_neta":31886.6,"excluded_bridge_escrow_neta":10480.4},R)
+summary=M.aggregate(pathlib.Path("."),parsed+[osmosis_event],{"collection_started_at":"2026-09-12T00:00:00Z"},{"total_supply_neta":31886.6,"excluded_bridge_escrow_neta":10480.4},R,{wallet:116.081499,"osmo1example":0.0})
 assert summary["market"]["swaps"]==3
 assert summary["market"]["by_chain"]=={"juno":2,"osmosis":1}
+assert summary["market"]["power_buyers"][0]["total_neta"]==0.0
+assert summary["market"]["power_buyers"][1]["total_neta"]==116.081499
 assert summary["validation"]["swap_chain_totals_match"] is True
 print("multichain route and WYND swap classification: OK")
