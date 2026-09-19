@@ -45,7 +45,7 @@
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-09-19T11:18:59.332823Z",
+  "generated_at": "2026-09-19T12:24:38.398583Z",
   "market": {
     "by_chain": {
       "osmosis": 42
@@ -96,7 +96,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 22.39,
+      "coverage_percent": 22.54,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -129,7 +129,7 @@
     },
     "7d": {
       "available": false,
-      "coverage_percent": 95.97,
+      "coverage_percent": 96.62,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -162,7 +162,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 7.46,
+      "coverage_percent": 7.51,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
