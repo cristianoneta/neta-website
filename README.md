@@ -1,104 +1,68 @@
-# NETA Reborn
+# NETA DAO Workspace
 
-Static, data-driven community website for the NETA ecosystem on Juno and
-Osmosis. It includes the holder ranking, Map of NETA, public WYND liquidity
-recovery, the tightly scoped Rescue NETA swap interface and the on-chain NETA
-Socials board on Juno mainnet.
+Static governance workspace for DAO collaboration on Juno. The frontend combines private browser drafts, public UNI-7 review contracts and read-only mainnet governance data.
 
-## Current production state
+## Current product boundary
 
-- Public pages: Ranking, Map of NETA, NETA DAO, WYND Recovery, Rescue NETA and
-  NETA Socials.
-- `What is NETA` is intentionally offline until its content is rewritten.
-- Recovery permits only Unbond, Claim and Withdraw for eight frozen, validated
-  WYND pool contract sets. Bond and Provide Liquidity are not shipped.
-- Rescue NETA swaps only against the frozen WYND JUNO/NETA pair and enforces a
-  $25 estimated-value cap per transaction.
-- Map of NETA combines verified swaps from the Juno WYND pair and Osmosis pool
-  631 and displays their chain split and snapshot update time.
-- Map of NETA includes controlled IBC transfers for allowlisted routes and
-  assets. Wrapped assets may only return to their origin. The unresolved
-  Juno-to-Terra NETA packet remains visible in channel-aware accounting and its
-  route stays disabled rather than being hidden by a tolerance.
-- NETA Socials reads and writes the checksum-locked Juno mainnet contract. A
-  minimum of 10 actively staked NETA is required, except for the owner. Every
-  write requires a separate Keplr approval and attaches no funds. A guarded,
-  unlinked admin surface retains the emergency-pause path.
-- The controlled JUNO/NETA Claim after its on-chain maturity time remains the
-  final live recovery test; it is additional evidence rather than a public gate.
+### NETA Operations DAO
 
-## Local development
+- Private drafts are stored only in the current browser.
+- Public review, revisions and discussions use the configured UNI-7 workshop contract.
+- Publishing, revising and finalizing require positive Operations DAO voting power.
+- Comments and replies require strictly more than 10 actively staked NETA.
+- Existing Operations proposals and voting state are read from Juno mainnet.
 
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-python3 -m http.server 8000
-```
+### Juno Network Governance
 
-Open `http://localhost:8000`. Do not open the HTML files directly: browser
-security rules can block the JSON requests used by the recovery and map pages.
+- Mainnet proposals and current deposit/voting parameters are read-only.
+- Community review is tested on UNI-7.
+- Review writes require at least 1 delegated JUNOX and 1 actively staked test NETA.
+- Mainnet deposit, `MsgSubmitProposal` and native Juno voting remain disabled until the exact transactions have been simulated and reviewed.
+- A newly deployed Juno review contract is browser-local until its verified address is committed to the DAO registry in `neta-governance.js`.
 
-Run the deterministic regression suite before changing generated data,
-transaction code or contracts:
+### UX concepts
 
-```bash
-npm ci
-npm run test:static
-npm run test:browser:install
-npm test
-```
+Delivery and Contributors remain visual drafts. Treasury asset balances are collected read-only from the NETA Operations DAO core address `juno1excm…mancl` and from Juno's native distribution-module Community Pool. IBC denoms are resolved from their on-chain denom traces so bridged representations remain separate positions with their origin visible. USD prices are refreshed centrally, while planning, commitments and runway remain explicitly marked sample values until their accounting model is connected.
 
-The public header and footer are generated from one definition. After changing
-their navigation or wording, render and verify every page with:
+LP positions remain visible as LP-token holdings. Each position expands into its proportional underlying reserves, and its USD value is calculated from those reserves exactly once; underlying amounts are not added again as free treasury tokens. The collector fails visibly on unavailable providers and retains source, timestamp and block height.
+
+### Proposal deliverables
+
+Drafts and public revisions can contain structured deliverables with a milestone title, deadline, responsible party, required confirmer and expected evidence. They are embedded in the existing `actions_json` array as entries with `type: "dao_deliverable_v1"`. This keeps the format backward-compatible with the deployed workshop contract while allowing the Delivery view to consume approved milestones later. Submission adapters must separate these planning records from executable chain messages.
+
+When a connected user opens a discussion but lacks the configured comment stake, the workspace exposes that DAO's configured staking destination. The action is contextual; it is not shown when comment access is already satisfied, and staking does not imply DAO membership or publishing rights.
+
+## Security properties
+
+- User-provided content is rendered through DOM text nodes, not HTML injection sinks.
+- Contract writes enforce authorization on-chain; frontend state is not trusted.
+- The workshop rejects attached funds, starts paused and supports two-step owner transfer.
+- Revision hashes are computed in the contract from stored canonical proposal content.
+- Unverified `MarkSubmitted` calls are blocked until an on-chain submission adapter exists.
+- Published revisions and comments are immutable; finalization closes discussion.
+- The shipped Wasm is checked against `assets/neta_proposal_workshop.sha256` before browser deployment and in CI.
+
+## Development
+
+Rust is pinned in `rust-toolchain.toml`. Both contracts contain committed lockfiles.
 
 ```bash
-python scripts/site_shell.py --root .
-python scripts/test_site_integrity.py
+cargo test --locked --manifest-path contracts/neta-proposal-workshop/Cargo.toml
+cargo clippy --locked --all-targets --manifest-path contracts/neta-proposal-workshop/Cargo.toml -- -D warnings
+cargo test --locked --manifest-path contracts/workshop-access-mock/Cargo.toml
+node --test tests/frontend-smoke.test.mjs
 ```
 
-## Data ownership
+Build the review contract reproducibly:
 
-- `holders.json`, `address_index.json` and their JavaScript mirrors are generated
-  by `scripts/run_neta_data.py`.
-- `data/map/` is generated by `scripts/update_map_of_neta.py`.
-- `data/recovery/wynd-market.json` is a current daily valuation.
-- `data/recovery/recovery-events.json` stores immutable event-time valuations;
-  historical claims and unstakes are never repriced.
-- `data/recovery/wynd-leaderboard.json` ranks positions in the eight allowlisted
-  legacy pools.
+```bash
+bash scripts/build-wasm.sh neta-proposal-workshop
+```
 
-The GitHub Actions collectors serialize repository writes per branch to avoid
-competing rebases and deployments. Tests validate pull requests but do not write
-test logs back to `main`. An hourly read-only monitor fails visibly if ranking
-or Map data is older than eight hours, recovery statistics are older than three
-hours, or the daily recovery market data is older than 30 hours.
+The CI workflow validates CosmWasm compatibility and verifies that the built Wasm is byte-identical to the shipped browser artifact.
 
-## Recovery safety boundary
+UNI-7 deployment behavior, known API compatibility constraints and the state-based transaction recovery procedure are documented in [`UNI7_DEPLOYMENT_RUNBOOK.md`](UNI7_DEPLOYMENT_RUNBOOK.md).
 
-The recovery UI is intentionally fail-closed. Read-only discovery remains public;
-connected users may sign only Unbond, Claim and Withdraw transactions for the
-eight frozen WYND contract sets. Bond and Provide Liquidity are not shipped.
-The local CosmJS adapter is loaded lazily and works through Keplr's signer
-interface; no private key or seed phrase is ever requested by the site.
+## Deployment rule
 
-Every transaction must match the connected and inspected wallet, the frozen Pair,
-LP-token and Stake allowlists, current live balances and a supported unbonding
-period. The message is rebuilt and simulated immediately before Keplr approval.
-After confirmation the expected position change is queried on-chain; a confirmed
-hash is preserved if RPC indexing delays that result check.
-
-## Rescue NETA swap safety boundary
-
-The public Rescue NETA page allows any connected Juno account to swap directly
-against the frozen legacy WYND JUNO/NETA Pair. Each transaction is limited to an
-estimated USD value of $25; users may submit multiple separate swaps. The page
-revalidates the pair code ID, asset tuple, 0.30% fee, current balance, fresh
-contract quote and selected 0.1–10% slippage immediately before Keplr opens.
-Native JUNO swaps execute on the Pair; NETA swaps use the NETA CW20 send hook.
-An included transaction is shown as confirmed only after its receiving-asset
-event satisfies the displayed minimum.
-
-See [docs/OPERATIONS_KNOWLEDGE.md](docs/OPERATIONS_KNOWLEDGE.md) for the current
-contracts, pools, IBC, mainnet, Uni-7 and Keplr knowledge; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-for component boundaries; and [docs/CODEBASE_REVIEW_2026-09-15.md](docs/CODEBASE_REVIEW_2026-09-15.md)
-for the latest critical review and remaining gates.
+Changes go through a pull request and must pass contract/frontend CI. Do not enable native Juno submission or treasury execution from frontend-only validation.
