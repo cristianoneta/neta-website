@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-20",
+  "events": [
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 70936148,
+      "id": "osmosis:C2F2B4EB4F34F01D9813FBFDD7A4FD679D3D63A42150ED8E889809DD9D793AAE:pool631:27",
+      "market": "pool-631",
+      "neta_raw": 375996,
+      "timestamp": "2026-09-20T02:53:33Z",
+      "txhash": "C2F2B4EB4F34F01D9813FBFDD7A4FD679D3D63A42150ED8E889809DD9D793AAE",
+      "type": "swap",
+      "wallet": "osmo1zzzzzzzzzr6n4jzs7c2gfzwpr8qnms5m4hjgtf",
+      "wallet_id": "108421084210f53ac850f6148489c119c13dc29b"
+    }
+  ]
+}
