@@ -1,8 +1,9 @@
 # NETA Reborn — Technical Checkpoint
 
-Last updated: 2026-09-15
+Last updated: 2026-09-21
 
 > **Current source of truth:** read
+> [`../HANDOFF.md`](../HANDOFF.md) first for the concise cross-chat handoff, then
 > [OPERATIONS_KNOWLEDGE.md](OPERATIONS_KNOWLEDGE.md) for present contracts,
 > routes, deployment state and mainnet gates, and
 > [CODEBASE_REVIEW_2026-09-15.md](CODEBASE_REVIEW_2026-09-15.md) for the latest

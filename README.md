@@ -1,5 +1,8 @@
 # NETA Reborn
 
+> New maintainers and AI agents: start with [`HANDOFF.md`](HANDOFF.md) for the
+> repository boundary, production state, safety rules and current backlog.
+
 Static, data-driven community website for the NETA ecosystem on Juno and
 Osmosis. It includes the holder ranking, Map of NETA, public WYND liquidity
 recovery, the tightly scoped Rescue NETA swap interface and the on-chain NETA
