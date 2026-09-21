@@ -1,5 +1,5 @@
 {
-  "market_updated_at": "2026-09-20T19:21:04.074503Z",
+  "market_updated_at": "2026-09-21T01:23:46.406475Z",
   "pools": [
     {
       "attributed_lp_raw": "89760863464",
@@ -62,23 +62,23 @@
           "lp_raw": "9386979509",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "2707.017583"
+          "usd_value": "2714.039360"
         },
         {
           "lp_raw": "2681733098",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "112.081774"
+          "usd_value": "111.536474"
         },
         {
           "lp_raw": "2572155571",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "10.069424"
+          "usd_value": "10.008601"
         }
       ],
       "rank": 1,
-      "total_usd": "2829.17"
+      "total_usd": "2835.58"
     },
     {
       "address": "juno1nwyeyqudzru5l64e83dnmq79q4stqz7fcdhhnp",
@@ -88,29 +88,29 @@
           "lp_raw": "7483713420",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "2158.153621"
+          "usd_value": "2163.751690"
         },
         {
           "lp_raw": "1648240724",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "68.887446"
+          "usd_value": "68.552295"
         },
         {
           "lp_raw": "109305856",
           "name": "JUNO / NETA",
           "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
-          "usd_value": "25.523594"
+          "usd_value": "25.369422"
         },
         {
           "lp_raw": "1579441732",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "6.183168"
+          "usd_value": "6.145819"
         }
       ],
       "rank": 2,
-      "total_usd": "2258.75"
+      "total_usd": "2263.82"
     },
     {
       "address": "juno1la4t7jee73a4zqg9ccs2acjt462qjs5xqdnw5z",
@@ -120,23 +120,23 @@
           "lp_raw": "37528995375",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "1568.506715"
+          "usd_value": "1560.875625"
         },
         {
           "lp_raw": "188586099",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "54.384468"
+          "usd_value": "54.525537"
         },
         {
           "lp_raw": "839658947",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "3.287080"
+          "usd_value": "3.267225"
         }
       ],
       "rank": 3,
-      "total_usd": "1626.18"
+      "total_usd": "1618.67"
     },
     {
       "address": "juno1ztfk3dglwhskqyktms2ts4n8dgq62s4626etzz",
@@ -146,23 +146,23 @@
           "lp_raw": "5002998099",
           "name": "JUNO / USDC",
           "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
-          "usd_value": "1160.731708"
+          "usd_value": "1157.306389"
         },
         {
           "lp_raw": "78208012",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "0.306167"
+          "usd_value": "0.304318"
         },
         {
           "lp_raw": "2797320",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "0.116913"
+          "usd_value": "0.116344"
         }
       ],
       "rank": 4,
-      "total_usd": "1161.15"
+      "total_usd": "1157.73"
     },
     {
       "address": "juno15h3x52ag390rcdh2phda6zwe2scqxaarus7klj",
@@ -172,29 +172,29 @@
           "lp_raw": "3259507397",
           "name": "JUNO / USDC",
           "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
-          "usd_value": "756.229268"
+          "usd_value": "753.997635"
         },
         {
           "lp_raw": "192271407",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "55.447237"
+          "usd_value": "55.591063"
         },
         {
           "lp_raw": "41111030",
           "name": "WYND / OSMO",
           "pair": "juno1s00g9axpxgmwcrlc6xqcxzcjmaqpxhftkx62xfh64xends8ls5dqyyjnnl",
-          "usd_value": "0.309883"
+          "usd_value": "0.308740"
         },
         {
           "lp_raw": "64618427",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "0.252967"
+          "usd_value": "0.251439"
         }
       ],
       "rank": 5,
-      "total_usd": "812.24"
+      "total_usd": "810.15"
     },
     {
       "address": "juno1uk9ajlygunuf77qyumfyp6wtx2tvmwx2cleee4",
@@ -204,29 +204,29 @@
           "lp_raw": "2721164238",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "784.729468"
+          "usd_value": "786.764991"
         },
         {
           "lp_raw": "55313459",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "2.311800"
+          "usd_value": "2.300553"
         },
         {
           "lp_raw": "8833350",
           "name": "JUNO / NETA",
           "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
-          "usd_value": "2.062642"
+          "usd_value": "2.050183"
         },
         {
           "lp_raw": "66529913",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "0.260450"
+          "usd_value": "0.258877"
         }
       ],
       "rank": 6,
-      "total_usd": "789.36"
+      "total_usd": "791.37"
     },
     {
       "address": "juno18qw9ydpewh405w4lvmuhlg9gtaep79vy2gmtr2",
@@ -236,23 +236,23 @@
           "lp_raw": "2392404583",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "689.921744"
+          "usd_value": "691.711343"
         },
         {
           "lp_raw": "69482179",
           "name": "JUNO / NETA",
           "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
-          "usd_value": "16.224519"
+          "usd_value": "16.126516"
         },
         {
           "lp_raw": "1727792273",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "6.763927"
+          "usd_value": "6.723071"
         }
       ],
       "rank": 7,
-      "total_usd": "712.91"
+      "total_usd": "714.56"
     },
     {
       "address": "juno1lc9w4wpyq5nq6944n899fr82u6y6pn0gt7hkyz",
@@ -262,11 +262,11 @@
           "lp_raw": "15880853776",
           "name": "WYND / USDC",
           "pair": "juno18zk9xqj9xjm0ry39jjam8qsysj7qh49xwt4qdfp9lgtrk08sd58s2n54ve",
-          "usd_value": "631.213454"
+          "usd_value": "631.227976"
         }
       ],
       "rank": 8,
-      "total_usd": "631.21"
+      "total_usd": "631.23"
     },
     {
       "address": "juno104v3e5ydyszf6t0k5hsgcqw2hhpvekvjdp66y6",
@@ -276,17 +276,17 @@
           "lp_raw": "2133525720",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "615.266245"
+          "usd_value": "616.862194"
         },
         {
           "lp_raw": "1325691415",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "5.189791"
+          "usd_value": "5.158442"
         }
       ],
       "rank": 9,
-      "total_usd": "620.46"
+      "total_usd": "622.02"
     },
     {
       "address": "juno1tngrk6fdalfzff4k90uzyy88zfprg9vnd6sdsn",
@@ -296,38 +296,38 @@
           "lp_raw": "1590235743",
           "name": "JUNO / USDC",
           "pair": "juno1gqy6rzary8vwnslmdavqre6jdhakcd4n2z4r803ajjmdq08r66hq7zcwrj",
-          "usd_value": "368.946183"
+          "usd_value": "367.857422"
         },
         {
           "lp_raw": "709214516",
           "name": "JUNO / ATOM",
           "pair": "juno17uv02azt545ag23xq7whw6z3r3chw7jwztnr9lypugy62drq3caqeyd2r3",
-          "usd_value": "204.523315"
+          "usd_value": "205.053831"
         },
         {
           "lp_raw": "17281785",
           "name": "JUNO / NETA",
           "pair": "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra",
-          "usd_value": "4.035404"
+          "usd_value": "4.011028"
         },
         {
           "lp_raw": "72259977",
           "name": "JUNO / OSMO",
           "pair": "juno1u2pl8ql778655wakqmnhpln65q9pughd6jnrp93xwf4zakqjdh6qx3y9yt",
-          "usd_value": "3.020072"
+          "usd_value": "3.005379"
         },
         {
           "lp_raw": "714279848",
           "name": "WYND / JUNO",
           "pair": "juno1a7lmc8e04hcs4y2275cultvg83u636ult4pmnwktr6l9nhrh2e8qzxfdwf",
-          "usd_value": "2.796249"
+          "usd_value": "2.779358"
         }
       ],
       "rank": 10,
-      "total_usd": "583.32"
+      "total_usd": "582.71"
     }
   ],
-  "updated_at": "2026-09-20T19:24:59.967897Z",
+  "updated_at": "2026-09-21T01:26:40.920752Z",
   "validation": {
     "juno_addresses_only": true,
     "pool_attribution_not_above_supply": true,
