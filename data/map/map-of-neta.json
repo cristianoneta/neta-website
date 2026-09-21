@@ -45,47 +45,31 @@
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-09-21T14:21:54.968061Z",
+  "generated_at": "2026-09-21T15:19:32.111661Z",
   "market": {
     "by_chain": {
-      "osmosis": 28
+      "osmosis": 27
     },
     "power_buyers": [
       {
-        "bought_neta": 3.834009,
-        "net_neta": 3.834009,
+        "bought_neta": 20.759417,
+        "net_neta": 20.759417,
+        "sold_neta": 0.0,
+        "swaps": 5,
+        "total_neta": 30.0,
+        "wallet": "osmo12mvlwequdm23ltcl4utawkfm0ezxt3xhrucfpv"
+      },
+      {
+        "bought_neta": 0.490874,
+        "net_neta": 0.490874,
         "sold_neta": 0.0,
         "swaps": 1,
-        "total_neta": 0.0,
-        "wallet": "osmo1khrd2gyj6hu2s6hh4kpgp42etgdfch3rtvmz82"
-      },
-      {
-        "bought_neta": 1.17632,
-        "net_neta": 1.17632,
-        "sold_neta": 0.0,
-        "swaps": 6,
-        "total_neta": 0.0,
-        "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
-      },
-      {
-        "bought_neta": 0.945251,
-        "net_neta": 0.945251,
-        "sold_neta": 0.0,
-        "swaps": 2,
         "total_neta": 0.0,
         "wallet": "osmo16r9ce39l973pm4wwdkkf4835070kemmax8s5gd"
       }
     ],
-    "swaps": 28,
+    "swaps": 27,
     "top_sellers": [
-      {
-        "bought_neta": 0.0,
-        "net_neta": -49.9,
-        "sold_neta": 49.9,
-        "swaps": 1,
-        "total_neta": 2.605443,
-        "wallet": "osmo196v3k5dxxt48u5aawr3hnjee0ydr3f5y53lc9p"
-      },
       {
         "bought_neta": 0.0,
         "net_neta": -32.759227,
@@ -95,12 +79,20 @@
         "wallet": "osmo1v97hjhqgstrz3rfraa2n8k2f5tk98g3pjl8n9s"
       },
       {
-        "bought_neta": 0.154915,
-        "net_neta": -0.164092,
-        "sold_neta": 0.319007,
-        "swaps": 9,
+        "bought_neta": 0.11098,
+        "net_neta": -0.247958,
+        "sold_neta": 0.358938,
+        "swaps": 8,
         "total_neta": 0.0,
         "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h"
+      },
+      {
+        "bought_neta": 0.483122,
+        "net_neta": -0.233852,
+        "sold_neta": 0.716974,
+        "swaps": 4,
+        "total_neta": 0.0,
+        "wallet": "osmo1zzzzzzzzzr6n4jzs7c2gfzwpr8qnms5m4hjgtf"
       }
     ]
   },
@@ -112,7 +104,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 29.48,
+      "coverage_percent": 29.62,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -178,7 +170,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 9.83,
+      "coverage_percent": 9.87,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
