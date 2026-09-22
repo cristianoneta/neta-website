@@ -3,7 +3,7 @@
   "juno_endpoint": "https://juno-api.polkachu.com",
   "juno_last_height": 41987733,
   "osmosis_endpoint": "https://osmosis-api.polkachu.com",
-  "osmosis_last_height": 71074939,
+  "osmosis_last_height": 71077969,
   "schema_version": 1,
-  "updated_at": "2026-09-22T05:20:11.782805Z"
+  "updated_at": "2026-09-22T06:25:46.344502Z"
 }
