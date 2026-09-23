@@ -31,7 +31,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
 
 concurrency:
   group: production-data-${{ github.ref }}
@@ -69,6 +68,7 @@ jobs:
         if: steps.due.outputs.neta == 'true'
         run: |
           PYTHONPATH=scripts python scripts/test_neta_snapshot_consistency.py
+          PYTHONPATH=scripts python scripts/test_neta_snapshot_retry.py
           PYTHONPATH=scripts python scripts/test_neta_bridge_accounting.py
           python scripts/run_neta_data.py --output .
           python - <<'PY'
@@ -156,15 +156,3 @@ jobs:
             fi
             sleep $((attempt * 2))
           done
-
-      - name: Request one GitHub Pages rebuild
-        if: github.event_name != 'pull_request' && steps.publish.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          curl --fail-with-body --request POST \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "X-GitHub-Api-Version: 2026-03-10" \
-            "https://api.github.com/repos/${{ github.repository }}/pages/builds"

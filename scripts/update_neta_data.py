@@ -31,6 +31,9 @@ ADDRESS_INDEX_FIELDS=("rank","juno_address","osmosis_address","juno_neta","osmos
 
 def log(x): print(f"[NETA] {x}",flush=True)
 
+class PoolSnapshotMismatch(RuntimeError):
+    """A bank scan and the height-pinned GAMM query disagree."""
+
 def req_json(bases,path,params=None,retries=3,height=None):
     """GET JSON, optionally pinned to one immutable Cosmos block height."""
     err=None
@@ -424,7 +427,15 @@ def build(out):
         raise RuntimeError(f"bridge escrow {escrow/1e6:.6f} != all channel liabilities {channel_total/1e6:.6f}")
     bridge_in_transit=bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments)
     if juno.get(WYND_PAIR,0)!=sum(wynd_lp.values()): raise RuntimeError("WYND pool direct NETA != attributed LP NETA")
-    if osmo.get(OSMO_POOL_ADDR,0)!=sum(osmo_lp.values()): raise RuntimeError("Pool 631 direct NETA != attributed LP NETA")
+    bank_pool_neta=osmo.get(OSMO_POOL_ADDR,0)
+    attributed_pool_neta=sum(osmo_lp.values())
+    if bank_pool_neta!=attributed_pool_neta:
+        raise PoolSnapshotMismatch(
+            f"Pool 631 at Osmosis height {height}: bank scan {bank_pool_neta} "
+            f"!= GAMM reserve {attributed_pool_neta} NETA raw "
+            f"(difference {bank_pool_neta-attributed_pool_neta}). "
+            "Keeping the last validated publication."
+        )
     dao_balance=juno.get(DAO,0); active=sum(staked.values()); unst=sum(unbonding.values()); claim=sum(claimable.values())
     dao_res=dao_balance-active-unst-claim
     if dao_res<0: raise RuntimeError("DAO attribution exceeds staking contract balance")
@@ -457,10 +468,19 @@ def build(out):
     (out/"data.js").write_text("window.NETA_METADATA="+json.dumps(meta,separators=(',',':'))+";\nwindow.NETA_TOP_HOLDERS="+json.dumps(public[:100],separators=(',',':'))+";\n",encoding='utf-8')
     return meta
 
+def build_with_pool_retry(out, attempts=3, pause=15):
+    for attempt in range(1,attempts+1):
+        try:
+            return build(out)
+        except PoolSnapshotMismatch as error:
+            if attempt==attempts: raise
+            log(f"{error} Retrying a fresh snapshot ({attempt}/{attempts-1}).")
+            time.sleep(pause)
+
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--output",default="."); a=ap.parse_args(); out=Path(a.output)
     with tempfile.TemporaryDirectory(prefix="neta-") as td:
-        tmp=Path(td); meta=build(tmp)
+        tmp=Path(td); meta=build_with_pool_retry(tmp)
         out.mkdir(parents=True,exist_ok=True)
         for name in ("holders.json","address_index.json","metadata.json","data.js","address-index.js"): os.replace(tmp/name,out/name)
     log(f"VALIDATED: {meta['economic_master_entries']:,} economic entries; {meta['wallet_attributed_neta']:,.6f} attributed + {meta['dao_residual_neta']:.6f} DAO + {meta['bridge_unattributed_neta']:.6f} bridge residual = {meta['total_supply_neta']:,.6f} NETA")
