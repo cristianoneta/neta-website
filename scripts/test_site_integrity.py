@@ -104,7 +104,7 @@ publisher_workflow = (ROOT / ".github/workflows/update-production-data.yml").rea
 assert 'pull_request:\n    branches: [main]\n    paths:' in publisher_workflow
 assert 'schedule:\n    - cron: "7 * * * *"' in publisher_workflow
 assert "Publish one atomic data commit" in publisher_workflow
-assert "Request one GitHub Pages rebuild" in publisher_workflow
+assert "Request one GitHub Pages rebuild" not in publisher_workflow
 
 expected_nav = {href for href, _ in NAVIGATION}
 for page in PAGES:
