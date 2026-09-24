@@ -45,20 +45,12 @@
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-09-24T01:24:34.006675Z",
+  "generated_at": "2026-09-24T02:21:01.442839Z",
   "market": {
     "by_chain": {
-      "osmosis": 36
+      "osmosis": 30
     },
     "power_buyers": [
-      {
-        "bought_neta": 5.191361,
-        "net_neta": 5.191361,
-        "sold_neta": 0.0,
-        "swaps": 3,
-        "total_neta": 32.49881,
-        "wallet": "osmo1s7dj5kewy75pa470st6jpqt7cxjvgyxss2npm0"
-      },
       {
         "bought_neta": 3.191922,
         "net_neta": 3.191922,
@@ -66,6 +58,14 @@
         "swaps": 1,
         "total_neta": 0.0,
         "wallet": "osmo1x9ad7du3eke8jxjclxmgdn39faknwedvyxp8w0"
+      },
+      {
+        "bought_neta": 0.873249,
+        "net_neta": 0.873249,
+        "sold_neta": 0.0,
+        "swaps": 4,
+        "total_neta": 0.0,
+        "wallet": "osmo1zzzzzzzzzr6n4jzs7c2gfzwpr8qnms5m4hjgtf"
       },
       {
         "bought_neta": 0.757285,
@@ -76,7 +76,7 @@
         "wallet": "osmo16nd8tzw3q8tmacxw5pcyf8vu0lu9nv25ap0c70"
       }
     ],
-    "swaps": 36,
+    "swaps": 30,
     "top_sellers": [
       {
         "bought_neta": 0.0,
@@ -95,12 +95,12 @@
         "wallet": "osmo1psguvq2uje9u88ynmh8dlj3hnzrqq77hk02qsm"
       },
       {
-        "bought_neta": 0.018858,
-        "net_neta": -0.464343,
-        "sold_neta": 0.483201,
-        "swaps": 7,
+        "bought_neta": 0.0,
+        "net_neta": -0.38461,
+        "sold_neta": 0.38461,
+        "swaps": 1,
         "total_neta": 0.0,
-        "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h"
+        "wallet": "osmo16r9ce39l973pm4wwdkkf4835070kemmax8s5gd"
       }
     ]
   },
@@ -112,7 +112,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 37.68,
+      "coverage_percent": 37.81,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -178,7 +178,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 12.56,
+      "coverage_percent": 12.6,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
