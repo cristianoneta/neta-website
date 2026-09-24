@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-24T19:24:05.399695Z",
+  "generated_at": "2026-09-24T22:25:22.518123Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -60,11 +60,11 @@
     "top_1_percent_wallets": 140
   },
   "osmosis": {
-    "height": 71248286,
+    "height": 71256867,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 71248286,
+      "height": 71256867,
       "rpc": "https://rpc.osmosis.zone",
       "pool_neta_raw": 944000449,
       "lp_supply_raw": 225004459685449894124978,
@@ -78,7 +78,7 @@
     }
   },
   "juno": {
-    "height": 42053560,
+    "height": 42057276,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 858557047,
@@ -92,8 +92,8 @@
     }
   },
   "dao": {
-    "height": 42053560,
-    "block_time": "2026-09-24T19:19:38.762190+00:00",
+    "height": 42057276,
+    "block_time": "2026-09-24T22:20:58.085191+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 292,
     "method": "CosmWasm AllContractState; claims classified by release_at at snapshot"
