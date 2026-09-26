@@ -2,7 +2,7 @@
   "collection_started_at": "2026-09-13T14:48:31.781583Z",
   "double_count_notice": "Unstaked and Claimed are separate milestones and must not be added as unique recovered value.",
   "juno_endpoint": "https://juno-api.polkachu.com",
-  "juno_last_height": 42110037,
+  "juno_last_height": 42111216,
   "memo_tag": "netareborn.com/wynd-recovery:v1",
   "pools": {
     "juno16r20f55kp59l0v5ne6hzell3qu27jhuzrqmu59w2nxzcsnj90y0sh2m6p5": {
@@ -66,7 +66,7 @@
   "price_timestamp": "2026-09-14T08:47:09.511105Z",
   "schema_version": 1,
   "status": "COLLECTING",
-  "updated_at": "2026-09-26T16:25:57.136023Z",
+  "updated_at": "2026-09-26T17:19:20.624698Z",
   "validation": {
     "allowlisted_pairs_only": true,
     "event_ids_unique": true
