@@ -32,7 +32,10 @@ ADDRESS_INDEX_FIELDS=("rank","juno_address","osmosis_address","juno_neta","osmos
 def log(x): print(f"[NETA] {x}",flush=True)
 
 class PoolSnapshotMismatch(RuntimeError):
-    """A bank scan and the height-pinned GAMM query disagree."""
+    """A height-pinned Osmosis or cross-chain snapshot disagrees."""
+
+class OsmosisSupplyMismatch(PoolSnapshotMismatch):
+    """The scanned bank balances disagree with Bank's supply at the same height."""
 
 def req_json(bases,path,params=None,retries=3,height=None):
     """GET JSON, optionally pinned to one immutable Cosmos block height."""
@@ -309,6 +312,8 @@ def subspace(prefix,height,rpc):
     q={"path":'"/store/bank/subspace"',"data":"0x"+prefix.hex(),"height":str(height),"prove":"false"}
     r=S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=TIMEOUT); r.raise_for_status(); d=r.json()["result"]["response"]
     if int(d.get("code",0) or 0)!=0: raise RuntimeError(f"ABCI code {d.get('code')}: {d.get('log')}")
+    if int(d.get("height", -1)) != height:
+        raise PoolSnapshotMismatch(f"ABCI returned height {d.get('height')} instead of {height}")
     raw=base64.b64decode(d.get("value") or ""); return kvpairs(raw) if raw else []
 def bank_key(k):
     if len(k)<3 or k[0]!=2: raise ValueError("not balance key")
@@ -337,6 +342,20 @@ def scan_osmo():
     if not pool_shares: raise RuntimeError("Osmosis scan returned zero Pool 631 share holders")
     log(f"Osmosis: {len(holders):,} NETA holders; {len(pool_shares):,} Pool 631 share holders")
     return holders,pool_shares,height,rpc
+
+def verify_osmosis_supply(holders,height):
+    """Reject a mixed or malformed prefix scan before attributing any LP shares."""
+    data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",
+                    {"denom":DENOM},height=height)
+    amount=data.get("amount") or {}
+    if amount.get("denom")!=DENOM or not str(amount.get("amount","")).isdigit():
+        raise RuntimeError("Osmosis bank supply response invalid")
+    observed=sum(holders.values()); expected=int(amount["amount"])
+    if observed!=expected:
+        raise OsmosisSupplyMismatch(
+            f"Osmosis bank scan at {height}: {observed} NETA raw != "
+            f"Bank supply {expected} raw (difference {observed-expected})"
+        )
 
 # ---- economic attribution ----
 def ekey(addr,chain):
@@ -400,7 +419,7 @@ def bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments):
         or packet_commitments.get(f"osmosis:{OSMOSIS_NETA_COUNTERPARTY}")
     )
     if transit<0:
-        raise RuntimeError(
+        raise PoolSnapshotMismatch(
             f"Osmosis primary state exceeds channel liability by {-transit/1e6:.6f} NETA"
         )
     if transit and not relevant:
@@ -414,6 +433,7 @@ def build(out):
     juno,supply,supply_src=scan_juno(juno_height)
     staked,unbonding,claimable,dao_snapshot=scan_dao(juno_state)
     osmo,osmo_shares,height,rpc=scan_osmo()
+    verify_osmosis_supply(osmo,height)
     import lp_attribution as lp
     wynd_lp,wynd_meta=lp.wynd_attribution(juno_height)
     osmo_lp,osmo_lp_meta=lp.osmosis_attribution(osmo_shares,height,rpc)
