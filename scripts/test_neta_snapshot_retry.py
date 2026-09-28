@@ -30,6 +30,18 @@ def test_pinned_bank_supply_check():
         assert req.call_args.kwargs["height"] == 42
 
 
+def test_lp_wallet_count_merges_only_matching_20_byte_keys():
+    shared=bytes(range(20))
+    long=bytes(range(32))
+    positions={
+        indexer.b32enc("juno",shared):1,
+        indexer.b32enc("osmo",shared):2,
+        indexer.b32enc("juno",long):3,
+        indexer.b32enc("osmo",long):4,
+    }
+    assert indexer.economic_lp_wallet_count(positions)==3
+
+
 def test_pool_snapshot_persistent_failure():
     with patch.object(indexer, "build", side_effect=indexer.PoolSnapshotMismatch("persistent mismatch")) as build, patch.object(indexer.time, "sleep") as sleep:
         try:
@@ -46,4 +58,5 @@ if __name__ == "__main__":
     test_pool_snapshot_retry()
     test_osmosis_supply_mismatch_retries_a_fresh_snapshot()
     test_pinned_bank_supply_check()
+    test_lp_wallet_count_merges_only_matching_20_byte_keys()
     test_pool_snapshot_persistent_failure()
