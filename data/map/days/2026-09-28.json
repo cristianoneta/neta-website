@@ -1118,6 +1118,19 @@
       "type": "swap",
       "wallet": "juno1mdces8gjmuv9add2r8j647un6v54n83d42yjdt",
       "wallet_id": "db71981d12df185eb5aa19e5aafb93d329599e2d"
+    },
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 42168248,
+      "id": "juno:B4A05ADEF5D075C53506BCEA7F701D80D5E961FFA4D78266EBCE2B47AE504796:wynd:14",
+      "market": "wynd",
+      "neta_raw": 180037,
+      "timestamp": "2026-09-28T14:38:07Z",
+      "txhash": "B4A05ADEF5D075C53506BCEA7F701D80D5E961FFA4D78266EBCE2B47AE504796",
+      "type": "swap",
+      "wallet": "juno1mdces8gjmuv9add2r8j647un6v54n83d42yjdt",
+      "wallet_id": "db71981d12df185eb5aa19e5aafb93d329599e2d"
     }
   ]
 }
