@@ -32,7 +32,10 @@ ADDRESS_INDEX_FIELDS=("rank","juno_address","osmosis_address","juno_neta","osmos
 def log(x): print(f"[NETA] {x}",flush=True)
 
 class PoolSnapshotMismatch(RuntimeError):
-    """A bank scan and the height-pinned GAMM query disagree."""
+    """A height-pinned Osmosis or cross-chain snapshot disagrees."""
+
+class OsmosisSupplyMismatch(PoolSnapshotMismatch):
+    """The scanned bank balances disagree with Bank's supply at the same height."""
 
 def req_json(bases,path,params=None,retries=3,height=None):
     """GET JSON, optionally pinned to one immutable Cosmos block height."""
@@ -309,6 +312,8 @@ def subspace(prefix,height,rpc):
     q={"path":'"/store/bank/subspace"',"data":"0x"+prefix.hex(),"height":str(height),"prove":"false"}
     r=S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=TIMEOUT); r.raise_for_status(); d=r.json()["result"]["response"]
     if int(d.get("code",0) or 0)!=0: raise RuntimeError(f"ABCI code {d.get('code')}: {d.get('log')}")
+    if int(d.get("height", -1)) != height:
+        raise PoolSnapshotMismatch(f"ABCI returned height {d.get('height')} instead of {height}")
     raw=base64.b64decode(d.get("value") or ""); return kvpairs(raw) if raw else []
 def bank_key(k):
     if len(k)<3 or k[0]!=2: raise ValueError("not balance key")
@@ -337,6 +342,20 @@ def scan_osmo():
     if not pool_shares: raise RuntimeError("Osmosis scan returned zero Pool 631 share holders")
     log(f"Osmosis: {len(holders):,} NETA holders; {len(pool_shares):,} Pool 631 share holders")
     return holders,pool_shares,height,rpc
+
+def verify_osmosis_supply(holders,height):
+    """Reject a mixed or malformed prefix scan before attributing any LP shares."""
+    data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",
+                    {"denom":DENOM},height=height)
+    amount=data.get("amount") or {}
+    if amount.get("denom")!=DENOM or not str(amount.get("amount","")).isdigit():
+        raise RuntimeError("Osmosis bank supply response invalid")
+    observed=sum(holders.values()); expected=int(amount["amount"])
+    if observed!=expected:
+        raise OsmosisSupplyMismatch(
+            f"Osmosis bank scan at {height}: {observed} NETA raw != "
+            f"Bank supply {expected} raw (difference {observed-expected})"
+        )
 
 # ---- economic attribution ----
 def ekey(addr,chain):
@@ -389,6 +408,10 @@ def write_address_index(out, rows):
     )
     (out/"address_index.json").write_text(json.dumps(payload,separators=(',',':')),encoding='utf-8')
     (out/"address-index.js").write_text(bootstrap,encoding='utf-8')
+def economic_lp_wallet_count(lp_neta):
+    """Merge identical 20-byte Juno/Osmosis keys, but retain 32-byte chain identity."""
+    return len({ekey(a,"juno" if a.startswith("juno1") else "osmosis") for a in lp_neta})
+
 def gini(vals):
     xs=sorted(v for v in vals if v>=0); sm=sum(xs); n=len(xs)
     return 0 if not xs or sm==0 else (2*sum((i+1)*x for i,x in enumerate(xs)))/(n*sm)-(n+1)/n
@@ -400,7 +423,7 @@ def bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments):
         or packet_commitments.get(f"osmosis:{OSMOSIS_NETA_COUNTERPARTY}")
     )
     if transit<0:
-        raise RuntimeError(
+        raise PoolSnapshotMismatch(
             f"Osmosis primary state exceeds channel liability by {-transit/1e6:.6f} NETA"
         )
     if transit and not relevant:
@@ -414,6 +437,7 @@ def build(out):
     juno,supply,supply_src=scan_juno(juno_height)
     staked,unbonding,claimable,dao_snapshot=scan_dao(juno_state)
     osmo,osmo_shares,height,rpc=scan_osmo()
+    verify_osmosis_supply(osmo,height)
     import lp_attribution as lp
     wynd_lp,wynd_meta=lp.wynd_attribution(juno_height)
     osmo_lp,osmo_lp_meta=lp.osmosis_attribution(osmo_shares,height,rpc)
@@ -461,7 +485,7 @@ def build(out):
     def top(n): return round(sum(r["total_raw"] for r in rows[:n])/1e6,6)
     onepct=max(1,(len(rows)+99)//100)
     bridge={"contract":ESCROW,"query_endpoint":bridge_endpoint,"osmosis_channel":OSMOSIS_NETA_CHANNEL,"osmosis_counterparty_channel":OSMOSIS_NETA_COUNTERPARTY,"channel_liabilities_neta":{k:round(v/1e6,6) for k,v in sorted(channel_liabilities.items())},"unattributed_non_osmosis_neta":round(bridge_res/1e6,6),"in_transit_neta":round(bridge_in_transit/1e6,6),"open_packet_commitments":packet_commitments}
-    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_all_channel_liabilities":True,"osmosis_channel_liability_equals_osmosis_primary_state_or_tracked_in_transit":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_dao_and_bridge_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":len(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(dao_res/1e6,6),"bridge_unattributed_neta":round((bridge_res+bridge_in_transit)/1e6,6),"unattributed_total_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"bridge":bridge,"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"height":juno_height,"method":"height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
+    meta={"schema_version":3,"generated_at":dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),"validation":{"passed":True,"cw20_balance_sum_equals_supply":True,"juno_ics20_escrow_equals_all_channel_liabilities":True,"osmosis_channel_liability_equals_osmosis_primary_state_or_tracked_in_transit":True,"dao_contract_balance_equals_staked_plus_unstaking_plus_claimable_plus_residual":True,"wynd_pool_neta_fully_attributed":True,"osmosis_pool_631_neta_fully_attributed":True,"economic_total_plus_dao_and_bridge_residual_equals_supply":True,"custody_holder_union_equals_economic_holders":True},"total_supply_neta":round(supply/1e6,6),"total_supply_source":supply_src,"juno_custody_addresses":juno_custody,"osmosis_primary_state_addresses":osmosis_custody,"dao_active_stakers":len(staked),"dao_active_staking_neta":round(active/1e6,6),"dao_unstaking_wallets":len(unbonding),"dao_unstaking_neta":round(unst/1e6,6),"dao_claimable_wallets":len(claimable),"dao_claimable_neta":round(claim/1e6,6),"lp_wallets":economic_lp_wallet_count(lp_neta),"lp_neta":round(sum(lp_neta.values())/1e6,6),"economic_master_entries":len(rows),"cross_chain_matches":sum(r["cross_chain_match"] for r in rows),"wallet_attributed_neta":round(ranked/1e6,6),"dao_residual_neta":round(dao_res/1e6,6),"bridge_unattributed_neta":round((bridge_res+bridge_in_transit)/1e6,6),"unattributed_total_neta":round(residual/1e6,6),"excluded_bridge_escrow_neta":round(escrow/1e6,6),"bridge":bridge,"gini":round(gini([r["total_raw"] for r in rows]),6),"concentration_neta":{"top_1":top(1),"top_5":top(5),"top_10":top(10),"top_25":top(25),"top_50":top(50),"top_100":top(100),"top_1_percent":top(onepct),"top_1_percent_wallets":onepct},"osmosis":{"height":height,"rpc":rpc,"method":"single bank primary-state scan for NETA + Pool 631 shares","pool_631":osmo_lp_meta},"juno":{"height":juno_height,"method":"height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace","wynd":wynd_meta},"dao":{**dao_snapshot,"method":"CosmWasm AllContractState; claims classified by release_at at snapshot"}}
     (out/"holders.json").write_text(json.dumps(public,separators=(',',':')),encoding='utf-8')
     write_address_index(out,public)
     (out/"metadata.json").write_text(json.dumps(meta,indent=2),encoding='utf-8')
