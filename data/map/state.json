@@ -1,9 +1,9 @@
 {
   "collection_started_at": "2026-09-12T18:05:26.203149Z",
   "juno_endpoint": "https://juno-api.polkachu.com",
-  "juno_last_height": 42169278,
+  "juno_last_height": 42170713,
   "osmosis_endpoint": "https://osmosis-api.polkachu.com",
-  "osmosis_last_height": 71503178,
+  "osmosis_last_height": 71506153,
   "schema_version": 1,
-  "updated_at": "2026-09-28T15:25:00.262769Z"
+  "updated_at": "2026-09-28T16:29:55.395039Z"
 }
