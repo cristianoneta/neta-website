@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-29T13:34:36.615178Z",
+  "generated_at": "2026-09-29T16:34:04.392133Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -23,7 +23,7 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4060,
-  "lp_neta": 1807.188677,
+  "lp_neta": 1807.688641,
   "economic_master_entries": 13971,
   "cross_chain_matches": 2029,
   "wallet_attributed_neta": 31886.38,
@@ -48,25 +48,25 @@
       ]
     }
   },
-  "gini": 0.878013,
+  "gini": 0.878025,
   "concentration_neta": {
     "top_1": 1612.135373,
     "top_5": 4732.521974,
-    "top_10": 6210.178007,
-    "top_25": 8785.287754,
-    "top_50": 10988.650789,
-    "top_100": 13538.317527,
-    "top_1_percent": 14700.275009,
+    "top_10": 6210.183277,
+    "top_25": 8785.293024,
+    "top_50": 10988.656059,
+    "top_100": 13538.346302,
+    "top_1_percent": 14700.32492,
     "top_1_percent_wallets": 140
   },
   "osmosis": {
-    "height": 71563892,
-    "rpc": "https://osmosis-rpc.polkachu.com",
+    "height": 71572302,
+    "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 71563892,
-      "rpc": "https://osmosis-rpc.polkachu.com",
-      "pool_neta_raw": 948946792,
+      "height": 71572302,
+      "rpc": "https://rpc.osmosis.zone",
+      "pool_neta_raw": 949446756,
       "lp_supply_raw": 225004459685449894124978,
       "direct_share_holders": 578,
       "economic_wallets": 1969,
@@ -78,7 +78,7 @@
     }
   },
   "juno": {
-    "height": 42198664,
+    "height": 42202745,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 858241885,
@@ -92,8 +92,8 @@
     }
   },
   "dao": {
-    "height": 42198664,
-    "block_time": "2026-09-29T13:26:43.041261+00:00",
+    "height": 42202745,
+    "block_time": "2026-09-29T16:29:34.643329+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 292,
     "method": "CosmWasm AllContractState; claims classified by release_at at snapshot"
