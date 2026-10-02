@@ -1,5 +1,11 @@
 # Codebase review — 2026-09-15
 
+> Historical evidence / procedure. Current code-backed state is in
+> [CURRENT_STATE.md](CURRENT_STATE.md) and [../HANDOFF.md](../HANDOFF.md).
+> Dates, earlier deployment states and continuation notes below are historical;
+> verify current identity/state before any wallet action.
+
+
 Scope: browser frontend, data collectors, GitHub Actions, NETA Socials and its
 Uni-7 stake mock. This review is a checkpoint, not a claim that future chain,
 endpoint or dependency changes are safe automatically.

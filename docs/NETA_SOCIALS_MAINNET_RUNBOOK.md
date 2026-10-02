@@ -1,5 +1,11 @@
 # NETA Socials mainnet runbook
 
+> Historical evidence / procedure. Current code-backed state is in
+> [CURRENT_STATE.md](CURRENT_STATE.md) and [../HANDOFF.md](../HANDOFF.md).
+> Dates, earlier deployment states and continuation notes below are historical;
+> verify current identity/state before any wallet action.
+
+
 Status: **live and independently verified unpaused**. Code ID `5167` and
 contract `juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9`
 are recorded in the release manifest. Public writes are enabled subject to the

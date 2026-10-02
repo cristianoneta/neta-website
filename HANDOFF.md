@@ -1,79 +1,87 @@
 # NETA Reborn handoff
 
-Last verified: 2026-09-21
+Code/documentation reviewed: **2026-10-02**. This repository owns
+<https://netareborn.com>. `cristianoneta/neta-dao` owns
+<https://dao.netareborn.com>; Governance, Delivery, Treasury, Contributors,
+RELAY and Names work belongs there.
 
-Read this file, `README.md`, `docs/OPERATIONS_KNOWLEDGE.md` and
-`docs/ARCHITECTURE.md` before changing the site. This repository owns
-`https://netareborn.com`. The separate `cristianoneta/neta-dao` repository owns
-`https://dao.netareborn.com`; governance, Delivery, Treasury and Contributors work
-belongs there.
+## Read in this order
 
-## Production scope
+1. [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md): feature inventory, owning
+   files, collector cadence, deployment boundaries and known limitations.
+2. [README.md](README.md): local checks and transaction boundaries.
+3. [docs/OPERATIONS_KNOWLEDGE.md](docs/OPERATIONS_KNOWLEDGE.md): contract,
+   pool, IBC and recorded deployment evidence.
+4. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): component invariants.
 
-- The public site contains Ranking, Map of NETA, NETA DAO, WYND Recovery, Rescue
-  NETA and NETA Socials. `What is NETA` remains offline pending a rewrite.
-- Ranking and Map are generated read-only data products. Generated files have a
-  single owning collector; do not hand-edit their mirrors.
-- WYND Recovery is allowlisted to Unbond, Claim and Withdraw for eight frozen
-  contract sets. Rescue NETA is limited to the frozen JUNO/NETA pair and USD 25
-  estimated value per transaction.
-- Controlled IBC routes are explicit. Wrapped assets may only return to origin;
-  an unresolved packet remains visible and disables the affected route.
-- NETA Socials is a checksum-locked Juno mainnet contract. Every write uses Keplr,
-  attaches no funds and preserves the emergency pause path.
+`docs/NETA_REBORN_CHECKPOINT.md` and dated reviews are historical evidence,
+not current continuation instructions. Read the relevant owning code/tests
+before changing behavior. Deployment records must be rechecked on-chain before
+wallet writes; a docs review is not a fresh chain attestation.
 
-## Safety and workflow
+## Working map
 
-- Never request or enter a seed phrase. Do not add raw private-key signing.
-- Transaction code is fail-closed: revalidate wallet, chain, allowlist, live state,
-  quote and gas immediately before opening Keplr.
-- Change the shared shell through `scripts/site_shell.py`, then regenerate every
-  page. CI intentionally fails if one page retains stale navigation or CSP.
-- Use branches and pull requests; run `npm ci && npm run test:static` at minimum.
-  Browser-facing changes also require the pinned Playwright suite in CI.
-- Production collectors serialize writes. Do not force-update `main` or overwrite
-  generated data to resolve a branch conflict.
+| Task | Owning files |
+| --- | --- |
+| Economic ranking / LP attribution | `scripts/run_neta_data.py`, `scripts/update_neta_data.py`, `scripts/lp_attribution.py`; `app.js` |
+| Map / swaps / transfers | `scripts/update_map_of_neta.py`, `data/map/chains.json`, `map-of-neta.js`, `ibc-transfer.js`, `src/ibc-signing-client.js` |
+| WYND recovery | `data/recovery/wynd-pools.json`, `wynd-recovery.js`, `recovery-signing-config.js`, `src/recovery-signing-client.js` |
+| Rescue swap | `rescue-neta.js`, `rescue-neta-signing-config.js`, `src/swap-signing-client.js` |
+| Socials | `neta-socials.js`, `data/socials-mainnet-release.json`, `contracts/neta-socials/` |
+| Shared shell / wallet | `scripts/site_shell.py`, `wallet-header.js`, `cosmos-client.js` |
+| Production publishing | `.github/workflows/update-production-data.yml`, `scripts/data_refresh_schedule.py` |
 
-## GitHub Actions diagnosis
+Legacy `contracts/neta-governance/` remains here because Operations UNI-7 uses
+its API. It is not the v0.3.0 workshop in the DAO repository. Its
+`finalize_and_submit` changes review status only, not mainnet governance.
 
-- The only recent failed website test was PR #132, run `35532282737` on
-  2026-09-20. The exact failure was `shared shell is stale: index.html`: the PR
-  changed the shell definition without regenerating `index.html`. This is a useful
-  guardrail failure, not a production outage. Current `main` tests and deployments
-  subsequently passed.
-- Cancelled Pages runs commonly occur when a newer deployment supersedes an older
-  one. Treat a red build/test as actionable; verify the next Pages run before
-  treating an auto-cancelled deployment as an incident.
+## Workflow and verification
 
-## Commands
+Use feature branches/PRs; preserve generated data and unrelated changes.
+Install requirements in a venv, `npm ci`, then run `npm run test:static`.
+For browser code, run the pinned Playwright checks and rebuild the affected
+signing bundle; CI compares generated bundles with committed bytes.
+For shell edits, regenerate only the five pages enumerated by `site_shell.py`,
+then verify Socials/guarded consoles separately. `--check` is non-mutating.
 
-```bash
-npm ci
-npm run test:static
-python scripts/site_shell.py --root .
-python scripts/test_site_integrity.py
-npm run test:browser:install
-npm test
-```
+Root README/Handoff and ordinary docs edits do not match website CI filters.
+Markdown beneath `contracts/**` does match contract and website CI. Inspect the
+actual changed paths and checks; run local checks/link review as well. A successful
+Pages deployment proves publication, not a transaction or security audit.
 
-The shell generation command writes files. Use `python scripts/site_shell.py
---root . --check` for a non-mutating drift check.
+## Non-negotiable boundaries
 
-## Current backlog
+- Never request seeds/private keys; every wallet write requires Keplr approval.
+- Recovery: eight frozen pools, Unbond/Claim/Withdraw only; no Bond/Provide Liquidity.
+- Rescue: frozen JUNO/NETA pair, estimated USD 25 cap per individual swap.
+- Source IBC inclusion means packet submitted, not destination receipt.
+- Juno↔Terra is absent from the transfer route table. Osmosis↔Terra native routes
+  are present; NETA only has Juno↔Osmosis channels. Do not describe all Terra paths
+  as disabled or Terra as a NETA destination.
+- Validate economic ownership with integer raw units and height-pinned chain
+  queries; no tolerance or manual snapshot editing to close supply.
+- Shared bridge custody is channel-specific; keep unexplained/transit amounts
+  explicit. Old September-12 whole-escrow=Osmosis guidance is superseded.
+- Collector outputs have one owner. Production collectors run sequentially in
+  one job and publish one commit; parallel jobs remain open Issue #122.
+- No force push/reset to resolve snapshot races. Current bot rebase uses
+  `-X theirs`; never copy that blindly into a human conflict resolution.
 
-- Keep generated rankings, Map, recovery statistics and market data within the
-  freshness limits documented in `README.md`.
-- Complete the remaining controlled live recovery evidence only with explicit user
-  approval; simulation coverage is already the public safety gate.
-- Continue DAO product work in `neta-dao`, not by duplicating governance logic here.
-- Reassess disabled/experimental IBC routes only from packet acknowledgement and
-  destination-balance evidence, never from source inclusion alone.
+## Next work / outstanding evidence
 
-## First steps for the next AI
+1. Check current Actions, freshness timestamps and served files at session start.
+2. Controlled JUNO/NETA Claim matured on 2026-09-21; no completed live Claim
+   evidence was found in the reviewed docs. Query current claim state before
+   proposing/signing any action. Historical simulation coverage remains separate.
+3. Last documented Terra NETA packet: channel-154/33, sequence 36, 0.01 NETA.
+   Recheck commitment/receipt/acknowledgement/refund before claiming resolution.
+4. Keep daily/periodic data within freshness limits. Parallelize collectors only
+   behind a single validated publisher if pursuing Issue #122.
+5. Rewrite `What is NETA` only when requested; it is intentionally offline.
+6. Continue encrypted messaging in **neta-dao** using its current Handoff and
+   existing UNI-7 lab; do not build duplicate DAO features here.
 
-1. Check the latest Actions runs and deployed page before assuming a saved checkpoint
-   is still current.
-2. Read the current operational knowledge; historical sections in
-   `docs/NETA_REBORN_CHECKPOINT.md` are evidence, not continuation instructions.
-3. Identify the owning collector before editing any JSON or generated JavaScript.
-4. Preserve unrelated local changes and never use a destructive Git reset.
+CURRENT_STATE lists unfixed code/configuration limitations, including CSP/endpoint
+mismatches, explicit Pages-request absence in the data publisher, generated recovery
+test-log commits, and old deployment/testing artifacts. Do not silently erase them
+from the record or represent this documentation cleanup as code fixes.

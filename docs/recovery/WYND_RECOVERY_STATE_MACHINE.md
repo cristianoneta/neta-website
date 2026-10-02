@@ -31,9 +31,10 @@ Claim and Withdraw on the exact Top-8 contract allowlist.
 - Controlled JUNO/NETA broadcasts validated Withdraw and Unbond, including
   emitted events, gas, before/after state and transaction-link handling.
 - Claim success, user rejection and delayed post-state are covered by browser
-  lifecycle tests. The first controlled Claim broadcast remains scheduled after
-  the JUNO/NETA claim matures and will be recorded as additional production
-  evidence.
+  lifecycle tests. The controlled JUNO/NETA claim release date was 2026-09-21, now in the past.
+  A completed live Claim broadcast is not recorded in the reviewed evidence;
+  query current claim state before any action. It remains additional production
+  evidence, not the only public gate. See [../CURRENT_STATE.md](../CURRENT_STATE.md).
 
 ## Public signing boundary
 
