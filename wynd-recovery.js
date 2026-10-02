@@ -289,7 +289,7 @@ function loadSigningClient(){
   if(signingClientPromise)return signingClientPromise;
   signingClientPromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="assets/recovery-signing-client.js?v=1";
+    script.src="assets/recovery-signing-client.js?v=2";
     script.onload=()=>window.NetaRecoverySigning
       ?resolve(window.NetaRecoverySigning)
       :reject(new Error("SIGNING CLIENT DID NOT INITIALIZE"));
@@ -381,7 +381,7 @@ async function executePendingAction(){
   const button=$("#execute-action");
   button.disabled=true;
   setTransactionFeedback("pending","REVALIDATING LIVE STATE","CHECKING CONTRACTS AND CURRENT POSITION…");
-  let confirmedHash="";
+  let confirmedHash="",connectedClient=null;
   try{
     const signingClient=await loadSigningClient();
     await window.keplr.enable(CHAIN_ID);
@@ -394,11 +394,12 @@ async function executePendingAction(){
     }
     setTransactionFeedback("pending","CONNECTING SIGNING RPC","PREPARING FINAL SIMULATION…");
     const connection=await signingClient.connect(SIGNING_CONFIG.rpcEndpoints,signer,SIGNING_CONFIG.gasPrice);
+    connectedClient=connection.client;
     const gas=await signingClient.simulate(connection.client,wallet.address,fresh.contract,fresh.message,TX_MEMO);
     const cap=SIGNING_CONFIG.gasCaps[pendingAction.action];
     if(!Number.isSafeInteger(gas)||gas<=0||gas>cap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${cap}`);
     setTransactionFeedback("pending","SIGNATURE + NETWORK CONFIRMATION",`SIMULATED ${gas.toLocaleString()} GAS // WAITING FOR KEPLR AND JUNO…`);
-    const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,SIGNING_CONFIG.gasAdjustment,TX_MEMO);
+    const result=await signingClient.execute(connection.client,wallet.address,fresh.contract,fresh.message,signingClient.fixedFee(gas,SIGNING_CONFIG.gasAdjustment,SIGNING_CONFIG.gasPrice,cap),TX_MEMO);
     if(result.code!==undefined&&Number(result.code)!==0)throw new Error(`TRANSACTION FAILED WITH CODE ${result.code}`);
     confirmedHash=String(result.transactionHash||"").toUpperCase();
     const completed=pendingAction;
@@ -414,6 +415,7 @@ async function executePendingAction(){
     }
     throw error;
   }finally{
+    try{connectedClient?.disconnect()}catch{}
     button.disabled=!pendingAction||!recoveryAuthorized(pendingAction.pool,pendingAction.action,pendingAction.request);
   }
 }

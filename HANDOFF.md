@@ -81,7 +81,8 @@ Pages deployment proves publication, not a transaction or security audit.
 6. Continue encrypted messaging in **neta-dao** using its current Handoff and
    existing UNI-7 lab; do not build duplicate DAO features here.
 
-CURRENT_STATE lists unfixed code/configuration limitations, including CSP/endpoint
-mismatches, explicit Pages-request absence in the data publisher, generated recovery
+CURRENT_STATE and [the security audit](docs/SECURITY_EFFICIENCY_AUDIT_2026-10-02.md)
+list remaining limitations, including ambiguous broadcast reconciliation,
+legacy withdrawal output protection, explicit Pages-request absence in the data publisher, generated recovery
 test-log commits, and old deployment/testing artifacts. Do not silently erase them
 from the record or represent this documentation cleanup as code fixes.

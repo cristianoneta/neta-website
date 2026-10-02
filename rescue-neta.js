@@ -35,7 +35,7 @@
   const client=new window.NetaCosmosClient(LCD_ENDPOINTS);
   let offer="JUNO",slippage=5,junoUsd=null,pool=null,contractValid=false;
   let quote=null,requestId=0,debounceTimer=null,refreshTimer=null,ageTimer=null,balanceRaw=null;
-  let signing=false;
+  let signing=false,previewIntent=null;
 
   const other=symbol=>symbol==="JUNO"?"NETA":"JUNO";
   const asNumber=raw=>Number(raw)/10**DECIMALS;
@@ -105,7 +105,7 @@
     const selected=market.pools?.[PAIR];
     const juno=selected?.assets?.find(asset=>asset.key==="native:ujuno");
     const stamp=Date.parse(market.price_timestamp||"");
-    if(!selected||!juno?.usd_price||!Number.isFinite(stamp))throw new Error("INVALID MARKET SNAPSHOT");
+    if(!selected||!Number.isFinite(Number(juno?.usd_price))||Number(juno.usd_price)<=0||!Number.isFinite(stamp)||stamp>Date.now()+60000)throw new Error("INVALID MARKET SNAPSHOT");
     if(Date.now()-stamp>36*60*60*1000)throw new Error("USD PRICE SNAPSHOT IS STALE");
     junoUsd=Number(juno.usd_price);
   }
@@ -159,7 +159,7 @@
     }catch(error){if(id===requestId)clearQuote(`QUOTE FAILED: ${(error.message||String(error)).toUpperCase()}`,"error")}
   }
 
-  function scheduleQuote(){clearTimeout(debounceTimer);clearTimeout(refreshTimer);debounceTimer=setTimeout(requestQuote,320)}
+  function scheduleQuote(){requestId++;clearQuote("REFRESHING QUOTE…","loading");clearTimeout(debounceTimer);clearTimeout(refreshTimer);debounceTimer=setTimeout(requestQuote,320)}
   function renderAge(){if(!quote)return;const seconds=Math.max(0,Math.floor((Date.now()-quote.at)/1000));dom.age.textContent=seconds?`QUOTED ${seconds}S AGO`:"QUOTED NOW"}
 
   async function updateBalance(){
@@ -222,6 +222,7 @@
   function openPreview(){
     if(!signingAuthority().ok)return;
     const address=window.NETA_WALLET_STATE.address,tx=buildTransaction(quote,address);
+    previewIntent={address,raw:quote.raw,offer:quote.offer,slippage};
     dom.preview.textContent=JSON.stringify(transactionPreview(quote,tx,address),null,2);
     dom.modalState.textContent="READY FOR FINAL LIVE REVALIDATION";delete dom.modalState.dataset.state;
     dom.modalMessage.textContent="The quote, wallet balance, pair identity and $25 per-swap limit will be checked again before Keplr opens.";
@@ -248,19 +249,23 @@
   }
 
   async function signSwap(){
-    if(signing)return;signing=true;renderAction();dom.confirm.disabled=true;dom.close.disabled=true;
+    if(signing||!previewIntent)return;const reviewed=previewIntent;signing=true;const controls=[dom.amount,dom.reverse,dom.max,dom.custom,...dom.slippageButtons];controls.forEach(item=>item.disabled=true);renderAction();dom.confirm.disabled=true;dom.close.disabled=true;
     dom.modalState.dataset.state="loading";dom.modalState.textContent="REVALIDATING LIVE STATE…";dom.result.hidden=true;
     let signingClient,broadcastHash="";
     try{
-      const address=window.NETA_WALLET_STATE?.address,liveQuote=await freshQuoteForSigning(),tx=buildTransaction(liveQuote,address);
+      const address=window.NETA_WALLET_STATE?.address,liveQuote=await freshQuoteForSigning();
+      if(address!==reviewed.address||liveQuote.raw!==reviewed.raw||liveQuote.offer!==reviewed.offer||slippage!==reviewed.slippage)throw new Error("SWAP PARAMETERS CHANGED — REVIEW AGAIN");
+      const tx=buildTransaction(liveQuote,address);
       dom.modalState.textContent="CONNECTING TO SIGNING RPC…";
-      const connection=await window.NetaSwapSigning.connect(SIGNING.rpcEndpoints,window.NETA_WALLET_STATE.signer,SIGNING.gasPrice);
+      const walletSigner=window.NETA_WALLET_STATE?.signer;if(!walletSigner||(await walletSigner.getAccounts())[0]?.address!==address)throw new Error("KEPLR ACCOUNT CHANGED — REVIEW AGAIN");
+      const connection=await window.NetaSwapSigning.connect(SIGNING.rpcEndpoints,walletSigner,SIGNING.gasPrice);
       signingClient=connection.client;
       const gas=await window.NetaSwapSigning.simulate(signingClient,address,tx.contract,tx.message,tx.funds,SIGNING.memo);
       if(!Number.isSafeInteger(gas)||gas<=0||gas>SIGNING.gasCap)throw new Error(`SIMULATED GAS ${gas} EXCEEDS SAFETY CAP ${SIGNING.gasCap}`);
       dom.preview.textContent=JSON.stringify(transactionPreview(liveQuote,tx,address,gas),null,2);
+      if(window.NETA_WALLET_STATE?.address!==address||(await walletSigner.getAccounts())[0]?.address!==address)throw new Error("KEPLR ACCOUNT CHANGED — REVIEW AGAIN");
       dom.modalState.textContent="CHECK KEPLR — REVIEW EVERY FIELD BEFORE APPROVING";
-      const result=await window.NetaSwapSigning.execute(signingClient,address,tx.contract,tx.message,tx.funds,SIGNING.gasAdjustment,SIGNING.memo);
+      const result=await window.NetaSwapSigning.execute(signingClient,address,tx.contract,tx.message,tx.funds,window.NetaSwapSigning.fixedFee(gas,SIGNING.gasAdjustment,SIGNING.gasPrice,SIGNING.gasCap),SIGNING.memo);
       broadcastHash=String(result?.transactionHash||"").toUpperCase();if(!/^[0-9A-F]{64}$/.test(broadcastHash))throw new Error("BROADCAST RETURNED NO VALID TRANSACTION HASH");
       dom.resultLabel.textContent="TRANSACTION INCLUDED";dom.resultHash.textContent=broadcastHash;dom.explorer.href=`https://atomscan.com/juno/transactions/${broadcastHash}`;dom.result.hidden=false;dom.confirm.hidden=true;
       dom.modalState.textContent="TRANSACTION INCLUDED — VERIFYING RECEIVED ASSET EVENT…";
@@ -274,7 +279,7 @@
       dom.modalState.dataset.state="error";dom.modalState.textContent=broadcastHash?"TRANSACTION INCLUDED · VERIFICATION INCOMPLETE":"TRANSACTION NOT CONFIRMED";dom.modalMessage.textContent=errorText(error);
       if(broadcastHash){dom.resultLabel.textContent="TRANSACTION INCLUDED";dom.resultHash.textContent=broadcastHash;dom.explorer.href=`https://atomscan.com/juno/transactions/${broadcastHash}`;dom.result.hidden=false;dom.confirm.hidden=true}
     }
-    finally{try{signingClient?.disconnect()}catch{}signing=false;dom.close.disabled=false;if(!dom.confirm.hidden)dom.confirm.disabled=false;renderAction()}
+    finally{try{signingClient?.disconnect()}catch{}signing=false;controls.forEach(item=>item.disabled=false);dom.max.disabled=balanceRaw===null||balanceRaw<=0n;dom.close.disabled=false;if(!dom.confirm.hidden)dom.confirm.disabled=false;renderAction()}
   }
 
   function selectSlippage(value){

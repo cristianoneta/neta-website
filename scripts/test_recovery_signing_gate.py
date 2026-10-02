@@ -55,7 +55,7 @@ for required in [
     "gas>cap",
     "signingClient.simulate",
     "signingClient.execute",
-    'script.src="assets/recovery-signing-client.js?v=1"',
+    'script.src="assets/recovery-signing-client.js?v=2"',
 ]:
     assert required in frontend, required
 
