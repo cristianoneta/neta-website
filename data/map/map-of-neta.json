@@ -45,17 +45,17 @@
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-10-02T18:26:35.571383Z",
+  "generated_at": "2026-10-02T19:27:35.035619Z",
   "market": {
     "by_chain": {
       "osmosis": 7
     },
     "power_buyers": [
       {
-        "bought_neta": 0.110272,
-        "net_neta": 0.106735,
+        "bought_neta": 0.242514,
+        "net_neta": 0.238977,
         "sold_neta": 0.003537,
-        "swaps": 2,
+        "swaps": 3,
         "total_neta": 0.0,
         "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h"
       }
@@ -63,10 +63,10 @@
     "swaps": 7,
     "top_sellers": [
       {
-        "bought_neta": 0.005905,
-        "net_neta": -0.025388,
+        "bought_neta": 0.004255,
+        "net_neta": -0.027038,
         "sold_neta": 0.031293,
-        "swaps": 5,
+        "swaps": 4,
         "total_neta": 0.0,
         "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
       }
@@ -80,7 +80,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 66.72,
+      "coverage_percent": 66.86,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -118,7 +118,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 22.24,
+      "coverage_percent": 22.29,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
