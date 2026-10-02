@@ -147,7 +147,9 @@ Run the deterministic runner after installing requirements; it executes all
 `scripts/test_*.py` plus root/source JS syntax checks. The website CI builds
 and byte-compares four signing bundles, audits npm and runs pinned Playwright.
 Contract checks are separate workflows. All current workflow `uses` entries
-here are SHA-pinned. Docs-only changes do not match website CI path filters.
+here are SHA-pinned. Root README/Handoff and ordinary docs edits do not match
+website CI filters; Markdown under `contracts/**` does. This reconciliation PR
+includes a legacy contract README and therefore triggers the relevant CI.
 A historical 46-test count or old launch failure is not today's execution evidence.
 
 2026-10-02 local verification: all 18 deterministic Python test programs and

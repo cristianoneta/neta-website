@@ -88,8 +88,9 @@ hours, recovery statistics older than three hours, or market data older than
 `metadata.json` is schema v3; `address_index.json` uses compact schema v4.
 Never hand-edit generated exports or reuse the old whole-escrow=Osmosis invariant.
 
-Documentation-only PRs do not trigger the path-filtered website CI. Run local
-checks and review links; browser/code changes require the appropriate CI suite.
+Root README/Handoff and ordinary docs edits alone do not trigger website CI.
+Markdown under `contracts/**` does, including this reconciliation PR. Inspect
+actual path filters, run local checks and review links.
 
 ## Recovery safety boundary
 

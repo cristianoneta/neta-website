@@ -44,8 +44,9 @@ signing bundle; CI compares generated bundles with committed bytes.
 For shell edits, regenerate only the five pages enumerated by `site_shell.py`,
 then verify Socials/guarded consoles separately. `--check` is non-mutating.
 
-Documentation-only PRs do not match the existing CI path filters. Run local
-checks/link review and inspect the checks actually triggered. A successful
+Root README/Handoff and ordinary docs edits do not match website CI filters.
+Markdown beneath `contracts/**` does match contract and website CI. Inspect the
+actual changed paths and checks; run local checks/link review as well. A successful
 Pages deployment proves publication, not a transaction or security audit.
 
 ## Non-negotiable boundaries
