@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-10-02T19:27:32.569122Z",
+  "generated_at": "2026-10-02T22:26:05.915057Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -23,7 +23,7 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4060,
-  "lp_neta": 1807.690313,
+  "lp_neta": 1808.226055,
   "economic_master_entries": 13972,
   "cross_chain_matches": 2029,
   "wallet_attributed_neta": 31886.38,
@@ -48,25 +48,25 @@
       ]
     }
   },
-  "gini": 0.878035,
+  "gini": 0.878032,
   "concentration_neta": {
     "top_1": 1612.135373,
     "top_5": 4732.521974,
-    "top_10": 6210.183294,
-    "top_25": 8785.293041,
-    "top_50": 10988.656076,
-    "top_100": 13538.346398,
-    "top_1_percent": 14700.124717,
+    "top_10": 6210.188941,
+    "top_25": 8785.298688,
+    "top_50": 10988.661723,
+    "top_100": 13538.377232,
+    "top_1_percent": 14699.640439,
     "top_1_percent_wallets": 140
   },
   "osmosis": {
-    "height": 71778910,
+    "height": 71787049,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 71778910,
+      "height": 71787049,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 949448428,
+      "pool_neta_raw": 949984170,
       "lp_supply_raw": 225004459685449894124978,
       "direct_share_holders": 578,
       "economic_wallets": 1969,
@@ -78,7 +78,7 @@
     }
   },
   "juno": {
-    "height": 42302239,
+    "height": 42306187,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 858241885,
@@ -92,8 +92,8 @@
     }
   },
   "dao": {
-    "height": 42302239,
-    "block_time": "2026-10-02T19:22:45.747167+00:00",
+    "height": 42306187,
+    "block_time": "2026-10-02T22:21:40.968007+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 293,
     "method": "CosmWasm AllContractState; claims classified by release_at at snapshot"
