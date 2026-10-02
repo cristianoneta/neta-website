@@ -36,3 +36,7 @@ The DAO has additional local passing suites and unresolved RELAY availability ri
 ## Continuation
 
 Use CURRENT_STATE.md and HANDOFF.md as the navigation entry point. Resolve ambiguous broadcast retries before broadening transaction UX; retain reviewed intent and wallet identity checks. Mainnet messaging must remain disabled until the DAO RELAY blockers and adversarial regressions are resolved. Verify new bundle versions in deployment after integration.
+
+### CI evidence at continuation handoff
+
+Website Test website run 307 passed, including browser integration and reproducible bundles. DAO RELAY browser crypto run 31 passed, including stale-response regressions and the optional adversarial test that intentionally reproduces the open persistent-lock blocker. DAO contract/frontend run 136 was still running; website production-data run 409 was pending. Check final outcomes before merging. Code checkpoint SHAs are recorded in HANDOFF.md; these follow-up documentation changes do not change the tested implementation.
