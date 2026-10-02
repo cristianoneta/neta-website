@@ -1,5 +1,9 @@
 # NETA Reborn architecture
 
+Reviewed 2026-10-02. [CURRENT_STATE.md](CURRENT_STATE.md) owns the feature and
+workflow inventory; this document describes component boundaries. Historical
+review/checkpoint claims do not override current source.
+
 ## Layers
 
 | Layer | Responsibility | Must not do |
@@ -8,16 +12,20 @@
 | Page scripts | Page-specific interaction and rendering | Copy shared shell, canvas or network infrastructure |
 | `scripts/neta_core/` | LCD failover, CosmWasm queries, price lookup and deterministic JSON I/O | Contain NETA/WYND business rules |
 | Collectors | Fetch chain state and build validated snapshots | Publish partially validated output |
-| GitHub Actions | Schedule, test and serialize generated-data commits | Commit routine test logs to `main` |
+| GitHub Actions | Schedule, test and serialize generated-data commits | Publish partially validated output; the recovery-statistics diagnostic log is currently retained |
 
 ## Data pipelines
 
-1. A scheduled or manually dispatched workflow checks out the latest branch.
-2. The collector queries allowlisted chain endpoints and validates its result.
-3. Tests run before generated files are staged.
-4. Only changed data files are committed.
-5. All repository-writing workflows share the same per-branch concurrency group.
-6. GitHub Pages is rebuilt after a successful production data commit.
+1. The central workflow checks out one coherent `main` or PR source snapshot.
+2. Berlin-local due selection chooses collectors; they execute sequentially.
+3. Collector checks and combined snapshot/freshness validation precede publication.
+4. Only owned outputs plus the retained recovery-statistics diagnostic log are staged.
+5. Production writes serialize in one workflow concurrency group; PRs do not publish.
+6. At most one changed-data commit is pushed with bounded fetch/rebase retries.
+7. Check Pages publication. The data workflow has no explicit Pages API call;
+   the main website CI deploy job does. Diagnostic/discovery writers are separate.
+
+Parallel collectors behind a central publisher are still open Issue #122.
 
 Map of NETA stores Juno WYND-pair swaps and Osmosis pool-631 swaps as distinct
 events before aggregating them. Ordinary transfers are not counted as swaps.
@@ -52,7 +60,7 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
   new wallet lookup.
 - A failed pool produces a partial total and can be retried independently; it
   never enables transaction actions or removes successful pool results.
-- Live pool reserves and current USD totals may refresh daily.
+- Live reserves and current USD totals follow the six-hour market cadence.
 - Unstake and claim values are fixed at collection time. Existing event records
   with `valuation_locked: true` are never repriced.
 - Stake-contract custody is excluded from the economic-owner leaderboard to
@@ -127,9 +135,11 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
 
 - Snapshot and chain data is rendered with DOM creation plus `textContent`; the
   browser code must not use `innerHTML` or `insertAdjacentHTML`.
-- Every page ships the same Content Security Policy. Scripts are restricted to
-  same-origin assets, network access is limited to the declared Juno endpoints,
-  and objects, framing bases and arbitrary form targets are disabled.
+- The five generated-shell pages share a CSP template with a Map-specific Terra
+  REST addition. Socials and guarded consoles have separate policies. Scripts are
+  same-origin and connection allowlists are explicit; configured RPC fallbacks
+  do not necessarily appear in each page CSP. See CURRENT_STATE for the IBC
+  PublicNode mismatch. Objects, bases and form targets are restricted.
 - Inline styles remain temporarily allowed because the shared Matrix canvas
   updates dimensions at runtime. Removing that exception is the next CSP
   tightening opportunity.
@@ -156,7 +166,7 @@ verified timeout/refund; no tolerance converts them into unexplained residuals.
 - Generate the static header and footer with `scripts/site_shell.py`; never edit
   one page's shell in isolation.
 - Generated snapshots are build artifacts with an explicit owning workflow.
-- The WYND market and economic-owner leaderboard are published as one daily
+- The WYND market and economic-owner leaderboard are published as one six-hour
   snapshot unit. Publication fails unless both cover the exact registry Top 8,
   share the same market timestamp, pass LP-supply conservation checks and the
   market data is no more than 36 hours old. The frontend labels older retained

@@ -1,5 +1,11 @@
 # NETA Reborn — Technical Checkpoint
 
+> Historical evidence / procedure. Current code-backed state is in
+> [CURRENT_STATE.md](CURRENT_STATE.md) and [../HANDOFF.md](../HANDOFF.md).
+> Dates, earlier deployment states and continuation notes below are historical;
+> verify current identity/state before any wallet action.
+
+
 Last updated: 2026-09-21
 
 > **Current source of truth:** read

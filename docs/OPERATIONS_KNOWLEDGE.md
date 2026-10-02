@@ -1,9 +1,11 @@
 # NETA Reborn operational knowledge
 
-Last verified: 2026-09-15
+Code/documentation reviewed: 2026-10-02; deployment/packet evidence dates remain explicit.
 
-This is the canonical current-state reference. Historical investigation logs
-remain in `NETA_REBORN_CHECKPOINT.md`, but must not override this document.
+Use [CURRENT_STATE.md](CURRENT_STATE.md) for the current code/workflow inventory.
+This document retains contracts, accounting and historical operational evidence.
+Neither document substitutes for fresh on-chain identity/state checks before writes.
+`NETA_REBORN_CHECKPOINT.md` is historical and must not override current code.
 
 ## Production surfaces and authority
 
@@ -74,12 +76,12 @@ Escrow must be reconciled per channel, not only as one bridge balance:
 | Route | Source / destination channels | Accounting state |
 | --- | --- | --- |
 | NETA Juno ↔ Osmosis | `channel-47` / `channel-169` | Osmosis outstanding is reconciled against channel-47 escrow |
-| NETA Juno ↔ Terra | `channel-154` / `channel-33` | 10,000 raw NETA (`0.010000`) remains represented by packet commitment sequence 36 |
+| NETA Juno ↔ Terra | `channel-154` / `channel-33` | Last documented packet: 10,000 raw NETA (`0.010000`), sequence 36; not re-queried in the 2026-10-02 docs review |
 | JUNO Juno ↔ Osmosis | `channel-0` / `channel-42` | Validated live outbound transfer |
 | Native Juno ↔ Terra | `channel-86` / `channel-2` | Route known; restore only after timeout/refund behavior is verified |
 | Native Osmosis ↔ Terra | `channel-251` / `channel-1` | Route registry only |
 
-The exact `0.010000 NETA` difference is not rounding noise and must never be
+The documented `0.010000 NETA` difference was not rounding noise and must never be
 hidden by tolerance or retries. Check packet commitment, acknowledgement,
 receipt and timeout/refund state. Until sequence 36 is resolved, Juno↔Terra
 NETA is not a public frontend route and Terra is displayed with zero NETA.
@@ -104,8 +106,9 @@ queryable on-chain and clients render a moderation tombstone.
 
 The testnet stake mock is hard-restricted to `uni-7` and must never be used as a
 mainnet dependency. Owner exemption proves deployment control, not the 10-NETA
-gate. That gate still needs a second non-owner wallet with synthetic stake for
-an end-to-end positive and negative test.
+gate. The synthetic non-owner end-to-end write test was not recorded here. Production
+read-only non-owner eligibility evidence is separately recorded below; do not
+confuse owner exemption, read-only eligibility and an actual signed write test.
 
 ### Uni-7 and Keplr lessons
 
@@ -126,9 +129,10 @@ an end-to-end positive and negative test.
   recovery accepts both encodings and reuses verified code IDs instead of
   uploading duplicate WASM.
 
-## Mainnet activation gates
+## Historical Socials activation procedure (completed 2026-09-15)
 
-The exact contract is deployed and verified paused. Before unpausing:
+The contract was initially deployed paused, then activated as recorded below.
+This is the historical sequence, not an instruction to unpause again:
 
 1. Keep locked Rust, optimized-WASM, JavaScript and browser checks green.
 2. Merge and deploy the public frontend configured for the recorded mainnet
@@ -184,8 +188,10 @@ frontend is live, and the admin surface retains the emergency-pause path.
 Production collection and publication are centralized in
 `.github/workflows/update-production-data.yml`. A single run checks out one
 coherent source snapshot, executes only the collectors due at that Berlin-local
-hour, validates the complete publication snapshot, creates at most one data
-commit and requests at most one Pages rebuild. The former standalone writer
+hour, validates the complete publication snapshot and creates at most one data
+commit. The current publisher has no explicit Pages API request; successful
+Pages runs were observed after data commits on 2026-10-02. Inspect the actual
+run after publication; only the separate website CI deploy job explicitly requests a build. The former standalone writer
 workflows were retired so independently correct collectors cannot race while
 pushing to `main`.
 
@@ -195,14 +201,16 @@ The production cadence is:
 - Economic NETA ranking: every three hours.
 - WYND recovery market and leaderboard: every six hours at 03:00, 09:00,
   15:00 and 21:00 Europe/Berlin.
-- A manual dispatch or a qualifying production-code push runs every collector,
-  which is the supported full-refresh path outside the normal schedule.
+- A manual dispatch or qualifying main push runs every collector. The main
+  push filter covers only the workflow and schedule script/test, not all
+  collector code. Manual dispatch is the full-refresh path; unrelated code or
+  docs pushes do not imply a refresh.
 
 Pull requests run the same collectors and validations but never commit data or
 request Pages. Production runs use one concurrency group with
 `cancel-in-progress: false`; normal runtimes remain well below the hourly
 interval. The publisher still uses a bounded three-attempt
-`fetch main` → deterministic rebase → push loop because a human commit can
+`fetch main` → rebase with `-X theirs` → push loop because a human commit can
 land during collection even though data workers no longer compete with one
 another.
 
@@ -216,5 +224,13 @@ A Juno/Osmosis difference may be published as `in_transit_neta` only when an
 open packet commitment exists on Juno `channel-47` or Osmosis `channel-169`.
 The amount remains an explicit unattributed bridge residual until delivery. A
 negative difference or a positive difference without packet evidence fails
-closed. The unresolved Terra `0.010000 NETA` remains separate and is not
+closed. The last documented Terra `0.010000 NETA` liability remains a separate category and is not
 covered by this active Osmosis-transit classification.
+
+## Current implementation qualifications
+
+Collectors are sequential in one job; parallel execution remains Issue #122.
+The publisher stages the recovery-statistics test log and uses `git rebase -X theirs`;
+old blanket claims of no committed logs or all writers sharing one concurrency
+group are superseded. Current code-backed status, format versions, endpoint/CSP
+limits and outstanding Claim/packet evidence are in CURRENT_STATE.
