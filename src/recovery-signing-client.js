@@ -1,3 +1,4 @@
+import {journalBroadcast} from "./broadcast-journal.mjs";
 export {fixedFee} from "./transaction-fee.mjs";
 import {SigningCosmWasmClient} from "@cosmjs/cosmwasm-stargate";
 import {GasPrice} from "@cosmjs/stargate";
@@ -49,5 +50,5 @@ export async function simulate(client,sender,contract,message,memo){
 }
 
 export async function execute(client,sender,contract,message,gasAdjustment,memo){
-  return client.execute(sender,contract,message,gasAdjustment,memo,[]);
+  return journalBroadcast(client,sender,[executeMessage(sender,contract,message)],gasAdjustment,memo);
 }

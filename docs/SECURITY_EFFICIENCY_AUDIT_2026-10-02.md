@@ -40,3 +40,26 @@ Use CURRENT_STATE.md and HANDOFF.md as the navigation entry point. Resolve ambig
 ### CI evidence at continuation handoff
 
 Website Test website run 307 passed, including browser integration and reproducible bundles. DAO RELAY browser crypto run 31 passed, including stale-response regressions and the optional adversarial test that intentionally reproduces the open persistent-lock blocker. DAO contract/frontend run 136 was still running; website production-data run 409 was pending. Check final outcomes before merging. Code checkpoint SHAs are recorded in HANDOFF.md; these follow-up documentation changes do not change the tested implementation.
+
+## 2026-10-03 continuation — broadcast journal
+
+PR #137 was merged after Test website run 308 and production-data run 410
+passed. Merge: `4109b2ed3f8dcbbda587cc3d3f90c59a9ac40b14`. Eight deployed
+website/DAO code assets matched their reviewed bytes on both domains.
+
+W2 follow-up adds `src/broadcast-journal.mjs` to recovery, swap, IBC and shared
+Socials/DAO execute adapters. A Web Lock serializes attempts per origin/chain/
+account. Signed TxRaw bytes, SHA-256 hash and signer sequence are persisted
+and read back before broadcast. RPC errors, malformed results and missing
+index entries keep the account locked across reloads. A later included result
+produces a reconciliation notice before a separately reviewed new action.
+Signature rejection before any broadcast may clear its signing intent.
+
+The guarantee is browser/origin-local, not coordination with another device,
+another domain, wallet app or manually cleared storage. Interrupted signing
+intents and transactions permanently rejected before inclusion currently require
+manual investigation; no automatic reset or rebroadcast is implemented. Storage
+or Web Locks unavailability fails closed. Upload/instantiate helpers are not
+covered. This source change must pass browser CI and reproducible bundle checks
+before merging. Five local Node fee/journal tests and deterministic Python checks
+passed. Mainnet messaging remains disabled.

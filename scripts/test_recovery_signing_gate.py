@@ -55,14 +55,14 @@ for required in [
     "gas>cap",
     "signingClient.simulate",
     "signingClient.execute",
-    'script.src="assets/recovery-signing-client.js?v=2"',
+    'script.src="assets/recovery-signing-client.js?v=3"',
 ]:
     assert required in frontend, required
 
 # The adapter exposes no generic raw broadcast or retired multi-message helper.
 assert "SigningCosmWasmClient.connectWithSigner" in client
 assert "client.simulate" in client
-assert "client.execute" in client
+assert "journalBroadcast(client,sender,[executeMessage" in client
 assert "client.executeMultiple" not in client
 assert "broadcastTx" not in client
 assert config.count("https://juno-rpc.") >= 2

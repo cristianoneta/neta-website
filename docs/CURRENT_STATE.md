@@ -165,3 +165,12 @@ estimate as an explicit fee instead of triggering a second automatic simulation.
 Swap and IBC signing freeze reviewed parameters and recheck wallet identity.
 Recovery signing clients disconnect after each attempt. Ambiguous broadcasts
 still require independent transaction reconciliation before another attempt.
+
+## Continuation 2026-10-03
+
+Security PR #137 merged after successful relevant CI; deployed signing/controller
+assets were checked byte-for-byte. The next broadcast-journal patch records signed
+bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
+See the security audit for its browser-local scope and manual recovery limits.
+Never discard pending transaction records just to re-enable confirmation.
+Mainnet messaging remains blocked in the DAO repository.
