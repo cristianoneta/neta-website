@@ -138,9 +138,9 @@ execute mainnet proposal creation. See the DAO repo's REVIEW_ARCHITECTURE.
 `site_shell.py` renders exactly five pages: Ranking, Map, NETA DAO, WYND
 Recovery, Rescue. Socials and guarded consoles have their own headers/CSP.
 No claim that one generator rewrites every HTML page or every page has identical
-CSP is correct. Map gets an extra Terra REST allowlist entry. Current IBC code
-also lists Osmosis/Terra PublicNode fallback URLs absent from its page CSP;
-browser fallback availability must not be inferred from configured endpoints.
+CSP is correct. Map has the exact configured Osmosis REST/RPC and Terra REST
+PublicNode fallback origins in its connect-src allowlist; the mismatch identified
+during documentation review was corrected in the later security audit.
 Inline-style exception remains in shared CSP. Main scripts use text nodes.
 
 Run the deterministic runner after installing requirements; it executes all
@@ -156,3 +156,12 @@ A historical 46-test count or old launch failure is not today's execution eviden
 root/source JavaScript syntax checks passed; generated shell drift check passed.
 No browser run, Rust execution, wallet write or new on-chain state attestation
 was performed for this documentation-only change.
+
+## Security audit continuation
+
+Read [the security and efficiency audit](SECURITY_EFFICIENCY_AUDIT_2026-10-02.md)
+before changing signing flows. Recovery, Rescue and IBC now reuse a checked gas
+estimate as an explicit fee instead of triggering a second automatic simulation.
+Swap and IBC signing freeze reviewed parameters and recheck wallet identity.
+Recovery signing clients disconnect after each attempt. Ambiguous broadcasts
+still require independent transaction reconciliation before another attempt.

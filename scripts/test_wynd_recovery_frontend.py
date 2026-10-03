@@ -39,7 +39,7 @@ for required in [
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
     'wallet-header.js?v=4', 'id="keplr-connect"',
     'cosmos-client.js?v=3', 'recovery-signing-config.js?v=9',
-    'wynd-recovery.js?v=20260914-22',
+    'wynd-recovery.js?v=20261002-1',
     'wynd-recovery.css?v=20260914-7', 'styles.css?v=20260918-1', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:

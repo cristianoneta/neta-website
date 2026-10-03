@@ -1,3 +1,4 @@
+export {fixedFee} from "./transaction-fee.mjs";
 import {SigningStargateClient,GasPrice} from "@cosmjs/stargate";
 import {Registry} from "@cosmjs/proto-signing";
 import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";

@@ -59,6 +59,7 @@ async function installSigningClient(page, executeBody) {
     body: `window.NetaRecoverySigning={
       connect:async()=>({client:{},endpoint:"https://rpc.test"}),
       simulate:async()=>123456,
+      fixedFee:()=>({gas:"172839",amount:[{denom:"ujuno",amount:"12963"}]}),
       execute:async()=>{${executeBody}}
     };`,
   }));
@@ -384,9 +385,9 @@ test("Rescue NETA public signing builds exact native and CW20 swaps and fails cl
   await page.route("**/assets/swap-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaSwapSigning={
-      connect:async()=>({client:{},endpoint:"https://rpc.test"}),
-      simulate:async()=>150000,
-      execute:async()=>{if(window.__swapReject)throw new Error("USER REJECTED");return window.__swapResult}
+      fixedFee:()=>({gas:"210000",amount:[{denom:"ujuno",amount:"15750"}]}),      connect:async()=>({client:{},endpoint:"https://rpc.test"}),
+      simulate:async()=>{if(window.__pauseSwapSimulation)await new Promise(resolve=>window.__releaseSwapSimulation=resolve);return 150000},
+      execute:async()=>{window.__swapExecutes=(window.__swapExecutes||0)+1;if(window.__swapReject)throw new Error("USER REJECTED");return window.__swapResult}
     };`,
   }));
   await page.route(/^https:\/\/juno-api\./, async route => {
@@ -414,7 +415,7 @@ test("Rescue NETA public signing builds exact native and CW20 swaps and fails cl
   await page.goto("/rescue-neta.html", {waitUntil: "domcontentloaded"});
   await expect(page.locator("#contract-state")).toHaveText("LIVE CODE OK");
   await page.evaluate(address => {
-    window.NETA_WALLET_STATE = {address, signer: {}};
+    window.NETA_WALLET_STATE = {address, signer: {getAccounts:async()=>[{address}]}};
     dispatchEvent(new CustomEvent("neta:wallet-connected", {detail: window.NETA_WALLET_STATE}));
   }, wallet);
   await page.locator("#offer-amount").fill("3000");
@@ -432,6 +433,11 @@ test("Rescue NETA public signing builds exact native and CW20 swaps and fails cl
   expect(preview.per_swap_limit_usd).toBe(25);
   expect(preview.pilot_only).toBeUndefined();
   expect(preview.memo).toBe("netareborn.com/rescue-neta:swap:v1");
+  await page.evaluate(() => {document.querySelector('#offer-amount').value='2';});
+  await page.locator('#confirm-swap').click();
+  await expect(page.locator('#swap-modal-message')).toHaveText('SWAP PARAMETERS CHANGED — REVIEW AGAIN');
+  expect(await page.evaluate(()=>window.__swapExecutes||0)).toBe(0);
+  await page.evaluate(()=>{document.querySelector('#offer-amount').value='1';});
 
   await page.locator("#close-swap").click();
   await page.locator("#slippage-summary-button").click();
@@ -451,7 +457,12 @@ test("Rescue NETA public signing builds exact native and CW20 swaps and fails cl
       {key: "to", value: wallet}, {key: "amount", value: "10094"},
     ]}]};
   }, {neta, wallet});
+  await page.evaluate(()=>{window.__pauseSwapSimulation=true;});
   await page.locator("#confirm-swap").click();
+  await expect.poll(()=>page.evaluate(()=>typeof window.__releaseSwapSimulation)).toBe('function');
+  await expect(page.locator('#offer-amount')).toBeDisabled();
+  await expect(page.locator('#reverse-swap')).toBeDisabled();
+  await page.evaluate(()=>{window.__pauseSwapSimulation=false;window.__releaseSwapSimulation();});
   await expect(page.locator("#swap-modal-state")).toContainText("TRANSACTION CONFIRMED");
   await expect(page.locator("#swap-result-hash")).toHaveText("A".repeat(64));
   await expect(page.locator("#swap-explorer")).toHaveAttribute("href", `https://atomscan.com/juno/transactions/${"A".repeat(64)}`);

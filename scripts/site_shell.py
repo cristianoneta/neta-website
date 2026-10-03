@@ -36,8 +36,8 @@ ASSET_VERSIONS = {
     "index.html": {"app.js": "20260918-1", "styles.css": "20260918-1"},
     "map-of-neta.html": {"styles.css": "20260918-1"},
     "neta-dao.html": {"styles.css": "20260918-1"},
-    "wynd-recovery.html": {"wynd-recovery.js": "20260914-22", "wynd-recovery.css": "20260914-7", "styles.css": "20260918-1"},
-    "rescue-neta.html": {"rescue-neta.js": "20260914-5", "rescue-neta.css": "20260914-4", "styles.css": "20260918-1"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20261002-1", "wynd-recovery.css": "20260914-7", "styles.css": "20260918-1"},
+    "rescue-neta.html": {"rescue-neta.js": "20261002-1", "rescue-neta.css": "20260914-4", "styles.css": "20260918-1"},
 }
 
 
@@ -90,6 +90,7 @@ def render_footer(page: str) -> str:
 def expected_page(source: str, page: str) -> str:
     csp_meta = CSP_META
     if page == "map-of-neta.html":
+        csp_meta = csp_meta.replace("https://osmosis-api.polkachu.com", "https://osmosis-api.polkachu.com https://osmosis-rest.publicnode.com https://osmosis-rpc.publicnode.com wss://osmosis-rpc.publicnode.com")
         csp_meta = csp_meta.replace("https://terra-api.polkachu.com", "https://terra-rest.publicnode.com https://terra-api.polkachu.com")
     if CSP_RE.search(source):
         source = CSP_RE.sub(csp_meta, source, count=1)

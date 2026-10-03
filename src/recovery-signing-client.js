@@ -1,3 +1,4 @@
+export {fixedFee} from "./transaction-fee.mjs";
 import {SigningCosmWasmClient} from "@cosmjs/cosmwasm-stargate";
 import {GasPrice} from "@cosmjs/stargate";
 import {toUtf8} from "@cosmjs/encoding";
