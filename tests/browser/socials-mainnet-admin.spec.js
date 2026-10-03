@@ -3,7 +3,7 @@ const {test,expect}=require("@playwright/test");
 test("guarded Socials admin verifies gates and sends only exact pause messages",async({page})=>{
   const owner="juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
   const contract="juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9";
-  await page.route("**/assets/recovery-signing-client.js?v=7",route=>route.fulfill({contentType:"application/javascript",body:`window.NetaRecoverySigning={
+  await page.route("**/assets/recovery-signing-client.js*",route=>route.fulfill({contentType:"application/javascript",body:`window.NetaRecoverySigning={
     connect:async()=>({client:{
       getChainId:async()=>"juno-1",
       getContract:async()=>({codeId:5167,creator:"${owner}",admin:"${owner}",label:"NETA Socials v1"}),

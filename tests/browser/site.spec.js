@@ -94,7 +94,7 @@ test("NETA Socials starts with an honest empty state", async ({page}) => {
 
 test("NETA Socials reads Juno mainnet and builds an exact owner thread transaction", async ({page}) => {
   const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
-  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: "window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,contract,message,_gas,memo)=>{window.__socialTx={sender,contract,message,memo};return{transactionHash:'TEST_HASH'}}};",
   }));
@@ -161,7 +161,7 @@ test("NETA Socials mainnet deployment remains sequential and paused", async ({pa
   const owner = "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57";
   const stake = "juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh";
   const contract = "juno1mainnetcontract0000000000000000000000000000000000000";
-  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaRecoverySigning={connect:async()=>({client:{
       getChainId:async()=>"juno-1",getBalance:async()=>({amount:"5000000"}),disconnect:()=>{},
@@ -221,7 +221,7 @@ test("NETA Socials testnet resumes from the confirmed uni-7 code checkpoints", a
 });
 
 test("NETA Socials testnet accepts REST hex checksums and never re-uploads checkpointed code", async ({page}) => {
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/socials-testnet-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'109000000'}),getSequence:async()=>({sequence:3})}),upload:async()=>{window.__uploads=(window.__uploads||0)+1;throw new Error('unexpected upload')},instantiate:async(_client,_address,codeId)=>{window.__instantiateCode=codeId;return{contractAddress:'juno1mock',transactionHash:'MOCK_TX'}}};",
   }));
@@ -270,7 +270,7 @@ test("NETA Socials testnet console surfaces a missing Keplr extension", async ({
 });
 
 test("NETA Socials testnet connection button toggles connected and disconnected", async ({page}) => {
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/socials-testnet-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: "window.NetaSocialsTestnet={connect:async()=>({getBalance:async()=>({amount:'110000000'}),disconnect:()=>{window.__rpcDisconnected=true}})};",
   }));
@@ -295,7 +295,7 @@ test("NETA Socials testnet connection button toggles connected and disconnected"
 });
 
 test("NETA Socials testnet passes fee protection to the actual Keplr sign call", async ({page}) => {
-  await page.route("**/assets/socials-testnet-client.js?v=3", route => route.fulfill({
+  await page.route("**/assets/socials-testnet-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: "window.NetaSocialsTestnet={connect:async(_rpc,signer)=>{window.__capturedSigner=signer;return{getBalance:async()=>({amount:'110000000'})}}};",
   }));
