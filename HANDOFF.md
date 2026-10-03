@@ -92,3 +92,12 @@ from the record or represent this documentation cleanup as code fixes.
 Audit changes are published in PR #137, branch `audit/security-efficiency-20261002`; code checkpoint `ada510893206197a42a2648f4c691ac0caaaba31`. Cross-project PRs: https://github.com/cristianoneta/neta-dao/pull/100 and https://github.com/cristianoneta/neta-website/pull/137. At handoff, website tests and DAO RELAY browser tests passed; DAO contract/frontend CI was still running and website production-data CI pending. PRs were not merged. Check current results before integration.
 
 The isolated adversarial browser test reproduced the persistent RELAY receive lock after malformed ciphertext and reload. Mainnet messaging remains blocked. Read `docs/SECURITY_EFFICIENCY_AUDIT_2026-10-02.md`; prioritize authenticated transactional receive/recovery, sender-scoped archive identity, prekey abuse and ambiguous mainnet broadcast retries. Preserve unrelated changes/data-bot updates. Local audit worktrees contain commits, while the original worktrees have documentation edits already published in the earlier documentation PRs; do not discard these blindly.
+
+## Continuation 2026-10-03
+
+Security PR #137 merged after successful relevant CI; deployed signing/controller
+assets were checked byte-for-byte. The next broadcast-journal patch records signed
+bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
+See the security audit for its browser-local scope and manual recovery limits.
+Never discard pending transaction records just to re-enable confirmation.
+Mainnet messaging remains blocked in the DAO repository.

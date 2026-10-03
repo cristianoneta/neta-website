@@ -1,3 +1,4 @@
+import {journalBroadcast} from "./broadcast-journal.mjs";
 export {fixedFee} from "./transaction-fee.mjs";
 import {SigningStargateClient,GasPrice} from "@cosmjs/stargate";
 import {Registry} from "@cosmjs/proto-signing";
@@ -39,4 +40,4 @@ export function executeMessage(sender,contract,message){
 }
 
 export async function simulate(client,sender,message,memo){return client.simulate(sender,[message],memo)}
-export async function broadcast(client,sender,message,gasAdjustment,memo){return client.signAndBroadcast(sender,[message],gasAdjustment,memo)}
+export async function broadcast(client,sender,message,gasAdjustment,memo){return journalBroadcast(client,sender,[message],gasAdjustment,memo)}

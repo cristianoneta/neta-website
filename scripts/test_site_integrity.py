@@ -77,7 +77,7 @@ assert '"verified_paused": false' in mainnet_manifest
 assert '"unpause_tx": "8B2354A8C603CB9EE0A95009FA734D3C4FEF84CA31AFB563D97D3EFDDADC3FD6"' in mainnet_manifest
 socials_html = (ROOT / "neta-socials.html").read_text(encoding="utf-8")
 socials_script = (ROOT / "neta-socials.js").read_text(encoding="utf-8")
-assert "assets/recovery-signing-client.js?v=7" in socials_html
+assert "assets/recovery-signing-client.js?v=8" in socials_html
 assert "ON-CHAIN MAINNET" in socials_html
 assert "<strong>LIVE</strong>" in socials_html
 assert 'href="https://t.me/+mfsF41Zra7I2ZDYy"' in socials_html

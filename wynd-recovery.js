@@ -289,7 +289,7 @@ function loadSigningClient(){
   if(signingClientPromise)return signingClientPromise;
   signingClientPromise=new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="assets/recovery-signing-client.js?v=2";
+    script.src="assets/recovery-signing-client.js?v=3";
     script.onload=()=>window.NetaRecoverySigning
       ?resolve(window.NetaRecoverySigning)
       :reject(new Error("SIGNING CLIENT DID NOT INITIALIZE"));

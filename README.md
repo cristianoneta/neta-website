@@ -122,3 +122,12 @@ contracts, pools, IBC, mainnet, Uni-7 and Keplr knowledge; [docs/ARCHITECTURE.md
 for component boundaries; and [docs/CODEBASE_REVIEW_2026-09-15.md](docs/CODEBASE_REVIEW_2026-09-15.md)
 for the historical launch review. Current status and remaining work are in
 [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md); the dated review is not a current audit.
+
+## Continuation 2026-10-03
+
+Security PR #137 merged after successful relevant CI; deployed signing/controller
+assets were checked byte-for-byte. The next broadcast-journal patch records signed
+bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
+See the security audit for its browser-local scope and manual recovery limits.
+Never discard pending transaction records just to re-enable confirmation.
+Mainnet messaging remains blocked in the DAO repository.

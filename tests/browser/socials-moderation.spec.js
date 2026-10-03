@@ -5,7 +5,7 @@ test("NETA Socials owner closes and reopens a thread with exact messages", async
   const contract = "juno1a0s5kaavcfnjgewtka0vr5tmmssynqfxmqyat3hm5lw75us0em9qcjdfv9";
   let closed = false;
   await page.exposeFunction("__setSocialThreadClosed", value => { closed = value; });
-  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__setSocialThreadClosed(message.set_thread_closed.closed);return{transactionHash:"TEST_HASH"}}};`,
   }));
@@ -42,7 +42,7 @@ test("NETA Socials confirms exact comment, ban and moderator actions", async ({p
     if (message.set_user_banned) banned = message.set_user_banned.banned;
     if (message.set_moderator) moderator = message.set_moderator.enabled;
   });
-  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaRecoverySigning={connect:async()=>({client:{}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applySocialAction(message);return{transactionHash:"TEST_HASH"}}};`,
   }));
@@ -96,7 +96,7 @@ test("NETA Socials enforces owner, moderator and banned-user frontend roles", as
     if (message.set_user_banned) { banned = message.set_user_banned.banned; if (banned) moderator = false; }
     if (message.set_comment_hidden) hidden = message.set_comment_hidden.hidden;
   });
-  await page.route("**/assets/recovery-signing-client.js?v=7", route => route.fulfill({
+  await page.route("**/assets/recovery-signing-client.js*", route => route.fulfill({
     contentType: "application/javascript",
     body: `window.NetaRecoverySigning={connect:async()=>({client:{disconnect(){}}}),execute:async(_client,sender,target,message,_gas,memo)=>{window.__socialTx={sender,target,message,memo};await window.__applyRoleAction(message);return{transactionHash:"TEST_HASH"}}};`,
   }));

@@ -1,3 +1,5 @@
+import {journalBroadcast} from "./broadcast-journal.mjs";
+import {toUtf8} from "@cosmjs/encoding";
 import {GasPrice} from "@cosmjs/stargate";
 import {SigningCosmWasmClient} from "@cosmjs/cosmwasm-stargate";
 
@@ -16,7 +18,7 @@ export async function instantiate(client,sender,codeId,message,label){
 }
 
 export async function execute(client,sender,contract,message,memo){
-  return client.execute(sender,contract,message,"auto",memo);
+  return journalBroadcast(client,sender,[{typeUrl:"/cosmwasm.wasm.v1.MsgExecuteContract",value:{sender,contract,msg:toUtf8(JSON.stringify(message)),funds:[]}}],"auto",memo);
 }
 
 export async function query(client,contract,message){
