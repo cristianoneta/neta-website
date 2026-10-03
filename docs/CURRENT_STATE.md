@@ -174,3 +174,8 @@ bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
 See the security audit for its browser-local scope and manual recovery limits.
 Never discard pending transaction records just to re-enable confirmation.
 Mainnet messaging remains blocked in the DAO repository.
+
+
+## Verified continuation — 2026-10-03 UTC
+
+PRs #137 and #138 are merged and their relevant CI and Pages deployments passed. The broadcast journal is deployed; the previous text describing it as the next patch is superseded. See [the checked continuation](SECURITY_CONTINUATION_2026-10-03.md) for exact runs, deployed verification, origin-local limits and remaining DAO Mainnet gates. Preserve pending transaction journals and later bot updates.

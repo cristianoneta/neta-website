@@ -63,3 +63,8 @@ or Web Locks unavailability fails closed. Upload/instantiate helpers are not
 covered. This source change must pass browser CI and reproducible bundle checks
 before merging. Five local Node fee/journal tests and deterministic Python checks
 passed. Mainnet messaging remains disabled.
+
+
+## Verified continuation — 2026-10-03 UTC
+
+PRs #137 and #138 are merged and their relevant CI and Pages deployments passed. The broadcast journal is deployed; the previous text describing it as the next patch is superseded. See [the checked continuation](SECURITY_CONTINUATION_2026-10-03.md) for exact runs, deployed verification, origin-local limits and remaining DAO Mainnet gates. Preserve pending transaction journals and later bot updates.
