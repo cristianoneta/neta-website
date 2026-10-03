@@ -1,6 +1,6 @@
 # NETA Reborn handoff
 
-Code/documentation reviewed: **2026-10-02**. This repository owns
+Baseline review: **2026-10-02**; security integration rechecked **2026-10-03**. This repository owns
 <https://netareborn.com>. `cristianoneta/neta-dao` owns
 <https://dao.netareborn.com>; Governance, Delivery, Treasury, Contributors,
 RELAY and Names work belongs there.
@@ -87,22 +87,21 @@ legacy withdrawal output protection, explicit Pages-request absence in the data 
 test-log commits, and old deployment/testing artifacts. Do not silently erase them
 from the record or represent this documentation cleanup as code fixes.
 
-## Security audit continuation — 2026-10-03 Berlin
+## Current security checkpoint — 2026-10-03
 
-Audit changes are published in PR #137, branch `audit/security-efficiency-20261002`; code checkpoint `ada510893206197a42a2648f4c691ac0caaaba31`. Cross-project PRs: https://github.com/cristianoneta/neta-dao/pull/100 and https://github.com/cristianoneta/neta-website/pull/137. At handoff, website tests and DAO RELAY browser tests passed; DAO contract/frontend CI was still running and website production-data CI pending. PRs were not merged. Check current results before integration.
+Security PRs #137/#138 and documentation PR #139 are merged. The relevant final
+website/browser, reproducible-bundle and production-data checks passed; Pages
+1123 published #139. The resumed verification compared ten website production
+files with the checked GitHub revision, including all four signing bundles.
+See [the evidence](docs/SECURITY_CONTINUATION_2026-10-03.md).
 
-The isolated adversarial browser test reproduced the persistent RELAY receive lock after malformed ciphertext and reload. Mainnet messaging remains blocked. Read `docs/SECURITY_EFFICIENCY_AUDIT_2026-10-02.md`; prioritize authenticated transactional receive/recovery, sender-scoped archive identity, prekey abuse and ambiguous mainnet broadcast retries. Preserve unrelated changes/data-bot updates. Local audit worktrees contain commits, while the original worktrees have documentation edits already published in the earlier documentation PRs; do not discard these blindly.
+The broadcast journal is deployed: signed bytes/hash/sequence are persisted before
+broadcast, and unknown outcomes block further signatures across reloads until
+exact-hash inclusion is reconciled. This is browser/origin-local; other devices,
+domains, manually cleared storage and upload/instantiate helpers are outside the
+guarantee. Interrupted signing and permanent rejection require investigation.
+Never delete pending records merely to enable another transaction.
 
-## Continuation 2026-10-03
-
-Security PR #137 merged after successful relevant CI; deployed signing/controller
-assets were checked byte-for-byte. The next broadcast-journal patch records signed
-bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
-See the security audit for its browser-local scope and manual recovery limits.
-Never discard pending transaction records just to re-enable confirmation.
-Mainnet messaging remains blocked in the DAO repository.
-
-
-## Verified continuation — 2026-10-03 UTC
-
-PRs #137 and #138 are merged and their relevant CI and Pages deployments passed. The broadcast journal is deployed; the previous text describing it as the next patch is superseded. See [the checked continuation](docs/SECURITY_CONTINUATION_2026-10-03.md) for exact runs, deployed verification, origin-local limits and remaining DAO Mainnet gates. Preserve pending transaction journals and later bot updates.
+Continue messaging work in neta-dao. Mainnet messaging stays disabled; coherent
+automatic off-device recovery and v0.2 consent/generation integration remain open.
+No real wallet keys or live attack transactions are permitted in this task.

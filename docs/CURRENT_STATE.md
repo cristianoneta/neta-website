@@ -148,8 +148,8 @@ Run the deterministic runner after installing requirements; it executes all
 and byte-compares four signing bundles, audits npm and runs pinned Playwright.
 Contract checks are separate workflows. All current workflow `uses` entries
 here are SHA-pinned. Root README/Handoff and ordinary docs edits do not match
-website CI filters; Markdown under `contracts/**` does. This reconciliation PR
-includes a legacy contract README and therefore triggers the relevant CI.
+website CI filters; Markdown under `contracts/**` does. Inspect each PR's actual
+changed paths instead of assuming a documentation update triggered code CI.
 A historical 46-test count or old launch failure is not today's execution evidence.
 
 2026-10-02 local verification: all 18 deterministic Python test programs and
@@ -166,16 +166,21 @@ Swap and IBC signing freeze reviewed parameters and recheck wallet identity.
 Recovery signing clients disconnect after each attempt. Ambiguous broadcasts
 still require independent transaction reconciliation before another attempt.
 
-## Continuation 2026-10-03
+## Current security checkpoint — 2026-10-03
 
-Security PR #137 merged after successful relevant CI; deployed signing/controller
-assets were checked byte-for-byte. The next broadcast-journal patch records signed
-bytes/hash/sequence before broadcasting and blocks retries on unknown outcomes.
-See the security audit for its browser-local scope and manual recovery limits.
-Never discard pending transaction records just to re-enable confirmation.
-Mainnet messaging remains blocked in the DAO repository.
+Security PRs #137/#138 and documentation PR #139 are merged. The relevant final
+website/browser, reproducible-bundle and production-data checks passed; Pages
+1123 published #139. The resumed verification compared ten website production
+files with the checked GitHub revision, including all four signing bundles.
+See [the evidence](SECURITY_CONTINUATION_2026-10-03.md).
 
+The broadcast journal is deployed: signed bytes/hash/sequence are persisted before
+broadcast, and unknown outcomes block further signatures across reloads until
+exact-hash inclusion is reconciled. This is browser/origin-local; other devices,
+domains, manually cleared storage and upload/instantiate helpers are outside the
+guarantee. Interrupted signing and permanent rejection require investigation.
+Never delete pending records merely to enable another transaction.
 
-## Verified continuation — 2026-10-03 UTC
-
-PRs #137 and #138 are merged and their relevant CI and Pages deployments passed. The broadcast journal is deployed; the previous text describing it as the next patch is superseded. See [the checked continuation](SECURITY_CONTINUATION_2026-10-03.md) for exact runs, deployed verification, origin-local limits and remaining DAO Mainnet gates. Preserve pending transaction journals and later bot updates.
+Continue messaging work in neta-dao. Mainnet messaging stays disabled; coherent
+automatic off-device recovery and v0.2 consent/generation integration remain open.
+No real wallet keys or live attack transactions are permitted in this task.
