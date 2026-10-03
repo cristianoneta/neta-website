@@ -1,5 +1,8 @@
 # NETA Reborn code-backed current state
 
+Latest review: [maintenance checkpoint, 2026-10-03](MAINTENANCE_CHECKPOINT_2026-10-03.md).
+
+
 Reviewed **2026-10-02** against `main` checkout
 `f435151bed2c3e09db834528934b252301fec96e`. Automated data commits advance
 `main` frequently. Review scope: browser controllers/configuration, collector
@@ -184,3 +187,4 @@ Never delete pending records merely to enable another transaction.
 Continue messaging work in neta-dao. Mainnet messaging stays disabled; coherent
 automatic off-device recovery and v0.2 consent/generation integration remain open.
 No real wallet keys or live attack transactions are permitted in this task.
+

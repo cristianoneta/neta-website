@@ -1,5 +1,12 @@
 # NETA Reborn handoff
 
+## Latest maintenance checkpoint — 2026-10-03
+
+Read [the maintenance checkpoint](docs/MAINTENANCE_CHECKPOINT_2026-10-03.md)
+first for current UI scope, refreshed data, CI changes and remaining work.
+Older dated sections below retain their historical evidence.
+
+
 Baseline review: **2026-10-02**; security integration rechecked **2026-10-03**. This repository owns
 <https://netareborn.com>. `cristianoneta/neta-dao` owns
 <https://dao.netareborn.com>; Governance, Delivery, Treasury, Contributors,
@@ -105,3 +112,4 @@ Never delete pending records merely to enable another transaction.
 Continue messaging work in neta-dao. Mainnet messaging stays disabled; coherent
 automatic off-device recovery and v0.2 consent/generation integration remain open.
 No real wallet keys or live attack transactions are permitted in this task.
+

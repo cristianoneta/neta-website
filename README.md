@@ -141,3 +141,6 @@ Never delete pending records merely to enable another transaction.
 Continue messaging work in neta-dao. Mainnet messaging stays disabled; coherent
 automatic off-device recovery and v0.2 consent/generation integration remain open.
 No real wallet keys or live attack transactions are permitted in this task.
+
+
+Latest repository/CI/data review: [maintenance checkpoint](docs/MAINTENANCE_CHECKPOINT_2026-10-03.md).
