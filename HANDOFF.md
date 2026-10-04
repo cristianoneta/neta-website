@@ -1,5 +1,13 @@
 # NETA Reborn handoff
 
+## Production refresh correction — 2026-10-04
+
+See [the incident record](docs/DATA_REFRESH_INCIDENT_2026-10-04.md). Delayed
+scheduled jobs could skip overdue ranking/market work, then fail the global
+freshness gate and block otherwise fresh Map/recovery publication. The scheduler
+now adds timestamp-based catch-up while preserving calendar slots and validation.
+Verify the new main push refresh and public timestamps after integration.
+
 ## Latest maintenance checkpoint — 2026-10-03
 
 Read [the maintenance checkpoint](docs/MAINTENANCE_CHECKPOINT_2026-10-03.md)
