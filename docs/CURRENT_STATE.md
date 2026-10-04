@@ -67,7 +67,11 @@ snapshot and stages only their outputs before one changed-data commit.
 | WYND market / leaderboard | `data/recovery/wynd-market.json`, `wynd-leaderboard.json` | 03/09/15/21 local hours |
 | Recovery events/statistics | `recovery-events.json`, `recovery-stats.json` and retained diagnostic log | Hourly |
 
-Cron is `7 * * * *` UTC; due selection uses Berlin time/DST. Manual and eligible
+Cron is `7 * * * *` UTC; due selection uses Berlin time/DST. Since the
+2026-10-04 correction, scheduled runs also catch up ranking snapshots at least
+3 hours old and market snapshots at least 6 hours old, regardless of the actual
+start hour. Missing/invalid timestamps also force recollection. Freshness limits
+and complete-snapshot validation remain unchanged. Manual and eligible
 non-scheduled invocations run every collector. The workflow's main push filter
 only matches the workflow/schedule script/test; not every collector-code push
 triggers a full refresh. Use workflow_dispatch for an intentional complete refresh.
