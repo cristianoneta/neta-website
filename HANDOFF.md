@@ -1,5 +1,44 @@
 # NETA Reborn handoff
 
+## Open pool-coverage task — owner request, 2026-10-06
+
+**TODO: account for the legacy JunoSwap JUNO/NETA pool.** It is absent from the
+Map's current swap sources (WYND and Osmosis 631); the economic LP model also does
+not unwrap JunoSwap custody. Do not present those sources as all NETA markets.
+
+Verified identity from the [official JunoSwap pool list](https://github.com/CosmosContracts/junoswap-asset-list/blob/main/pools_list.json):
+- Chain: `juno-1`; pool: `juno1e8n6ch7msks487ecznyeagmzd5ml2pq9tgedqt2u63vra0q0r9mqrjy6ys`.
+- On-chain label `JUNO NETA Pool`, code ID 16; CW2 `crates.io:wasmswap`, `1.0.0-beta`.
+- NETA CW20: `juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr` (6 decimals).
+- LP token: `juno1jmechmr7w6kwqu8jcy5973rtllxgttyetarys60rtsu0g675mkjsy96t8l`.
+- Read-only observation on 2026-10-06 around 12:37 Berlin: **120.022857 NETA**
+  and **16,725.024039 JUNO**. NETA balance and pool `info` reserve agreed.
+  This is a timestamped observation, not a current quote or height-pinned audit.
+
+Implementation follow-up:
+1. Recheck pool/token/LP identities, reserves and contract interface. Read-only
+   CosmWasm smart `info` and CW20 `balance {address: pool}` worked through
+   `https://juno.api.m.stavr.tech`; CW2 metadata came from raw `contract_info`.
+   Contract operation does not establish availability of a JunoSwap frontend.
+2. Add a reviewed legacy-pool swap adapter and explicit market label to
+   `scripts/update_map_of_neta.py` and the Map UI; establish backfill/cursor bounds.
+   Infer trade direction from verified assets/messages/transfers, not ambiguous
+   legacy event labels alone. Preserve unique per-event IDs, multi-market legs
+   and existing validation; document historical coverage limits.
+3. Review ranking/LP attribution in `scripts/lp_attribution.py` and
+   `scripts/update_neta_data.py`: reconcile custody and LP owners with integer,
+   height-pinned accounting before unwrapping; avoid counting custody twice.
+   Review any displayed market totals/price coverage that imply completeness.
+4. Test fixtures and accounting invariants before a collector-driven refresh.
+   Do not manually patch generated snapshots. Keep the single validated publisher.
+
+This is a documented task, **not implemented**. It does not authorize new swap,
+recovery or liquidity-provision flows and does not change their frozen pool lists.
+
+Map refresh verified earlier on 2026-10-06: generated at `2026-10-06T10:28:23.477412Z`
+(12:28 Berlin), validation passed; production run 37449481208 and Pages 37450012205
+succeeded and public JSON matched. Refresh completion does not close this coverage gap.
+
 ## Production refresh correction — 2026-10-04
 
 See [the incident record](docs/DATA_REFRESH_INCIDENT_2026-10-04.md). Delayed

@@ -52,7 +52,10 @@ Do not assume all exports have the same schema version. Read `app.js` and
 implementation handoff is historical and predates compact schema v4 and current
 bridge validation. Total supply must equal wallet attribution plus explicit
 DAO and bridge/transit residuals; a full CW20 bridge balance is not all Osmosis
-custody. JunoSwap is not unwrapped by the economic LP model.
+custody. JunoSwap is not unwrapped by the economic LP model. The owner requested
+adding the legacy JUNO/NETA pool to coverage on 2026-10-06; identity, observed
+reserves and the Map/LP follow-up are recorded in [HANDOFF](../HANDOFF.md#open-pool-coverage-task--owner-request-2026-10-06).
+This remains an open task, not a newly supported market.
 
 ## Generated data ownership and actual cadence
 
