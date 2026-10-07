@@ -62,18 +62,18 @@
     "transfers": 1,
     "volume_neta": 24.608252
   },
-  "generated_at": "2026-10-07T09:25:06.501691Z",
+  "generated_at": "2026-10-07T10:28:13.666808Z",
   "market": {
     "by_chain": {
-      "juno": 20,
+      "juno": 9,
       "osmosis": 17
     },
     "power_buyers": [
       {
-        "bought_neta": 110.184296,
-        "net_neta": 110.184296,
+        "bought_neta": 44.121353,
+        "net_neta": 44.121353,
         "sold_neta": 0.0,
-        "swaps": 7,
+        "swaps": 3,
         "total_neta": 221.510431,
         "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
       },
@@ -86,21 +86,13 @@
         "wallet": "osmo1s7dj5kewy75pa470st6jpqt7cxjvgyxss2npm0"
       }
     ],
-    "swaps": 37,
+    "swaps": 26,
     "top_sellers": [
       {
-        "bought_neta": 3.229571,
-        "net_neta": -9.308272,
-        "sold_neta": 12.537843,
-        "swaps": 7,
-        "total_neta": 0.580027,
-        "wallet": "juno1xlj0alc6vy6kkmla0v7ynz2rafprjerz94zhpj"
-      },
-      {
         "bought_neta": 0.0,
-        "net_neta": -1.88966,
-        "sold_neta": 1.88966,
-        "swaps": 2,
+        "net_neta": -1.805226,
+        "sold_neta": 1.805226,
+        "swaps": 1,
         "total_neta": 0.0,
         "wallet": "juno1a5c9v9d2kj4dru20n3p4jywpj2ls3ujddy558u"
       },
@@ -111,6 +103,14 @@
         "swaps": 2,
         "total_neta": 0.0,
         "wallet": "osmo1j6nqs5xy0ah6mfsz443dy2anduksv9ecdef7zt"
+      },
+      {
+        "bought_neta": 0.0,
+        "net_neta": -0.870869,
+        "sold_neta": 0.870869,
+        "swaps": 1,
+        "total_neta": 0.0,
+        "wallet": "osmo1khrd2gyj6hu2s6hh4kpgp42etgdfch3rtvmz82"
       }
     ]
   },
@@ -132,7 +132,7 @@
     },
     "30d": {
       "available": false,
-      "coverage_percent": 82.13,
+      "coverage_percent": 82.27,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
@@ -198,7 +198,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 27.38,
+      "coverage_percent": 27.42,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
