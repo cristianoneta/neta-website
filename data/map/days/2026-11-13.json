@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-13",
+  "events": [
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 43711008,
+      "id": "juno:4A1A12A51DC3F2BE6C6D8A8FF5413EA9A6F7596E976AB4571347E788A8ECD354:wynd:29",
+      "market": "wynd",
+      "neta_raw": 35112601,
+      "timestamp": "2026-11-13T19:37:55Z",
+      "txhash": "4A1A12A51DC3F2BE6C6D8A8FF5413EA9A6F7596E976AB4571347E788A8ECD354",
+      "type": "swap",
+      "wallet": "juno1zzssvjchht00qag3x9987esrwux09tv5qk2sfj",
+      "wallet_id": "10a1064b17badef07511314a7f6603770cf2ad94"
+    },
+    {
+      "chain": "juno",
+      "direction": "sell",
+      "height": 43711009,
+      "id": "juno:485B78914268F1744D74853EDD5F9BBFBA9A1C55D1263237861D002BF8E80FB4:wynd:21",
+      "market": "wynd",
+      "neta_raw": 3806100,
+      "timestamp": "2026-11-13T19:37:58Z",
+      "txhash": "485B78914268F1744D74853EDD5F9BBFBA9A1C55D1263237861D002BF8E80FB4",
+      "type": "swap",
+      "wallet": "juno1n8na8sx06dj90jwedg27cyy6ptqqkeyx8sv5m9",
+      "wallet_id": "99e7d3c0cfd36457c9d96a15ec109a0ac00b6486"
+    },
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "juno",
+      "height": 43711009,
+      "id": "juno:A692A58D14902778DCDF283FE1B1A1E3E3782008F69C7B6F2022788B0563854D:ibc:11",
+      "neta_raw": 35112601,
+      "receiver": "osmo1zzssvjchht00qag3x9987esrwux09tv57l6mcu",
+      "remote_chain": "osmosis",
+      "sender": "juno1zzssvjchht00qag3x9987esrwux09tv5qk2sfj",
+      "timestamp": "2026-11-13T19:37:58Z",
+      "to_chain": "osmosis",
+      "txhash": "A692A58D14902778DCDF283FE1B1A1E3E3782008F69C7B6F2022788B0563854D",
+      "type": "ibc"
+    },
+    {
+      "chain": "juno",
+      "direction": "sell",
+      "height": 43711010,
+      "id": "juno:F86B1500FBD1C6F850165C639D36AC86A18DB80F5460391B177DA4516E8F2551:wynd:86",
+      "market": "wynd",
+      "neta_raw": 385869,
+      "timestamp": "2026-11-13T19:38:01Z",
+      "txhash": "F86B1500FBD1C6F850165C639D36AC86A18DB80F5460391B177DA4516E8F2551",
+      "type": "swap",
+      "wallet": "juno1mdces8gjmuv9add2r8j647un6v54n83d42yjdt",
+      "wallet_id": "db71981d12df185eb5aa19e5aafb93d329599e2d"
+    }
+  ]
+}

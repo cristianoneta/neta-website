@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-14",
+  "events": [
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "juno",
+      "height": 43741306,
+      "id": "juno:1BF29E306F2014E279DDB29E7B4AE2FB6247770B107682E0ACEF40B04021DCF8:ibc:11",
+      "neta_raw": 1000000,
+      "receiver": "osmo1z3xcalwan92yqxu9d406tlft9yy94jy8wafq9s",
+      "remote_chain": "osmosis",
+      "sender": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+      "timestamp": "2026-11-14T17:29:48Z",
+      "to_chain": "osmosis",
+      "txhash": "1BF29E306F2014E279DDB29E7B4AE2FB6247770B107682E0ACEF40B04021DCF8",
+      "type": "ibc"
+    },
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "osmosis",
+      "height": 43741328,
+      "id": "juno:F1C0CB46464C3B28A7C8A49EB8E3C1B07CC9FC4863893E26FD74104611C8349F:ibc:13",
+      "neta_raw": 1000000,
+      "receiver": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+      "remote_chain": "osmosis",
+      "sender": "osmo1z3xcalwan92yqxu9d406tlft9yy94jy8wafq9s",
+      "timestamp": "2026-11-14T17:30:45Z",
+      "to_chain": "juno",
+      "txhash": "F1C0CB46464C3B28A7C8A49EB8E3C1B07CC9FC4863893E26FD74104611C8349F",
+      "type": "ibc"
+    }
+  ]
+}

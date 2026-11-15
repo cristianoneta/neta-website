@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-31",
+  "events": [
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 73645984,
+      "id": "osmosis:37B7F5A6EB109EB7FC47E88C98F923C08B97B9F5324CDDA3BE6F06952F38310E:pool631:50",
+      "market": "pool-631",
+      "neta_raw": 398048,
+      "timestamp": "2026-10-31T07:03:18Z",
+      "txhash": "37B7F5A6EB109EB7FC47E88C98F923C08B97B9F5324CDDA3BE6F06952F38310E",
+      "type": "swap",
+      "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn",
+      "wallet_id": "78a8d46f83d6675d8ad4b70efc41fe1ba0017f8b"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 73647400,
+      "id": "osmosis:D18CFA8C009AE1F4FB6578CB0DB92FD718B08D796BCC2CDE53EE7940D2E94AB6:pool631:63",
+      "market": "pool-631",
+      "neta_raw": 719234,
+      "timestamp": "2026-10-31T07:23:39Z",
+      "txhash": "D18CFA8C009AE1F4FB6578CB0DB92FD718B08D796BCC2CDE53EE7940D2E94AB6",
+      "type": "swap",
+      "wallet": "osmo1khrd2gyj6hu2s6hh4kpgp42etgdfch3rtvmz82",
+      "wallet_id": "b5c6d52092d5f8a86af7ad8280d5595a1a9c5e23"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 73651258,
+      "id": "osmosis:934416E7174D374AB64D39F9AB933E3B7C440C2C537090330A2E43A51686D493:pool631:20",
+      "market": "pool-631",
+      "neta_raw": 430993,
+      "timestamp": "2026-10-31T08:19:59Z",
+      "txhash": "934416E7174D374AB64D39F9AB933E3B7C440C2C537090330A2E43A51686D493",
+      "type": "swap",
+      "wallet": "osmo12r7z7qglxnnm8s5h8uyu0szlc9kggk03ylws29",
+      "wallet_id": "50fc2f011f34e7b3c2973f09c7c05fc16c8459f1"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 73662387,
+      "id": "osmosis:7336042DEE568DAA59DEA28B91DBCACACE7B689F4A2DA59B970511F0FB1640CD:pool631:50",
+      "market": "pool-631",
+      "neta_raw": 164365,
+      "timestamp": "2026-10-31T11:02:36Z",
+      "txhash": "7336042DEE568DAA59DEA28B91DBCACACE7B689F4A2DA59B970511F0FB1640CD",
+      "type": "swap",
+      "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn",
+      "wallet_id": "78a8d46f83d6675d8ad4b70efc41fe1ba0017f8b"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-08",
+  "events": [
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 42494083,
+      "id": "juno:B1B79DE189DD09C598A65372B8BE40AE0FD31EA7C96CF5389FFC93742112316D:wynd:14",
+      "market": "wynd",
+      "neta_raw": 174486,
+      "timestamp": "2026-10-08T15:24:26Z",
+      "txhash": "B1B79DE189DD09C598A65372B8BE40AE0FD31EA7C96CF5389FFC93742112316D",
+      "type": "swap",
+      "wallet": "juno1n8na8sx06dj90jwedg27cyy6ptqqkeyx8sv5m9",
+      "wallet_id": "99e7d3c0cfd36457c9d96a15ec109a0ac00b6486"
+    },
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 42497258,
+      "id": "juno:ED6510642ECDF2FD6E207804A20DD962CD7D921104BBF5975788E58F1E30EA44:wynd:14",
+      "market": "wynd",
+      "neta_raw": 175663,
+      "timestamp": "2026-10-08T17:41:33Z",
+      "txhash": "ED6510642ECDF2FD6E207804A20DD962CD7D921104BBF5975788E58F1E30EA44",
+      "type": "swap",
+      "wallet": "juno1mdces8gjmuv9add2r8j647un6v54n83d42yjdt",
+      "wallet_id": "db71981d12df185eb5aa19e5aafb93d329599e2d"
+    }
+  ]
+}

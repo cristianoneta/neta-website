@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-09",
+  "events": [
+    {
+      "chain_resolution": "address_prefix",
+      "chain_verified": true,
+      "channel": null,
+      "from_chain": "osmosis",
+      "height": 43549004,
+      "id": "juno:086B3468216B05981987C1F0E69A0B6275E43C70F862E854F5FA1265D92E44E0:ibc:13",
+      "neta_raw": 3000000,
+      "receiver": "juno1s7dj5kewy75pa470st6jpqt7cxjvgyxswrr22p",
+      "remote_chain": "osmosis",
+      "sender": "osmo1s7dj5kewy75pa470st6jpqt7cxjvgyxss2npm0",
+      "timestamp": "2026-11-09T00:09:08Z",
+      "to_chain": "juno",
+      "txhash": "086B3468216B05981987C1F0E69A0B6275E43C70F862E854F5FA1265D92E44E0",
+      "type": "ibc"
+    },
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 43549096,
+      "id": "juno:D004822873BBD0A9A73CA4CF0F8F170835A2A1F09A0D19E8315F5B107C16E9E2:wynd:14",
+      "market": "wynd",
+      "neta_raw": 156059,
+      "timestamp": "2026-11-09T00:13:02Z",
+      "txhash": "D004822873BBD0A9A73CA4CF0F8F170835A2A1F09A0D19E8315F5B107C16E9E2",
+      "type": "swap",
+      "wallet": "juno1a5c9v9d2kj4dru20n3p4jywpj2ls3ujddy558u",
+      "wallet_id": "ed305615aab4aad1f14f9c435911c192bf08f24d"
+    }
+  ]
+}

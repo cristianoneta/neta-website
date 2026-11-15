@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-06",
+  "events": [
+    {
+      "chain": "osmosis",
+      "direction": "buy",
+      "height": 74255174,
+      "id": "osmosis:4EA11A7672CB8166FB14A0BC00D11107AF933880A3FAE0645ED5C9E294E9003D:pool631:27",
+      "market": "pool-631",
+      "neta_raw": 23354,
+      "timestamp": "2026-11-06T04:35:28Z",
+      "txhash": "4EA11A7672CB8166FB14A0BC00D11107AF933880A3FAE0645ED5C9E294E9003D",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
+    },
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 43472171,
+      "id": "juno:B5FBCC126A2B57F3417F83F19892DB96F3A745C995C56FCDEB94D4582B3A8415:wynd:14",
+      "market": "wynd",
+      "neta_raw": 154517,
+      "timestamp": "2026-11-06T17:11:14Z",
+      "txhash": "B5FBCC126A2B57F3417F83F19892DB96F3A745C995C56FCDEB94D4582B3A8415",
+      "type": "swap",
+      "wallet": "juno1a5c9v9d2kj4dru20n3p4jywpj2ls3ujddy558u",
+      "wallet_id": "ed305615aab4aad1f14f9c435911c192bf08f24d"
+    }
+  ]
+}

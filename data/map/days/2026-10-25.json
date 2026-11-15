@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-25",
+  "events": [
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 43073272,
+      "id": "juno:5AA95071B05F983A380665E04E24ED66E56C3C32F91C28E09993078599499B67:wynd:12",
+      "market": "wynd",
+      "neta_raw": 441520,
+      "timestamp": "2026-10-25T19:47:45Z",
+      "txhash": "5AA95071B05F983A380665E04E24ED66E56C3C32F91C28E09993078599499B67",
+      "type": "swap",
+      "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+      "wallet_id": "144d8efddd9954401b856d5fa5fd2b29085ac887"
+    }
+  ]
+}
