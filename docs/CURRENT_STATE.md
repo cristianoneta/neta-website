@@ -1,5 +1,11 @@
 # NETA Reborn code-backed current state
 
+## Shared collector inputs, 15 November 2026
+
+The ranking can reuse active NETA stake at the exact Juno block published by Cosmoot. It verifies block identity and total voting power, then reads pending and matured claims at that height. Its custody, bridge, LP attribution and supply reconciliations remain part of publication.
+
+The market updater can consume the eight allowlisted WYND pairs from the Cosmoot Treasury observation and retain its original reserve and price timestamps. Both consumers retain their direct collection paths when the shared input is unavailable. The existing production workflow is the single publisher for the legacy site. Integration of source code alone does not refresh published data.
+
 Latest review: [maintenance checkpoint, 2026-10-03](MAINTENANCE_CHECKPOINT_2026-10-03.md).
 
 

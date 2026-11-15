@@ -4,6 +4,7 @@ import update_neta_data as neta
 
 
 class Response:
+    headers = {"x-cosmos-block-height": "123456"}
     def raise_for_status(self):
         return None
 
