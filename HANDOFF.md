@@ -1,5 +1,7 @@
 # NETA Reborn handoff
 
+The November 15 shared stake and WYND input changes are described in [Current state](docs/CURRENT_STATE.md). Confirm a successful validated production run and the timestamps on the public ranking, map and WYND pages after deploying.
+
 ## Open pool-coverage task — owner request, 2026-10-06
 
 **TODO: account for the legacy JunoSwap JUNO/NETA pool.** It is absent from the

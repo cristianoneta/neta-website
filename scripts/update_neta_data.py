@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Daily NETA Reborn on-chain indexer. Fail-closed: outputs are replaced only after all checks pass."""
 from __future__ import annotations
-import argparse, base64, datetime as dt, json, os, re, tempfile, time
+import argparse, base64, binascii, datetime as dt, json, os, re, tempfile, time
 from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import quote
 import requests
+import shared_observations as shared
 
 NETA="juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr"
 DAO="juno1a7x8aj7k38vnj9edrlymkerhrl5d4ud3makmqhx6vt3dhu0d824qh038zh"
@@ -16,7 +17,7 @@ DENOM="ibc/297C64CC42B5A8D8F82FE2EBE208A6FE8F94B86037FA28C4529A23701C228F7A"
 WYND_PAIR="juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra"
 OSMO_POOL_ADDR="osmo1yn7z42al3mafmztjayjduz42a8at3whyd279fkdsyumzar83x8mqvpw83x"
 OSMO_SHARE_DENOM="gamm/pool/631"
-JUNO=["https://juno-api.polkachu.com"]
+JUNO=["https://juno-api.polkachu.com", "https://juno.api.m.stavr.tech", "https://juno-rest.publicnode.com"]
 OSMO=["https://rpc.osmosis.zone","https://osmosis-rpc.polkachu.com"]
 OSMO_LCD=["https://osmosis-api.polkachu.com","https://lcd.osmosis.zone"]
 TIMEOUT=45
@@ -44,7 +45,16 @@ def req_json(bases,path,params=None,retries=3,height=None):
     for base in bases:
         for n in range(retries):
             try:
-                r=S.get(base.rstrip('/')+path,params=params,headers=headers,timeout=TIMEOUT); r.raise_for_status(); return r.json(),base
+                r=S.get(base.rstrip('/')+path,params=params,headers=headers,timeout=TIMEOUT); r.raise_for_status()
+                data = r.json()
+                if height is not None:
+                    reported = [r.headers.get(key) for key in ('x-cosmos-block-height','grpc-metadata-x-cosmos-block-height')]
+                    if path.startswith('/ibc/') and isinstance(data.get('height'), dict):
+                        reported.append(data['height'].get('revision_height'))
+                    confirmations = {str(item) for item in reported if item is not None}
+                    if confirmations != {str(height)}:
+                        raise ValueError("provider did not confirm requested block height")
+                return data,base
             except Exception as e:
                 err=e; time.sleep(min(2**n,5))
         log(f"endpoint failed: {base}")
@@ -145,15 +155,25 @@ def payload(addr):
     return bytes(conv([CM[c] for c in addr[p+1:-6]],5,8,False))
 
 # ---- CosmWasm raw state ----
-def contract_state(addr,height=None):
-    rows=[]; key=None; endpoint=None
+def contract_state(addr,height=None,prefix=None):
+    from lp_attribution import decode_state_blob
+    rows=[]; key=base64.b64encode(prefix).decode() if prefix else None; endpoint=None
+    seen=set()
     while True:
         q={"pagination.limit":"5000"}
         if key: q["pagination.key"]=key
         d,endpoint=req_json(JUNO,f"/cosmwasm/wasm/v1/contract/{addr}/state",q,height=height)
-        rows += [(base64.b64decode(x["key"]),base64.b64decode(x["value"])) for x in d.get("models",[])]
+        for model in d["models"]:
+            raw = decode_state_blob(model["key"])
+            if prefix and raw < prefix:
+                raise ValueError("claim pagination moved before prefix")
+            if prefix and not raw.startswith(prefix):
+                return rows
+            rows.append((raw, base64.b64decode(model["value"], validate=True)))
         key=(d.get("pagination") or {}).get("next_key")
         if not key: break
+        if key in seen: raise ValueError("repeated contract cursor")
+        seen.add(key)
     log(f"contract {addr[:15]}…: {len(rows):,} rows via {endpoint}"); return rows
 
 def nskey(k):
@@ -189,13 +209,21 @@ def scan_juno(height=None):
     if sm!=supply: raise RuntimeError(f"CW20 balance sum {sm} != supply {supply}")
     log(f"Juno: {len(bal):,} holders / {supply/1e6:,.6f} NETA"); return bal,supply,src
 
-def juno_snapshot(finality_blocks=2):
-    latest,ep=req_json(JUNO,"/cosmos/base/tendermint/v1beta1/blocks/latest")
-    latest_height=int(latest["block"]["header"]["height"])
-    height=max(1,latest_height-finality_blocks)
+def juno_snapshot(finality_blocks=2, observation=None):
+    if observation is None:
+        latest,ep=req_json(JUNO,"/cosmos/base/tendermint/v1beta1/blocks/latest")
+        height=max(1,int(latest["block"]["header"]["height"])-finality_blocks)
+    else:
+        height=observation['height']
     d,ep=req_json(JUNO,f"/cosmos/base/tendermint/v1beta1/blocks/{height}")
     h=d["block"]["header"]
-    if int(h["height"])!=height:
+    if observation is not None:
+        shared.recent(h['time'], 65)
+        raw = d['block_id']['hash']
+        digest = raw.upper() if re.fullmatch(r'[0-9a-fA-F]{64}', raw) else base64.b64decode(raw,validate=True).hex().upper()
+        if digest != observation['block_hash'] or h['time'] != observation['block_time']:
+            raise ValueError('Shared stake block identity mismatch')
+    if h['chain_id'] != 'juno-1' or int(h["height"])!=height:
         raise RuntimeError(f"Juno snapshot height mismatch: requested {height}, received {h['height']}")
     when=dt.datetime.fromisoformat(h["time"].replace("Z","+00:00"))
     return height,int(when.timestamp()*1_000_000_000),when.isoformat(),ep
@@ -208,10 +236,12 @@ def claim_is_released(release_at,height,now_ns):
     if kind=="at_height": return value<=height
     raise ValueError(f"unexpected release_at kind: {kind}")
 
-def scan_dao(snapshot=None):
+def scan_dao(snapshot=None, shared_stakes=None):
     height,now_ns,block_time,endpoint=snapshot or juno_snapshot()
-    staked={}; unbonding={}; claimable={}; stored_total=None; claim_records=0
-    for k,v in contract_state(DAO,height):
+    staked={} if shared_stakes is None else shared_stakes
+    unbonding={}; claimable={}; stored_total=None; claim_records=0
+    prefix = None if shared_stakes is None else bytes([0, 6]) + b'claims'
+    for k,v in contract_state(DAO,height,prefix):
         ns,suf=nskey(k)
         if ns=="staked_balances" and suf:
             a=suf.decode(); x=jint(v)
@@ -234,7 +264,7 @@ def scan_dao(snapshot=None):
     log(f"DAO at Juno {height:,} ({block_time}): {len(staked):,} active / {active/1e6:,.6f}; "
         f"{len(unbonding):,} unbonding / {sum(unbonding.values())/1e6:,.6f}; "
         f"{len(claimable):,} claimable / {sum(claimable.values())/1e6:,.6f}")
-    return staked,unbonding,claimable,{"height":height,"block_time":block_time,"endpoint":endpoint,"claim_records":claim_records}
+    return staked,unbonding,claimable,{"height":height,"block_time":block_time,"endpoint":endpoint,"claim_records":claim_records,"active_stakes_source":"cosmoot" if shared_stakes is not None else "contract-state"}
 
 # ---- protobuf + Osmosis bank KV scan ----
 def varint(buf,p):
@@ -307,7 +337,11 @@ def bank_amount(raw,expected_denom=DENOM):
         raise ValueError(f"bank value denom mismatch: {denom}")
     return amount
 def latest_height():
-    d,ep=req_json(OSMO,"/status"); return int(d["result"]["sync_info"]["latest_block_height"]),ep
+    data, endpoint = req_json(OSMO, "/status")
+    result = data["result"]
+    if result["node_info"]["network"] != "osmosis-1" or result["sync_info"]["catching_up"] is not False:
+        raise ValueError("Osmosis RPC is on another chain or catching up")
+    return int(result["sync_info"]["latest_block_height"]), endpoint
 def subspace(prefix,height,rpc):
     q={"path":'"/store/bank/subspace"',"data":"0x"+prefix.hex(),"height":str(height),"prove":"false"}
     r=S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=TIMEOUT); r.raise_for_status(); d=r.json()["result"]["response"]
@@ -343,11 +377,38 @@ def scan_osmo():
     log(f"Osmosis: {len(holders):,} NETA holders; {len(pool_shares):,} Pool 631 share holders")
     return holders,pool_shares,height,rpc
 
-def verify_osmosis_supply(holders,height):
+def rpc_bank_supply(rpc, height):
+    # QuerySupplyOfRequest has one length-delimited denom. An IBC denom is 68 ASCII bytes.
+    denom = DENOM.encode('ascii')
+    message = bytes((10, len(denom))) + denom
+    params = {'path': '"/cosmos.bank.v1beta1.Query/SupplyOf"', 'data': '0x'+message.hex(),
+              'height': str(height), 'prove':'false'}
+    data, _ = req_json([rpc], '/abci_query', params, retries=1)
+    response = data['result']['response']
+    if int(response.get('code',0)) or int(response.get('height',-1)) != height:
+        raise ValueError('Unconfirmed Osmosis bank query')
+    result = binascii.a2b_base64(response['value'], strict_mode=True)
+    coins = [v for f,w,v in fields(result) if f == 1 and w == 2]
+    if len(coins) != 1:
+        raise ValueError('Expected one bank supply coin')
+    identity = [v.decode('ascii') for f,w,v in fields(coins[0]) if f == 1 and w == 2]
+    amounts = [v.decode('ascii') for f,w,v in fields(coins[0]) if f == 2 and w == 2]
+    if identity != [DENOM] or len(amounts) != 1 or not amounts[0].isdigit():
+        raise ValueError('Invalid supply coin identity or amount')
+    return {'denom':DENOM,'amount':amounts[0]}
+
+
+def verify_osmosis_supply(holders,height,rpc=None):
     """Reject a mixed or malformed prefix scan before attributing any LP shares."""
-    data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",
-                    {"denom":DENOM},height=height)
-    amount=data.get("amount") or {}
+    amount = None
+    if rpc:
+        try:
+            amount = rpc_bank_supply(rpc,height)
+        except (OSError, RuntimeError, ValueError, KeyError, TypeError) as error:
+            log(f"RPC supply query unavailable ({error}); checking a height-confirming LCD")
+    if amount is None:
+        data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",{"denom":DENOM},height=height)
+        amount=data.get("amount") or {}
     if amount.get("denom")!=DENOM or not str(amount.get("amount","")).isdigit():
         raise RuntimeError("Osmosis bank supply response invalid")
     observed=sum(holders.values()); expected=int(amount["amount"])
@@ -430,14 +491,30 @@ def bridge_transit_amount(osmosis_liability,osmo_total,packet_commitments):
         raise RuntimeError(f"unexplained Juno/Osmosis bridge difference: {transit/1e6:.6f} NETA")
     return transit
 
+def stake_snapshot():
+    try:
+        observation = shared.fetch('daos/neta.json')
+        active = shared.stakes(observation, NETA, DAO)
+        state = juno_snapshot(observation=observation)
+        height = state[0]
+        power, _ = smart_query(shared.VOTING, {'total_power_at_height': {'height': height}}, height)
+        if int(power['height']) != height or int(power['power']) != sum(active.values()):
+            raise ValueError('Independent voting power mismatch')
+        return state, scan_dao(state, active)
+    except (OSError, RuntimeError, ValueError, KeyError, TypeError) as error:
+        log(f"Shared stake read unavailable ({error}); collecting local stake and claims")
+        state = juno_snapshot()
+        return state, scan_dao(state)
+
+
 def build(out):
-    juno_state=juno_snapshot()
+    juno_state, dao_positions = stake_snapshot()
     juno_height=juno_state[0]
     log(f"Juno immutable snapshot height {juno_height:,}")
     juno,supply,supply_src=scan_juno(juno_height)
-    staked,unbonding,claimable,dao_snapshot=scan_dao(juno_state)
+    staked,unbonding,claimable,dao_snapshot=dao_positions
     osmo,osmo_shares,height,rpc=scan_osmo()
-    verify_osmosis_supply(osmo,height)
+    verify_osmosis_supply(osmo,height,rpc)
     import lp_attribution as lp
     wynd_lp,wynd_meta=lp.wynd_attribution(juno_height)
     osmo_lp,osmo_lp_meta=lp.osmosis_attribution(osmo_shares,height,rpc)
