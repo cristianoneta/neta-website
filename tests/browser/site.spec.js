@@ -337,8 +337,16 @@ test("recovery renders validated snapshots and stays fail-closed", async ({page}
   expect(pageErrors).toEqual([]);
 });
 
+async function routeRescueMarket(page, pair, ageHours = 0) {
+  await page.route("**/data/recovery/wynd-market.json", route => route.fulfill({json: {
+    price_timestamp: new Date(Date.now() - ageHours * 3600000).toISOString(),
+    pools: {[pair]: {assets: [{key: "native:ujuno", usd_price: "0.01"}]}}
+  }}));
+}
+
 test("Rescue NETA validates the fixed pair and renders a read-only live quote", async ({page}) => {
   const pair = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra";
+  await routeRescueMarket(page, pair);
   const neta = "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr";
   await page.route(/^https:\/\/juno-api\./, async route => {
     const url = new URL(route.request().url());
@@ -376,10 +384,18 @@ test("Rescue NETA validates the fixed pair and renders a read-only live quote", 
   await expect(page.locator("#receive-symbol")).toHaveText("JUNO");
   await expect(page.locator("#offer-logo")).toHaveAttribute("src", "assets/neta-token.png");
   await expect(page.locator("#receive-logo")).toHaveAttribute("src", "assets/juno-chain.png");
+  await routeRescueMarket(page, pair, 72);
+  await page.reload({waitUntil: "domcontentloaded"});
+  await expect(page.locator("#contract-state")).toHaveText("LIVE CODE OK");
+  await page.locator("#offer-amount").fill("1");
+  await expect(page.locator("#quote-error")).toContainText("USD LIMIT CANNOT BE VERIFIED");
+  await expect(page.locator("#swap-action")).toBeDisabled();
+
 });
 
 test("Rescue NETA public signing builds exact native and CW20 swaps and fails closed on rejection", async ({page}) => {
   const pair = "juno1h6x5jlvn6jhpnu63ufe4sgv4utyk8hsfl5rqnrpg2cvp6ccuq4lqwqnzra";
+  await routeRescueMarket(page, pair);
   const neta = "juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr";
   const wallet = "juno1d0g7f97v87xwe6r4vr4jj3jfhzcv4vvfhamy8w";
   await page.route("**/assets/swap-signing-client.js*", route => route.fulfill({
