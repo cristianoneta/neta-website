@@ -40,6 +40,17 @@ class SharedTests(unittest.TestCase):
             self.assertEqual(ranking.stake_snapshot(),(state,'local'))
             local.assert_called_once_with(state)
 
+    def test_primary_supply_query_requires_matching_height_and_denom(self):
+        def field(n, b): return bytes([n << 3 | 2, len(b)]) + b
+        coin = field(1, ranking.DENOM.encode()) + field(2,b'71')
+        result = {'height':'42','value':base64.b64encode(field(1,coin)).decode(), 'code':0}
+        with patch.object(ranking,'req_json',return_value=({'result':{'response':result}},'rpc')) as read:
+            self.assertEqual(ranking.rpc_bank_supply('rpc',42)['amount'],'71')
+            self.assertEqual(read.call_args.args[2]['height'],'42')
+            with self.assertRaises(ValueError): ranking.rpc_bank_supply('rpc',41)
+            with patch.dict(result,{'value':base64.b64encode(field(1,field(1,b'other')+field(2,b'71'))).decode()}), self.assertRaises(ValueError):
+                ranking.rpc_bank_supply('rpc',42)
+
     def test_all_eight_pool_identities_and_original_observation_reach_market_output(self):
         registry = json.loads((Path(__file__).resolve().parents[1]/'data/recovery/wynd-pools.json').read_text())
         stamp = datetime.now(timezone.utc).isoformat()

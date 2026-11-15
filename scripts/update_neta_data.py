@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Daily NETA Reborn on-chain indexer. Fail-closed: outputs are replaced only after all checks pass."""
 from __future__ import annotations
-import argparse, base64, datetime as dt, json, os, re, tempfile, time
+import argparse, base64, binascii, datetime as dt, json, os, re, tempfile, time
 from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import quote
@@ -46,9 +46,15 @@ def req_json(bases,path,params=None,retries=3,height=None):
         for n in range(retries):
             try:
                 r=S.get(base.rstrip('/')+path,params=params,headers=headers,timeout=TIMEOUT); r.raise_for_status()
-                if height is not None and r.headers.get("x-cosmos-block-height") != str(height):
-                    raise ValueError("provider did not confirm requested block height")
-                return r.json(),base
+                data = r.json()
+                if height is not None:
+                    reported = [r.headers.get(key) for key in ('x-cosmos-block-height','grpc-metadata-x-cosmos-block-height')]
+                    if path.startswith('/ibc/') and isinstance(data.get('height'), dict):
+                        reported.append(data['height'].get('revision_height'))
+                    confirmations = {str(item) for item in reported if item is not None}
+                    if confirmations != {str(height)}:
+                        raise ValueError("provider did not confirm requested block height")
+                return data,base
             except Exception as e:
                 err=e; time.sleep(min(2**n,5))
         log(f"endpoint failed: {base}")
@@ -331,7 +337,11 @@ def bank_amount(raw,expected_denom=DENOM):
         raise ValueError(f"bank value denom mismatch: {denom}")
     return amount
 def latest_height():
-    d,ep=req_json(OSMO,"/status"); return int(d["result"]["sync_info"]["latest_block_height"]),ep
+    data, endpoint = req_json(OSMO, "/status")
+    result = data["result"]
+    if result["node_info"]["network"] != "osmosis-1" or result["sync_info"]["catching_up"] is not False:
+        raise ValueError("Osmosis RPC is on another chain or catching up")
+    return int(result["sync_info"]["latest_block_height"]), endpoint
 def subspace(prefix,height,rpc):
     q={"path":'"/store/bank/subspace"',"data":"0x"+prefix.hex(),"height":str(height),"prove":"false"}
     r=S.get(rpc.rstrip('/')+"/abci_query",params=q,timeout=TIMEOUT); r.raise_for_status(); d=r.json()["result"]["response"]
@@ -367,11 +377,38 @@ def scan_osmo():
     log(f"Osmosis: {len(holders):,} NETA holders; {len(pool_shares):,} Pool 631 share holders")
     return holders,pool_shares,height,rpc
 
-def verify_osmosis_supply(holders,height):
+def rpc_bank_supply(rpc, height):
+    # QuerySupplyOfRequest has one length-delimited denom. An IBC denom is 68 ASCII bytes.
+    denom = DENOM.encode('ascii')
+    message = bytes((10, len(denom))) + denom
+    params = {'path': '"/cosmos.bank.v1beta1.Query/SupplyOf"', 'data': '0x'+message.hex(),
+              'height': str(height), 'prove':'false'}
+    data, _ = req_json([rpc], '/abci_query', params, retries=1)
+    response = data['result']['response']
+    if int(response.get('code',0)) or int(response.get('height',-1)) != height:
+        raise ValueError('Unconfirmed Osmosis bank query')
+    result = binascii.a2b_base64(response['value'], strict_mode=True)
+    coins = [v for f,w,v in fields(result) if f == 1 and w == 2]
+    if len(coins) != 1:
+        raise ValueError('Expected one bank supply coin')
+    identity = [v.decode('ascii') for f,w,v in fields(coins[0]) if f == 1 and w == 2]
+    amounts = [v.decode('ascii') for f,w,v in fields(coins[0]) if f == 2 and w == 2]
+    if identity != [DENOM] or len(amounts) != 1 or not amounts[0].isdigit():
+        raise ValueError('Invalid supply coin identity or amount')
+    return {'denom':DENOM,'amount':amounts[0]}
+
+
+def verify_osmosis_supply(holders,height,rpc=None):
     """Reject a mixed or malformed prefix scan before attributing any LP shares."""
-    data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",
-                    {"denom":DENOM},height=height)
-    amount=data.get("amount") or {}
+    amount = None
+    if rpc:
+        try:
+            amount = rpc_bank_supply(rpc,height)
+        except (OSError, RuntimeError, ValueError, KeyError, TypeError) as error:
+            log(f"RPC supply query unavailable ({error}); checking a height-confirming LCD")
+    if amount is None:
+        data,_=req_json(OSMO_LCD,"/cosmos/bank/v1beta1/supply/by_denom",{"denom":DENOM},height=height)
+        amount=data.get("amount") or {}
     if amount.get("denom")!=DENOM or not str(amount.get("amount","")).isdigit():
         raise RuntimeError("Osmosis bank supply response invalid")
     observed=sum(holders.values()); expected=int(amount["amount"])
@@ -477,7 +514,7 @@ def build(out):
     juno,supply,supply_src=scan_juno(juno_height)
     staked,unbonding,claimable,dao_snapshot=dao_positions
     osmo,osmo_shares,height,rpc=scan_osmo()
-    verify_osmosis_supply(osmo,height)
+    verify_osmosis_supply(osmo,height,rpc)
     import lp_attribution as lp
     wynd_lp,wynd_meta=lp.wynd_attribution(juno_height)
     osmo_lp,osmo_lp_meta=lp.osmosis_attribution(osmo_shares,height,rpc)
