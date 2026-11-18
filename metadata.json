@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-17T22:17:34.292698Z",
+  "generated_at": "2026-11-18T04:14:13.335677Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -23,7 +23,7 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4043,
-  "lp_neta": 1318.967499,
+  "lp_neta": 1318.983282,
   "economic_master_entries": 13835,
   "cross_chain_matches": 1992,
   "wallet_attributed_neta": 31886.39,
@@ -41,31 +41,27 @@
     },
     "unattributed_non_osmosis_neta": 0.0,
     "in_transit_neta": 0.0,
-    "open_packet_commitments": {
-      "osmosis:channel-169": [
-        119549
-      ]
-    }
+    "open_packet_commitments": {}
   },
-  "gini": 0.8833,
+  "gini": 0.883301,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5178.122759,
-    "top_10": 6862.517791,
-    "top_25": 9685.430947,
-    "top_50": 11877.702774,
-    "top_100": 14311.820235,
-    "top_1_percent": 15394.544051,
+    "top_5": 5178.122984,
+    "top_10": 6862.518187,
+    "top_25": 9685.431343,
+    "top_50": 11877.70317,
+    "top_100": 14311.820631,
+    "top_1_percent": 15394.545285,
     "top_1_percent_wallets": 139
   },
   "osmosis": {
-    "height": 75395526,
+    "height": 75418272,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 75395526,
+      "height": 75418272,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 801625835,
+      "pool_neta_raw": 801641618,
       "lp_supply_raw": 218194199598658472102869,
       "direct_share_holders": 562,
       "economic_wallets": 1950,
@@ -77,7 +73,7 @@
     }
   },
   "juno": {
-    "height": 43848012,
+    "height": 43856304,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 517341664,
@@ -91,8 +87,8 @@
     }
   },
   "dao": {
-    "height": 43848012,
-    "block_time": "2026-11-17T22:13:23.136263+00:00",
+    "height": 43856304,
+    "block_time": "2026-11-18T04:10:54.090281+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 299,
     "active_stakes_source": "contract-state",
