@@ -13,6 +13,84 @@
       "type": "swap",
       "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn",
       "wallet_id": "78a8d46f83d6675d8ad4b70efc41fe1ba0017f8b"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 75727470,
+      "id": "osmosis:A1EE89664F5A59A8721007E6C61DE2CBF46CA5DA19987E26C85AC799E3549588:pool631:50",
+      "market": "pool-631",
+      "neta_raw": 89174,
+      "timestamp": "2026-11-21T13:30:44Z",
+      "txhash": "A1EE89664F5A59A8721007E6C61DE2CBF46CA5DA19987E26C85AC799E3549588",
+      "type": "swap",
+      "wallet": "osmo1zzzzzzzzzr6n4jzs7c2gfzwpr8qnms5m4hjgtf",
+      "wallet_id": "108421084210f53ac850f6148489c119c13dc29b"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 75727512,
+      "id": "osmosis:026E0FEA64E53FEFF19C7EE017059DC9EE6328F34461EF230BD244AF209CD2C4:pool631:47",
+      "market": "pool-631",
+      "neta_raw": 18439,
+      "timestamp": "2026-11-21T13:31:22Z",
+      "txhash": "026E0FEA64E53FEFF19C7EE017059DC9EE6328F34461EF230BD244AF209CD2C4",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 75727785,
+      "id": "osmosis:1DD3011B91945A005B48508DB6F1FF097A779880B5001ED3748EDC84AF65DD2C:pool631:47",
+      "market": "pool-631",
+      "neta_raw": 11436,
+      "timestamp": "2026-11-21T13:35:41Z",
+      "txhash": "1DD3011B91945A005B48508DB6F1FF097A779880B5001ED3748EDC84AF65DD2C",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
+    },
+    {
+      "chain": "juno",
+      "direction": "buy",
+      "height": 43969892,
+      "id": "juno:A24758794E9C17E2610C3879822CE0017A76A77D595D699DE2CB5227B6614645:wynd:12",
+      "market": "wynd",
+      "neta_raw": 728001,
+      "timestamp": "2026-11-21T13:53:39Z",
+      "txhash": "A24758794E9C17E2610C3879822CE0017A76A77D595D699DE2CB5227B6614645",
+      "type": "swap",
+      "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57",
+      "wallet_id": "144d8efddd9954401b856d5fa5fd2b29085ac887"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 75733230,
+      "id": "osmosis:53E3AC725D55999ECD67B906328B4E4450791F81D26A5D2929CEF9A0FA2BBC56:pool631:50",
+      "market": "pool-631",
+      "neta_raw": 25350,
+      "timestamp": "2026-11-21T15:01:23Z",
+      "txhash": "53E3AC725D55999ECD67B906328B4E4450791F81D26A5D2929CEF9A0FA2BBC56",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
+    },
+    {
+      "chain": "osmosis",
+      "direction": "sell",
+      "height": 75741805,
+      "id": "osmosis:A9EED14FC063FD7274F3761B772A10BA9B572D13DA08BF736FCE61F8529FBF8A:pool631:63",
+      "market": "pool-631",
+      "neta_raw": 36351,
+      "timestamp": "2026-11-21T17:16:45Z",
+      "txhash": "A9EED14FC063FD7274F3761B772A10BA9B572D13DA08BF736FCE61F8529FBF8A",
+      "type": "swap",
+      "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h",
+      "wallet_id": "38578a17a93668078f4cac43b900d788168d1745"
     }
   ]
 }
