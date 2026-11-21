@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-20T20:03:27.903283Z",
+  "generated_at": "2026-11-21T01:28:21.170374Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -15,7 +15,7 @@
   "total_supply_neta": 31886.6,
   "total_supply_source": "cw20_token_info",
   "juno_custody_addresses": 12260,
-  "osmosis_primary_state_addresses": 3561,
+  "osmosis_primary_state_addresses": 3559,
   "dao_active_stakers": 2082,
   "dao_active_staking_neta": 4064.135927,
   "dao_unstaking_wallets": 9,
@@ -23,8 +23,8 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4042,
-  "lp_neta": 1245.383938,
-  "economic_master_entries": 13829,
+  "lp_neta": 1245.480664,
+  "economic_master_entries": 13827,
   "cross_chain_matches": 1992,
   "wallet_attributed_neta": 31886.39,
   "dao_residual_neta": 0.21,
@@ -50,25 +50,25 @@
       ]
     }
   },
-  "gini": 0.883965,
+  "gini": 0.883961,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5291.655405,
-    "top_10": 6975.735186,
-    "top_25": 9790.286839,
-    "top_50": 11975.454002,
-    "top_100": 14404.274912,
-    "top_1_percent": 15478.938248,
+    "top_5": 5292.06818,
+    "top_10": 6976.149013,
+    "top_25": 9790.700666,
+    "top_50": 11975.867829,
+    "top_100": 14404.688739,
+    "top_1_percent": 15479.357212,
     "top_1_percent_wallets": 139
   },
   "osmosis": {
-    "height": 75661818,
+    "height": 75681298,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 75661818,
+      "height": 75681298,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 772620994,
+      "pool_neta_raw": 772717720,
       "lp_supply_raw": 218194199598658472102869,
       "direct_share_holders": 561,
       "economic_wallets": 1949,
@@ -80,7 +80,7 @@
     }
   },
   "juno": {
-    "height": 43944640,
+    "height": 43952279,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 472762944,
@@ -94,8 +94,8 @@
     }
   },
   "dao": {
-    "height": 43944640,
-    "block_time": "2026-11-20T19:41:14.525315+00:00",
+    "height": 43952279,
+    "block_time": "2026-11-21T01:11:21.185500+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 300,
     "active_stakes_source": "cosmoot",
