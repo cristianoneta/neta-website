@@ -45,47 +45,47 @@
     "transfers": 0,
     "volume_neta": 0.0
   },
-  "generated_at": "2026-11-21T17:27:05.985890Z",
+  "generated_at": "2026-11-21T23:09:29.203035Z",
   "market": {
     "by_chain": {
-      "juno": 1,
-      "osmosis": 13
+      "juno": 10,
+      "osmosis": 8
     },
     "power_buyers": [
       {
-        "bought_neta": 0.728001,
-        "net_neta": 0.728001,
+        "bought_neta": 29.622129,
+        "net_neta": 29.622129,
         "sold_neta": 0.0,
-        "swaps": 1,
-        "total_neta": 618.741384,
+        "swaps": 4,
+        "total_neta": 647.63538,
         "wallet": "juno1z3xcalwan92yqxu9d406tlft9yy94jy8s5et57"
       }
     ],
-    "swaps": 14,
+    "swaps": 18,
     "top_sellers": [
       {
-        "bought_neta": 0.085798,
-        "net_neta": -0.401577,
-        "sold_neta": 0.487375,
-        "swaps": 8,
+        "bought_neta": 0.0,
+        "net_neta": -3.789802,
+        "sold_neta": 3.789802,
+        "swaps": 3,
+        "total_neta": 0.581417,
+        "wallet": "juno1xlj0alc6vy6kkmla0v7ynz2rafprjerz94zhpj"
+      },
+      {
+        "bought_neta": 0.0,
+        "net_neta": -0.130634,
+        "sold_neta": 0.130634,
+        "swaps": 2,
         "total_neta": 0.0,
         "wallet": "osmo10z5dgmur6en4mzk5ku80cs07rwsqzlutdzzsgn"
       },
       {
         "bought_neta": 0.0,
-        "net_neta": -0.091576,
-        "sold_neta": 0.091576,
-        "swaps": 4,
+        "net_neta": -0.105032,
+        "sold_neta": 0.105032,
+        "swaps": 5,
         "total_neta": 0.0,
         "wallet": "osmo18ptc59afxe5q0r6v43pmjqxh3qtg6969ql9y7h"
-      },
-      {
-        "bought_neta": 0.0,
-        "net_neta": -0.089174,
-        "sold_neta": 0.089174,
-        "swaps": 1,
-        "total_neta": 0.0,
-        "wallet": "osmo1zzzzzzzzzr6n4jzs7c2gfzwpr8qnms5m4hjgtf"
       }
     ]
   },
@@ -163,7 +163,7 @@
     },
     "90d": {
       "available": false,
-      "coverage_percent": 77.75,
+      "coverage_percent": 78.01,
       "top_ibc_transfers": [
         {
           "from_chain": "juno",
