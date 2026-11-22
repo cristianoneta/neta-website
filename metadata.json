@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-21T23:09:26.904525Z",
+  "generated_at": "2026-11-22T03:07:50.398811Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -15,17 +15,17 @@
   "total_supply_neta": 31886.6,
   "total_supply_source": "cw20_token_info",
   "juno_custody_addresses": 12259,
-  "osmosis_primary_state_addresses": 3523,
+  "osmosis_primary_state_addresses": 3510,
   "dao_active_stakers": 2082,
   "dao_active_staking_neta": 4064.135927,
   "dao_unstaking_wallets": 9,
   "dao_unstaking_neta": 116.0,
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
-  "lp_wallets": 4019,
+  "lp_wallets": 4006,
   "lp_neta": 1220.158792,
-  "economic_master_entries": 13802,
-  "cross_chain_matches": 1980,
+  "economic_master_entries": 13792,
+  "cross_chain_matches": 1977,
   "wallet_attributed_neta": 31886.39,
   "dao_residual_neta": 0.21,
   "bridge_unattributed_neta": 0.0,
@@ -50,37 +50,37 @@
       ]
     }
   },
-  "gini": 0.884389,
+  "gini": 0.884447,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5344.428473,
-    "top_10": 7028.512851,
-    "top_25": 9838.253774,
-    "top_50": 12019.384473,
-    "top_100": 14445.158049,
-    "top_1_percent": 15519.775255,
-    "top_1_percent_wallets": 139
+    "top_5": 5350.158831,
+    "top_10": 7034.243209,
+    "top_25": 9843.984132,
+    "top_50": 12025.114831,
+    "top_100": 14450.888407,
+    "top_1_percent": 15501.356461,
+    "top_1_percent_wallets": 138
   },
   "osmosis": {
-    "height": 75764373,
+    "height": 75779984,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 75764373,
+      "height": 75779984,
       "rpc": "https://rpc.osmosis.zone",
       "pool_neta_raw": 773043884,
       "lp_supply_raw": 218194199598658472102869,
-      "direct_share_holders": 570,
-      "economic_wallets": 1917,
-      "lockup_module_shares_raw": 123272192404416131669016,
-      "lock_owners": 1366,
-      "lock_records": 1377,
+      "direct_share_holders": 560,
+      "economic_wallets": 1904,
+      "lockup_module_shares_raw": 122621687236173767143142,
+      "lock_owners": 1363,
+      "lock_records": 1374,
       "active_lock_records": 1365,
-      "unlocking_lock_records": 12
+      "unlocking_lock_records": 9
     }
   },
   "juno": {
-    "height": 43982044,
+    "height": 43987562,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 447114908,
@@ -94,8 +94,8 @@
     }
   },
   "dao": {
-    "height": 43982044,
-    "block_time": "2026-11-21T22:41:20.783928+00:00",
+    "height": 43987562,
+    "block_time": "2026-11-22T02:41:12.099579+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 300,
     "active_stakes_source": "cosmoot",
