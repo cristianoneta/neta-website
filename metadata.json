@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-22T03:07:50.398811Z",
+  "generated_at": "2026-11-22T11:13:50.843507Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -23,7 +23,7 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4006,
-  "lp_neta": 1220.158792,
+  "lp_neta": 1220.246989,
   "economic_master_entries": 13792,
   "cross_chain_matches": 1977,
   "wallet_attributed_neta": 31886.39,
@@ -53,20 +53,20 @@
   "gini": 0.884447,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5350.158831,
-    "top_10": 7034.243209,
-    "top_25": 9843.984132,
-    "top_50": 12025.114831,
-    "top_100": 14450.888407,
-    "top_1_percent": 15501.356461,
+    "top_5": 5350.158832,
+    "top_10": 7034.24321,
+    "top_25": 9844.000677,
+    "top_50": 12025.132224,
+    "top_100": 14450.916282,
+    "top_1_percent": 15501.384552,
     "top_1_percent_wallets": 138
   },
   "osmosis": {
-    "height": 75779984,
+    "height": 75810448,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 75779984,
+      "height": 75810448,
       "rpc": "https://rpc.osmosis.zone",
       "pool_neta_raw": 773043884,
       "lp_supply_raw": 218194199598658472102869,
@@ -80,10 +80,10 @@
     }
   },
   "juno": {
-    "height": 43987562,
+    "height": 43998602,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
-      "pool_neta_raw": 447114908,
+      "pool_neta_raw": 447203105,
       "lp_supply_raw": 8957224003,
       "attributable_lp_supply_raw": 8957223003,
       "economic_wallets": 3344,
@@ -94,8 +94,8 @@
     }
   },
   "dao": {
-    "height": 43987562,
-    "block_time": "2026-11-22T02:41:12.099579+00:00",
+    "height": 43998602,
+    "block_time": "2026-11-22T10:41:18.732673+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 300,
     "active_stakes_source": "cosmoot",
