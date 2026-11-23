@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-23T00:50:12.128007Z",
+  "generated_at": "2026-11-23T08:58:39.444082Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -15,7 +15,7 @@
   "total_supply_neta": 31886.6,
   "total_supply_source": "cw20_token_info",
   "juno_custody_addresses": 12258,
-  "osmosis_primary_state_addresses": 3511,
+  "osmosis_primary_state_addresses": 3503,
   "dao_active_stakers": 2082,
   "dao_active_staking_neta": 4064.135927,
   "dao_unstaking_wallets": 9,
@@ -23,9 +23,9 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4006,
-  "lp_neta": 1221.743081,
-  "economic_master_entries": 13792,
-  "cross_chain_matches": 1977,
+  "lp_neta": 1221.768069,
+  "economic_master_entries": 13786,
+  "cross_chain_matches": 1975,
   "wallet_attributed_neta": 31886.39,
   "dao_residual_neta": 0.21,
   "bridge_unattributed_neta": 0.0,
@@ -51,25 +51,25 @@
       ]
     }
   },
-  "gini": 0.88445,
+  "gini": 0.884426,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5349.695903,
-    "top_10": 7033.682432,
-    "top_25": 9845.409112,
-    "top_50": 12028.23885,
-    "top_100": 14455.270294,
-    "top_1_percent": 15505.396988,
+    "top_5": 5350.473141,
+    "top_10": 7034.459942,
+    "top_25": 9846.186622,
+    "top_50": 12029.01636,
+    "top_100": 14456.047804,
+    "top_1_percent": 15506.175518,
     "top_1_percent_wallets": 138
   },
   "osmosis": {
-    "height": 75861610,
+    "height": 75892351,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 75861610,
+      "height": 75892351,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 764041263,
+      "pool_neta_raw": 764066251,
       "lp_supply_raw": 218194199598658472102869,
       "direct_share_holders": 560,
       "economic_wallets": 1904,
@@ -81,7 +81,7 @@
     }
   },
   "juno": {
-    "height": 44017852,
+    "height": 44028837,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
       "pool_neta_raw": 457701818,
@@ -95,8 +95,8 @@
     }
   },
   "dao": {
-    "height": 44017852,
-    "block_time": "2026-11-23T00:41:16.244741+00:00",
+    "height": 44028837,
+    "block_time": "2026-11-23T08:41:10.965517+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 300,
     "active_stakes_source": "cosmoot",
