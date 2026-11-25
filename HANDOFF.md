@@ -1,5 +1,14 @@
 # NETA Reborn handoff
 
+## Legacy data freshness — 25 November 2026
+
+The stale public Recovery observation was refreshed through the unchanged validated
+collector and Pages publisher; the external check passed all 50 observations.
+A separate host collector and generation-aware browser reader are prepared to
+remove dependence on delayed GitHub schedules. Host installation and the next
+unattended cycle remain unverified; the GitHub fallback is retained. See
+[incident, implementation and acceptance boundaries](docs/LEGACY_DATA_SERVER_2026-11-25.md).
+
 The November 15 shared stake and WYND input changes are described in [Current state](docs/CURRENT_STATE.md). Confirm a successful validated production run and the timestamps on the public ranking, map and WYND pages after deploying.
 
 ## Open pool-coverage task — owner request, 2026-10-06

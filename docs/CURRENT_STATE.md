@@ -1,5 +1,14 @@
 # NETA Reborn code-backed current state
 
+## Legacy data freshness — 25 November 2026
+
+The stale public Recovery observation was refreshed through the unchanged validated
+collector and Pages publisher; the external check passed all 50 observations.
+A separate host collector and generation-aware browser reader are prepared to
+remove dependence on delayed GitHub schedules. Host installation and the next
+unattended cycle remain unverified; the GitHub fallback is retained. See
+[incident, implementation and acceptance boundaries](LEGACY_DATA_SERVER_2026-11-25.md).
+
 ## Shared collector inputs, 15 November 2026
 
 The ranking can reuse active NETA stake at the exact Juno block published by Cosmoot. It verifies block identity and total voting power, then reads pending and matured claims at that height. Its custody, bridge, LP attribution and supply reconciliations remain part of publication.

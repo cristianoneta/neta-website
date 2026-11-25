@@ -1,10 +1,10 @@
-const M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX,A=window.NETA_ADDRESS_ROWS;
-const S=M.stats||M;
+let M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX,A=window.NETA_ADDRESS_ROWS;
+let S=M.stats||M;
 const f=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:6}).format(Number(n||0));
 const stake=h=>Number(h.neta_dao_staking||0),unstake=h=>Number(h.neta_dao_unstaking||0),claimable=h=>Number(h.neta_dao_claimable||0),lp=h=>Number(h.lp_neta||0);
-const supply=Number(S.total_supply_neta||0),totalEntries=Number(S.economic_master_entries||0);
+let supply=Number(S.total_supply_neta||0),totalEntries=Number(S.economic_master_entries||0);
 const sh=a=>a?(a.length>24?a.slice(0,12)+"…"+a.slice(-7):a):"—";
-const allRows=A?.length?A:H;
+let allRows=A?.length?A:H;
 let sortKey="total_neta",sortDir=-1;
 
 function node(tag,className,text){
@@ -21,8 +21,12 @@ function appendMetric(parent,className,label,value){
 }
 
 const statsRoot=document.querySelector("#stats");
+function renderSummary(){
+statsRoot.replaceChildren();
 for(const [label,value] of [["TOTAL SUPPLY",S.total_supply_neta],["ECONOMIC HOLDERS",S.economic_master_entries],["JUNO CUSTODY",S.juno_custody_addresses],["OSMOSIS CUSTODY",S.osmosis_primary_state_addresses],["DAO STAKED",S.dao_active_staking_neta],["DAO UNSTAKING",S.dao_unstaking_neta],["DAO CLAIMABLE",S.dao_claimable_neta],["LP NETA",S.lp_neta]])appendMetric(statsRoot,"stat",label,f(value));
 document.querySelector("#updated").textContent="LAST UPDATED: "+new Date(M.generated_at).toLocaleString();
+}
+renderSummary();
 
 const val=(h,k)=>k==="neta_dao_staking"?stake(h):k==="neta_dao_unstaking"?unstake(h):k==="neta_dao_claimable"?claimable(h):k==="lp_neta"?lp(h):Number(h[k]||0);
 function sorted(){return [...allRows].sort((a,b)=>{const d=val(a,sortKey)-val(b,sortKey);return d?sortDir*d:Number(a.rank||0)-Number(b.rank||0)}).slice(0,100)}
@@ -101,5 +105,16 @@ function lookup(){
 document.querySelector("#go").onclick=lookup;
 document.querySelector("#q").onkeydown=event=>{if(event.key==="Enter")lookup()};
 function resetLookup(){document.querySelector("#q").value="";document.querySelector("#result").classList.add("hidden");document.querySelector("#rankPanelDefault").classList.remove("hidden");document.querySelector("#rankPanelResult").classList.add("hidden")}
-window.addEventListener("neta:wallet-connected",event=>{if(!event.detail?.address)return;const address=I[event.detail.address.toLowerCase()]?event.detail.address:event.detail.osmosisAddress;document.querySelector("#q").value=address;lookup()});
+function acceptRankingWallet(detail){if(!detail?.address)return;const address=I[detail.address.toLowerCase()]?detail.address:detail.osmosisAddress;if(!address)return;document.querySelector("#q").value=address;lookup()}
+window.addEventListener("neta:wallet-connected",event=>acceptRankingWallet(event.detail));
+if(window.NETA_WALLET_STATE)acceptRankingWallet(window.NETA_WALLET_STATE);
 window.addEventListener("neta:wallet-disconnected",resetLookup);
+
+// Keep the saved view interactive while the independent public source loads.
+if(window.NETAPublicData)window.NETAPublicData.rankingReady().then(()=>{
+  M=window.NETA_METADATA;H=window.NETA_TOP_HOLDERS;I=window.NETA_ADDRESS_INDEX;A=window.NETA_ADDRESS_ROWS;
+  S=M.stats||M;supply=Number(S.total_supply_neta||0);totalEntries=Number(S.economic_master_entries||0);allRows=A?.length?A:H;
+  renderSummary();render();
+  if(document.querySelector("#q").value.trim())lookup();
+  else if(window.NETA_WALLET_STATE)acceptRankingWallet(window.NETA_WALLET_STATE);
+}).catch(()=>{document.querySelector("#updated").textContent+=" — saved observation";});
