@@ -111,10 +111,29 @@ def collect(root, source, now, runner=run):
     return due
 
 
+def sync_directory(path):
+    descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def sync_tree(root):
+    for path in root.rglob('*'):
+        if path.is_file():
+            with path.open('rb') as file:
+                os.fsync(file.fileno())
+    for path in sorted((p for p in root.rglob('*') if p.is_dir()), key=lambda p: len(p.parts), reverse=True):
+        sync_directory(path)
+    sync_directory(root)
+
+
 def switch_link(parent, name, destination):
     temporary = parent / ('.' + name + '-' + str(os.getpid()))
     temporary.symlink_to(destination)
     os.replace(temporary, parent / name)
+    sync_directory(parent)
 
 
 def prune(parent, current, keep=6):
@@ -147,7 +166,9 @@ def publish(root, public, revision, now, *, activate=True):
             }, sort_keys=True) + '\n')
             for path in [temporary, *[p for p in temporary.rglob('*') if p.is_dir()]]:
                 path.chmod(0o755)
+            sync_tree(temporary)
             temporary.rename(destination)
+            sync_directory(public)
         finally:
             if temporary.exists():
                 shutil.rmtree(temporary)
@@ -172,6 +193,7 @@ def cycle(state, public, source, seed, revision, *, now=None, collector=collect,
             generation = publish(temporary, public, revision, finished, activate=False)
             checkpoint = state / generation
             if not checkpoint.exists():
+                sync_tree(temporary)
                 temporary.rename(checkpoint)
             # Retain forward cursors and locked valuations before exposing them.
             switch_link(state, 'current', generation)

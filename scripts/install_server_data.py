@@ -221,7 +221,7 @@ def main():
     # A separate seed is today's coherent main data, never executable code from main.
     seed = BASE / 'seed'
     if not (STATE/'current').exists() and not seed.exists():
-        latest = json.loads(request(f'https://api.github.com/repos/{REPO}/commits/main', 100000))['sha']
+        latest = json.loads(request(f'https://api.github.com/repos/{REPO}/git/ref/heads/main', 16000))['object']['sha']
         with tempfile.TemporaryDirectory(dir=BASE, prefix='.seed-') as temp:
             archive(latest, Path(temp))
             shutil.rmtree(Path(temp)/'scripts')
