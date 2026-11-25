@@ -37,7 +37,7 @@ function renderMovers(id,rows,positive){
 }
 async function load(){
  try{
-  const r=await fetch("data/map/map-of-neta.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();
+  const r=await window.NETAPublicData.fetch("data/map/map-of-neta.json");if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();
   mapData=d;
   if(!d.validation?.passed)throw Error("unvalidated map data");
   const j=d.chains.find(x=>x.id==="juno-1"),o=d.chains.find(x=>x.id==="osmosis-1"),t=d.chains.find(x=>x.id==="phoenix-1");

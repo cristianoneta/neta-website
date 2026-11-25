@@ -586,14 +586,15 @@ function startGhost(){
 
 async function init(){
   startGhost();
-  const [registryResponse,statsResponse,marketResponse,leaderboardResponse,blockResult]=await Promise.all([
+  const [registryResponse,publicResponses,blockResult]=await Promise.all([
     fetch("data/recovery/wynd-pools.json",{cache:"no-store"}),
-    fetch("data/recovery/recovery-stats.json",{cache:"no-store"}),
-    fetch("data/recovery/wynd-market.json",{cache:"no-store"}),
-    fetch("data/recovery/wynd-leaderboard.json",{cache:"no-store"}),
+    window.NETAPublicData.fetchGroup([
+      "data/recovery/recovery-stats.json", "data/recovery/wynd-market.json", "data/recovery/wynd-leaderboard.json"
+    ]),
     chainClient.get("/cosmos/base/tendermint/v1beta1/blocks/latest").catch(()=>({data:null})),
   ]);
   if(!registryResponse.ok)throw new Error("TOP-8 REGISTRY UNAVAILABLE");
+  const [statsResponse,marketResponse,leaderboardResponse]=publicResponses;
   registry=await registryResponse.json();
   stats=statsResponse.ok?await statsResponse.json():{pools:{}};
   market=marketResponse.ok?await marketResponse.json():{pools:{}};

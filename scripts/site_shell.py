@@ -31,12 +31,12 @@ FOOTER_RE = re.compile(
     re.DOTALL,
 )
 CSP_RE = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">')
-CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
+CSP_META = '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:; connect-src \'self\' https://data.cosmoot.com https://juno-api.polkachu.com https://juno-api.lavenderfive.com https://juno-rpc.polkachu.com wss://juno-rpc.polkachu.com https://juno-rpc.kleomedes.network wss://juno-rpc.kleomedes.network https://rpc.lavenderfive.com wss://rpc.lavenderfive.com https://osmosis-api.polkachu.com https://osmosis-rpc.polkachu.com wss://osmosis-rpc.polkachu.com https://terra-api.polkachu.com https://terra-rpc.polkachu.com wss://terra-rpc.polkachu.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; worker-src \'none\'; upgrade-insecure-requests">'
 ASSET_VERSIONS = {
-    "index.html": {"app.js": "20260918-1", "styles.css": "20260918-1"},
-    "map-of-neta.html": {"styles.css": "20260918-1"},
+    "index.html": {"app.js": "20261125-1", "styles.css": "20260918-1"},
+    "map-of-neta.html": {"map-of-neta.js": "20261125-1", "styles.css": "20260918-1"},
     "neta-dao.html": {"styles.css": "20260918-1"},
-    "wynd-recovery.html": {"wynd-recovery.js": "20261002-1", "wynd-recovery.css": "20260914-7", "styles.css": "20260918-1"},
+    "wynd-recovery.html": {"wynd-recovery.js": "20261125-1", "wynd-recovery.css": "20260914-7", "styles.css": "20260918-1"},
     "rescue-neta.html": {"rescue-neta.js": "20261002-1", "rescue-neta.css": "20260914-4", "styles.css": "20260918-1"},
 }
 
@@ -99,8 +99,12 @@ def expected_page(source: str, page: str) -> str:
         if viewport not in source:
             raise RuntimeError(f"{page}: viewport marker missing")
         source = source.replace(viewport, viewport + csp_meta, 1)
+    source = re.sub(r'wallet-header.js\?v=[^"\']+', "wallet-header.js?v=20261125-1", source)
     for asset, version in ASSET_VERSIONS.get(page, {}).items():
         source = re.sub(rf"{re.escape(asset)}\?v=[^\"']+", f"{asset}?v={version}", source)
+    marker = '<script src="public-data.js?v=20261125-1"></script>'
+    if marker not in source:
+        source = source.replace('<script src="matrix-background.js', marker + '\n<script src="matrix-background.js', 1)
     source, header_count = HEADER_RE.subn(render_header(page), source, count=1)
     source, footer_count = FOOTER_RE.subn(render_footer(page), source, count=1)
     if header_count != 1 or footer_count != 1:

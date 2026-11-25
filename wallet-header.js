@@ -49,6 +49,7 @@
   window.NetaWalletHeader=Object.freeze({toPrefix});
 
   function loadAddressIndex(){
+    if(window.NETAPublicData)return window.NETAPublicData.rankingReady();
     if(window.NETA_ADDRESS_INDEX)return Promise.resolve(window.NETA_ADDRESS_INDEX);
     if(indexPromise)return indexPromise;
     indexPromise=new Promise((resolve,reject)=>{

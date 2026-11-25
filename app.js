@@ -1,3 +1,5 @@
+async function startRanking() {
+  if (window.NETAPublicData) await window.NETAPublicData.rankingReady();
 const M=window.NETA_METADATA,H=window.NETA_TOP_HOLDERS,I=window.NETA_ADDRESS_INDEX,A=window.NETA_ADDRESS_ROWS;
 const S=M.stats||M;
 const f=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:6}).format(Number(n||0));
@@ -101,5 +103,10 @@ function lookup(){
 document.querySelector("#go").onclick=lookup;
 document.querySelector("#q").onkeydown=event=>{if(event.key==="Enter")lookup()};
 function resetLookup(){document.querySelector("#q").value="";document.querySelector("#result").classList.add("hidden");document.querySelector("#rankPanelDefault").classList.remove("hidden");document.querySelector("#rankPanelResult").classList.add("hidden")}
-window.addEventListener("neta:wallet-connected",event=>{if(!event.detail?.address)return;const address=I[event.detail.address.toLowerCase()]?event.detail.address:event.detail.osmosisAddress;document.querySelector("#q").value=address;lookup()});
+function acceptRankingWallet(detail){if(!detail?.address)return;const address=I[detail.address.toLowerCase()]?detail.address:detail.osmosisAddress;if(!address)return;document.querySelector("#q").value=address;lookup()}
+window.addEventListener("neta:wallet-connected",event=>acceptRankingWallet(event.detail));
+if(window.NETA_WALLET_STATE)acceptRankingWallet(window.NETA_WALLET_STATE);
 window.addEventListener("neta:wallet-disconnected",resetLookup);
+
+}
+startRanking().catch(() => { document.querySelector("#updated").textContent = "Ranking data unavailable. Please retry."; });

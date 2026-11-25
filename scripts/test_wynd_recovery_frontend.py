@@ -37,9 +37,9 @@ for required in [
     "UNSTAKED VIA NETA REBORN", "CLAIMED VIA NETA REBORN",
     'id="address-form"', '<button type="submit" disabled>SEARCH</button>', 'id="wallet-address"', 'id="pool-total-usd"', 'id="position-total-usd"',
     'assets/wynd-offline-mascot.png', 'matrix-blackout.js', 'id="leaderboard-list"',
-    'wallet-header.js?v=4', 'id="keplr-connect"',
+    'wallet-header.js?v=20261125-1', 'id="keplr-connect"',
     'cosmos-client.js?v=3', 'recovery-signing-config.js?v=9',
-    'wynd-recovery.js?v=20261002-1',
+    'wynd-recovery.js?v=20261125-1',
     'wynd-recovery.css?v=20260914-7', 'styles.css?v=20260918-1', 'id="execute-action"', 'hidden disabled',
     'id="transaction-feedback"', 'id="transaction-explorer"', 'VIEW ON ATOMSCAN',
 ]:
@@ -66,7 +66,9 @@ assert '`${LCD}/' not in js
 assert '<a class="active" aria-current="page" href="wynd-recovery.html">WYND RECOVERY</a>' in html
 assert 'totalPoolUsd+=Number(live.pool_value_usd||0)' in js
 assert '.position-summary[hidden]{display:none}' in (root/"wynd-recovery.css").read_text()
-assert js.count('{cache:"no-store"}') == 4
+assert js.count('{cache:"no-store"}') == 1  # Frozen registry remains local.
+assert 'window.NETAPublicData.fetchGroup' in js
+assert "cache: 'no-store'" in (root/'public-data.js').read_text()
 for forbidden in ["pendingLiquidity", "showLiquidityPreview", "executeLiquidityPilot", "provide_liquidity", 'action==="bond"', "delegate:"]:
     assert forbidden not in js, forbidden
 for required in ['setTransactionFeedback("pending"', 'setTransactionFeedback("success"', 'setTransactionFeedback("error"', 'ATOMSCAN_TX_BASE+normalizedHash', '/^[0-9A-F]{64}$/', 'String(txhash||"").toUpperCase()', 'ESTIMATE ONLY: THIS LEGACY WYND CONTRACT DOES NOT ENFORCE MINIMUM WITHDRAWAL OUTPUTS', 'TRANSACTION CONFIRMED // RESULT CHECK INCOMPLETE']:
