@@ -27,7 +27,7 @@ test('ranking consumes a coherent server generation and an early wallet connecti
  await page.goto('/index.html');
  await expect(page.locator('#q')).toHaveValue(address);
  await expect(page.locator('#result')).toContainText('RANK #');
- expect(await page.evaluate(()=>window.NETA_METADATA.generated_at)).toBe(metadata.generated_at);
+ await expect.poll(()=>page.evaluate(()=>window.NETA_METADATA.generated_at)).toBe(metadata.generated_at);
  expect(errors).toEqual([]);
 });
 
