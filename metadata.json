@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-25T12:44:01.013400Z",
+  "generated_at": "2026-11-25T21:22:42.981017Z",
   "validation": {
     "passed": true,
     "cw20_balance_sum_equals_supply": true,
@@ -23,7 +23,7 @@
   "dao_claimable_wallets": 287,
   "dao_claimable_neta": 702.382593,
   "lp_wallets": 4006,
-  "lp_neta": 1220.772982,
+  "lp_neta": 1220.677978,
   "economic_master_entries": 13787,
   "cross_chain_matches": 1975,
   "wallet_attributed_neta": 31886.39,
@@ -54,22 +54,22 @@
   "gini": 0.884418,
   "concentration_neta": {
     "top_1": 1612.135373,
-    "top_5": 5379.817344,
-    "top_10": 7033.681301,
-    "top_25": 9847.341282,
-    "top_50": 12031.800155,
-    "top_100": 14460.056238,
-    "top_1_percent": 15509.748104,
+    "top_5": 5379.817351,
+    "top_10": 7033.681309,
+    "top_25": 9847.323446,
+    "top_50": 12031.781405,
+    "top_100": 14460.026186,
+    "top_1_percent": 15509.717825,
     "top_1_percent_wallets": 138
   },
   "osmosis": {
-    "height": 76088846,
+    "height": 76122123,
     "rpc": "https://rpc.osmosis.zone",
     "method": "single bank primary-state scan for NETA + Pool 631 shares",
     "pool_631": {
-      "height": 76088846,
+      "height": 76122123,
       "rpc": "https://rpc.osmosis.zone",
-      "pool_neta_raw": 752763912,
+      "pool_neta_raw": 752764053,
       "lp_supply_raw": 218194199598658472102869,
       "direct_share_holders": 560,
       "economic_wallets": 1904,
@@ -81,10 +81,10 @@
     }
   },
   "juno": {
-    "height": 44099553,
+    "height": 44112062,
     "method": "height-pinned CosmWasm AllContractState / cw-storage-plus balance namespace",
     "wynd": {
-      "pool_neta_raw": 468009070,
+      "pool_neta_raw": 467913925,
       "lp_supply_raw": 8957224003,
       "attributable_lp_supply_raw": 8957223003,
       "economic_wallets": 3344,
@@ -95,8 +95,8 @@
     }
   },
   "dao": {
-    "height": 44099553,
-    "block_time": "2026-11-25T12:11:27.801757+00:00",
+    "height": 44112062,
+    "block_time": "2026-11-25T21:11:39.825570+00:00",
     "endpoint": "https://juno-api.polkachu.com",
     "claim_records": 300,
     "active_stakes_source": "cosmoot",
